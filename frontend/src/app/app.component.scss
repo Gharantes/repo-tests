@@ -1,0 +1,28 @@
+@mixin wh100 { width: 100%; height: 100%; }
+
+:host {
+  @include wh100;
+  display: flex;
+  box-sizing: border-box;
+  background: red;
+  overflow: hidden;
+
+
+  #layout-container {
+    @include wh100;
+    display: flex;
+    flex-direction: column;
+    background: red;
+    overflow: hidden;
+    box-sizing: border-box;
+
+    #main-container {
+      @include wh100;
+      display: flex;
+      flex-direction: row;
+      background: blue;
+      overflow: hidden;
+      box-sizing: border-box;
+    }
+  }
+}

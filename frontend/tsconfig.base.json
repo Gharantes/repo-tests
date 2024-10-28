@@ -1,0 +1,26 @@
+{
+  "compileOnSave": false,
+  "compilerOptions": {
+    "rootDir": ".",
+    "sourceMap": true,
+    "declaration": false,
+    "moduleResolution": "node",
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "importHelpers": true,
+    "target": "es2022",
+    "module": "esnext",
+    "lib": ["es2020", "dom"],
+    "skipLibCheck": true,
+    "skipDefaultLibCheck": true,
+    "baseUrl": ".",
+    "paths": {
+      "@synergia-frontend": ["/src/libs/*"],
+      "@synergia-frontend/routes": ["src/libs/routes/src/index.ts"],
+      "@synergia-frontend/api": ["src/libs/api/src/index.ts"],
+      "@synergia-frontend/tables": ["src/libs/components/tables/src/index.ts"],
+      "@synergia-frontend/ui": ["src/libs/components/ui/src/index.ts"]
+    }
+  },
+  "exclude": ["node_modules", "tmp"]
+}

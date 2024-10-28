@@ -1,0 +1,1 @@
+nx generate @nx/angular:library tables --directory=src/libs/components

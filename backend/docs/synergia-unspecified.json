@@ -1,0 +1,343 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "OpenAPI definition",
+    "version": "v0"
+  },
+  "servers": [
+    {
+      "url": "http://localhost:8080",
+      "description": "Generated server url"
+    }
+  ],
+  "paths": {
+    "/api/test/getById/{idUsuario}": {
+      "get": {
+        "tags": [
+          "usuario-resource"
+        ],
+        "operationId": "getUsuarioById",
+        "parameters": [
+          {
+            "name": "idUsuario",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/test/getAll": {
+      "get": {
+        "tags": [
+          "usuario-resource"
+        ],
+        "operationId": "getAllUsuarios",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsuarioDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projeto/getById/{idProjeto}": {
+      "get": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "getProjetoById",
+        "parameters": [
+          {
+            "name": "idProjeto",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/ProjetoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/projeto/getAll": {
+      "get": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "getAllProjetos",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjetoDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/evento/getById/{idEvento}": {
+      "get": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "getEventoById",
+        "parameters": [
+          {
+            "name": "idEvento",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/evento/getAll": {
+      "get": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "getAllEvento",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "*/*": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/EventoDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "UsuarioDto": {
+        "required": [
+          "email",
+          "idUsuario",
+          "name",
+          "permissoes"
+        ],
+        "type": "object",
+        "properties": {
+          "idUsuario": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "permissoes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "ProjetoDto": {
+        "required": [
+          "eventosNoQualParticipa",
+          "idProjeto",
+          "membrosProjeto",
+          "titulo"
+        ],
+        "type": "object",
+        "properties": {
+          "idProjeto": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "eventosNoQualParticipa": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "membrosProjeto": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "EventoDto": {
+        "required": [
+          "descricao",
+          "idEvento",
+          "periodos",
+          "projetosParticipantes",
+          "supervisores",
+          "titulo"
+        ],
+        "type": "object",
+        "properties": {
+          "idEvento": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "descricao": {
+            "type": "string"
+          },
+          "periodos": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Periodo"
+            }
+          },
+          "supervisores": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InfoPessoaSimplesDto"
+            }
+          },
+          "projetosParticipantes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "InfoPessoaSimplesDto": {
+        "required": [
+          "emailContato",
+          "id",
+          "nome",
+          "tipoUsuario"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "nome": {
+            "type": "string"
+          },
+          "emailContato": {
+            "type": "string"
+          },
+          "tipoUsuario": {
+            "type": "string",
+            "enum": [
+              "PROFESSOR",
+              "COORDENADOR",
+              "ALUNO"
+            ]
+          }
+        }
+      },
+      "Periodo": {
+        "required": [
+          "descricao",
+          "tipoPeriodo"
+        ],
+        "type": "object",
+        "properties": {
+          "descricao": {
+            "type": "string"
+          },
+          "tipoPeriodo": {
+            "type": "string",
+            "enum": [
+              "UNIQUE",
+              "BETWEEN"
+            ]
+          },
+          "dataUnica": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataInicio": {
+            "type": "string",
+            "format": "date"
+          },
+          "dataFim": {
+            "type": "string",
+            "format": "date"
+          }
+        }
+      }
+    }
+  }
+}
