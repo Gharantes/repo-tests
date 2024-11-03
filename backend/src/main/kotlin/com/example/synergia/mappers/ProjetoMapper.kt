@@ -11,7 +11,7 @@ class ProjetoMapper {
     fun entityToDto(entity: Projeto): ProjetoDto {
         return ProjetoDto(
             entity.id!!,
-            entity.name!!,
+            entity.titulo!!,
             listOf(),
             listOf(),
         )
@@ -19,14 +19,14 @@ class ProjetoMapper {
     fun dtoToEntity(dto: ProjetoDto): Projeto {
         return Projeto().apply {
             id = dto.idProjeto
-            name = dto.titulo
-            description = dto.titulo
+            titulo = dto.titulo
+            descricao = dto.titulo
         }
     }
     fun dtoToEntity(dto: CreateProjetoDto): Projeto {
         return Projeto().apply {
-            name = dto.name
-            description = dto.description
+            titulo = dto.name
+            descricao = dto.description
         }
     }
 }

@@ -4,8 +4,8 @@ import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
 @SpringBootApplication
-class FuncionalFretesExportacaoApplication
+class SynergiaApplication
 
 fun main(args: Array<String>) {
-	runApplication<FuncionalFretesExportacaoApplication>(*args)
+	runApplication<SynergiaApplication>(*args)
 }

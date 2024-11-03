@@ -1,34 +1,45 @@
-import { Component } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { MatTable, MatTableModule } from '@angular/material/table';
+import { Observable, of } from 'rxjs';
+import { IDoExtentendableTableColumnInfo } from './i-do-extentendable-table-column-info';
 
 @Component({
   selector: 'lib-extendable-table',
   standalone: true,
   imports: [CommonModule, MatTableModule],
-  templateUrl: './extendable-table.component.html',
+  template: `
+    <table id="table" mat-table [dataSource]="data$">
+      <ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
+        <th mat-header-cell *matHeaderCellDef>{{ column.header }}</th>
+        <td mat-cell *matCellDef="let element">{{ column.value(element) }}</td>
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+  `,
   styleUrl: './extendable-table.component.scss',
 })
-export class ExtendableTableComponent {
-  displayedColumns: string[] = ['position', 'name', 'weight', 'symbol'];
-  dataSource = ELEMENT_DATA;
-}
+export class ExtendableTableComponent<T> implements AfterViewInit {
+  @Input()
+  columns!: IDoExtentendableTableColumnInfo<T>[];
 
-export interface PeriodicElement {
-  name: string;
-  position: number;
-  weight: number;
-  symbol: string;
+  @Input()
+  data$!: Observable<T[]>;
+
+  displayedColumns: string[] = [];
+
+  constructor(
+    private readonly cdr: ChangeDetectorRef
+  ) {
+  }
+  ngAfterViewInit() {
+    console.log("TESTE")
+    this.displayedColumns.push(
+      ...this.columns.map(v => v.def)
+    )
+    console.log(this.displayedColumns);
+    this.cdr.detectChanges();
+  }
 }
-const ELEMENT_DATA: PeriodicElement[] = [
-  {position: 1, name: 'Hydrogen', weight: 1.0079, symbol: 'H'},
-  {position: 2, name: 'Helium', weight: 4.0026, symbol: 'He'},
-  {position: 3, name: 'Lithium', weight: 6.941, symbol: 'Li'},
-  {position: 4, name: 'Beryllium', weight: 9.0122, symbol: 'Be'},
-  {position: 5, name: 'Boron', weight: 10.811, symbol: 'B'},
-  {position: 6, name: 'Carbon', weight: 12.0107, symbol: 'C'},
-  {position: 7, name: 'Nitrogen', weight: 14.0067, symbol: 'N'},
-  {position: 8, name: 'Oxygen', weight: 15.9994, symbol: 'O'},
-  {position: 9, name: 'Fluorine', weight: 18.9984, symbol: 'F'},
-  {position: 10, name: 'Neon', weight: 20.1797, symbol: 'Ne'},
-];

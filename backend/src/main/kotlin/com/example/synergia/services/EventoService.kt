@@ -28,10 +28,11 @@ class EventoService (
         )
     }
     fun getProjetosOfEvento(idEvento: Long): List<ProjetoDto> {
-        return eventoRepository.findById(idEvento)
-            .map { it.projetos }
-            .orElseThrow { Exception("Evento não encontrado") }
-            .map { ProjetoMapper().entityToDto(it) }
+        return listOf()
+//        return eventoRepository.findById(idEvento)
+//            .map { it.projetos }
+//            .orElseThrow { Exception("Evento não encontrado") }
+//            .map { ProjetoMapper().entityToDto(it) }
     }
     fun deleteEvento(idEvento: Long) {
         eventoRepository.deleteById(idEvento)

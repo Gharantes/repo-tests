@@ -8,8 +8,8 @@ class EventoMapper {
     fun entityToDto(entity: Evento): EventoDto {
         return EventoDto(
             entity.id!!,
-            entity.name!!,
-            entity.description!!,
+            entity.titulo!!,
+            entity.descricao!!,
             listOf(),
             listOf(),
             listOf(),
@@ -19,14 +19,14 @@ class EventoMapper {
     fun dtoToEntity(dto: EventoDto): Evento {
         return Evento().apply {
             id = dto.idEvento
-            name = dto.titulo
-            description = dto.descricao
+            titulo = dto.titulo
+            descricao = dto.descricao
         }
     }
     fun dtoToEntity(dto: CreateEventoDto): Evento {
         return Evento().apply {
-            name = dto.name
-            description = dto.description
+            titulo = dto.name
+            descricao = dto.description
         }
     }
 }

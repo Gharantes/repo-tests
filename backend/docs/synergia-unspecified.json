@@ -11,12 +11,12 @@
     }
   ],
   "paths": {
-    "/api/evento/create-evento": {
+    "/api/usuario/export-users-as-excel": {
       "post": {
         "tags": [
-          "evento-resource"
+          "usuario-resource"
         ],
-        "operationId": "createEvento",
+        "operationId": "exportUsersAsExcel",
         "responses": {
           "200": {
             "description": "OK"
@@ -24,15 +24,136 @@
         }
       }
     },
-    "/api/test/getById/{idUsuario}": {
+    "/api/usuario/create-users-from-file": {
+      "post": {
+        "tags": [
+          "usuario-resource"
+        ],
+        "operationId": "createUsersFromFile",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/project/create-project": {
+      "post": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "createProject",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateProjetoDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/project/assign-projeto-to-evento/{id-project}/{id-evento}": {
+      "post": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "assignProjectToEvent",
+        "parameters": [
+          {
+            "name": "id-project",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-evento",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/evento/create-event/{id-system}": {
+      "post": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "createEvent",
+        "parameters": [
+          {
+            "name": "id-system",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEventoDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/usuario/get-by-id/{id-usuario}": {
       "get": {
         "tags": [
           "usuario-resource"
         ],
-        "operationId": "getUsuarioById",
+        "operationId": "getUserById",
         "parameters": [
           {
-            "name": "idUsuario",
+            "name": "id-usuario",
             "in": "path",
             "required": true,
             "schema": {
@@ -45,7 +166,7 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/UsuarioDto"
                 }
@@ -55,17 +176,17 @@
         }
       }
     },
-    "/api/test/getAll": {
+    "/api/usuario/get-all": {
       "get": {
         "tags": [
           "usuario-resource"
         ],
-        "operationId": "getAllUsuarios",
+        "operationId": "getAllUsers",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -78,15 +199,15 @@
         }
       }
     },
-    "/api/projeto/getById/{idProjeto}": {
+    "/api/system/get-by-id/{id-system}": {
       "get": {
         "tags": [
-          "projeto-resource"
+          "system-resource"
         ],
-        "operationId": "getProjetoById",
+        "operationId": "getSystemById",
         "parameters": [
           {
-            "name": "idProjeto",
+            "name": "id-system",
             "in": "path",
             "required": true,
             "schema": {
@@ -99,7 +220,58 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/system/get-all": {
+      "get": {
+        "tags": [
+          "system-resource"
+        ],
+        "operationId": "getAllSystems",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EventoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/project/get-by-id/{id-project}": {
+      "get": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "getProjectById",
+        "parameters": [
+          {
+            "name": "id-project",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ProjetoDto"
                 }
@@ -109,17 +281,17 @@
         }
       }
     },
-    "/api/projeto/getAll": {
+    "/api/project/get-all": {
       "get": {
         "tags": [
           "projeto-resource"
         ],
-        "operationId": "getAllProjetos",
+        "operationId": "getAllProjects",
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -132,15 +304,24 @@
         }
       }
     },
-    "/api/evento/getById/{idEvento}": {
+    "/api/evento/get-projects-of-event/{id-system}/{id-event}": {
       "get": {
         "tags": [
           "evento-resource"
         ],
-        "operationId": "getEventoById",
+        "operationId": "getProjectsOfEvent",
         "parameters": [
           {
-            "name": "idEvento",
+            "name": "id-system",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-event",
             "in": "path",
             "required": true,
             "schema": {
@@ -153,7 +334,50 @@
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjetoDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/evento/get-by-id/{id-system}/{id-event}": {
+      "get": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "getEventById",
+        "parameters": [
+          {
+            "name": "id-system",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-event",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/EventoDto"
                 }
@@ -163,17 +387,28 @@
         }
       }
     },
-    "/api/evento/get-all": {
+    "/api/evento/get-all/{id-system}": {
       "get": {
         "tags": [
           "evento-resource"
         ],
-        "operationId": "getAllEvento",
+        "operationId": "getAllEvent",
+        "parameters": [
+          {
+            "name": "id-system",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
             "content": {
-              "*/*": {
+              "application/json": {
                 "schema": {
                   "type": "array",
                   "items": {
@@ -185,10 +420,97 @@
           }
         }
       }
+    },
+    "/api/project/delete-project/{id-project}": {
+      "delete": {
+        "tags": [
+          "projeto-resource"
+        ],
+        "operationId": "deleteProject",
+        "parameters": [
+          {
+            "name": "id-project",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/evento/delete-event/{id-system}/{id-event}": {
+      "delete": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "deleteEvent",
+        "parameters": [
+          {
+            "name": "id-system",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-event",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "CreateProjetoDto": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateEventoDto": {
+        "required": [
+          "description",
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
       "UsuarioDto": {
         "required": [
           "email",
@@ -209,38 +531,6 @@
             "type": "string"
           },
           "permissoes": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      },
-      "ProjetoDto": {
-        "required": [
-          "eventosNoQualParticipa",
-          "idProjeto",
-          "membrosProjeto",
-          "titulo"
-        ],
-        "type": "object",
-        "properties": {
-          "idProjeto": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "titulo": {
-            "type": "string"
-          },
-          "eventosNoQualParticipa": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          "membrosProjeto": {
             "type": "array",
             "items": {
               "type": "integer",
@@ -348,6 +638,38 @@
           "dataFim": {
             "type": "string",
             "format": "date"
+          }
+        }
+      },
+      "ProjetoDto": {
+        "required": [
+          "eventosNoQualParticipa",
+          "idProjeto",
+          "membrosProjeto",
+          "titulo"
+        ],
+        "type": "object",
+        "properties": {
+          "idProjeto": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "eventosNoQualParticipa": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "membrosProjeto": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       }

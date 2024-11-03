@@ -23,13 +23,13 @@ open class Evento {
 //    @OneToOne(mappedBy = "evento")
 //    open var detalhesEvento: DetalhesEvento? = null
 
-    @Column(name = "name", nullable = false)
-    open var name: String? = null
-    @Column(name = "description", nullable = false)
-    open var description: String? = null
+    @Column(name = "titulo", nullable = false)
+    open var titulo: String? = null
+    @Column(name = "descricao", nullable = false)
+    open var descricao: String? = null
 
-    @ManyToMany(mappedBy = "eventos")
-    open var projetos: MutableSet<Projeto> = mutableSetOf()
+//    @ManyToMany(mappedBy = "eventos")
+//    open var projetos: MutableSet<Projeto> = mutableSetOf()
 
     // The ManyToMany relationship with Projeto
 //    @ManyToMany

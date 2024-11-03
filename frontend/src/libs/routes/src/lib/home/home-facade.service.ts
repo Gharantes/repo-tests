@@ -1,15 +1,16 @@
-import { Injectable } from '@angular/core';
-import { EventoResourceService } from '@synergia-frontend/api';
+import { Injectable, signal } from '@angular/core';
+import { EventoDto, EventoResourceService } from '@synergia-frontend/api';
 import { tap } from 'rxjs';
 
 @Injectable()
 export class HomeFacadeService {
+  public readonly events = signal<EventoDto[]>([])
+
   constructor(
-    private readonly teste: EventoResourceService
+    private readonly service: EventoResourceService
   ) {
-    this.teste.getAllEvento().pipe(
-      tap(() => console.log("EXECUTED")),
-      tap(res => console.log(res)),
+    this.service.getAllEvent(1).pipe(
+      tap(res => this.events.set(res)),
     ).subscribe()
   }
 }

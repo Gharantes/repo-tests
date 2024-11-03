@@ -5,11 +5,14 @@ api.module.ts
 api/api.ts
 api/eventoResource.service.ts
 api/projetoResource.service.ts
+api/systemResource.service.ts
 api/usuarioResource.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
 index.ts
+model/createEventoDto.ts
+model/createProjetoDto.ts
 model/eventoDto.ts
 model/infoPessoaSimplesDto.ts
 model/models.ts

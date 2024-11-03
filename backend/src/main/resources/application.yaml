@@ -1,0 +1,32 @@
+server:
+  port: 8080
+spring:
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  datasource:
+    url: jdbc:postgresql://localhost:5432/synergia
+    username: raindrop
+    password: doorway
+    name: synergia
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: none
+  output:
+    ansi:
+      enabled: always
+  application:
+    name: synergia
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  disable-i18n: true
+  model-converters:
+    pageable-converter:
+      enabled: true
+  show-actuator: false
+  api-docs:
+    groups:
+      enabled: true

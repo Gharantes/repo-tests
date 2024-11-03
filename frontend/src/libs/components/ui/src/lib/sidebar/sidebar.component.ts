@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { routeLabels } from '@synergia-frontend/constants';
 import { Router, RouterLink } from '@angular/router';
+import { NavigationService } from '@synergia-frontend/services';
 
 @Component({
   selector: 'lib-sidebar',
@@ -31,10 +32,10 @@ export class SidebarComponent {
   public routes = routeLabels
 
   constructor(
-    private readonly router: Router,
+    private readonly navigationService: NavigationService
   ) {
   }
   navigate(path: string) {
-    this.router.navigate([path]).then()
+    this.navigationService.navigate(path);
   }
 }

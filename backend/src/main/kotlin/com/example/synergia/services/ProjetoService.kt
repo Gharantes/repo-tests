@@ -39,7 +39,7 @@ class ProjetoService(
             .map { it }
             .orElseThrow { Exception("Evento não encontrado") }
 
-        projeto.eventos.add(evento)
+//        projeto.eventos.add(evento)
         projetoRepository.save(projeto)
     }
 

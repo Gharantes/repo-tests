@@ -7,6 +7,11 @@ import { BehaviorSubject } from 'rxjs';
 export class AuthenticationService {
   private readonly authenticated$ = new BehaviorSubject<boolean>(false);
 
+  constructor() {
+    this.updateAuthenticated(
+      this.checkSessionStorage()
+    )
+  }
   getAuthenticated() {
     return this.authenticated$.value;
   }
@@ -19,10 +24,10 @@ export class AuthenticationService {
       this.updateSessionStorage('false')
     }
   }
-  updateSessionStorage(bool: string) {
+  private updateSessionStorage(bool: string) {
     sessionStorage.setItem('authenticated', bool)
   }
-  checkSessionStorage () {
+  private checkSessionStorage () {
     return sessionStorage.getItem('authenticated') == 'true'
   }
 }
