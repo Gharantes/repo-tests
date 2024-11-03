@@ -11,6 +11,19 @@
     }
   ],
   "paths": {
+    "/api/evento/create-evento": {
+      "post": {
+        "tags": [
+          "evento-resource"
+        ],
+        "operationId": "createEvento",
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/test/getById/{idUsuario}": {
       "get": {
         "tags": [
@@ -150,7 +163,7 @@
         }
       }
     },
-    "/api/evento/getAll": {
+    "/api/evento/get-all": {
       "get": {
         "tags": [
           "evento-resource"

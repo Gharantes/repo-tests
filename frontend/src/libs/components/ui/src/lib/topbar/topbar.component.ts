@@ -6,7 +6,7 @@ import { CommonModule } from '@angular/common';
   standalone: true,
   imports: [CommonModule],
   template: `
-    TOPBAR
+    SYNERGIA
   `,
   styles: [`
     :host {

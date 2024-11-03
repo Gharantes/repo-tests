@@ -1,0 +1,1 @@
+chmod +x generate-api.sh

@@ -1,0 +1,30 @@
+@mixin display-sistema-option {
+  height: 45px;
+  border: 1px solid black;
+  border-radius: 5px;
+  padding: 5px;
+  box-sizing: border-box;
+}
+
+#route-container {}
+
+
+.abs-top-right {
+    position: absolute;
+    top: 0;
+    right: 0;
+}
+#sistema-selecionado {
+  @include display-sistema-option;
+}
+#lista-sistemas {
+  .sistema-option {
+    @include display-sistema-option;
+  }
+  .login-em-novo-sistema {
+    @include display-sistema-option;
+  }
+  .criar-novo-sistema {
+    @include display-sistema-option;
+  }
+}

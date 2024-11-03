@@ -1,5 +1,3 @@
-export * from './lib/lib.routes';
-
-export * from './lib/src-libs-routes.component';
-
-export * from './lib/home/index';
+export * from './lib/events';
+export * from './lib/home';
+export * from './lib/login'

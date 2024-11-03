@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExtendableTableComponent } from '@synergia-frontend/tables';
 import { HomeFacadeService } from './home-facade.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'lib-home',
@@ -15,8 +16,7 @@ import { HomeFacadeService } from './home-facade.service';
 })
 export class HomeRouteComponent {
   constructor(
-    private readonly facade: HomeFacadeService
+    private readonly facade: HomeFacadeService,
   ) {
-    console.log('HOME ROUTE');
   }
 }
