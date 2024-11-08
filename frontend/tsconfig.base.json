@@ -19,6 +19,7 @@
       "@synergia-frontend/api": ["src/libs/api/src/index.ts"],
       "@synergia-frontend/constants": ["src/libs/constants/src/index.ts"],
       "@synergia-frontend/routes": ["src/libs/routes/src/index.ts"],
+      "@synergia-frontend/views": ["src/libs/views/src/index.ts"],
       "@synergia-frontend/services": ["src/libs/services/src/index.ts"],
       "@synergia-frontend/tables": ["src/libs/components/tables/src/index.ts"],
       "@synergia-frontend/ui": ["src/libs/components/ui/src/index.ts"]

@@ -1,1 +1,1 @@
-export * from './lib/src-libs-views.component';
+export * from './lib/extra'

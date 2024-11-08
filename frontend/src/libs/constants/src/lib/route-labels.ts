@@ -7,4 +7,5 @@ export const routeLabels: {
   { label: 'Projetos', path: '/projects' },
   { label: 'Roles', path: '/roles' },
   { label: 'Usuários', path: '/users' },
+  { label: 'Contador', path: '/extra' },
 ]

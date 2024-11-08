@@ -33,4 +33,9 @@ export const appRoutes: Route[] = [
     loadChildren: () =>
       import('@synergia-frontend/routes').then(m => m.usersRoutes)
   },
+  {
+    path: 'extra',
+    loadChildren: () =>
+      import('@synergia-frontend/routes').then(m => m.extraRoutes)
+  },
 ];
