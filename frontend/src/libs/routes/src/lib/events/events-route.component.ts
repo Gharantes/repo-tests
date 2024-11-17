@@ -26,15 +26,15 @@ import { MatIcon } from '@angular/material/icon';
   ],
   template: `
     <form [formGroup]="form">
-      <sy-common-form-field
+      <lib-sy-common-form-field
         [label]="'Nome'"
         [control]="form.controls.name"
-      ></sy-common-form-field>
+      ></lib-sy-common-form-field>
 
-      <sy-common-form-field
+      <lib-sy-common-form-field
         [label]="'Descrição'"
         [control]="form.controls.description"
-      ></sy-common-form-field>
+      ></lib-sy-common-form-field>
     </form>
 
     <button mat-raised-button [disabled]="invalidForm" (click)="createEvent()">

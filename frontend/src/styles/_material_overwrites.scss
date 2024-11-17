@@ -1,0 +1,6 @@
+/** Removes the extra-spacing below the form-field element **/
+.sy-common-form-field {
+  .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
+    display: none;
+  }
+}

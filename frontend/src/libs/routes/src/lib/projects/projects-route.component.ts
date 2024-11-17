@@ -27,10 +27,10 @@ import { MatIcon } from '@angular/material/icon';
   ],
   template: `
     <form [formGroup]="form">
-      <sy-common-form-field
+      <lib-sy-common-form-field
         [label]="'Nome'"
         [control]="form.controls.name"
-      ></sy-common-form-field>
+      ></lib-sy-common-form-field>
     </form>
 
     <button

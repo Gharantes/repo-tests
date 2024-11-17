@@ -1,0 +1,9 @@
+$dark-theme: true !default;
+
+$text-color: black !default;
+$border-color: black !default;
+
+@if $dark-theme {
+  $text-color: #fff;
+  $border-color: #fff;
+}

@@ -199,15 +199,54 @@
         }
       }
     },
-    "/api/system/get-by-id/{id-system}": {
+    "/api/tenant/get-tenant-by-unique-keys": {
       "get": {
         "tags": [
-          "system-resource"
+          "tenant-resource"
         ],
-        "operationId": "getSystemById",
+        "operationId": "getTenantByUniqueKeys",
         "parameters": [
           {
-            "name": "id-system",
+            "name": "id_tenant",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "identifier",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IdentifierDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/tenant/get-login-page-configurations-of-tenant/{id_tenant}": {
+      "get": {
+        "tags": [
+          "tenant-resource"
+        ],
+        "operationId": "getLoginPageConfigurationsOfTenantByTenantId",
+        "parameters": [
+          {
+            "name": "id_tenant",
             "in": "path",
             "required": true,
             "schema": {
@@ -222,27 +261,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/EventoDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/system/get-all": {
-      "get": {
-        "tags": [
-          "system-resource"
-        ],
-        "operationId": "getAllSystems",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EventoDto"
+                  "$ref": "#/components/schemas/TenantLoginPageConfigInfoDto"
                 }
               }
             }
@@ -539,6 +558,75 @@
           }
         }
       },
+      "IdentifierDto": {
+        "required": [
+          "id",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "TenantLoginPageConfigInfoDto": {
+        "required": [
+          "id"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "bgHex": {
+            "type": "string"
+          },
+          "bgUrl": {
+            "type": "string"
+          },
+          "textHex": {
+            "type": "string"
+          }
+        }
+      },
+      "ProjetoDto": {
+        "required": [
+          "eventosNoQualParticipa",
+          "idProjeto",
+          "membrosProjeto",
+          "titulo"
+        ],
+        "type": "object",
+        "properties": {
+          "idProjeto": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "titulo": {
+            "type": "string"
+          },
+          "eventosNoQualParticipa": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "membrosProjeto": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
       "EventoDto": {
         "required": [
           "descricao",
@@ -638,38 +726,6 @@
           "dataFim": {
             "type": "string",
             "format": "date"
-          }
-        }
-      },
-      "ProjetoDto": {
-        "required": [
-          "eventosNoQualParticipa",
-          "idProjeto",
-          "membrosProjeto",
-          "titulo"
-        ],
-        "type": "object",
-        "properties": {
-          "idProjeto": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "titulo": {
-            "type": "string"
-          },
-          "eventosNoQualParticipa": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          "membrosProjeto": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
           }
         }
       }

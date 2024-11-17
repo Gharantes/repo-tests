@@ -1,0 +1,1 @@
+export const isBlankOrNull = (str: string | null | undefined) => !str || str.trim().length === 0;

@@ -17,8 +17,8 @@ open class Projeto {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     open var id: Long? = null
 
-    @Column(name= "id_supervisor")
-    open var idSupervisor: Long? = null
+//    @Column(name= "id_supervisor")
+//    open var idSupervisor: Long? = null
 
     @Column(name = "titulo", nullable = false)
     open var titulo: String? = null

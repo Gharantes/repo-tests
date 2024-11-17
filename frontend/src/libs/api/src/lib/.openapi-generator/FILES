@@ -5,7 +5,7 @@ api.module.ts
 api/api.ts
 api/eventoResource.service.ts
 api/projetoResource.service.ts
-api/systemResource.service.ts
+api/tenantResource.service.ts
 api/usuarioResource.service.ts
 configuration.ts
 encoder.ts
@@ -14,10 +14,12 @@ index.ts
 model/createEventoDto.ts
 model/createProjetoDto.ts
 model/eventoDto.ts
+model/identifierDto.ts
 model/infoPessoaSimplesDto.ts
 model/models.ts
 model/periodo.ts
 model/projetoDto.ts
+model/tenantLoginPageConfigInfoDto.ts
 model/usuarioDto.ts
 param.ts
 variables.ts

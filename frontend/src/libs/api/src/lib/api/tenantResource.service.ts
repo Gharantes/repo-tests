@@ -17,7 +17,9 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { EventoDto } from '../model/eventoDto';
+import { IdentifierDto } from '../model/identifierDto';
+// @ts-ignore
+import { TenantLoginPageConfigInfoDto } from '../model/tenantLoginPageConfigInfoDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -28,7 +30,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class SystemResourceService {
+export class TenantResourceService {
 
     protected basePath = 'http://localhost:8080';
     public defaultHeaders = new HttpHeaders();
@@ -91,13 +93,17 @@ export class SystemResourceService {
     }
 
     /**
+     * @param idTenant 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllSystems(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventoDto>;
-    public getAllSystems(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventoDto>>;
-    public getAllSystems(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventoDto>>;
-    public getAllSystems(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getLoginPageConfigurationsOfTenantByTenantId(idTenant: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<TenantLoginPageConfigInfoDto>;
+    public getLoginPageConfigurationsOfTenantByTenantId(idTenant: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<TenantLoginPageConfigInfoDto>>;
+    public getLoginPageConfigurationsOfTenantByTenantId(idTenant: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<TenantLoginPageConfigInfoDto>>;
+    public getLoginPageConfigurationsOfTenantByTenantId(idTenant: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (idTenant === null || idTenant === undefined) {
+            throw new Error('Required parameter idTenant was null or undefined when calling getLoginPageConfigurationsOfTenantByTenantId.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -135,8 +141,8 @@ export class SystemResourceService {
             }
         }
 
-        let localVarPath = `/api/system/get-all`;
-        return this.httpClient.request<EventoDto>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/tenant/get-login-page-configurations-of-tenant/${this.configuration.encodeParam({name: "idTenant", value: idTenant, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        return this.httpClient.request<TenantLoginPageConfigInfoDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -150,16 +156,24 @@ export class SystemResourceService {
     }
 
     /**
-     * @param idSystem 
+     * @param idTenant 
+     * @param identifier 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getSystemById(idSystem: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventoDto>;
-    public getSystemById(idSystem: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventoDto>>;
-    public getSystemById(idSystem: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventoDto>>;
-    public getSystemById(idSystem: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (idSystem === null || idSystem === undefined) {
-            throw new Error('Required parameter idSystem was null or undefined when calling getSystemById.');
+    public getTenantByUniqueKeys(idTenant?: number, identifier?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<IdentifierDto>;
+    public getTenantByUniqueKeys(idTenant?: number, identifier?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<IdentifierDto>>;
+    public getTenantByUniqueKeys(idTenant?: number, identifier?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<IdentifierDto>>;
+    public getTenantByUniqueKeys(idTenant?: number, identifier?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (idTenant !== undefined && idTenant !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>idTenant, 'id_tenant');
+        }
+        if (identifier !== undefined && identifier !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>identifier, 'identifier');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -198,10 +212,11 @@ export class SystemResourceService {
             }
         }
 
-        let localVarPath = `/api/system/get-by-id/${this.configuration.encodeParam({name: "idSystem", value: idSystem, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<EventoDto>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/tenant/get-tenant-by-unique-keys`;
+        return this.httpClient.request<IdentifierDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
