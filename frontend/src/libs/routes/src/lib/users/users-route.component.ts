@@ -1,4 +1,4 @@
-import { Component, OnDestroy } from '@angular/core';
+import { Component, DestroyRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { ExtendableTableComponent } from '@synergia-frontend/tables';
 import { UsersFacadeService } from './users-facade.service';
@@ -44,17 +44,14 @@ import { Subject } from 'rxjs';
   ],
   providers: [UsersFacadeService],
 })
-export class UsersRouteComponent implements OnDestroy {
-  private readonly ngUnsubscribe = new Subject<void>();
+export class UsersRouteComponent {
 
-  constructor(public readonly facade: UsersFacadeService) {
-    this.facade.initializeNgUpdate(this.ngUnsubscribe);
+  constructor(
+    public readonly facade: UsersFacadeService,
+    private readonly destroyRef: DestroyRef
+  ) {
+    this.facade.initializeNgUpdate(this.destroyRef);
     this.facade.update()
-  }
-
-  ngOnDestroy() {
-    this.ngUnsubscribe.next();
-    this.ngUnsubscribe.complete();
   }
 
   private file: File | undefined = undefined;
@@ -64,7 +61,7 @@ export class UsersRouteComponent implements OnDestroy {
 
   uploadFile() {
     if (this.file) {
-      this.facade.createFile(this.file);
+      this.facade.createAccountsInMassFromExcelFile(this.file, this.destroyRef);
     }
   }
 }

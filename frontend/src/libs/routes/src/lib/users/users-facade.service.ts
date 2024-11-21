@@ -1,67 +1,78 @@
-import { Injectable } from '@angular/core';
-import { AccountResourceService, UsuarioDto } from '@synergia-frontend/api';
+import { DestroyRef, Injectable } from '@angular/core';
+import {
+  AccountDto,
+  AccountResourceService,
+  ImportManagerResourceService
+} from '@synergia-frontend/api';
 import {
   debounceTime,
   ReplaySubject,
   Subject,
   switchMap,
   take,
-  takeUntil,
   tap,
 } from 'rxjs';
 import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/tables';
+import { TenantsService } from '@synergia-frontend/services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Injectable()
 export class UsersFacadeService {
   private readonly ngUpdate = new Subject<void>();
 
-  public readonly tableInfo: IDoExtentendableTableColumnInfo<UsuarioDto>[] = [
+  public readonly tableInfo: IDoExtentendableTableColumnInfo<AccountDto>[] = [
     {
       def: 'id',
       header: 'ID',
-      value: (element) => element.idUsuario.toString(),
+      value: (element) => element.id.toString(),
     },
     {
-      def: 'name',
-      header: 'Nome',
-      value: (element) => element.name,
-    },
-    {
-      def: 'email',
-      header: 'Email',
-      value: (element) => element.email,
-    },
+      def: 'login',
+      header: 'Login',
+      value: (element) => element.login,
+    }
   ];
-  private readonly usersSubject = new ReplaySubject<UsuarioDto[]>();
+  private readonly usersSubject = new ReplaySubject<AccountDto[]>();
   public readonly usersData$ = this.usersSubject.asObservable();
   // public readonly users = signal<UsuarioDto[]>([])
 
-  constructor(private readonly service: AccountResourceService) {}
-
-  initializeNgUpdate(ngUnsubscribe: Subject<void>) {
-    this.ngUpdate
-      .pipe(
-        debounceTime(300),
-        switchMap(() => this.queryAllUsers()),
-        takeUntil(ngUnsubscribe)
-      )
-      .subscribe();
-  }
+  constructor(
+    private readonly tenantService: TenantsService,
+    private readonly importRService: ImportManagerResourceService,
+    private readonly accountRService: AccountResourceService
+  ) {}
   update() {
     this.ngUpdate.next();
   }
-  queryAllUsers() {
-    return this.service.getAllAccounts().pipe(
+
+  initializeNgUpdate(destroyRef: DestroyRef) {
+    this.ngUpdate
+      .pipe(
+        debounceTime(300),
+        switchMap(() => this.queryAllAccounts(destroyRef)),
+        takeUntilDestroyed(destroyRef)
+      )
+      .subscribe();
+  }
+
+  queryAllAccounts(destroyRef: DestroyRef) {
+    const idTenant = this.tenantService.getTenantId() ?? -1;
+    return this.accountRService.getAllAccounts(idTenant).pipe(
       tap((res) => this.usersSubject.next(res)),
-      take(1)
+      take(1),
+      takeUntilDestroyed(destroyRef)
     );
   }
-  createFile(file: File) {
+  createAccountsInMassFromExcelFile(file: File, destroyRef: DestroyRef) {
     const asBlob = new Blob([file]);
-
-    this.service
-      .createAccountsFromFile(asBlob)
-      .pipe(tap(() => this.update()))
+    const idTenant = this.tenantService.getTenantId() ?? -1;
+    this.importRService
+      .createAccountsInMassFromExcelFile(idTenant, asBlob)
+      .pipe(
+        tap(() => this.update()),
+        take(1),
+        takeUntilDestroyed(destroyRef)
+      )
       .subscribe();
   }
 }

@@ -1,46 +1,57 @@
-import { DestroyRef, Injectable, signal } from '@angular/core';
-import { EventoDto, EventoResourceService } from '@synergia-frontend/api';
-import { BehaviorSubject, debounceTime, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { Injectable, signal } from '@angular/core';
+import { debounceTime, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
+import { EventDto, EventResourceService } from '@synergia-frontend/api';
+import { TenantsService } from '@synergia-frontend/services';
 
 @Injectable()
 export class EventsFacadeService {
   private readonly ngUpdate = new Subject<void>();
-  public readonly events = signal<EventoDto[]>([])
-
+  public readonly events = signal<EventDto[]>([]);
 
   constructor(
-    private readonly service: EventoResourceService,
-  ) {
-  }
+    private readonly tenantsService: TenantsService,
+    private readonly eventRService: EventResourceService
+  ) {}
 
   initializeNgUpdate(ngUnsubscribe: Subject<void>) {
-    this.ngUpdate.pipe(
-      debounceTime(300),
-      switchMap(() => this.queryAllEvents()),
-      takeUntil(ngUnsubscribe),
-    ).subscribe()
+    this.ngUpdate
+      .pipe(
+        debounceTime(300),
+        switchMap(() => this.queryAllEvents()),
+        takeUntil(ngUnsubscribe)
+      )
+      .subscribe();
   }
   update() {
     this.ngUpdate.next();
   }
   queryAllEvents() {
-    return this.service.getAllEvent(1).pipe(
-      tap(res => this.events.set(res)),
+    const idTenant = this.tenantsService.getTenantId() ?? -1
+    return this.eventRService.getAllEvent(idTenant).pipe(
+      tap((res) => this.events.set(res)),
       take(1)
-    )
+    );
   }
-  createEvent(form: { name: string | null | undefined; description: string | null | undefined }) {
-    this.service.createEvent(1, {
-      name: form.name ?? '',
-      description: form.description ?? ''
-    }).pipe(
-      tap(() => this.update())
-    ).subscribe()
+  createEvent(form: {
+    name: string | null | undefined;
+    description: string | null | undefined;
+  }) {
+    const idTenant = this.tenantsService.getTenantId() ?? -1
+    this.eventRService
+      .createEvent({
+        title: form.name ?? '',
+        description: form.description ?? '',
+        idTenant: idTenant
+      })
+      .pipe(tap(() => this.update()))
+      .subscribe();
   }
 
   deleteEvent(idEvento: number) {
-    this.service.deleteEvent(1, idEvento).pipe(
-      tap(() => this.update())
-    ).subscribe()
+    const idTenant = this.tenantsService.getTenantId() ?? -1
+    this.eventRService
+      .deleteEvent(idTenant, idEvento)
+      .pipe(tap(() => this.update()))
+      .subscribe();
   }
 }

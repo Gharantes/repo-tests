@@ -1,6 +1,6 @@
 import { ElementRef, Injectable, signal } from '@angular/core';
 import {
-  AccountResourceService,
+  AccountResourceService, LoginPageResourceService,
   TenantLoginPageConfigInfoDto,
   TenantResourceService
 } from '@synergia-frontend/api';
@@ -28,6 +28,7 @@ export class LoginFacadeService {
     /* R Services */
     private readonly tenantRService: TenantResourceService,
     private readonly accountRService: AccountResourceService,
+    private readonly loginPageRService: LoginPageResourceService
   ) {}
 
   /** Executed on View Init **/
@@ -49,7 +50,7 @@ export class LoginFacadeService {
     idTenant: number,
     elementRef: ElementRef
   ) {
-    this.tenantRService
+    this.loginPageRService
       .getLoginPageConfigurationsOfTenantByTenantId(idTenant)
       .pipe(
         tap((res: TenantLoginPageConfigInfoDto): void => {
@@ -82,7 +83,7 @@ export class LoginFacadeService {
     if (idTenant == null) {
       return;
     }
-    this.accountRService.authenticateAccount(
+    this.loginPageRService.authenticateAccount(
       idTenant,
       login,
       password

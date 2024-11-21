@@ -1,26 +1,17 @@
 package com.example.synergia.services
 
-import com.example.synergia.domain.Tenant
-import com.example.synergia.dto.output.TenantLoginPageConfigInfoDto
+import com.example.synergia.dto.entity_mirror.TenantDto
+import com.example.synergia.dto.output.login_page.TenantLoginPageConfigInfoDto
 import com.example.synergia.dto.utilities.IdentifierDto
-import com.example.synergia.repositories.TenantJdbcRepository
-import com.example.synergia.repositories.TenantRepository
+import com.example.synergia.repositories.tenant.TenantJdbcRepository
+import com.example.synergia.repositories.tenant.TenantRepository
 import org.springframework.stereotype.Service
 
 
 @Service
 class TenantService (
     private val tenantRepository: TenantRepository,
-    private val tenantJdbcRepository: TenantJdbcRepository
 ) {
-    fun getLoginPageConfigurationsOfTenantByTenantId(
-        idTenant: Long
-    ): TenantLoginPageConfigInfoDto? {
-        return tenantJdbcRepository.getLoginPageConfigurationsOfTenantByTenantId(
-            idTenant = idTenant
-        )
-    }
-
     fun getTenantByUniqueKeys(
         idTenant: Long?,
         identifier: String?
@@ -29,6 +20,16 @@ class TenantService (
             IdentifierDto(
                 id=it.id!!,
                 label=it.name!!
+            )
+        }
+    }
+    fun seeAllTenantsOnDatabase(): List<TenantDto>? {
+        return tenantRepository.findAll().map {
+            TenantDto(
+                id = it.id!!,
+                name = it.name!!,
+                owner = it.owner!!,
+                identifier = it.identifier!!
             )
         }
     }

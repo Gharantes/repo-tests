@@ -23,6 +23,6 @@ open class TenantConfiguration {
     @Column(name = "login_bg_url", length = 8)
     open var loginBgUrl: String? = null
 
-    @Column(name = "login_text_hex", length = 8)
-    open var loginTextHex: String? = null
+    @Column(name = "login_dark_mode")
+    open var loginDarkMode: Boolean? = null
 }

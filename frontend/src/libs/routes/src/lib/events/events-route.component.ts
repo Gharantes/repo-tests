@@ -50,7 +50,7 @@ import { MatIcon } from '@angular/material/icon';
         [appearance]="'outlined'"
       >
         <div>
-          <button mat-icon-button (click)="deleteEvent(event.idEvento)">
+          <button mat-icon-button (click)="deleteEvent(event.id)">
             <mat-icon>delete</mat-icon>
           </button>
         </div>
@@ -58,8 +58,8 @@ import { MatIcon } from '@angular/material/icon';
           <img class="event-picture" [src]="placeholderImgUrl" alt="" />
         </div>
         <div class="event-details-container">
-          <div class="event-title">{{ event.titulo }}</div>
-          <div class="event-description">{{ event.descricao }}</div>
+          <div class="event-title">{{ event.title }}</div>
+          <div class="event-description">{{ event.description }}</div>
         </div>
       </mat-card>
     </div>

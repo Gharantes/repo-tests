@@ -19,7 +19,7 @@ object ResponseMessenger {
         }
     }
 
-    fun <T> successTemplate(msg: String, body: T? = null): ResponseEntity<T> {
+    private fun <T> successTemplate(msg: String, body: T? = null): ResponseEntity<T> {
         val sanitizedMessage = msg.replace("\r", "").replace("\n", "")
 
         val headers = HttpHeaders()
@@ -28,7 +28,7 @@ object ResponseMessenger {
         return ResponseEntity.ok().headers(headers).body(body)
     }
 
-    fun <T> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
+    private fun <T> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
         val sanitizedMessage = msg.replace("\r", "").replace("\n", "")
 
         val headers = HttpHeaders()
@@ -38,7 +38,7 @@ object ResponseMessenger {
         return ResponseEntity.internalServerError().headers(headers).body(body)
     }
 
-    fun truncateForHeader(input: String, maxBytes: Int = 8192): String {
+    private fun truncateForHeader(input: String, maxBytes: Int = 8192): String {
         var truncatedString = input
         while (truncatedString.toByteArray(StandardCharsets.UTF_8).size > maxBytes) {
             truncatedString = truncatedString.dropLast(1)
