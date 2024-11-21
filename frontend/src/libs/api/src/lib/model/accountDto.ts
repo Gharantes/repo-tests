@@ -9,10 +9,9 @@
  */
 
 
-export interface TenantLoginPageConfigInfoDto { 
+export interface AccountDto { 
     id: number;
-    bgHex?: string;
-    bgUrl?: string;
-    darkMode: boolean;
+    idTenant: number;
+    login: string;
 }
 

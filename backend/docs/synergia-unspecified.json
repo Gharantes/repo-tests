@@ -11,50 +11,6 @@
     }
   ],
   "paths": {
-    "/api/usuario/export-users-as-excel": {
-      "post": {
-        "tags": [
-          "usuario-resource"
-        ],
-        "operationId": "exportUsersAsExcel",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/usuario/create-users-from-file": {
-      "post": {
-        "tags": [
-          "usuario-resource"
-        ],
-        "operationId": "createUsersFromFile",
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "file"
-                ],
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/project/create-project": {
       "post": {
         "tags": [
@@ -145,56 +101,46 @@
         }
       }
     },
-    "/api/usuario/get-by-id/{id-usuario}": {
-      "get": {
+    "/api/account/export-accounts-as-excel": {
+      "post": {
         "tags": [
-          "usuario-resource"
+          "account-resource"
         ],
-        "operationId": "getUserById",
-        "parameters": [
-          {
-            "name": "id-usuario",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "operationId": "exportAccountsAsExcel",
         "responses": {
           "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/UsuarioDto"
-                }
-              }
-            }
+            "description": "OK"
           }
         }
       }
     },
-    "/api/usuario/get-all": {
-      "get": {
+    "/api/account/create-accounts-from-file": {
+      "post": {
         "tags": [
-          "usuario-resource"
+          "account-resource"
         ],
-        "operationId": "getAllUsers",
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/UsuarioDto"
+        "operationId": "createAccountsFromFile",
+        "requestBody": {
+          "content": {
+            "multipart/form-data": {
+              "schema": {
+                "required": [
+                  "file"
+                ],
+                "type": "object",
+                "properties": {
+                  "file": {
+                    "type": "string",
+                    "format": "binary"
                   }
                 }
               }
             }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }
@@ -440,6 +386,107 @@
         }
       }
     },
+    "/api/account/get-by-id/{id}": {
+      "get": {
+        "tags": [
+          "account-resource"
+        ],
+        "operationId": "getAccountById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UsuarioDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/get-all": {
+      "get": {
+        "tags": [
+          "account-resource"
+        ],
+        "operationId": "getAllAccounts",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UsuarioDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/account/authenticate-account/{id_tenant}": {
+      "get": {
+        "tags": [
+          "account-resource"
+        ],
+        "operationId": "authenticateAccount",
+        "parameters": [
+          {
+            "name": "id_tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "login",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "password",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/project/delete-project/{id-project}": {
       "delete": {
         "tags": [
@@ -530,34 +577,6 @@
           }
         }
       },
-      "UsuarioDto": {
-        "required": [
-          "email",
-          "idUsuario",
-          "name",
-          "permissoes"
-        ],
-        "type": "object",
-        "properties": {
-          "idUsuario": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "permissoes": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      },
       "IdentifierDto": {
         "required": [
           "id",
@@ -576,6 +595,7 @@
       },
       "TenantLoginPageConfigInfoDto": {
         "required": [
+          "darkMode",
           "id"
         ],
         "type": "object",
@@ -590,8 +610,8 @@
           "bgUrl": {
             "type": "string"
           },
-          "textHex": {
-            "type": "string"
+          "darkMode": {
+            "type": "boolean"
           }
         }
       },
@@ -726,6 +746,55 @@
           "dataFim": {
             "type": "string",
             "format": "date"
+          }
+        }
+      },
+      "UsuarioDto": {
+        "required": [
+          "email",
+          "idUsuario",
+          "name",
+          "permissoes"
+        ],
+        "type": "object",
+        "properties": {
+          "idUsuario": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "permissoes": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "AccountDto": {
+        "required": [
+          "id",
+          "idTenant",
+          "login"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "login": {
+            "type": "string"
           }
         }
       }

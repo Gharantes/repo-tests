@@ -1,6 +1,3 @@
-@import 'variables';
-
-
 @mixin fill {
   width: 100%;
   height: 100%;
@@ -18,10 +15,10 @@
   left: 50%;
   transform: translate(-50%, -50%);
 }
-
 @mixin display-sistema-option {
   height: 45px;
-  border: 1px solid white;
+  border: 1px solid black;
+  color: black;
   border-radius: 5px;
   padding: 5px;
   box-sizing: border-box;
@@ -53,22 +50,14 @@
 }
 
 
-.abs-top-right {
-    position: absolute;
-    top: 0;
-    right: 0;
-}
-#sistema-selecionado {
-  @include display-sistema-option;
-}
-#lista-sistemas {
-  .sistema-option {
+#container-for-system-options {
+  position: absolute;
+  top: 0;
+  right: 0;
+  .tenant-option, .save-new-tenant {
     @include display-sistema-option;
   }
-  .login-em-novo-sistema {
-    @include display-sistema-option;
-  }
-  .criar-novo-sistema {
-    @include display-sistema-option;
+  .selected-tenant {
+    font-weight: bold;
   }
 }

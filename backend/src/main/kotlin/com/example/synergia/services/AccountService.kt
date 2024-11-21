@@ -1,7 +1,10 @@
 package com.example.synergia.services
 
 import com.example.synergia.domain.Pessoa
+import com.example.synergia.dto.entity_mirror.AccountDto
 import com.example.synergia.dto.entity_mirror.UsuarioDto
+import com.example.synergia.mappers.AccountMapper
+import com.example.synergia.repositories.AccountRepository
 import com.example.synergia.repositories.PersonRepository
 import org.springframework.stereotype.Service
 import org.springframework.web.multipart.MultipartFile
@@ -12,7 +15,8 @@ import org.apache.poi.xssf.usermodel.XSSFWorkbook
 
 
 @Service
-class UsuarioService (
+class AccountService (
+    private val accountRepository: AccountRepository,
     private val personRepository: PersonRepository
 ) {
     fun getById(idUsuario: Long): UsuarioDto? {
@@ -23,7 +27,7 @@ class UsuarioService (
             UsuarioDto(name = it.name ?: "", email = it.surname ?: "", idUsuario = it.id ?: 1, permissoes = listOf())
         }
     }
-    fun createUsersFromFile(
+    fun createAccountsFromFile(
         multipart: MultipartFile,
         useDecoder: Boolean
     ) {
@@ -58,7 +62,23 @@ class UsuarioService (
         return workbook
     }
 
-    fun exportUsersAsExcel() {
-        TODO("Not yet implemented")
+    fun exportAccountsAsExcel() {
+    }
+
+    fun authenticateAccount(
+        idTenant: Long,
+        login: String,
+        password: String
+    ): AccountDto {
+        val entity = accountRepository.findAccountByIdTenantAndLoginAndPassword(
+            idTenant,
+            login,
+            password
+        )
+        return entity ?.let { account ->
+            AccountMapper().entityToAccountDto(account)
+        } ?: run {
+            throw RuntimeException("Account not found")
+        }
     }
 }

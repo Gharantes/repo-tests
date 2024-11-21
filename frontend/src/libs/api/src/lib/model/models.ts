@@ -1,3 +1,4 @@
+export * from './accountDto';
 export * from './createEventoDto';
 export * from './createProjetoDto';
 export * from './eventoDto';

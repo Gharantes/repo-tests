@@ -60,7 +60,7 @@ export class RegisterTenantDialogComponent {
     let identifier: string | undefined;
 
     if (isBlankOrNull(value)) {
-      this.snackbarService.show('Input inválido.');
+      this.snackbarService.temporaryMessage('Input inválido.');
       return;
     }
     if (IsNumericOnly(value as string)) {
@@ -69,7 +69,7 @@ export class RegisterTenantDialogComponent {
       identifier = value ?? undefined;
     }
     if (id == null && identifier == null) {
-      this.snackbarService.show('Input inválido.');
+      this.snackbarService.temporaryMessage('Input inválido.');
       return;
     }
 

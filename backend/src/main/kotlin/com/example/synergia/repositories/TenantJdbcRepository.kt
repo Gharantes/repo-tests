@@ -22,7 +22,7 @@ class TenantJdbcRepository (
                 t.id,
                 tc.login_bg_hex,
                 tc.login_bg_url,
-                tc.login_text_hex
+                tc.login_dark_mode
             FROM tenant t
             LEFT JOIN tenant_configuration tc on 
                 t.id = tc.id_tenant
@@ -39,7 +39,7 @@ class TenantJdbcRepository (
                     id = rs.getLong("id"),
                     bgHex = rs.getString("login_bg_hex"),
                     bgUrl = rs.getString("login_bg_url"),
-                    textHex = rs.getString("login_text_hex")
+                    darkMode = rs.getBoolean("login_dark_mode")
                 )
             }
         } catch (e: EmptyResultDataAccessException) {
