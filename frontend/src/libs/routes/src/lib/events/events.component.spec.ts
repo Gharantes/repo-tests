@@ -1,16 +1,16 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { EventsComponent } from './events-route.component';
+import { EventsRouteComponent } from './list-events/events-route.component';
 
 describe('EventsComponent', () => {
-  let component: EventsComponent;
-  let fixture: ComponentFixture<EventsComponent>;
+  let component: EventsRouteComponent;
+  let fixture: ComponentFixture<EventsRouteComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [EventsComponent],
+      imports: [EventsRouteComponent],
     }).compileComponents();
 
-    fixture = TestBed.createComponent(EventsComponent);
+    fixture = TestBed.createComponent(EventsRouteComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

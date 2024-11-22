@@ -129,13 +129,6 @@ export class LoginRouteComponent implements AfterViewInit {
     }
   }
 
-  /** DOM STUFF **/
-  ngStyleStuff(
-    style: Exclude<{ textHex: string }, false | 0 | '' | null | undefined>
-  ) {
-    return { color: style.textHex, 'border-color': style.textHex };
-  }
-
   ngClassSelectedTenant(tenantOption: IDoIdentifier) {
     return tenantOption.id === this.facade.getTenantId()
       ? 'selected-tenant'

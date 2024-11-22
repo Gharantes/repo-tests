@@ -32,7 +32,6 @@ export class SnackbarService {
     console.log(concatenatedMessages);
     this.snackbar.open(concatenatedMessages, undefined);
   }
-
   private concatenateMessages() {
     return this.messages().map(v => v.message).join('; ');
   }
@@ -69,10 +68,13 @@ export class SnackbarService {
     remove
       .pipe(
         tap(() => this.removeMessageById(id)),
-        takeUntilDestroyed(forceRemove),
         take(1)
-      )
-      .subscribe();
+      ).subscribe();
+
+    forceRemove.onDestroy(() => {
+      remove.next();
+      remove.complete();
+    });
 
     return remove;
   }
@@ -96,5 +98,17 @@ export class SnackbarService {
     } while (existingIds.includes(id));
 
     return id;
+  }
+
+
+  public handleCatchError(err: any, altMessage: string| undefined = undefined) {
+    let message = err.headers.get('x-error');
+    if (isBlankOrNull(message)) {
+      message = altMessage;
+    }
+    if (isBlankOrNull(message)) {
+      return;
+    }
+    this.temporaryMessage(message);
   }
 }

@@ -1,7 +1,8 @@
-import { Injectable, signal } from '@angular/core';
+import {DestroyRef, Injectable, signal} from '@angular/core';
 import { debounceTime, Subject, switchMap, take, takeUntil, tap } from 'rxjs';
 import { ProjectDto, ProjectResourceService } from '@synergia-frontend/api';
 import { TenantsService } from '@synergia-frontend/services';
+import {takeUntilDestroyed} from "@angular/core/rxjs-interop";
 
 @Injectable()
 export class ProjectsFacadeService {
@@ -13,12 +14,12 @@ export class ProjectsFacadeService {
     private readonly tenantService: TenantsService,
   ) {}
 
-  initializeNgUpdate(ngUnsubscribe: Subject<void>) {
+  initializeNgUpdate(destroyRef: DestroyRef) {
     this.ngUpdate
       .pipe(
         debounceTime(300),
         switchMap(() => this.queryAllProjects()),
-        takeUntil(ngUnsubscribe)
+        takeUntilDestroyed(destroyRef)
       )
       .subscribe();
   }
@@ -42,14 +43,6 @@ export class ProjectsFacadeService {
         description: form.description ?? '',
         idTenant: this.tenantService.getTenantId() ?? -1
       })
-      .pipe(tap(() => this.update()))
-      .subscribe();
-  }
-
-  deleteProject(idProject: number) {
-    const idTenant = this.tenantService.getTenantId() ?? -1
-    this.projectRService
-      .deleteProject(idTenant, idProject)
       .pipe(tap(() => this.update()))
       .subscribe();
   }

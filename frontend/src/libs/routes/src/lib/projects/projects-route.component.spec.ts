@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-import { ProjectsRouteComponent } from './projects-route.component';
+import { ProjectsRouteComponent } from './list-projects/projects-route.component';
 
 describe('ProjectsComponent', () => {
   let component: ProjectsRouteComponent;

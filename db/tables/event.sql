@@ -1,3 +1,4 @@
+-- DROP TABLE Event;
 CREATE TABLE event (
     id serial4 primary key,
     id_tenant bigint references tenant not null,

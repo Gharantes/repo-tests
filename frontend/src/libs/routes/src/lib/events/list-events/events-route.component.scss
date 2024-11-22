@@ -4,11 +4,28 @@
   padding: 15px;
   box-sizing: border-box;
   overflow: auto;
+
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .divider {
   margin-top: 10px;
   margin-bottom: 10px;
+}
+
+#events-route-top-contaienr {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  #search-field {
+    width: 100%;
+    flex: 1;
+  }
+  #create-new-event-btn {
+    justify-self: flex-end;
+  }
 }
 
 #event-cards-container {
@@ -21,9 +38,8 @@
 
   .event-card {
     display: flex;
-    width: 100%;
-    height: 100%;
-    max-height: 250px;
+    max-width: 100%;
+    aspect-ratio: 1 / 1;
     box-sizing: border-box;
     overflow: hidden;
 

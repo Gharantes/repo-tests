@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { ProjectsRouteComponent } from './projects-route.component';
+import { ProjectsRouteComponent } from './list-projects/projects-route.component';
 
 export const projectsRoutes: Route[] = [
   {

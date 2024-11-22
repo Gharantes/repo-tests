@@ -82,5 +82,6 @@
       "style": "scss"
     }
   },
-  "defaultProject": "synergia-frontend"
+  "defaultProject": "synergia-frontend",
+  "useLegacyCache": true
 }

@@ -9,7 +9,7 @@ import jakarta.persistence.Table
 
 
 @Entity
-@Table(name = "projeto")
+@Table(name = "project")
 open class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
