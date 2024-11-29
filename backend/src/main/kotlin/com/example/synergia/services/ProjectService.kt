@@ -6,6 +6,7 @@ import com.example.synergia.dto.input.ProjectCreateDto
 import com.example.synergia.dto.input.ProjectUpdateDto
 import com.example.synergia.mappers.ProjectMapper
 import com.example.synergia.repositories.ProjectRepository
+import jakarta.transaction.Transactional
 import org.springframework.stereotype.Service
 
 @Service
@@ -16,7 +17,10 @@ class ProjectService(
         return projectRepository.findByIdTenantAndId(idTenant, id)
             ?.let { ProjectMapper().entityToProjectDto(it) }
     }
-    fun getAll(idTenant: Long): List<ProjectDto> {
+    fun getAll(
+        idTenant: Long,
+        textSearch: String?
+    ): List<ProjectDto> {
         val mapper = ProjectMapper()
         return projectRepository.findAllByIdTenant(idTenant)
             .map { mapper.entityToProjectDto(it) }
@@ -31,6 +35,7 @@ class ProjectService(
             ProjectMapper().projectUpdateDtoToEntity(projectUpdateDto)
         )
     }
+    @Transactional
     fun deleteProject(idTenant: Long, id: Long) {
         projectRepository.deleteByIdTenantAndId(idTenant, id)
     }

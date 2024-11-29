@@ -28,9 +28,20 @@ export class EventsFacadeService {
   }
   private queryAllEvents() {
     const idTenant = this.tenantsService.getTenantId() ?? -1;
-    return this.eventRService.getAllEvent(idTenant).pipe(
+    const textSearch = this.getFiltro()
+
+    return this.eventRService.getAllEvent(idTenant, textSearch).pipe(
       tap((res) => this.events.set(res)),
       take(1)
     );
+  }
+
+  private filtro: string | null = null;
+
+  setFiltro(res: string | null) {
+    this.filtro = res;
+  }
+  getFiltro() {
+    return this.filtro ?? undefined;
   }
 }

@@ -1,6 +1,7 @@
 export * from './accountDto';
 export * from './eventCreateDto';
 export * from './eventDto';
+export * from './eventUpdateDto';
 export * from './identifierDto';
 export * from './projectCreateDto';
 export * from './projectDto';

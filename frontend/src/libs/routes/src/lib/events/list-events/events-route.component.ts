@@ -8,8 +8,9 @@ import { MatCard } from '@angular/material/card';
 import { EventDto } from '@synergia-frontend/api';
 import { MatDialog } from '@angular/material/dialog';
 import { EventCardDialogComponent } from '../dialog/event-card-dialog.component';
-import { take, tap } from 'rxjs';
+import { debounceTime, take, tap } from 'rxjs';
 import { NavigationService } from '@synergia-frontend/services';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-events-route',
@@ -73,6 +74,15 @@ export class EventsRouteComponent {
 
     this.facade.initializeNgUpdate(this.destroyRef);
     this.facade.update();
+
+    this.searchControl.valueChanges.pipe(
+      debounceTime(300),
+      tap(res => {
+        this.facade.setFiltro(res)
+        this.facade.update()
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe()
   }
 
   openEventCard(event: EventDto) {
@@ -81,10 +91,11 @@ export class EventsRouteComponent {
     );
 
     ref.afterClosed().pipe(
-      tap(reload => {
-        if (reload === true) {
+      tap(() => {
+        // console.log(reload)
+        // if (reload === true) {
           this.facade.update();
-        }
+        // }
       }),
       take(1)
     ).subscribe()

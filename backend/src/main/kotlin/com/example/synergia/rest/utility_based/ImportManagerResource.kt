@@ -24,7 +24,7 @@ class ImportManagerResource (
         @RequestPart("file") file: MultipartFile,
     ): ResponseEntity<Void> {
         return ResponseMessenger.buildResponse(null) {
-            importAccountsService.createAccountsFromFile(file, false)
+            importAccountsService.createAccountsFromFile(idTenant, file, false)
             null
         }
     }

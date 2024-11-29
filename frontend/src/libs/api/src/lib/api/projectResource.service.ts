@@ -234,15 +234,22 @@ export class ProjectResourceService {
 
     /**
      * @param idTenant 
+     * @param textSearch 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAllProjects(idTenant: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProjectDto>>;
-    public getAllProjects(idTenant: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProjectDto>>>;
-    public getAllProjects(idTenant: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProjectDto>>>;
-    public getAllProjects(idTenant: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAllProjects(idTenant: number, textSearch?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProjectDto>>;
+    public getAllProjects(idTenant: number, textSearch?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProjectDto>>>;
+    public getAllProjects(idTenant: number, textSearch?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProjectDto>>>;
+    public getAllProjects(idTenant: number, textSearch?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idTenant === null || idTenant === undefined) {
             throw new Error('Required parameter idTenant was null or undefined when calling getAllProjects.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (textSearch !== undefined && textSearch !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>textSearch, 'text_search');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -285,6 +292,7 @@ export class ProjectResourceService {
         return this.httpClient.request<Array<ProjectDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -8,3 +8,13 @@ INSERT INTO account (
     'LOGIN@',
     'PASSWORD'
 );
+
+INSERT INTO account (
+    id_tenant,
+    login,
+    password
+) VALUES (
+    4,
+    'OWNER',
+    'ADMIN'
+);

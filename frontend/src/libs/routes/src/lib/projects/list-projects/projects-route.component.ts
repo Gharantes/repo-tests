@@ -39,8 +39,7 @@ import { NavigationService } from '@synergia-frontend/services';
       <button
         id="create-new-project-btn"
         mat-stroked-button
-        (click)="navigateToCreateProjectsPage()"
-      >
+        (click)="navigateToCreateProjectsPage()">
         Criar Novo Projeto
       </button>
     </div>

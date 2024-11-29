@@ -5,3 +5,4 @@ export * from './lib/roles'
 export * from './lib/projects'
 export * from './lib/users'
 export * from './lib/extra';
+export * from './lib/tenants';

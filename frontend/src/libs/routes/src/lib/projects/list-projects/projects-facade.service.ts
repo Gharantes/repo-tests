@@ -33,17 +33,4 @@ export class ProjectsFacadeService {
       take(1)
     );
   }
-  createProject(form: {
-    name: string | null | undefined;
-    description: string | null | undefined;
-  }) {
-    this.projectRService
-      .createProject({
-        title: form.name ?? '',
-        description: form.description ?? '',
-        idTenant: this.tenantService.getTenantId() ?? -1
-      })
-      .pipe(tap(() => this.update()))
-      .subscribe();
-  }
 }

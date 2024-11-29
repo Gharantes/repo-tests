@@ -6,6 +6,8 @@ import { SnackbarService, TenantsService } from '@synergia-frontend/services';
 import { DialogRef } from '@angular/cdk/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { MatButton } from '@angular/material/button';
+import { FormBuilder } from '@angular/forms';
+import { CommonFormFieldComponent } from '@synergia-frontend/ui';
 
 @Component({
   selector: 'lib-event-card-dialog',
@@ -19,8 +21,20 @@ import { MatButton } from '@angular/material/button';
       {{ data.id }}
       {{ data.title }}
       {{ data.description }}
+      
+      
+      <lib-sy-common-form-field
+        [control]="form.controls.title"
+        [label]="'Título'"
+      ></lib-sy-common-form-field>
 
-      <button mat-stroked-button color="warn" (click)="deleteEvent()"></button>
+      <lib-sy-common-form-field
+        [control]="form.controls.description"
+        [label]="'Descrição'"
+      ></lib-sy-common-form-field>
+
+      <button mat-stroked-button color="warn" (click)="deleteEvent()">Deletar Evento</button>
+      <button mat-stroked-button color="primary" (click)="updateEvent()">Atualizar Evento</button>
     </div>
   `,
   styles: [
@@ -39,19 +53,27 @@ import { MatButton } from '@angular/material/button';
       }
     `,
   ],
-  imports: [MatButton],
+  imports: [MatButton, CommonFormFieldComponent],
   providers: [],
 })
 export class EventCardDialogComponent {
   public readonly data = inject<EventDto>(MAT_DIALOG_DATA);
+
+  public readonly form;
 
   constructor(
     private readonly tenantsService: TenantsService,
     private readonly snackbarService: SnackbarService,
     private readonly eventRService: EventResourceService,
     private readonly destroyRef: DestroyRef,
-    private readonly dialogRef: DialogRef<boolean>
-  ) {}
+    private readonly dialogRef: DialogRef<boolean>,
+    private readonly fb: FormBuilder
+  ) {
+    this.form = this.fb.group({
+      title: this.fb.control(this.data.title),
+      description: this.fb.control(this.data.description),
+    });
+  }
 
   deleteEvent() {
     const idTenant = this.tenantsService.getTenantId() ?? -1;
@@ -75,5 +97,24 @@ export class EventCardDialogComponent {
 
   private closeDialog(reload = false) {
     this.dialogRef.close(reload);
+  }
+
+  updateEvent() {
+    const id = this.data.id;
+
+    this.eventRService.updateProject1({
+      id: id,
+      title: this.form.controls.title.value ?? '',
+      description: this.form.controls.description.value ?? ''
+    }).pipe(
+      catchError(err => {
+        this.snackbarService.handleCatchError(err, "Erro ao atualizar evento.");
+        return EMPTY;
+      }),
+      tap(() => {
+        this.snackbarService.temporaryMessage("Evento atualizado com sucesso.");
+      }),
+      takeUntilDestroyed(this.destroyRef),
+    ).subscribe();
   }
 }

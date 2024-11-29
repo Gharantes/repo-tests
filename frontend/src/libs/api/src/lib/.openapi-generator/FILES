@@ -18,6 +18,7 @@ index.ts
 model/accountDto.ts
 model/eventCreateDto.ts
 model/eventDto.ts
+model/eventUpdateDto.ts
 model/identifierDto.ts
 model/models.ts
 model/projectCreateDto.ts

@@ -4,4 +4,3 @@ CREATE TABLE state (
     acronym varchar(2) not null,
     name varchar(255) not null
 );
-drop table estado;

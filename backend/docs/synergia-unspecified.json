@@ -125,6 +125,29 @@
         }
       }
     },
+    "/api/event/update-event": {
+      "post": {
+        "tags": [
+          "event-resource"
+        ],
+        "operationId": "updateProject_1",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/EventUpdateDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/event/create-event": {
       "post": {
         "tags": [
@@ -264,6 +287,14 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "text_search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -416,6 +447,14 @@
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "text_search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -608,6 +647,26 @@
         "type": "object",
         "properties": {
           "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "EventUpdateDto": {
+        "required": [
+          "description",
+          "id",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int64"
           },
