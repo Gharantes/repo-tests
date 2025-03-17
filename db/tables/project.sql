@@ -1,4 +1,4 @@
-DROP TABLE project;
+-- DROP TABLE project;
 CREATE TABLE project (
     id serial4 primary key ,
     id_tenant bigint references tenant not null,
