@@ -6,8 +6,8 @@ import { filter, tap } from 'rxjs';
   providedIn: 'root',
 })
 export class NavigationService {
-  private readonly activeRoute = signal<string>('home');
-  private readonly previousRoute = signal<string>('home')
+  private readonly activeRoute = signal<string>('login');
+  private readonly previousRoute = signal<string>('login')
 
   constructor(private readonly router: Router) {
     this.router.setUpLocationChangeListener();
@@ -36,7 +36,7 @@ export class NavigationService {
     this.router.navigate([this.previousRoute()]).then()
   }
   navigateToHome() {
-    this.router.navigate(['home']).then();
+    this.router.navigate(['login']).then();
   }
   navigateToLogin() {
     this.router.navigate(['login']).then();

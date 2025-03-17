@@ -25,12 +25,14 @@
         ],
         "styles": [
           "@angular/material/prebuilt-themes/azure-blue.css",
-          "./src/styles.scss"
+          "./src/styles/styles.scss",
+          "./src/styles/_mat-theme.scss",
+          "./src/styles/_material_overwrites.scss",
+          "./src/styles/_mixins.scss"
         ],
         "stylePreprocessorOptions": {
           "includePaths": [
-            "./src/styles",
-            "src/styles"
+            "./src/styles"
           ]
         },
         "scripts": []

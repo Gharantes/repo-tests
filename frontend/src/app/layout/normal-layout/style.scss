@@ -1,0 +1,34 @@
+@mixin col {
+    display: flex;
+    flex-direction: column;
+}
+@mixin row {
+    display: flex;
+    flex-direction: row;
+}
+* {
+    box-sizing: border-box;
+}
+:host {
+    @include col();
+    max-width: 100%;
+    height: 100%;
+    overflow: hidden;
+    #page {
+        @include row();
+        overflow: hidden;
+        
+        #page-container {
+            @include row();
+            max-width: 100%;
+            overflow: hidden;
+            padding: 5px;
+            #card {
+                @include row();
+                overflow: hidden;
+                max-width: 100%;
+                height: 100%;
+            }
+        }
+    }
+}

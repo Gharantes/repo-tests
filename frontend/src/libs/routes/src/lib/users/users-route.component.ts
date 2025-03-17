@@ -1,10 +1,9 @@
-import { Component, DestroyRef, OnDestroy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ExtendableTableComponent } from '@synergia-frontend/tables';
-import { UsersFacadeService } from './users-facade.service';
+import { Component, DestroyRef } from '@angular/core';
 import { MatButton } from '@angular/material/button';
+import { ExtendableTableComponent } from '@synergia-frontend/tables';
 import { CommonFileInputButtonComponent } from '@synergia-frontend/ui';
-import { Subject } from 'rxjs';
+import { UsersFacadeService } from './users-facade.service';
 
 @Component({
   selector: 'lib-users',

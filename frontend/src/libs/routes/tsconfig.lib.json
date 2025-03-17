@@ -13,5 +13,5 @@
     "jest.config.ts",
     "src/**/*.test.ts"
   ],
-  "include": ["src/**/*.ts"]
+  "include": ["src/**/*.ts", "../../app/modules/login/register-tenant-dialog.component.ts", "../../app/modules/login/login-facade.service.ts"]
 }

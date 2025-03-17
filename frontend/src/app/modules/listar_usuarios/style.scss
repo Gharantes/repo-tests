@@ -1,0 +1,9 @@
+* {
+    box-sizing: border-box;
+}
+:host {
+    display: flex;
+    width: auto;
+    height: 100%;
+    overflow: auto;
+}
