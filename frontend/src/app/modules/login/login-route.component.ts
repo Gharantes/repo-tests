@@ -38,6 +38,6 @@ export class LoginRouteComponent {
   });
 
   public attemptLogin() {
-    this.routingService.goToHome()
+    this.routingService.goTo(this.routingService.dashboard())
   }
 }
