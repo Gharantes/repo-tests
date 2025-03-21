@@ -1,8 +1,8 @@
 import { Component, inject, OnInit } from "@angular/core";
+import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
+import { RoutingService } from "@synergia-frontend/services";
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { of } from "rxjs";
-import { AbsClassNonParameterizedRoute } from "src/app/abstracts/abs-class-non-parameterized-route";
-import { RoutingService } from "src/app/services/routing.service";
 
 @Component({
   standalone: true,

@@ -1,17 +1,18 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
-import { ExtendableTableComponent, IDoExtentendableTableColumnInfo } from '@synergia-frontend/tables';
+import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { ObsExtendableTableComponent } from '@synergia-frontend/tables';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'lib-listar-projetos-view',
   standalone: true,
-  imports: [CommonModule, ExtendableTableComponent],
+  imports: [CommonModule, ObsExtendableTableComponent],
   template: ` 
-    <lib-extendable-table
+    <lib-obs-extendable-table
       [data$]="data$" 
       [columns]="columns"
-    ></lib-extendable-table>
+    ></lib-obs-extendable-table>
   `,
   styleUrl: 'style.scss',
 })

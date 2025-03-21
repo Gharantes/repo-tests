@@ -8,7 +8,7 @@ import {
 import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
-import { RoutingService } from 'src/app/services/routing.service';
+import { RoutingService } from '@synergia-frontend/services';
 
 @Component({
   selector: 'app-login-route',

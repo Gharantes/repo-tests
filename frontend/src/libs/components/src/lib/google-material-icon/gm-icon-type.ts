@@ -1,0 +1,1 @@
+export type GmIconType = 'outlined' | 'rounded' | 'sharp';

@@ -1,0 +1,1 @@
+export * from './lib/abs-class-non-parameterized-route';

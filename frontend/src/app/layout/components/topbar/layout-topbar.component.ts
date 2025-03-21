@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { RoutingService } from "src/app/services/routing.service";
+import { RoutingService } from "@synergia-frontend/services";
 
 @Component({
   standalone: true,
