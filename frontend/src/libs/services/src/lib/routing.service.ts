@@ -12,10 +12,10 @@ export class RoutingService {
 
     public readonly activeRouteInfo = signal<IDoRouteDetails | null>(null)
 
-    public setRouteInfo(r: { label: string, path: string }) {
+    public setRouteInfo(r: IDoRouteDetails) {
         this.activeRouteInfo.set(r)
     }
-    public goTo(r: { label: string, path: string }) {
+    public goTo(r: IDoRouteDetails) {
         this.setRouteInfo(r);
         this.router.navigate([r.path]);
     }
@@ -30,29 +30,26 @@ export class RoutingService {
             path: this.activeTenant() + 'dashboard'
         }
     }
+
     public users(): IDoRouteDetails {
-        return {
-            label: 'Usuários',
-            path: this.activeTenant() + 'users'
-        }
+        return { label: 'Usuários', path: this.activeTenant() + 'users' }
     }
+    public newUsers(): IDoRouteDetails {
+        return { label: 'Registrar Usuários', path: this.activeTenant() + 'users/new' }
+    }
+
     public projects(): IDoRouteDetails {
-        return {
-            label: 'Projetos',
-            path: this.activeTenant() + 'projects'
-        }
+        return { label: 'Projetos', path: this.activeTenant() + 'projects' }
     }
+    public newProjects(): IDoRouteDetails {
+        return { label: 'Registrar Projetos', path: this.activeTenant() + 'projects/new' }
+    }
+
     public events(): IDoRouteDetails {
-        return {
-            label: 'Eventos',
-            path: this.activeTenant() + 'events'
-        }
+        return { label: 'Eventos', path: this.activeTenant() + 'events' }
     }
     public newEvents(): IDoRouteDetails {
-        return {
-            label: 'Registrar Eventos',
-            path: this.activeTenant() + 'events/new'
-        }
+        return { label: 'Registrar Eventos', path: this.activeTenant() + 'events/new' }
     }
 
 public readonly routeLabelsConst: IDoRouteDetails[] = [

@@ -10,6 +10,7 @@ import { of } from "rxjs";
   template: `
     <lib-listar-projetos-view
       [data$]="data$"
+      (toNewProjectsPageEvent)="toNewProjectsPage()"
     ></lib-listar-projetos-view>
   `,
   styleUrl: `./style.scss`,
@@ -26,5 +27,9 @@ implements AbsClassNonParameterizedRoute, OnInit {
   }
   public setRouteInfo(): void {
       this.routingService.setRouteInfo(this.routingService.projects())
+  }
+
+  public toNewProjectsPage () {
+    return this.routingService.goTo(this.routingService.newProjects());
   }
 }

@@ -1,0 +1,21 @@
+@mixin col {
+    display: flex;
+    flex-direction: column;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+:host {
+    @include col();
+    width: 100%;
+    height: 100%;
+}
+
+.btn-line {
+    @include col();
+    align-items: flex-end;
+    justify-content: center;
+    padding: 10px;
+}

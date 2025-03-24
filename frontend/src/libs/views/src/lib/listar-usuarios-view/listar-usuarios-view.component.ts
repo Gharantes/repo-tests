@@ -1,45 +1,41 @@
 import { ObsExtendableTableComponent } from '@synergia-frontend/components';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { Observable } from 'rxjs';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'lib-listar-usuarios-view',
   standalone: true,
-  imports: [CommonModule, ObsExtendableTableComponent],
   template: ` 
+  
+    <div class="btn-line">
+      <button mat-raised-button (click)="toNewUserPage()">
+        <span>Criar novo usuário</span>
+        <mat-icon class="material-symbols-outlined">add</mat-icon>
+      </button>
+    </div>
+
     <lib-obs-extendable-table
       [data$]="data$" 
       [columns]="columns"
     ></lib-obs-extendable-table>
   `,
   styleUrl: 'style.scss',
+  imports: [CommonModule, ObsExtendableTableComponent, MatIconModule],
 })
 export class ListarUsuariosViewComponent {
   @Input() data$!: Observable<string[]>;
 
+  @Output() public readonly toNewUserPageEvent = new EventEmitter<void>();
+  public toNewUserPage() {
+    return this.toNewUserPageEvent.emit()
+  }
+  
   public readonly columns: IDoExtentendableTableColumnInfo<string>[] =[
     { def: 'a', header: 'Textp', 
       value: (element: string) => { return element; }
     },
-    { def: '5', header: '123sad', 
-      value: (element: string) => { return element; }
-    },
-    { def: '2', header: '123sad', 
-      value: (element: string) => { return element; }
-    },
-    { def: 'b', header: '123sad', 
-      value: (element: string) => { return element; }
-    },
-    { def: 'c', header: '123sad', 
-      value: (element: string) => { return element; }
-    },
-    { def: 'd', header: '123sad', 
-      value: (element: string) => { return element; }
-    },
-    { def: 'e', header: '123sad', 
-      value: (element: string) => { return element; }
-    }
   ]
 }

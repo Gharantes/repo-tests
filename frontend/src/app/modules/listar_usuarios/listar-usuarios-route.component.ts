@@ -10,6 +10,7 @@ import { of } from "rxjs";
   template: `
     <lib-listar-usuarios-view
       [data$]="data$"
+      (toNewUserPageEvent)="toNewUserPage()"
     ></lib-listar-usuarios-view>
   `,
   styleUrl: `./style.scss`,
@@ -26,5 +27,8 @@ implements AbsClassNonParameterizedRoute, OnInit {
   }
   public setRouteInfo(): void {
     this.routingService.setRouteInfo(this.routingService.users());
+  }
+  public toNewUserPage() {
+    this.routingService.goTo(this.routingService.newUsers());
   }
 }
