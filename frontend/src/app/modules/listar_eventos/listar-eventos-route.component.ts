@@ -12,6 +12,7 @@ import { map, tap } from "rxjs";
   template: `
     <lib-listar-eventos-view
       [data$]="data$"
+      (toNewEventPageEvent)="toNewEventPageEvent()"
     ></lib-listar-eventos-view>
   `,
   styleUrl: `./style.scss`,
@@ -29,9 +30,15 @@ implements AbsClassNonParameterizedRoute, OnInit {
     this.setRouteInfo();
     this.getData();
   }
+
   public setRouteInfo() {
     this.routingService.setRouteInfo(this.routingService.events());
   }
+  public toNewEventPageEvent() {
+    this.routingService.goTo(this.routingService.newEvents())
+  }
+
+
   public getData() {
     this.eventsRService.getAllEvent(
       this.sessionService.getTenantId()

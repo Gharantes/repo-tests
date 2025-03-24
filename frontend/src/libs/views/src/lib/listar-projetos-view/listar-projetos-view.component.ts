@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
-import { ObsExtendableTableComponent } from '@synergia-frontend/tables';
+import { ObsExtendableTableComponent } from '@synergia-frontend/components';
 import { Observable } from 'rxjs';
 
 @Component({

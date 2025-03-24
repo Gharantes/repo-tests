@@ -20,7 +20,6 @@
       "@synergia-frontend/constants": ["src/libs/constants/src/index.ts"],
       "@synergia-frontend/interfaces": ["src/libs/interfaces/src/index.ts"],
       "@synergia-frontend/services": ["src/libs/services/src/index.ts"],
-      "@synergia-frontend/tables": ["src/libs/tables/src/index.ts"],
       "@synergia-frontend/components": ["src/libs/components/src/index.ts"],
       "@synergia-frontend/utils": ["src/libs/utils/src/index.ts"],
       "@synergia-frontend/views": ["src/libs/views/src/index.ts"]

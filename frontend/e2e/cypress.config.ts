@@ -11,8 +11,8 @@ export default defineConfig({
         production: 'npx nx run synergia-frontend:serve-static',
       },
       ciWebServerCommand: 'npx nx run synergia-frontend:serve-static',
-      ciBaseUrl: 'http://localhost:4200',
+      ciBaseUrl: 'http://localhost:4201',
     }),
-    baseUrl: 'http://localhost:4200',
+    baseUrl: 'http://localhost:4201',
   },
 });

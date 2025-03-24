@@ -63,6 +63,9 @@
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "options": {
+        "port": 4201
+      },
       "configurations": {
         "production": {
           "buildTarget": "synergia-frontend:build:production"
@@ -97,7 +100,7 @@
       "executor": "@nx/web:file-server",
       "options": {
         "buildTarget": "synergia-frontend:build",
-        "port": 4200,
+        "port": 4201,
         "staticFilePath": "dist/synergia-frontend/browser",
         "spa": true
       }

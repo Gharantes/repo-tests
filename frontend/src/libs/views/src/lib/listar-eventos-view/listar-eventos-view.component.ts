@@ -1,21 +1,22 @@
-import { GmIconComponent } from '@synergia-frontend/ui';
 import { CommonModule } from '@angular/common';
-import { Component, Input, Signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import { IDoBasicEventInfo, IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
-import { SigExtendableTableComponent } from '@synergia-frontend/tables';
 
 @Component({
   selector: 'lib-listar-eventos-view',
   standalone: true,
   template: ` 
-    <div>Criar novo evento</div>
 
-    <lib-gm-icon [type]="'outlined'" [image]="'dashboard'"></lib-gm-icon>
-    <mat-icon class="material-symbols-outlined">dashboard</mat-icon>
-    <mat-icon class="material-symbols-outlined">view_list</mat-icon>
-    <mat-icon class="material-symbols-outlined">add</mat-icon>
-
+    <div class="btn-line">
+      <button mat-raised-button (click)="toNewEventPage()">
+        <span>Criar novo evento</span>
+        <mat-icon class="material-symbols-outlined">add</mat-icon>
+      </button>
+    </div>
+    
     <lib-sig-extendable-table
       [data$]="data$" 
       [columns]="columns"
@@ -23,11 +24,17 @@ import { SigExtendableTableComponent } from '@synergia-frontend/tables';
   `,
   styleUrl: 'style.scss',
   imports: [
-    CommonModule, SigExtendableTableComponent, 
-    MatIconModule, GmIconComponent],
+    CommonModule, 
+    SigExtendableTableComponent, 
+    MatIconModule,
+    MatButtonModule
+  ],
 })
 export class ListarEventosViewComponent {
   @Input() data$!: Signal<IDoBasicEventInfo[]>;
+  
+  @Output() toNewEventPageEvent = new EventEmitter<void>();
+  public toNewEventPage() { return this.toNewEventPageEvent.emit() }
 
   public readonly columns: IDoExtentendableTableColumnInfo<IDoBasicEventInfo>[] =[
     { def: 'title', header: 'Nome', 
@@ -37,4 +44,6 @@ export class ListarEventosViewComponent {
       value: (element: IDoBasicEventInfo) => { return element.description; }
     },
   ]
+
+
 }
