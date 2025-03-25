@@ -1,0 +1,14 @@
+{
+	"version": "2.0.0",
+	"tasks": [
+		{
+			"type": "nx",
+			"project": "",
+			"command": "run",
+			"positional": "synergia-frontend:serve",
+			"flags": [],
+			"problemMatcher": [],
+			"label": "nx: nx run synergia-frontend:serve"
+		}
+	]
+}

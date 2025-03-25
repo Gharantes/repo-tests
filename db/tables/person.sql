@@ -5,4 +5,4 @@ CREATE TABLE person (
     first_name varchar(255) not null ,
     last_name varchar(255) not null,
     birthday date not null
-);;
+);

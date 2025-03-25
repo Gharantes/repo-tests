@@ -1,0 +1,20 @@
+<div id="form-container">
+    <mat-form-field [appearance]="'outline'">
+        <mat-label>Tenanat</mat-label>
+        <input matInput type="text" [formControl]="form.controls.tenant">
+    </mat-form-field>
+
+    <mat-form-field [appearance]="'outline'">
+        <mat-label>Usuário</mat-label>
+        <input matInput type="text" [formControl]="form.controls.user">
+    </mat-form-field>
+
+    <mat-form-field [appearance]="'outline'">
+        <mat-label>Senha</mat-label>
+        <input matInput type="password" [formControl]="form.controls.password">
+    </mat-form-field>
+
+    <div id="buttons-container">
+        <button matRipple (click)="attemptLogin()">Confirmar</button>
+    </div>
+</div>
