@@ -15,7 +15,8 @@ import { CommonModule } from "@angular/common";
     imports: [MatIcon, CommonModule]
 })
 export class GmIconComponent {
-    @Input() type!: GmIconType;
+    @Input() type?: GmIconType = 'outlined';
+
     @Input() image!: GmIconImage;
     public getClass() {
         if (this.type == 'outlined') {

@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
-import { IDoNewEvent } from '@synergia-frontend/interfaces';
+import { IDoRegistrarEvento } from '@synergia-frontend/interfaces';
 
 @Component({
   selector: 'lib-registrar-eventos-view',
@@ -24,7 +24,12 @@ import { IDoNewEvent } from '@synergia-frontend/interfaces';
 
     <div class="btn-line">
       <button mat-raised-button (click)="goToParentPage()">Voltar</button>
-      <button mat-raised-button (click)="registrarEntidade()">Salvar</button>
+      <button 
+        mat-raised-button 
+        [disabled]="!isFormValid()"
+        (click)="registrarEntidade()">
+        Salvar
+      </button>
     </div>
   `,
   styleUrl: 'style.scss',
@@ -38,13 +43,13 @@ import { IDoNewEvent } from '@synergia-frontend/interfaces';
   ],
 })
 export class RegistrarEventosViewComponent 
-extends AbsClassInsertView<IDoNewEvent> {
+extends AbsClassInsertView<IDoRegistrarEvento> {
   @Output() goToParentPageEvent = new EventEmitter<void>;
-  @Output() registrarEntidadeEvent = new EventEmitter<IDoNewEvent>();
+  @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarEvento>();
 
   private readonly fb = inject(NonNullableFormBuilder);
 
-  public readonly form = this.fb.group<ControlsOf<IDoNewEvent>>({
+  public readonly form = this.fb.group<ControlsOf<IDoRegistrarEvento>>({
     title: this.fb.control('', [
       Validators.required
     ]),
@@ -53,8 +58,11 @@ extends AbsClassInsertView<IDoNewEvent> {
     ])
   });
 
-  override mapFormData(v: Partial<IDoNewEvent>): IDoNewEvent | null {
+  override mapFormData(v: Partial<IDoRegistrarEvento>): IDoRegistrarEvento | null {
     if (v.title == null || v.description == null) {
+      return null;
+    }
+    if (v.title == '' || v.description == '') {
       return null;
     }
     return {
@@ -62,14 +70,4 @@ extends AbsClassInsertView<IDoNewEvent> {
       title: v.title
     }
   } 
-  override registrarEntidade(): void  {
-    const f = this.getFormData();
-    if (f != null) {
-        this.registrarEntidadeEvent.emit(f);
-    }
-  }
-  override goToParentPage(): void {
-    this.goToParentPageEvent.emit();
-  }
-
 }

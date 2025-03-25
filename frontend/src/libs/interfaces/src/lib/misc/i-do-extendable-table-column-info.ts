@@ -1,4 +1,4 @@
-export interface IDoExtentendableTableColumnInfo <T> {
+export interface IDoExtendableTableColumnInfo <T> {
   def: string;
   header: string;
   value: (element: T) => unknown;

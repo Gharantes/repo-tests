@@ -1,7 +1,7 @@
 import { ObsExtendableTableComponent } from '@synergia-frontend/components';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -39,7 +39,7 @@ export class ListarUsuariosViewComponent {
     return this.toNewUserPageEvent.emit()
   }
   
-  public readonly columns: IDoExtentendableTableColumnInfo<string>[] =[
+  public readonly columns: IDoExtendableTableColumnInfo<string>[] =[
     { def: 'a', header: 'Textp', 
       value: (element: string) => { return element; }
     },

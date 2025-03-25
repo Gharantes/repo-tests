@@ -1,8 +1,10 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsClassChildRoute, AbsClassInsertRoute } from "@synergia-frontend/abstracts";
-import { EventResourceService } from "@synergia-frontend/api";
-import { IDoBasicEventInfo, IDoNewEvent } from "@synergia-frontend/interfaces";
+import { EventCreateDto, EventResourceService } from "@synergia-frontend/api";
+import { IDoBasicEventInfo, IDoRegistrarEvento } from "@synergia-frontend/interfaces";
+import { SnackbarService } from "@synergia-frontend/services";
 import { RegistrarEventosViewComponent } from "@synergia-frontend/views";
+import { catchError, EMPTY, tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -18,11 +20,12 @@ import { RegistrarEventosViewComponent } from "@synergia-frontend/views";
 })
 export class RegistrarEventosRouteComponent
 extends AbsClassChildRoute
-implements OnInit, AbsClassInsertRoute<IDoNewEvent> {
+implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
   public readonly data$ = signal<IDoBasicEventInfo[]>([]);
 
   override parentRoute = this.routingService.events();
 
+  private readonly snackService = inject(SnackbarService);
   private readonly eventRService = inject(EventResourceService);
   
   public ngOnInit() {
@@ -34,16 +37,24 @@ implements OnInit, AbsClassInsertRoute<IDoNewEvent> {
   goToParentPage() {
     this.routingService.goTo(this.routingService.events());
   }
-  public registrarEntidade($event: IDoNewEvent) {
-    console.log($event);
-    // const dto = this.mapToDto($event);
-    // this.eventRService.createEvent()
+  public registrarEntidade($event: IDoRegistrarEvento) {
+    const dto = this.mapToDto($event);
+    this.eventRService.createEvent(dto).pipe(
+      catchError(() => {
+        this.snackService.addMessage('Erro ao registrar evento.');
+        return EMPTY;
+      }),
+      tap(() => {
+        this.snackService.addMessage('Evento registrado com sucesso.');
+        this.goToParentRoute();
+      }),
+    ).subscribe()
   }
-  // private mapToDto($event: any): EventCreateDto {
-  //   return {
-  //     title: ,
-  //     description: ,
-  //     idTenant: this.SessionService.getTenantId().
-  //   }
-  // }
+  private mapToDto($event: IDoRegistrarEvento): EventCreateDto {
+    return {
+      title: $event.title,
+      description: $event.description,
+      idTenant: this.sessionService.getTenantId()
+    }
+  }
 }

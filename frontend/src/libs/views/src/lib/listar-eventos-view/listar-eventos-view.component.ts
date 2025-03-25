@@ -3,13 +3,12 @@ import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SigExtendableTableComponent } from '@synergia-frontend/components';
-import { IDoBasicEventInfo, IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
   selector: 'lib-listar-eventos-view',
   standalone: true,
   template: ` 
-
     <div class="btn-line">
       <button mat-raised-button (click)="toNewEventPage()">
         <span>Criar novo evento</span>
@@ -19,7 +18,8 @@ import { IDoBasicEventInfo, IDoExtentendableTableColumnInfo } from '@synergia-fr
     
     <lib-sig-extendable-table
       [data$]="data$" 
-      [columns]="columns"
+      [columns]="tableColumns"
+      [actions]="tableActions"
     ></lib-sig-extendable-table>
   `,
   styleUrl: 'style.scss',
@@ -36,13 +36,24 @@ export class ListarEventosViewComponent {
   @Output() toNewEventPageEvent = new EventEmitter<void>();
   public toNewEventPage() { return this.toNewEventPageEvent.emit() }
 
-  public readonly columns: IDoExtentendableTableColumnInfo<IDoBasicEventInfo>[] =[
+  @Output() editEntryEvent = new EventEmitter<IDoBasicEventInfo>();
+
+
+  public readonly tableColumns: IDoExtendableTableColumnInfo<IDoBasicEventInfo>[] =[
     { def: 'title', header: 'Nome', 
       value: (element: IDoBasicEventInfo) => { return element.title; }
     },
     { def: 'description', header: 'Descrição', 
       value: (element: IDoBasicEventInfo) => { return element.description; }
     },
+  ]
+  public readonly tableActions: IDoExtendableTableActions<IDoBasicEventInfo>[] = [
+    { 
+      label: 'Editar Evento',
+      icon: '', 
+      action: (el: IDoBasicEventInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      isAllowed: () => { return true; }
+    }
   ]
 
 

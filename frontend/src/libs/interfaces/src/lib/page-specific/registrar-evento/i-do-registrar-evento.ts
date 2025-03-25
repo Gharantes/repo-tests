@@ -1,4 +1,4 @@
-export interface IDoNewEvent {
+export interface IDoRegistrarEvento {
     title: string,
     description: string
 }

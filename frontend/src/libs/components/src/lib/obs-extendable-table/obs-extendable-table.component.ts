@@ -2,7 +2,7 @@ import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Input } from '@angular/core';
 import { MatTableModule } from '@angular/material/table';
 import { Observable } from 'rxjs';
-import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
   selector: 'lib-obs-extendable-table',
@@ -13,7 +13,7 @@ import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
 })
 export class ObsExtendableTableComponent<T> implements AfterViewInit {
   @Input()
-  columns!: IDoExtentendableTableColumnInfo<T>[];
+  columns!: IDoExtendableTableColumnInfo<T>[];
 
   @Input()
   data$!: Observable<T[]>;
