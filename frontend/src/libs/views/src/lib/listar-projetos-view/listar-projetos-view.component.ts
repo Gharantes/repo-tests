@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { ObsExtendableTableComponent } from '@synergia-frontend/components';
 import { Observable } from 'rxjs';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'lib-listar-projetos-view',
@@ -22,7 +23,12 @@ import { Observable } from 'rxjs';
     ></lib-obs-extendable-table>
   `,
   styleUrl: 'style.scss',
-  imports: [CommonModule, MatIconModule, ObsExtendableTableComponent],
+  imports: [
+    CommonModule, 
+    MatIconModule, 
+    ObsExtendableTableComponent,
+    MatButtonModule
+  ],
 })
 export class ListarProjetosViewComponent {
   @Input() data$!: Observable<string[]>;

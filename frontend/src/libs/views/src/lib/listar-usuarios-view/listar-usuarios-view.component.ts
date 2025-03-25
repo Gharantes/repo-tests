@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IDoExtentendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { Observable } from 'rxjs';
 import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'lib-listar-usuarios-view',
@@ -23,7 +24,12 @@ import { MatIconModule } from '@angular/material/icon';
     ></lib-obs-extendable-table>
   `,
   styleUrl: 'style.scss',
-  imports: [CommonModule, ObsExtendableTableComponent, MatIconModule],
+  imports: [
+    CommonModule, 
+    ObsExtendableTableComponent, 
+    MatIconModule,
+    MatButtonModule
+  ],
 })
 export class ListarUsuariosViewComponent {
   @Input() data$!: Observable<string[]>;
