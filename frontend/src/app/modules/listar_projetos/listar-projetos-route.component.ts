@@ -1,8 +1,10 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { RoutingService } from "@synergia-frontend/services";
+import { EventResourceService, ProjectDto, ProjectResourceService } from "@synergia-frontend/api";
+import { IDoBasicProjectInfo } from "@synergia-frontend/interfaces";
+import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { ListarProjetosViewComponent } from '@synergia-frontend/views';
-import { of } from "rxjs";
+import { map, of, tap } from "rxjs";
 
 @Component({
   standalone: true,
@@ -18,18 +20,34 @@ import { of } from "rxjs";
 })
 export class ListarProjetosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {
-  public readonly data$ = of(['teste', 'abc']);
+  public readonly data$ = signal<IDoBasicProjectInfo[]>([]);
 
   private readonly routingService = inject(RoutingService);
+  private readonly sessionService = inject(SessionService);
+  private readonly projectRService = inject(ProjectResourceService);
   
   public ngOnInit(): void {
     this.setRouteInfo();
+    this.getData();
   }
   public setRouteInfo(): void {
       this.routingService.setRouteInfo(this.routingService.projects())
   }
-
   public toNewProjectsPage () {
     return this.routingService.goTo(this.routingService.newProjects());
+  }
+
+  public getData() {
+    this.projectRService.getAllProjects(
+      this.sessionService.getTenantId()
+    ).pipe(
+      map(res => this.mapResponse(res)),
+      tap(res => this.data$.set(res))
+    ).subscribe()
+  }
+  private mapResponse(res: ProjectDto[]): IDoBasicProjectInfo[] {
+    return res.map(v => ({
+      ...v
+    }))
   }
 }

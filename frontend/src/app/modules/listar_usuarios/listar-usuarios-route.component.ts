@@ -1,5 +1,7 @@
-import { Component, inject, OnInit } from "@angular/core";
+import { Component, inject, OnInit, signal, Signal } from "@angular/core";
 import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
+import { AccountResourceService } from "@synergia-frontend/api";
+import { IDoBasicUsuarioInfo } from "@synergia-frontend/interfaces";
 import { RoutingService } from "@synergia-frontend/services";
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { of } from "rxjs";
@@ -18,9 +20,10 @@ import { of } from "rxjs";
 })
 export class ListarUsuariosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {
-  public readonly data$ = of(['teste', 'abc']);
+  public readonly data$ = signal<IDoBasicUsuarioInfo[]>([]);
 
   private readonly routingService = inject(RoutingService);
+  private readonly usuariosService = inject(AccountResourceService)
   
   public ngOnInit(): void {
       this.setRouteInfo();
@@ -30,5 +33,9 @@ implements AbsClassNonParameterizedRoute, OnInit {
   }
   public toNewUserPage() {
     this.routingService.goTo(this.routingService.newUsers());
+  }
+
+  public getData() {
+    return this.usuariosService.getAllAccounts(1).pipe().subscribe()
   }
 }

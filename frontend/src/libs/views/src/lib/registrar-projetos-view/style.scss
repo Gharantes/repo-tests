@@ -3,6 +3,11 @@
     flex-direction: column;
 }
 
+@mixin row {
+    display: flex;
+    flex-direction: row;
+}
+
 * {
     box-sizing: border-box;
 }
@@ -13,9 +18,21 @@
     height: 100%;
 }
 
-.btn-line {
+form {
     @include col();
-    align-items: flex-end;
+    align-items: center;
     justify-content: center;
     padding: 10px;
+    row-gap: 10px;
+
+    .field {
+        width: 100%;
+    }
+}
+.btn-line {
+    @include row();
+    align-items: center;
+    justify-content: flex-end;
+    padding: 10px;
+    column-gap: 10px;
 }

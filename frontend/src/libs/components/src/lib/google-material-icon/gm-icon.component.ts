@@ -10,8 +10,15 @@ import { CommonModule } from "@angular/common";
         <mat-icon [ngClass]="getClass()">{{ image }}</mat-icon>
     `,
     standalone: true,
-    styles: [
-    ],
+    styles: [`
+        :host {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: min-content;
+            width: min-content;
+        }   
+    `],
     imports: [MatIcon, CommonModule]
 })
 export class GmIconComponent {

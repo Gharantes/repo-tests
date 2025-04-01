@@ -38,7 +38,6 @@ export class ListarEventosViewComponent {
 
   @Output() editEntryEvent = new EventEmitter<IDoBasicEventInfo>();
 
-
   public readonly tableColumns: IDoExtendableTableColumnInfo<IDoBasicEventInfo>[] =[
     { def: 'title', header: 'Nome', 
       value: (element: IDoBasicEventInfo) => { return element.title; }

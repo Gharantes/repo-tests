@@ -15,9 +15,26 @@
     width: 100%;
 
     align-items: center;
+    justify-content: space-between;
 
     color: white;
     background: #555;
     padding: 10px;
     font-size: 1.4rem;
+}
+
+
+.usr-btn {
+    @include row();
+    justify-content: center;
+    align-items: center;
+    padding: 2px; 
+    border: none;
+    cursor: pointer;
+    background: none;
+    color: white;
+
+    &:hover {
+        background: #454545;
+    }
 }

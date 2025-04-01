@@ -1,10 +1,11 @@
 import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { ObsExtendableTableComponent } from '@synergia-frontend/components';
 import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
+import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-extendable-table/sig-extendable-table.component";
 
 @Component({
   selector: 'lib-listar-projetos-view',
@@ -17,31 +18,43 @@ import { MatButtonModule } from '@angular/material/button';
       </button>
     </div>
 
-    <lib-obs-extendable-table
+    <lib-sig-extendable-table
       [data$]="data$" 
       [columns]="columns"
-    ></lib-obs-extendable-table>
+      [actions]="tableActions"
+    ></lib-sig-extendable-table>
   `,
   styleUrl: 'style.scss',
   imports: [
-    CommonModule, 
-    MatIconModule, 
-    ObsExtendableTableComponent,
-    MatButtonModule
-  ],
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    SigExtendableTableComponent
+],
 })
 export class ListarProjetosViewComponent {
-  @Input() data$!: Observable<string[]>;
+  @Input() data$!: Signal<IDoBasicProjectInfo[]>;
 
   @Output() toNewProjectsPageEvent = new EventEmitter<void>();
-  public toNewProjectsPage() {
-    this.toNewProjectsPageEvent.emit();
-  }
+  public toNewProjectsPage() { this.toNewProjectsPageEvent.emit(); }
   
-  public readonly columns: IDoExtendableTableColumnInfo<string>[] =[
-    { def: 'a', header: 'Textp', 
-      value: (element: string) => { return element; }
+  @Output() editEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
+  
+  public readonly columns: IDoExtendableTableColumnInfo<IDoBasicProjectInfo>[] =[
+    { def: 'title', header: 'Nome', 
+      value: (element: IDoBasicProjectInfo) => { return element.title; },
+    },
+    { def: 'description', header: 'Descrição', 
+      value: (element: IDoBasicProjectInfo) => { return element.description; },
     },
   ]
 
+  public readonly tableActions: IDoExtendableTableActions<IDoBasicProjectInfo>[] = [
+    { 
+      label: 'Editar Projeto',
+      icon: '', 
+      action: (el: IDoBasicProjectInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      isAllowed: () => { return true; }
+    }
+  ]
 }

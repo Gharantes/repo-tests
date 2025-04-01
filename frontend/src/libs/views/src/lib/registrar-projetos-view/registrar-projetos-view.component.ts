@@ -12,15 +12,17 @@ import { IDoRegistrarEvento, IDoRegistrarProjeto } from '@synergia-frontend/inte
   selector: 'lib-registrar-projetos-view',
   standalone: true,
   template: `
-    <mat-form-field [appearance]="'outline'">
-      <mat-label>Título</mat-label>
-      <input type="text" matInput />
-    </mat-form-field>
+    <form>
+      <mat-form-field [appearance]="'outline'" class="field">
+        <mat-label>Título</mat-label>
+        <input type="text" matInput />
+      </mat-form-field>
 
-    <mat-form-field [appearance]="'outline'">
-      <mat-label>Descrição</mat-label>
-      <input type="text" matInput />
-    </mat-form-field>
+      <mat-form-field [appearance]="'outline'" class="field">
+        <mat-label>Descrição</mat-label>
+        <input type="text" matInput />
+      </mat-form-field>
+    </form>
 
     <div class="btn-line">
       <button mat-raised-button (click)="goToParentPage()">Voltar</button>
@@ -39,9 +41,8 @@ import { IDoRegistrarEvento, IDoRegistrarProjeto } from '@synergia-frontend/inte
 })
 export class RegistrarProjetosViewComponent
 extends AbsClassInsertView<IDoRegistrarEvento> {
-  
   @Output() goToParentPageEvent = new EventEmitter<void>;
-  @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarEvento>();
+  @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarProjeto>();
 
   private readonly fb = inject(NonNullableFormBuilder);
 
@@ -51,7 +52,7 @@ extends AbsClassInsertView<IDoRegistrarEvento> {
     ]),
     description: this.fb.control('', [
       Validators.required
-      ])
+    ])
   });
 
   override mapFormData(v: Partial<IDoRegistrarEvento>): IDoRegistrarEvento | null {

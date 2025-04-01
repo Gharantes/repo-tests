@@ -24,6 +24,9 @@ export class RoutingService {
     private activeTenant () {
         return 't/' + this.sessionService.getTenantId() + '/';
     }
+    
+    public login: IDoRouteDetails = { label: 'Login', path: 'login' }
+    
     public dashboard(): IDoRouteDetails {
         return {
             label: 'Dashboard',

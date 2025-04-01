@@ -7,6 +7,8 @@ export * from './lib/page-specific/listar-eventos/i-do-basic-event-info';
 
 export * from './lib/page-specific/listar-projetos/i-do-basic-project-info';
 
+export * from './lib/page-specific/listar-usuarios/i-do-basic-usuario-info';
+
 export * from './lib/page-specific/registrar-evento/i-do-registrar-evento';
 
 export * from './lib/page-specific/registrar-projeto/i-do-registrar-projeto';

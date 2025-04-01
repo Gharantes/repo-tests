@@ -1,4 +1,5 @@
 export type GmIconImage = 
     'dashboard' | 
     'view_list' | 
-    'more_vert';
+    'more_vert' |
+    'account_circle';
