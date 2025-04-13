@@ -7,16 +7,15 @@ import { ListarEventosViewComponent } from '@synergia-frontend/views';
 import { map, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-listar-eventos-route',
-  template: `
+    selector: 'app-listar-eventos-route',
+    template: `
     <lib-listar-eventos-view
       [data$]="data$"
       (toNewEventPageEvent)="toNewEventPageEvent()"
     ></lib-listar-eventos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [ListarEventosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [ListarEventosViewComponent]
 })
 export class ListarEventosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

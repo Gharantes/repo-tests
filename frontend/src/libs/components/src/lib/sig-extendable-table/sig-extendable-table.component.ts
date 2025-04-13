@@ -7,13 +7,13 @@ import {MatMenuModule} from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'lib-sig-extendable-table',
-  standalone: true,
-  templateUrl: 'index.html',
-  styleUrl: './style.scss',
-  imports: [
-    CommonModule, MatTableModule, GmIconButtonComponent,
-    MatMenuModule, MatIconModule],
+    selector: 'lib-sig-extendable-table',
+    templateUrl: 'index.html',
+    styleUrl: './style.scss',
+    imports: [
+        CommonModule, MatTableModule, GmIconButtonComponent,
+        MatMenuModule, MatIconModule
+    ]
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input()

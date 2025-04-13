@@ -14,9 +14,7 @@ import { GmIconComponent } from "../google-material-icon/gm-icon.component";
             ></lib-gm-icon>
         </button>
     `,
-    standalone: true,
-    styles: [
-    ],
+    styles: [],
     imports: [CommonModule, GmIconComponent]
 })
 export class GmIconButtonComponent {

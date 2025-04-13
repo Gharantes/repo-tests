@@ -10,9 +10,8 @@ import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-  selector: 'lib-registrar-tenant-view',
-  standalone: true,
-  template: `
+    selector: 'lib-registrar-tenant-view',
+    template: `
     <div id="form-container">
       <mat-form-field [appearance]="'outline'">
         <mat-label>Título</mat-label>
@@ -30,16 +29,16 @@ import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angula
       <button mat-raised-button [disabled]="!isFormValid()" (click)="registrarEntidade()">Registrar</button>
     </div>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule, 
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule, 
-    MatInputModule,
-    MatButtonModule,
-    ReactiveFormsModule
-  ],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule,
+        ReactiveFormsModule
+    ]
 })
 export class RegistrarTenantViewComponent
 extends AbsClassInsertView<IDoRegistrarTenant> {

@@ -7,23 +7,22 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 
 @Component({
-  selector: 'lib-registrar-usuarios-view',
-  standalone: true,
-  template: `
+    selector: 'lib-registrar-usuarios-view',
+    template: `
 
     <div class="btn-line">
       <button mat-raised-button (click)="voltar()">Voltar</button>
     </div>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule, 
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule, 
-    MatInputModule,
-    MatButtonModule
-  ],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        MatButtonModule
+    ]
 })
 export class RegistrarUsuariosViewComponent {
   

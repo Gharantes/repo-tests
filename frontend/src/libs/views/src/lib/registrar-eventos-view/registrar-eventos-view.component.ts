@@ -9,9 +9,8 @@ import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import { IDoRegistrarEvento } from '@synergia-frontend/interfaces';
 
 @Component({
-  selector: 'lib-registrar-eventos-view',
-  standalone: true,
-  template: `
+    selector: 'lib-registrar-eventos-view',
+    template: `
     <mat-form-field [appearance]="'outline'">
       <mat-label>Título</mat-label>
       <input type="text" matInput [formControl]="form.controls.title"/>
@@ -32,15 +31,15 @@ import { IDoRegistrarEvento } from '@synergia-frontend/interfaces';
       </button>
     </div>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule, 
-    MatIconModule,
-    MatButtonModule,
-    MatFormFieldModule, 
-    MatInputModule,
-    ReactiveFormsModule
-  ],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule
+    ]
 })
 export class RegistrarEventosViewComponent 
 extends AbsClassInsertView<IDoRegistrarEvento> {

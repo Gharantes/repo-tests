@@ -9,7 +9,6 @@ import { CommonModule } from "@angular/common";
     template: `
         <mat-icon [ngClass]="getClass()">{{ image }}</mat-icon>
     `,
-    standalone: true,
     styles: [`
         :host {
             display: flex;

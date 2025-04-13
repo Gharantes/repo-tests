@@ -7,16 +7,15 @@ import { RegistrarTenantViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-registrar-tenant-route',
-  template: `
+    selector: 'app-registrar-tenant-route',
+    template: `
     <lib-registrar-tenant-view
       (goToParentPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-tenant-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [RegistrarTenantViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [RegistrarTenantViewComponent]
 })
 export class RegistrarTenantRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

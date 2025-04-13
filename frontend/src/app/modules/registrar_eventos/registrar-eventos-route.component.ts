@@ -7,16 +7,15 @@ import { RegistrarEventosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-registrar-eventos-route',
-  template: `
+    selector: 'app-registrar-eventos-route',
+    template: `
     <lib-registrar-eventos-view
       (goToParentPageEvent)="goToParentPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-eventos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [RegistrarEventosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [RegistrarEventosViewComponent]
 })
 export class RegistrarEventosRouteComponent
 extends AbsClassChildRoute

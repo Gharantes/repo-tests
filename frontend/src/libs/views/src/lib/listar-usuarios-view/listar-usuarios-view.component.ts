@@ -8,9 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-extendable-table/sig-extendable-table.component";
 
 @Component({
-  selector: 'lib-listar-usuarios-view',
-  standalone: true,
-  template: ` 
+    selector: 'lib-listar-usuarios-view',
+    template: ` 
     <lib-sig-extendable-table
       [data$]="data$" 
       [columns]="columns"
@@ -24,13 +23,13 @@ import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-
       </button>
     </div>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    SigExtendableTableComponent
-],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        SigExtendableTableComponent
+    ]
 })
 export class ListarUsuariosViewComponent {
   @Input() data$!: Signal<IDoBasicUsuarioInfo[]>;

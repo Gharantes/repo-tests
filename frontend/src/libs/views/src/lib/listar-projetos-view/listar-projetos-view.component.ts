@@ -8,9 +8,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-extendable-table/sig-extendable-table.component";
 
 @Component({
-  selector: 'lib-listar-projetos-view',
-  standalone: true,
-  template: ` 
+    selector: 'lib-listar-projetos-view',
+    template: ` 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewProjectsPage()">
         <span>Criar novo projeto</span>
@@ -24,13 +23,13 @@ import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-
       [actions]="tableActions"
     ></lib-sig-extendable-table>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule,
-    MatIconModule,
-    MatButtonModule,
-    SigExtendableTableComponent
-],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        SigExtendableTableComponent
+    ]
 })
 export class ListarProjetosViewComponent {
   @Input() data$!: Signal<IDoBasicProjectInfo[]>;

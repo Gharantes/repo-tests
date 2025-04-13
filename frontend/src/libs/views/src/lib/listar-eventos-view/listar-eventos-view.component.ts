@@ -6,9 +6,8 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-  selector: 'lib-listar-eventos-view',
-  standalone: true,
-  template: ` 
+    selector: 'lib-listar-eventos-view',
+    template: ` 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewEventPage()">
         <span>Criar novo evento</span>
@@ -22,13 +21,13 @@ import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnI
       [actions]="tableActions"
     ></lib-sig-extendable-table>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule, 
-    SigExtendableTableComponent, 
-    MatIconModule,
-    MatButtonModule
-  ],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        SigExtendableTableComponent,
+        MatIconModule,
+        MatButtonModule
+    ]
 })
 export class ListarEventosViewComponent {
   @Input() data$!: Signal<IDoBasicEventInfo[]>;

@@ -7,16 +7,15 @@ import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { catchError, EMPTY, map, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-listar-usuarios-route',
-  template: `
+    selector: 'app-listar-usuarios-route',
+    template: `
     <lib-listar-usuarios-view
       [data$]="data$"
       (toNewUserPageEvent)="toNewUserPage()"
     ></lib-listar-usuarios-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [ListarUsuariosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [ListarUsuariosViewComponent]
 })
 export class ListarUsuariosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

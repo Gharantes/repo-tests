@@ -7,16 +7,15 @@ import { ListarProjetosViewComponent } from '@synergia-frontend/views';
 import { map, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-listar-projetos-route',
-  template: `
+    selector: 'app-listar-projetos-route',
+    template: `
     <lib-listar-projetos-view
       [data$]="data$"
       (toNewProjectsPageEvent)="toNewProjectsPage()"
     ></lib-listar-projetos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [ListarProjetosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [ListarProjetosViewComponent]
 })
 export class ListarProjetosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

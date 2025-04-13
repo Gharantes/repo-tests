@@ -4,9 +4,8 @@ import { MatMenuModule } from '@angular/material/menu';
 import { GmIconComponent } from "@synergia-frontend/components";
 
 @Component({
-  standalone: true,
-  selector: 'app-layout-topbar',
-  template: `
+    selector: 'app-layout-topbar',
+    template: `
     <div>
       Synergia
     </div>
@@ -25,8 +24,8 @@ import { GmIconComponent } from "@synergia-frontend/components";
     </mat-menu>
 
   `,
-  styleUrl: `./style.scss`,
-  imports: [GmIconComponent, MatMenuModule],
+    styleUrl: `./style.scss`,
+    imports: [GmIconComponent, MatMenuModule]
 })
 export class LayoutTopbarComponent {
   public readonly routingService = inject(RoutingService);

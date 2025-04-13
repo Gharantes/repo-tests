@@ -5,15 +5,14 @@ import { RoutingService } from "@synergia-frontend/services";
 import { RegistrarUsuariosViewComponent } from "@synergia-frontend/views";
 
 @Component({
-  standalone: true,
-  selector: 'app-registrar-usuarios-route',
-  template: `
+    selector: 'app-registrar-usuarios-route',
+    template: `
     <lib-registrar-usuarios-view
       (goToLastPageEvent)="goToLastPage()"
     ></lib-registrar-usuarios-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [RegistrarUsuariosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [RegistrarUsuariosViewComponent]
 })
 export class RegistrarUsuariosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

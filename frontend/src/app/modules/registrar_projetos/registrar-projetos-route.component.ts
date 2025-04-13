@@ -7,16 +7,15 @@ import { RegistrarProjetosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-registrar-projetos-route',
-  template: `
+    selector: 'app-registrar-projetos-route',
+    template: `
     <lib-registrar-projetos-view
       (goToLastPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-projetos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [RegistrarProjetosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [RegistrarProjetosViewComponent]
 })
 export class RegistrarProjetosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {

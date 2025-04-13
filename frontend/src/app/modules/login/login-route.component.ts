@@ -15,17 +15,16 @@ import { RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 
 @Component({
-  selector: 'app-login-route',
-  standalone: true,
-  templateUrl: 'index.html',
-  styleUrl: 'style.scss',
-  providers: [],
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRippleModule
-  ],
+    selector: 'app-login-route',
+    templateUrl: 'index.html',
+    styleUrl: 'style.scss',
+    providers: [],
+    imports: [
+        MatFormFieldModule,
+        MatInputModule,
+        ReactiveFormsModule,
+        MatRippleModule
+    ]
 })
 export class LoginRouteComponent implements AfterViewInit {
   public readonly listaTenants = signal<IDoLoginTenantInformation[]>([]);
