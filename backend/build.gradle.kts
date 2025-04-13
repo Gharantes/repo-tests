@@ -6,8 +6,11 @@ plugins {
 	kotlin("jvm") version "1.9.23"
 	kotlin("plugin.spring") version "1.9.23"
 	kotlin("plugin.jpa") version "1.9.24"
-	// https://github.com/springdoc/springdoc-openapi-gradle-plugin
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
+}
+
+repositories {
+	mavenCentral()
 }
 
 openApi {
@@ -37,14 +40,18 @@ dependencies {
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-	/** READ AND WRITE FILES **/
-	implementation("org.apache.poi:poi-ooxml:5.2.3")
+	/** JDBC **/
+	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+
 	/** Bancos de Dados **/
 	runtimeOnly("org.postgresql:postgresql")
-	implementation("jakarta.persistence:jakarta.persistence-api")
+
+	/** READ AND WRITE FILES **/
+//	implementation("org.apache.poi:poi-ooxml:5.2.3")
+
+//	implementation("jakarta.persistence:jakarta.persistence-api")
 	/** JPA **/
-	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-	implementation("org.springframework.data:spring-data-jpa")
+//	implementation("org.springframework.data:spring-data-jpa")
 	/** OPEN API **/
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")

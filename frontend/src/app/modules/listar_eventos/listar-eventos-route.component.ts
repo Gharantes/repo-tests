@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { EventDto, EventResourceService } from "@synergia-frontend/api";
+import { ListarEventosBasicInfoDto, PageListarEventosResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { ListarEventosViewComponent } from '@synergia-frontend/views';
@@ -24,7 +24,7 @@ implements AbsClassNonParameterizedRoute, OnInit {
 
   private readonly routingService = inject(RoutingService);
   private readonly sessionService = inject(SessionService);
-  private readonly eventsRService = inject(EventResourceService);
+  private readonly pageService = inject(PageListarEventosResourceService);
   
   public ngOnInit() {
     this.setRouteInfo();
@@ -40,14 +40,12 @@ implements AbsClassNonParameterizedRoute, OnInit {
 
 
   public getData() {
-    this.eventsRService.getAllEvent(
-      this.sessionService.getTenantId()
-    ).pipe(
+    this.pageService.listarEventosAll().pipe(
       map(res => this.mapResponse(res)),
       tap(res => this.data$.set(res))
     ).subscribe()
   }
-  private mapResponse(res: EventDto[]): IDoBasicEventInfo[] {
+  private mapResponse(res: ListarEventosBasicInfoDto[]): IDoBasicEventInfo[] {
     return res.map(v => ({
       ...v
     }))

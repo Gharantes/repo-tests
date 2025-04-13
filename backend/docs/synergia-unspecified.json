@@ -11,30 +11,47 @@
     }
   ],
   "paths": {
-    "/api/template/template-for-creating-accounts-in-mass": {
+    "/api/login/check-login-information": {
       "post": {
         "tags": [
-          "template-manager-resource"
+          "page-login-resource"
         ],
-        "operationId": "generateTemplateForCreatingAccountsInMass",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/project/update-project": {
-      "post": {
-        "tags": [
-          "project-resource"
-        ],
-        "operationId": "updateProject",
+        "operationId": "checkLoginInformation",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProjectUpdateDto"
+                "$ref": "#/components/schemas/LoginInformationInputDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginInformationResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-usuario/store": {
+      "post": {
+        "tags": [
+          "page-create-usuario-resource"
+        ],
+        "operationId": "createUsuario",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUsuarioDto"
               }
             }
           },
@@ -47,17 +64,17 @@
         }
       }
     },
-    "/api/project/create-project": {
+    "/api/create-tenant/store": {
       "post": {
         "tags": [
-          "project-resource"
+          "page-create-tenant-resource"
         ],
-        "operationId": "createProject",
+        "operationId": "createTenant",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/ProjectCreateDto"
+                "$ref": "#/components/schemas/CreateTenantDto"
               }
             }
           },
@@ -70,72 +87,17 @@
         }
       }
     },
-    "/api/import/create-accounts-in-mass-from-excel-file": {
+    "/api/create-projeto/store": {
       "post": {
         "tags": [
-          "import-manager-resource"
+          "page-create-projeto-resource"
         ],
-        "operationId": "createAccountsInMassFromExcelFile",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "multipart/form-data": {
-              "schema": {
-                "required": [
-                  "file"
-                ],
-                "type": "object",
-                "properties": {
-                  "file": {
-                    "type": "string",
-                    "format": "binary"
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/export_to_excel/export-accounts-as-excel": {
-      "post": {
-        "tags": [
-          "export-to-excel-resource"
-        ],
-        "operationId": "exportAccountsAsExcel",
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/event/update-event": {
-      "post": {
-        "tags": [
-          "event-resource"
-        ],
-        "operationId": "updateProject_1",
+        "operationId": "createProjeto",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EventUpdateDto"
+                "$ref": "#/components/schemas/CreateProjetoDto"
               }
             }
           },
@@ -148,17 +110,17 @@
         }
       }
     },
-    "/api/event/create-event": {
+    "/api/create-evento/store": {
       "post": {
         "tags": [
-          "event-resource"
+          "page-create-evento-resource"
         ],
-        "operationId": "createEvent",
+        "operationId": "createEvento",
         "requestBody": {
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/EventCreateDto"
+                "$ref": "#/components/schemas/CreateEventoDto"
               }
             }
           },
@@ -171,12 +133,12 @@
         }
       }
     },
-    "/api/tenant/see-all-tenants-on-database": {
+    "/api/login/listar-tenants": {
       "get": {
         "tags": [
-          "tenant-resource"
+          "page-login-resource"
         ],
-        "operationId": "seeAllTenantsOnDatabase",
+        "operationId": "listarTenantsLogin",
         "responses": {
           "200": {
             "description": "OK",
@@ -185,7 +147,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TenantDto"
+                    "$ref": "#/components/schemas/LoginTenantInformationDto"
                   }
                 }
               }
@@ -194,110 +156,12 @@
         }
       }
     },
-    "/api/tenant/get-tenant-by-unique-keys": {
+    "/api/listar-usuarios/all": {
       "get": {
         "tags": [
-          "tenant-resource"
+          "page-listar-usuarios-resource"
         ],
-        "operationId": "getTenantByUniqueKeys",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "identifier",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/IdentifierDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/project/get-by-id/{id_tenant}/{id}": {
-      "get": {
-        "tags": [
-          "project-resource"
-        ],
-        "operationId": "getProjectById",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ProjectDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/project/get-all/{id_tenant}": {
-      "get": {
-        "tags": [
-          "project-resource"
-        ],
-        "operationId": "getAllProjects",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "text_search",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "listarUsuariosAll",
         "responses": {
           "200": {
             "description": "OK",
@@ -306,7 +170,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ProjectDto"
+                    "$ref": "#/components/schemas/ListarUsuariosBasicInfoDto"
                   }
                 }
               }
@@ -315,149 +179,12 @@
         }
       }
     },
-    "/api/login/get-login-page-configurations-of-tenant/{id_tenant}": {
+    "/api/listar-projetos/all": {
       "get": {
         "tags": [
-          "login-page-resource"
+          "page-listar-projetos-resource"
         ],
-        "operationId": "getLoginPageConfigurationsOfTenantByTenantId",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/TenantLoginPageConfigInfoDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/login/authenticate-account/{id_tenant}": {
-      "get": {
-        "tags": [
-          "login-page-resource"
-        ],
-        "operationId": "authenticateAccount",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "login",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "password",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/event/get-by-id/{id_tenant}/{id}": {
-      "get": {
-        "tags": [
-          "event-resource"
-        ],
-        "operationId": "getEventById",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/EventDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/event/get-all/{id_tenant}": {
-      "get": {
-        "tags": [
-          "event-resource"
-        ],
-        "operationId": "getAllEvent",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "text_search",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
+        "operationId": "listarProjetosAll",
         "responses": {
           "200": {
             "description": "OK",
@@ -466,7 +193,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/EventDto"
+                    "$ref": "#/components/schemas/ListarProjetosBasicInfoDto"
                   }
                 }
               }
@@ -475,63 +202,12 @@
         }
       }
     },
-    "/api/account/get-by-id/{id_tenant}/{id}": {
+    "/api/listar-eventos/all": {
       "get": {
         "tags": [
-          "account-resource"
+          "page-listar-eventos-resource"
         ],
-        "operationId": "getAccountById",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/AccountDto"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/account/get-all/{id_tenant}": {
-      "get": {
-        "tags": [
-          "account-resource"
-        ],
-        "operationId": "getAllAccounts",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
+        "operationId": "listarEventosAll",
         "responses": {
           "200": {
             "description": "OK",
@@ -540,77 +216,11 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/AccountDto"
+                    "$ref": "#/components/schemas/ListarEventosBasicInfoDto"
                   }
                 }
               }
             }
-          }
-        }
-      }
-    },
-    "/api/project/delete-project/{id_tenant}/{id}": {
-      "delete": {
-        "tags": [
-          "project-resource"
-        ],
-        "operationId": "deleteProject",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/event/delete-event/{id_tenant}/{id}": {
-      "delete": {
-        "tags": [
-          "event-resource"
-        ],
-        "operationId": "deleteEvent",
-        "parameters": [
-          {
-            "name": "id_tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
           }
         }
       }
@@ -618,31 +228,11 @@
   },
   "components": {
     "schemas": {
-      "ProjectUpdateDto": {
+      "LoginInformationInputDto": {
         "required": [
-          "description",
-          "id",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          }
-        }
-      },
-      "ProjectCreateDto": {
-        "required": [
-          "description",
           "idTenant",
-          "title"
+          "login",
+          "password"
         ],
         "type": "object",
         "properties": {
@@ -650,39 +240,47 @@
             "type": "integer",
             "format": "int64"
           },
-          "title": {
+          "login": {
             "type": "string"
           },
-          "description": {
+          "password": {
             "type": "string"
           }
         }
       },
-      "EventUpdateDto": {
+      "LoginInformationResponseDto": {
         "required": [
-          "description",
-          "id",
-          "title"
+          "idAccount",
+          "login"
         ],
         "type": "object",
         "properties": {
-          "id": {
+          "idAccount": {
             "type": "integer",
             "format": "int64"
           },
-          "title": {
+          "login": {
             "type": "string"
           },
-          "description": {
+          "idPerson": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
             "type": "string"
           }
         }
       },
-      "EventCreateDto": {
+      "CreateUsuarioDto": {
         "required": [
-          "description",
+          "firstName",
           "idTenant",
-          "title"
+          "lastName",
+          "login",
+          "password"
         ],
         "type": "object",
         "properties": {
@@ -690,31 +288,28 @@
             "type": "integer",
             "format": "int64"
           },
-          "title": {
+          "login": {
             "type": "string"
           },
-          "description": {
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
             "type": "string"
           }
         }
       },
-      "TenantDto": {
+      "CreateTenantDto": {
         "required": [
-          "id",
           "identifier",
-          "name",
-          "owner"
+          "title"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "name": {
-            "type": "string"
-          },
-          "owner": {
+          "title": {
             "type": "string"
           },
           "identifier": {
@@ -722,35 +317,14 @@
           }
         }
       },
-      "IdentifierDto": {
-        "required": [
-          "id",
-          "label"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "label": {
-            "type": "string"
-          }
-        }
-      },
-      "ProjectDto": {
+      "CreateProjetoDto": {
         "required": [
           "description",
-          "id",
           "idTenant",
           "title"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
           "idTenant": {
             "type": "integer",
             "format": "int64"
@@ -763,54 +337,30 @@
           }
         }
       },
-      "TenantLoginPageConfigInfoDto": {
+      "CreateEventoDto": {
         "required": [
-          "darkMode",
-          "id"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "bgHex": {
-            "type": "string"
-          },
-          "bgUrl": {
-            "type": "string"
-          },
-          "darkMode": {
-            "type": "boolean"
-          }
-        }
-      },
-      "AccountDto": {
-        "required": [
-          "id",
+          "description",
           "idTenant",
-          "login"
+          "title"
         ],
         "type": "object",
         "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
           "idTenant": {
             "type": "integer",
             "format": "int64"
           },
-          "login": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
             "type": "string"
           }
         }
       },
-      "EventDto": {
+      "LoginTenantInformationDto": {
         "required": [
-          "description",
           "id",
-          "idTenant",
+          "identifier",
           "title"
         ],
         "type": "object",
@@ -819,7 +369,69 @@
             "type": "integer",
             "format": "int64"
           },
-          "idTenant": {
+          "title": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarUsuariosBasicInfoDto": {
+        "required": [
+          "idAccount",
+          "login"
+        ],
+        "type": "object",
+        "properties": {
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "login": {
+            "type": "string"
+          },
+          "idPerson": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarProjetosBasicInfoDto": {
+        "required": [
+          "description",
+          "id",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarEventosBasicInfoDto": {
+        "required": [
+          "description",
+          "id",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
             "type": "integer",
             "format": "int64"
           },

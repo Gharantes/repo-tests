@@ -3,13 +3,17 @@ import { AfterViewInit, ChangeDetectorRef, Component, Input, Signal } from '@ang
 import { MatTableModule } from '@angular/material/table';
 import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { GmIconButtonComponent } from "../gm-icon-button/gm-icon-button.component";
+import {MatMenuModule} from '@angular/material/menu';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'lib-sig-extendable-table',
   standalone: true,
-  imports: [CommonModule, MatTableModule, GmIconButtonComponent],
   templateUrl: 'index.html',
   styleUrl: './style.scss',
+  imports: [
+    CommonModule, MatTableModule, GmIconButtonComponent,
+    MatMenuModule, MatIconModule],
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input()

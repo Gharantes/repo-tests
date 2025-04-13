@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { ProjectResourceService } from "@synergia-frontend/api";
+import { PageCreateProjetoResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo, IDoRegistrarProjeto } from "@synergia-frontend/interfaces";
-import { RoutingService } from "@synergia-frontend/services";
+import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { RegistrarProjetosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY } from "rxjs";
 
@@ -22,8 +22,9 @@ export class RegistrarProjetosRouteComponent
 implements AbsClassNonParameterizedRoute, OnInit {
   public readonly data$ = signal<IDoBasicEventInfo[]>([]);
 
+  private readonly sessionService = inject(SessionService);
   private readonly routingService = inject(RoutingService);
-  private readonly projetosService = inject(ProjectResourceService);
+  private readonly pageService = inject(PageCreateProjetoResourceService);
   
   public ngOnInit() {
     this.setRouteInfo();
@@ -36,10 +37,10 @@ implements AbsClassNonParameterizedRoute, OnInit {
   }
 
   public registrarEntidade($event: IDoRegistrarProjeto) {
-    this.projetosService.createProject({
+    this.pageService.createProjeto({
       title: $event.title,
       description: $event.description,
-      idTenant: 1
+      idTenant: this.sessionService.getTenantId()
     }).pipe(
       catchError(err => {
         return EMPTY;

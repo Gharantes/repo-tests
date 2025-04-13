@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsClassChildRoute, AbsClassInsertRoute } from "@synergia-frontend/abstracts";
-import { EventCreateDto, EventResourceService } from "@synergia-frontend/api";
+import { CreateEventoDto, PageCreateEventoResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo, IDoRegistrarEvento } from "@synergia-frontend/interfaces";
 import { SnackbarService } from "@synergia-frontend/services";
 import { RegistrarEventosViewComponent } from "@synergia-frontend/views";
@@ -26,7 +26,7 @@ implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
   override parentRoute = this.routingService.events();
 
   private readonly snackService = inject(SnackbarService);
-  private readonly eventRService = inject(EventResourceService);
+  private readonly pageService = inject(PageCreateEventoResourceService);
   
   public ngOnInit() {
     this.setRouteInfo();
@@ -39,7 +39,7 @@ implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
   }
   public registrarEntidade($event: IDoRegistrarEvento) {
     const dto = this.mapToDto($event);
-    this.eventRService.createEvent(dto).pipe(
+    this.pageService.createEvento(dto).pipe(
       catchError(() => {
         this.snackService.addMessage('Erro ao registrar evento.');
         return EMPTY;
@@ -50,7 +50,7 @@ implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
       }),
     ).subscribe()
   }
-  private mapToDto($event: IDoRegistrarEvento): EventCreateDto {
+  private mapToDto($event: IDoRegistrarEvento): CreateEventoDto {
     return {
       title: $event.title,
       description: $event.description,

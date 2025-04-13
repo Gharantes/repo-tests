@@ -32,6 +32,6 @@ export class LayoutTopbarComponent {
   public readonly routingService = inject(RoutingService);
 
   public logout() {
-    this.routingService.goTo(this.routingService.login);
+    this.routingService.goTo(this.routingService.login());
   }
 }

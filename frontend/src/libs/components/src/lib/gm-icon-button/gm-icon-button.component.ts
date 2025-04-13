@@ -1,5 +1,5 @@
 import { CommonModule } from "@angular/common";
-import { Component, Input } from "@angular/core";
+import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { GmIconImage } from "../google-material-icon/gm-icon-image";
 import { GmIconType } from "../google-material-icon/gm-icon-type";
 import { GmIconComponent } from "../google-material-icon/gm-icon.component";
@@ -7,7 +7,7 @@ import { GmIconComponent } from "../google-material-icon/gm-icon.component";
 @Component({
     selector: 'lib-gm-icon-button',
     template: `
-        <button>
+        <button (click)="clicked()">
             <lib-gm-icon 
                 [type]="type"
                 [image]="image"    
@@ -22,4 +22,9 @@ import { GmIconComponent } from "../google-material-icon/gm-icon.component";
 export class GmIconButtonComponent {
     @Input() type?: GmIconType;
     @Input() image!: GmIconImage;
+
+    @Output() click = new EventEmitter<void>();
+    public clicked() {
+        this.click.emit();
+    }
 }

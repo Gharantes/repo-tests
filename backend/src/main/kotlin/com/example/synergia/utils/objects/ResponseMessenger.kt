@@ -5,27 +5,22 @@ import org.springframework.http.ResponseEntity
 import java.nio.charset.StandardCharsets
 
 object ResponseMessenger {
-    fun <T> buildResponse(successMsg: String?, function: () -> T?): ResponseEntity<T> {
+    fun responseWithoutReturn(function: () -> Unit): ResponseEntity<Void> {
         return try {
-            if (successMsg == null) {
-                ResponseEntity.ok(function())
-            }
-            else {
-                successTemplate(successMsg, function())
-            }
+            function()
+            ResponseEntity.ok((null))
+        } catch (e: Exception) {
+            e.printStackTrace()
+            errorTemplate(truncateForHeader((e.message ?: "Erro desconhecido.")))
+        }
+    }
+    fun <T> buildResponse(function: () -> T?): ResponseEntity<T> {
+        return try {
+            ResponseEntity.ok(function())
         } catch (e: Exception) {
             e.printStackTrace()
             errorTemplate(truncateForHeader(e.message ?: "Erro desconhecido."))
         }
-    }
-
-    private fun <T> successTemplate(msg: String, body: T? = null): ResponseEntity<T> {
-        val sanitizedMessage = msg.replace("\r", "").replace("\n", "")
-
-        val headers = HttpHeaders()
-        headers.set("x-success", sanitizedMessage)
-        headers.add("Content-Type", "text/html; charset=utf-8")
-        return ResponseEntity.ok().headers(headers).body(body)
     }
 
     private fun <T> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
@@ -33,7 +28,6 @@ object ResponseMessenger {
 
         val headers = HttpHeaders()
         headers.set("x-error", sanitizedMessage)
-        // headers.contentType = MediaType.valueOf("text/plain;charset=UTF-8")
         headers.add("Content-Type", "text/html; charset=utf-8")
         return ResponseEntity.internalServerError().headers(headers).body(body)
     }
