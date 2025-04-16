@@ -1,7 +1,7 @@
-package com.example.synergia.repositories.pageListarProjetosOfEvento
+package com.example.synergia.repositories.pageDetalhesEvento
 
-import com.example.synergia.rest.pageListarProjetosOfEvento.dto.input.FiltroListarProjetosOfEventoDto
-import com.example.synergia.rest.pageListarProjetosOfEvento.dto.output.ListarProjetosOfEventoDto
+import com.example.synergia.rest.pageDetalhesEvento.dto.input.FiltroListarProjetosOfEventoDto
+import com.example.synergia.rest.pageDetalhesEvento.dto.output.ListarProjetosOfEventoDto
 import com.example.synergia.utils.interfaces.ISqlGetterStatement
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource

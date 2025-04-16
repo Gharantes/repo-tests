@@ -35,8 +35,10 @@ export class ListarProjetosViewComponent {
   @Output() toNewProjectsPageEvent = new EventEmitter<void>();
   public toNewProjectsPage() { this.toNewProjectsPageEvent.emit(); }
   
-  @Output() editEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
-
+  @Output() readonly editEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
+  @Output() readonly deleteEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
+  public editEntry(el: IDoBasicProjectInfo) { this.editEntryEvent.emit(el) }
+  public deleteEntry(el: IDoBasicProjectInfo) { this.deleteEntryEvent.emit(el) }
 
   public readonly columns: IDoExtendableTableColumnInfo<IDoBasicProjectInfo>[] =[
     { def: 'title', header: 'Nome', 
@@ -51,7 +53,13 @@ export class ListarProjetosViewComponent {
     { 
       label: 'Editar Projeto',
       icon: '', 
-      action: (el: IDoBasicProjectInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      action: (el: IDoBasicProjectInfo) => { this.editEntry.bind(this)(el) },
+      isAllowed: () => { return true; }
+    },
+    { 
+      label: 'Deletar Projeto',
+      icon: '', 
+      action: (el: IDoBasicProjectInfo) => { this.deleteEntry.bind(this)(el) },
       isAllowed: () => { return true; }
     },
   ]

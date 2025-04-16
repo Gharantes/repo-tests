@@ -1,5 +1,7 @@
 package com.example.synergia.services
 
+import com.example.synergia.repositories.pageListarProjetos.DeletarProjetoSql
+import com.example.synergia.repositories.pageListarUsuarios.DeletarAccountSql
 import com.example.synergia.repositories.pageListarUsuarios.ListarUsuariosAllSql
 import com.example.synergia.rest.pageListarUsuarios.dto.input.FiltroListarUsuariosAllDto
 import com.example.synergia.rest.pageListarUsuarios.dto.output.ListarUsuariosBasicInfoDto
@@ -14,4 +16,6 @@ class PageListarUsuariosService (
         params: FiltroListarUsuariosAllDto
     ): List<ListarUsuariosBasicInfoDto> =
         ListarUsuariosAllSql(params).query(template)
+
+    fun deletarUsuario(id: Long) = DeletarAccountSql(id).executeStatement(template)
 }

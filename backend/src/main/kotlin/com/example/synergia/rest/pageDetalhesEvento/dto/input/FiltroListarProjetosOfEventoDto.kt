@@ -1,4 +1,4 @@
-package com.example.synergia.rest.pageListarProjetosOfEvento.dto.input
+package com.example.synergia.rest.pageDetalhesEvento.dto.input
 
 data class FiltroListarProjetosOfEventoDto(
     val idTenant: Long,

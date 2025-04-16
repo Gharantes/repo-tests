@@ -17,4 +17,11 @@ class PageListarUsuariosResource (
         @RequestBody params: FiltroListarUsuariosAllDto
     ): ResponseEntity<List<ListarUsuariosBasicInfoDto>> =
         ResponseMessenger.buildResponse { service.listarUsuariosAll(params) }
+
+    @DeleteMapping("/delete/{id}")
+    fun deletarUsuario(
+        @PathVariable("id") id: Long
+    ): ResponseEntity<Void> = ResponseMessenger.responseWithoutReturn {
+        service.deletarUsuario(id)
+    }
 }

@@ -1,11 +1,10 @@
 import { Component, OnInit, signal } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { ListarEventosBasicInfoDto } from "@synergia-frontend/api";
+import { ListarEventosBasicInfoDto, PageDetalhesEventoResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { tap } from "rxjs";
-import { PageListarProjetosOfEventoResourceService } from "src/libs/api/src/lib/api/pageListarProjetosOfEventoResource.service";
 import { ListarProjetosOfEventoDto } from "src/libs/api/src/lib/model/listarProjetosOfEventoDto";
 
 @Component({
@@ -34,7 +33,7 @@ implements AbsBaseRoute, OnInit {
   constructor (
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
-    private readonly pageService: PageListarProjetosOfEventoResourceService,
+    private readonly pageService: PageDetalhesEventoResourceService,
     private readonly activatedRoute: ActivatedRoute
   ) {}
   

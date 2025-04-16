@@ -7,8 +7,8 @@ api/pageCreateEventoResource.service.ts
 api/pageCreateProjetoResource.service.ts
 api/pageCreateTenantResource.service.ts
 api/pageCreateUsuarioResource.service.ts
+api/pageDetalhesEventoResource.service.ts
 api/pageListarEventosResource.service.ts
-api/pageListarProjetosOfEventoResource.service.ts
 api/pageListarProjetosResource.service.ts
 api/pageListarUsuariosResource.service.ts
 api/pageLoginResource.service.ts

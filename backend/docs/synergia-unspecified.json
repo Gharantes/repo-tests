@@ -110,7 +110,7 @@
     "/api/listar-projetos-of-evento/all": {
       "post": {
         "tags": [
-          "page-listar-projetos-of-evento-resource"
+          "page-detalhes-evento-resource"
         ],
         "operationId": "listarProjetosOfEvento",
         "requestBody": {
@@ -284,6 +284,78 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/listar-usuarios/delete/{id}": {
+      "delete": {
+        "tags": [
+          "page-listar-usuarios-resource"
+        ],
+        "operationId": "deletarUsuario",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/listar-projetos/delete/{id}": {
+      "delete": {
+        "tags": [
+          "page-listar-projetos-resource"
+        ],
+        "operationId": "deletarProjeto",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/listar-eventos/delete/{id}": {
+      "delete": {
+        "tags": [
+          "page-listar-eventos-resource"
+        ],
+        "operationId": "deletarEvento",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
           }
         }
       }

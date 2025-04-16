@@ -1,4 +1,4 @@
-package com.example.synergia.rest.pageListarProjetosOfEvento.dto.output
+package com.example.synergia.rest.pageDetalhesEvento.dto.output
 
 data class ListarProjetosOfEventoDto(
     val id: Long,

@@ -2,7 +2,6 @@ package com.example.synergia.repositories.pageListarProjetos
 
 import com.example.synergia.rest.pageListarProjetos.dto.input.FiltroListarProjetosAllDto
 import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosBasicInfoDto
-import com.example.synergia.rest.pageListarProjetosOfEvento.dto.output.ListarProjetosOfEventoDto
 import com.example.synergia.utils.interfaces.ISqlGetterStatement
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource

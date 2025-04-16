@@ -4,7 +4,7 @@ import { ListarProjetosBasicInfoDto, PageListarProjetosResourceService } from "@
 import { IDoBasicProjectInfo } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { ListarProjetosViewComponent } from '@synergia-frontend/views';
-import { catchError, EMPTY, map, tap } from "rxjs";
+import { catchError, concat, concatMap, EMPTY, map, tap } from "rxjs";
 
 @Component({
     selector: 'app-listar-projetos-route',
@@ -12,6 +12,7 @@ import { catchError, EMPTY, map, tap } from "rxjs";
     <lib-listar-projetos-view
       [data$]="data$"
       (toNewProjectsPageEvent)="toNewProjectsPage()"
+      (deleteEntryEvent)="deleteEntry($event)"
     ></lib-listar-projetos-view>
   `,
     styleUrl: `./style.scss`,
@@ -31,7 +32,7 @@ implements AbsBaseRoute, OnInit {
   
   public ngOnInit(): void {
     this.setRouteInfo();
-    this.getData();
+    this.getData().subscribe();
   }
   public setRouteInfo(): void {
       this.routingService.setRouteInfo(this.routingService.projects())
@@ -41,7 +42,7 @@ implements AbsBaseRoute, OnInit {
   }
 
   public getData() {
-    this.pageService.listarProjetosAll({
+    return this.pageService.listarProjetosAll({
       idTenant: this.sessionService.getTenantId() as number
     }).pipe(
       catchError(err => {
@@ -50,7 +51,7 @@ implements AbsBaseRoute, OnInit {
       }),
       map(res => this.mapResponse(res)),
       tap(res => this.data$.set(res))
-    ).subscribe()
+    );
   }
   private mapResponse(res: ListarProjetosBasicInfoDto[]): IDoBasicProjectInfo[] {
     return res.map(v => ({
@@ -58,5 +59,16 @@ implements AbsBaseRoute, OnInit {
       description: v.description,
       title: v.title
     }))
+  }
+
+  public deleteEntry(el: IDoBasicProjectInfo) {
+    this.pageService.deletarProjeto(el.id).pipe(
+      catchError(() => {
+        this.snackService.addMessage("Erro ao deletar projeto.");
+        return EMPTY;
+      }),
+      concatMap(() => this.getData()),
+      tap(() => this.snackService.addMessage("Projeto deletado com sucesso."))
+    ).subscribe()
   }
 }

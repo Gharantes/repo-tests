@@ -36,10 +36,11 @@ export class ListarEventosViewComponent {
   public toNewEventPage() { return this.toNewEventPageEvent.emit() }
 
   @Output() editEntryEvent = new EventEmitter<IDoBasicEventInfo>();
+  @Output() deleteEntryEvent = new EventEmitter<IDoBasicEventInfo>();
   @Output() viewDetailsEvent = new EventEmitter<IDoBasicEventInfo>();
-  public viewDetails(el: IDoBasicEventInfo) { 
-    this.viewDetailsEvent.emit(el); 
-  }
+  public editEntry(el: IDoBasicEventInfo) { this.editEntryEvent.emit(el); }
+  public viewDetails(el: IDoBasicEventInfo) { this.viewDetailsEvent.emit(el); }
+  public deleteEntry(el: IDoBasicEventInfo) { this.deleteEntryEvent.emit(el); }
   
   public readonly tableColumns: IDoExtendableTableColumnInfo<IDoBasicEventInfo>[] =[
     { def: 'title', header: 'Nome', 
@@ -50,29 +51,24 @@ export class ListarEventosViewComponent {
     },
   ]
 
-
   public readonly tableActions: IDoExtendableTableActions<IDoBasicEventInfo>[] = [
     { 
       label: 'Ver Detalhes',
       icon: '', 
-      action: (el: IDoBasicEventInfo) => { 
-        this.viewDetails.bind(this)(el);
-      },
+      action: (el: IDoBasicEventInfo) => { this.viewDetails.bind(this)(el); },
       isAllowed: () => { return true; }
     },
     { 
       label: 'Editar Evento',
       icon: '', 
-      action: (el: IDoBasicEventInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      action: (el: IDoBasicEventInfo) => { this.editEntry.bind(this)(el); },
       isAllowed: () => { return true; }
     },
     { 
       label: 'Deletar Evento',
       icon: '', 
-      action: (el: IDoBasicEventInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      action: (el: IDoBasicEventInfo) => { this.deleteEntry.bind(this)(el); },
       isAllowed: () => { return true; }
     }
   ]
-
-
 }
