@@ -1,11 +1,9 @@
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
-import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
-import { ObsExtendableTableComponent } from '@synergia-frontend/components';
-import { Observable } from 'rxjs';
 import { MatButtonModule } from '@angular/material/button';
-import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-extendable-table/sig-extendable-table.component";
+import { MatIconModule } from '@angular/material/icon';
+import { SigExtendableTableComponent } from "@synergia-frontend/components";
+import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
     selector: 'lib-listar-projetos-view',
@@ -38,7 +36,8 @@ export class ListarProjetosViewComponent {
   public toNewProjectsPage() { this.toNewProjectsPageEvent.emit(); }
   
   @Output() editEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
-  
+
+
   public readonly columns: IDoExtendableTableColumnInfo<IDoBasicProjectInfo>[] =[
     { def: 'title', header: 'Nome', 
       value: (element: IDoBasicProjectInfo) => { return element.title; },
@@ -54,6 +53,6 @@ export class ListarProjetosViewComponent {
       icon: '', 
       action: (el: IDoBasicProjectInfo) => { this.editEntryEvent.bind(this).emit(el) },
       isAllowed: () => { return true; }
-    }
+    },
   ]
 }

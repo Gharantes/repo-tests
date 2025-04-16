@@ -1,10 +1,10 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
+import { Component, OnInit, signal } from "@angular/core";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
 import { ListarProjetosBasicInfoDto, PageListarProjetosResourceService } from "@synergia-frontend/api";
 import { IDoBasicProjectInfo } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService } from "@synergia-frontend/services";
+import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { ListarProjetosViewComponent } from '@synergia-frontend/views';
-import { map, tap } from "rxjs";
+import { catchError, EMPTY, map, tap } from "rxjs";
 
 @Component({
     selector: 'app-listar-projetos-route',
@@ -18,12 +18,16 @@ import { map, tap } from "rxjs";
     imports: [ListarProjetosViewComponent]
 })
 export class ListarProjetosRouteComponent
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
+
   public readonly data$ = signal<IDoBasicProjectInfo[]>([]);
 
-  private readonly routingService = inject(RoutingService);
-  private readonly sessionService = inject(SessionService);
-  private readonly pageService = inject(PageListarProjetosResourceService);
+  constructor(
+    private readonly snackService: SnackbarService,
+    private readonly routingService: RoutingService,
+    private readonly sessionService: SessionService,
+    private readonly pageService: PageListarProjetosResourceService,
+  ) {}
   
   public ngOnInit(): void {
     this.setRouteInfo();
@@ -37,7 +41,13 @@ implements AbsClassNonParameterizedRoute, OnInit {
   }
 
   public getData() {
-    this.pageService.listarProjetosAll().pipe(
+    this.pageService.listarProjetosAll({
+      idTenant: this.sessionService.getTenantId() as number
+    }).pipe(
+      catchError(err => {
+        this.snackService.addMessage('Erro ao listar projetos');
+        return EMPTY;
+      }),
       map(res => this.mapResponse(res)),
       tap(res => this.data$.set(res))
     ).subscribe()

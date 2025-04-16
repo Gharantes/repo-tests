@@ -12,6 +12,7 @@
 export interface LoginInformationResponseDto { 
     idAccount: number;
     login: string;
+    tenantTitle: string;
     idPerson?: number;
     firstName?: string;
     lastName?: string;

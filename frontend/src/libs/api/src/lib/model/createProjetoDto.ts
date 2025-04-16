@@ -13,5 +13,6 @@ export interface CreateProjetoDto {
     idTenant: number;
     title: string;
     description: string;
+    eventosSelecionados: Array<number>;
 }
 

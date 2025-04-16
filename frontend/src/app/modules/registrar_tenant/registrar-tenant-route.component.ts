@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
 import { PageCreateTenantResourceService } from "@synergia-frontend/api";
 import { IDoRegistrarTenant } from "@synergia-frontend/interfaces";
 import { RoutingService, SnackbarService } from "@synergia-frontend/services";
@@ -18,7 +18,7 @@ import { catchError, EMPTY, tap } from "rxjs";
     imports: [RegistrarTenantViewComponent]
 })
 export class RegistrarTenantRouteComponent
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
 
   private readonly routingService = inject(RoutingService);
   private readonly snackService = inject(SnackbarService);

@@ -11,7 +11,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { LoginTenantInformationDto, PageLoginResourceService } from '@synergia-frontend/api';
 import { IDoLoginTenantInformation } from '@synergia-frontend/interfaces';
-import { RoutingService, SnackbarService } from '@synergia-frontend/services';
+import { RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 
 @Component({
@@ -34,6 +34,7 @@ export class LoginRouteComponent implements AfterViewInit {
   private readonly routingService = inject(RoutingService);
   private readonly pageService = inject(PageLoginResourceService);
   private readonly snackService = inject(SnackbarService);
+  private readonly sessionService = inject(SessionService);
 
   public readonly form: FormGroup<{
     idTenant: FormControl<number | null>,
@@ -46,8 +47,13 @@ export class LoginRouteComponent implements AfterViewInit {
   });
 
   public attemptLogin() {
+    const idTenant = this.form.controls.idTenant.value;
+    if (idTenant == null) {
+      return;
+    }
+
     this.pageService.checkLoginInformation({
-      idTenant: this.form.controls.idTenant.value as number,
+      idTenant: idTenant,
       login: this.form.controls.user.value,
       password: this.form.controls.password.value
     }).pipe(
@@ -55,7 +61,15 @@ export class LoginRouteComponent implements AfterViewInit {
         this.snackService.addMessage('Nâo foi possível realizar login.')
         return EMPTY;
       }),
-      tap(() => {
+      tap(res => {
+        this.sessionService.setTenant({
+          id: idTenant,
+          label: res.tenantTitle
+        })
+        this.sessionService.setUser({
+          id: res.idAccount,
+          label: res.login
+        })
         this.routingService.goTo(this.routingService.dashboard())
       })
     ).subscribe()

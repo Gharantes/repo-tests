@@ -36,7 +36,11 @@ export class ListarEventosViewComponent {
   public toNewEventPage() { return this.toNewEventPageEvent.emit() }
 
   @Output() editEntryEvent = new EventEmitter<IDoBasicEventInfo>();
-
+  @Output() viewDetailsEvent = new EventEmitter<IDoBasicEventInfo>();
+  public viewDetails(el: IDoBasicEventInfo) { 
+    this.viewDetailsEvent.emit(el); 
+  }
+  
   public readonly tableColumns: IDoExtendableTableColumnInfo<IDoBasicEventInfo>[] =[
     { def: 'title', header: 'Nome', 
       value: (element: IDoBasicEventInfo) => { return element.title; }
@@ -45,9 +49,25 @@ export class ListarEventosViewComponent {
       value: (element: IDoBasicEventInfo) => { return element.description; }
     },
   ]
+
+
   public readonly tableActions: IDoExtendableTableActions<IDoBasicEventInfo>[] = [
     { 
+      label: 'Ver Detalhes',
+      icon: '', 
+      action: (el: IDoBasicEventInfo) => { 
+        this.viewDetails.bind(this)(el);
+      },
+      isAllowed: () => { return true; }
+    },
+    { 
       label: 'Editar Evento',
+      icon: '', 
+      action: (el: IDoBasicEventInfo) => { this.editEntryEvent.bind(this).emit(el) },
+      isAllowed: () => { return true; }
+    },
+    { 
+      label: 'Deletar Evento',
       icon: '', 
       action: (el: IDoBasicEventInfo) => { this.editEntryEvent.bind(this).emit(el) },
       isAllowed: () => { return true; }

@@ -16,8 +16,11 @@ class CheckLoginInformationSql (
             a.login,
             p.first_name,
             p.last_name,
-            p.id as id_person
+            p.id as id_person,
+            t.title as tenant_title
         FROM account a
+        INNER JOIN tenant t on 
+            a.id_tenant = t.id
         LEFT JOIN person p ON 
             a.id_tenant = p.id_tenant AND
             a.id = p.id_account
@@ -36,6 +39,7 @@ class CheckLoginInformationSql (
         LoginInformationResponseDto(
             idAccount = rs.getLong("id"),
             login = rs.getString("login"),
+            tenantTitle = rs.getString("tenant_title"),
             idPerson = rs.getLong("id_person").takeUnless { rs.wasNull() },
             firstName = rs.getString("first_name"),
             lastName = rs.getString("last_name"),

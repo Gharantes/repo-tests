@@ -22,8 +22,8 @@ import { CommonModule } from "@angular/common";
 })
 export class GmIconComponent {
     @Input() type?: GmIconType = 'outlined';
-
     @Input() image!: GmIconImage;
+    
     public getClass() {
         if (this.type == 'outlined') {
             return 'material-symbols-outlined';

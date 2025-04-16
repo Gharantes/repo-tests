@@ -1,19 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, Signal } from '@angular/core';
-import { MatTableModule } from '@angular/material/table';
-import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
-import { GmIconButtonComponent } from "../gm-icon-button/gm-icon-button.component";
-import {MatMenuModule} from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTableModule } from '@angular/material/table';
+import { IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { GmIconComponent } from "../google-material-icon/gm-icon.component";
 
 @Component({
     selector: 'lib-sig-extendable-table',
     templateUrl: 'index.html',
     styleUrl: './style.scss',
     imports: [
-        CommonModule, MatTableModule, GmIconButtonComponent,
-        MatMenuModule, MatIconModule
-    ]
+    CommonModule, MatTableModule,
+    MatMenuModule, MatIconModule,
+    GmIconComponent
+]
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input()

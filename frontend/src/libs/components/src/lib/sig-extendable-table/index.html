@@ -6,21 +6,23 @@
   
   <ng-container [matColumnDef]="'actions'">
     <th mat-header-cell *matHeaderCellDef=""></th>
-    <td mat-cell *matCellDef="let element">
-      <lib-gm-icon-button
-        [matMenuTriggerFor]="actionsMenu"
-        [image]="'more_vert'"
-        [type]="'rounded'"
-      ></lib-gm-icon-button>
+    <td mat-cell *matCellDef="let element" class="actions-btn-cell">
+      <div [matMenuTriggerFor]="actionsMenu" class="expand-action-menu-btn">
+        <lib-gm-icon
+          [type]="'rounded'"
+          [image]="'more_vert'"    
+        ></lib-gm-icon>
+      </div>
+      <mat-menu #actionsMenu="matMenu">
+        @for (item of actions; track $index) {
+          <button mat-menu-item type="button" (click)="item.action(element)">
+            <span>{{ item.label }}</span>
+          </button>
+        }
+      </mat-menu>
     </td>
   </ng-container>
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
 
-<mat-menu #actionsMenu="matMenu">
-  <button mat-menu-item>
-    <mat-icon>dialpad</mat-icon>
-    <span>Redial</span>
-  </button>
-</mat-menu>

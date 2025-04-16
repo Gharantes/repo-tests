@@ -7,24 +7,26 @@ export class SessionService {
     private readonly tenant = signal<{ id: number, label: string } | null>(null);
     private readonly user = signal<{ id: number, label: string } | null>(null);
 
-    public setUser() {
-        console.log('TODO');
-    }
-    public setTenant() {
-        console.log('TODO');
+    public setUser(res: { id: number, label: string }) {
+        this.user.set(res);
     }
 
-    public getUserId(): number {
-        return 1;
+    public setTenant(res: { id: number, label: string }) {
+        this.tenant.set(res);
     }
-    public getUserLabel(): string {
-        return 'Guilherme';
+    public clearTenant() { this.tenant.set(null); }
+
+    public getUserId(): number | undefined {
+        return this.user()?.id;
+    }
+    public getUserLabel(): string | undefined {
+        return this.user()?.label;
     }
 
-    public getTenantId(): number {
-        return 1;
+    public getTenantId(): number | undefined {
+        return this.tenant()?.id;
     }
-    public getTenantLabel(): string {
-        return 'Tenant-Testes';
+    public getTenantLabel(): string | undefined {
+        return this.tenant()?.label
     }
 }

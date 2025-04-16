@@ -28,6 +28,6 @@ class CreateEventoSql (
         }
         paramMap.addValue("id_tenant", params.idTenant, Types.BIGINT)
         paramMap.addValue("title", params.title, Types.VARCHAR)
-        paramMap.addValue("identifier", params.description, Types.VARCHAR)
+        paramMap.addValue("description", params.description, Types.VARCHAR)
     }
 }

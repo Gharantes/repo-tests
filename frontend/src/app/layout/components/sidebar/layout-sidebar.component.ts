@@ -1,21 +1,25 @@
-import { Component, inject } from "@angular/core";
+import { Component } from "@angular/core";
+import { MatRippleModule } from "@angular/material/core";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 
 @Component({
     selector: 'app-layout-sidebar',
     template: `
     <div class="routes-container">
-      @for (item of routingService.routeLabelsConst; track $index) {
-        <div (click)="routingService.goTo(item)">
+      @for (item of routingService.getRouteLabels(); track $index) {
+        <div matRipple (click)="routingService.goTo(item)" class="link">
           {{ item.label }}
         </div>
       }
     </div>
   `,
     styleUrl: `./style.scss`,
-    imports: []
+    imports: [MatRippleModule]
 })
 export class LayoutSidebarComponent {
-  public readonly routingService = inject(RoutingService);
-  public readonly sessionService = inject(SessionService);
+  constructor(
+    public readonly routingService: RoutingService,
+    public readonly sessionService: SessionService
+  ) {}
+  ;
 }

@@ -1,16 +1,17 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { PageCreateProjetoResourceService } from "@synergia-frontend/api";
+import { Component, OnInit, signal } from "@angular/core";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
+import { PageCreateProjetoResourceService, PageListarEventosResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo, IDoRegistrarProjeto } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService } from "@synergia-frontend/services";
+import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { RegistrarProjetosViewComponent } from "@synergia-frontend/views";
-import { catchError, EMPTY } from "rxjs";
+import { catchError, EMPTY, map, tap } from "rxjs";
 
 @Component({
     selector: 'app-registrar-projetos-route',
     template: `
     <lib-registrar-projetos-view
-      (goToLastPageEvent)="goToLastPage()"
+      [listaEventos]="listaEventos()"
+      (goToParentPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-projetos-view>
   `,
@@ -18,31 +19,54 @@ import { catchError, EMPTY } from "rxjs";
     imports: [RegistrarProjetosViewComponent]
 })
 export class RegistrarProjetosRouteComponent
-implements AbsClassNonParameterizedRoute, OnInit {
-  public readonly data$ = signal<IDoBasicEventInfo[]>([]);
+implements AbsBaseRoute, OnInit {
+  public readonly listaEventos = signal<IDoBasicEventInfo[]>([]);
 
-  private readonly sessionService = inject(SessionService);
-  private readonly routingService = inject(RoutingService);
-  private readonly pageService = inject(PageCreateProjetoResourceService);
+
+  private idTenant: number;
+  constructor (
+    private readonly sessionService: SessionService,
+    private readonly routingService: RoutingService,
+    private readonly pageService: PageCreateProjetoResourceService,
+    private readonly listarEventosPageService: PageListarEventosResourceService,
+    private readonly snackService: SnackbarService
+  ) {
+    this.idTenant = this.sessionService.getTenantId() as number;
+  }
   
   public ngOnInit() {
     this.setRouteInfo();
+    this.buscarListaEventos();
   }
   public setRouteInfo() {
     this.routingService.setRouteInfo(this.routingService.newProjects());
   }
   public goToLastPage() {
-    this.routingService.goTo(this.routingService.newProjects());
+    this.routingService.goTo(this.routingService.projects());
+  }
+  private buscarListaEventos() {
+    this.listarEventosPageService.listarEventosAll({
+      idTenant: this.idTenant
+    }).pipe(
+      map(res => res.map(v => ({ ...v } as IDoBasicEventInfo))),
+      tap(res => this.listaEventos.set(res)) 
+    ).subscribe()
   }
 
   public registrarEntidade($event: IDoRegistrarProjeto) {
     this.pageService.createProjeto({
+      idTenant: this.idTenant,
       title: $event.title,
       description: $event.description,
-      idTenant: this.sessionService.getTenantId()
+      eventosSelecionados: $event.eventosSelecionados
     }).pipe(
       catchError(err => {
+        this.snackService.addMessage('Erro ao criar Projeto');
         return EMPTY;
+      }),
+      tap(() => {
+        this.snackService.addMessage('Projeto criado com sucesso.');
+        this.goToLastPage();
       })
     ).subscribe();
   }

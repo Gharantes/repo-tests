@@ -17,6 +17,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { FiltroListarUsuariosAllDto } from '../model/filtroListarUsuariosAllDto';
+// @ts-ignore
 import { ListarUsuariosBasicInfoDto } from '../model/listarUsuariosBasicInfoDto';
 
 // @ts-ignore
@@ -91,13 +93,17 @@ export class PageListarUsuariosResourceService {
     }
 
     /**
+     * @param filtroListarUsuariosAllDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarUsuariosAll(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarUsuariosBasicInfoDto>>;
-    public listarUsuariosAll(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarUsuariosBasicInfoDto>>>;
-    public listarUsuariosAll(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarUsuariosBasicInfoDto>>>;
-    public listarUsuariosAll(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listarUsuariosAll(filtroListarUsuariosAllDto: FiltroListarUsuariosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarUsuariosBasicInfoDto>>;
+    public listarUsuariosAll(filtroListarUsuariosAllDto: FiltroListarUsuariosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarUsuariosBasicInfoDto>>>;
+    public listarUsuariosAll(filtroListarUsuariosAllDto: FiltroListarUsuariosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarUsuariosBasicInfoDto>>>;
+    public listarUsuariosAll(filtroListarUsuariosAllDto: FiltroListarUsuariosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (filtroListarUsuariosAllDto === null || filtroListarUsuariosAllDto === undefined) {
+            throw new Error('Required parameter filtroListarUsuariosAllDto was null or undefined when calling listarUsuariosAll.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -124,6 +130,15 @@ export class PageListarUsuariosResourceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -136,9 +151,10 @@ export class PageListarUsuariosResourceService {
         }
 
         let localVarPath = `/api/listar-usuarios/all`;
-        return this.httpClient.request<Array<ListarUsuariosBasicInfoDto>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ListarUsuariosBasicInfoDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: filtroListarUsuariosAllDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

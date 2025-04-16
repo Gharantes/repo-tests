@@ -1,12 +1,16 @@
 package com.example.synergia.repositories.pageListarUsuarios
 
+import com.example.synergia.rest.pageListarUsuarios.dto.input.FiltroListarUsuariosAllDto
 import com.example.synergia.rest.pageListarUsuarios.dto.output.ListarUsuariosBasicInfoDto
 import com.example.synergia.utils.interfaces.ISqlGetterStatement
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import java.sql.Types
 
-class ListarUsuariosAllSql : ISqlGetterStatement<ListarUsuariosBasicInfoDto, Unit> {
-    override val params = Unit
+class ListarUsuariosAllSql (
+    override val params: FiltroListarUsuariosAllDto
+) : ISqlGetterStatement<ListarUsuariosBasicInfoDto, FiltroListarUsuariosAllDto> {
+
     override val sql: String = """
         SELECT 
             a.id,
@@ -18,8 +22,11 @@ class ListarUsuariosAllSql : ISqlGetterStatement<ListarUsuariosBasicInfoDto, Uni
         LEFT JOIN person p ON 
             a.id_tenant = p.id_tenant AND
             a.id = p.id_account
+        WHERE a.id_tenant = :id_tenant
     """.trimIndent()
-    override fun setParams(paramMap: MapSqlParameterSource) {}
+    override fun setParams(paramMap: MapSqlParameterSource) {
+        paramMap.addValue("id_tenant", params.idTenant, Types.BIGINT)
+    }
     override val rowMapper = RowMapper<ListarUsuariosBasicInfoDto> { rs, _ ->
         ListarUsuariosBasicInfoDto(
             idAccount = rs.getLong("id"),

@@ -17,6 +17,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { FiltroListarEventosAllDto } from '../model/filtroListarEventosAllDto';
+// @ts-ignore
 import { ListarEventosBasicInfoDto } from '../model/listarEventosBasicInfoDto';
 
 // @ts-ignore
@@ -91,13 +93,17 @@ export class PageListarEventosResourceService {
     }
 
     /**
+     * @param filtroListarEventosAllDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarEventosAll(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosBasicInfoDto>>;
-    public listarEventosAll(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosBasicInfoDto>>>;
-    public listarEventosAll(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosBasicInfoDto>>>;
-    public listarEventosAll(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosBasicInfoDto>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosBasicInfoDto>>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosBasicInfoDto>>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (filtroListarEventosAllDto === null || filtroListarEventosAllDto === undefined) {
+            throw new Error('Required parameter filtroListarEventosAllDto was null or undefined when calling listarEventosAll.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -124,6 +130,15 @@ export class PageListarEventosResourceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -136,9 +151,10 @@ export class PageListarEventosResourceService {
         }
 
         let localVarPath = `/api/listar-eventos/all`;
-        return this.httpClient.request<Array<ListarEventosBasicInfoDto>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ListarEventosBasicInfoDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: filtroListarEventosAllDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

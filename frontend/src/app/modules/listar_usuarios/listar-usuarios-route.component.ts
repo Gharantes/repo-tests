@@ -1,8 +1,8 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
 import { ListarUsuariosBasicInfoDto, PageListarUsuariosResourceService } from "@synergia-frontend/api";
 import { IDoBasicUsuarioInfo } from "@synergia-frontend/interfaces";
-import { RoutingService, SnackbarService } from "@synergia-frontend/services";
+import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { catchError, EMPTY, map, tap } from "rxjs";
 
@@ -18,12 +18,16 @@ import { catchError, EMPTY, map, tap } from "rxjs";
     imports: [ListarUsuariosViewComponent]
 })
 export class ListarUsuariosRouteComponent
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
   public readonly data$ = signal<IDoBasicUsuarioInfo[]>([]);
 
-  private readonly snackService = inject(SnackbarService);
-  private readonly routingService = inject(RoutingService);
-  private readonly pageService = inject(PageListarUsuariosResourceService)
+  constructor (
+    private readonly sessionService: SessionService,
+    private readonly snackService: SnackbarService,
+    private readonly routingService: RoutingService,
+    private readonly pageService: PageListarUsuariosResourceService
+  ) {}
+
   
   public ngOnInit(): void {
       this.setRouteInfo();
@@ -36,7 +40,9 @@ implements AbsClassNonParameterizedRoute, OnInit {
     this.routingService.goTo(this.routingService.newUsers());
   }
   public getData() {
-    return this.pageService.listarUsuariosAll().pipe(
+    return this.pageService.listarUsuariosAll({
+      idTenant: this.sessionService.getTenantId() as number
+    }).pipe(
       catchError(err => {
         this.snackService.addMessage('Erro ao trazer usuários.');
         return EMPTY;

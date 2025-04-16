@@ -1,5 +1,5 @@
 import { Component, inject } from "@angular/core";
-import { RoutingService } from "@synergia-frontend/services";
+import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { MatMenuModule } from '@angular/material/menu';
 import { GmIconComponent } from "@synergia-frontend/components";
 
@@ -14,6 +14,9 @@ import { GmIconComponent } from "@synergia-frontend/components";
       {{ routingService.activeRouteInfo()?.label ?? '' }}
     </div>
 
+    <div>
+      {{ sessionService.getTenantId() }} - {{ sessionService.getTenantLabel() }}
+    </div>
     <button 
       class="usr-btn" 
       [matMenuTriggerFor]="userMenu">
@@ -28,9 +31,13 @@ import { GmIconComponent } from "@synergia-frontend/components";
     imports: [GmIconComponent, MatMenuModule]
 })
 export class LayoutTopbarComponent {
-  public readonly routingService = inject(RoutingService);
+  constructor(
+    public readonly routingService: RoutingService, 
+    public readonly sessionService: SessionService
+  ) {}
 
   public logout() {
+    this.sessionService.clearTenant()
     this.routingService.goTo(this.routingService.login());
   }
 }

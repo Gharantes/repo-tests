@@ -1,13 +1,12 @@
-import { RoutingService } from '@synergia-frontend/services';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
-import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
     selector: 'lib-registrar-tenant-view',
@@ -45,7 +44,6 @@ extends AbsClassInsertView<IDoRegistrarTenant> {
   @Output() goToParentPageEvent = new EventEmitter<void>();
   @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarTenant>();
 
-  private readonly fb = inject(NonNullableFormBuilder);
   public readonly form = this.fb.group<ControlsOf<IDoRegistrarTenant>>({
     title: this.fb.control('', [Validators.required]),
     identifier: this.fb.control('', [Validators.required])

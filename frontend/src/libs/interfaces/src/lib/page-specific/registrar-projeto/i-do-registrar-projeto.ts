@@ -1,4 +1,5 @@
 export interface IDoRegistrarProjeto {
     title: string,
-    description: string
+    description: string,
+    eventosSelecionados: number[]
 }

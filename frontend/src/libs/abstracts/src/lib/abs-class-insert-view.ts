@@ -1,8 +1,10 @@
-import { EventEmitter } from "@angular/core";
-import { FormControl, FormGroup } from "@angular/forms";
+import { EventEmitter, inject } from "@angular/core";
+import { FormControl, FormGroup, NonNullableFormBuilder } from "@angular/forms";
 
 export abstract class AbsClassInsertView<T> {
 
+    public readonly fb = inject(NonNullableFormBuilder);
+    
     abstract goToParentPageEvent: EventEmitter<void>;
     abstract registrarEntidadeEvent: EventEmitter<T>;
 

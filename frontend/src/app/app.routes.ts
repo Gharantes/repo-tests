@@ -9,6 +9,8 @@ import { RegistrarEventosRouteComponent } from './modules/registrar_eventos/regi
 import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
 import { RegistrarProjetosRouteComponent } from './modules/registrar_projetos/registrar-projetos-route.component';
 import { RegistrarTenantRouteComponent } from './modules/registrar_tenant/registrar-tenant-route.component';
+import { HasActiveTenant } from './security/routing/has-active-tenant';
+import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
 
 export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -22,7 +24,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 't/:id_tenant',
-    canActivate: [],
+    canActivate: [HasActiveTenant],
     component: NormalLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -43,6 +45,10 @@ export const appRoutes: Route[] = [
       {
         path: 'events',
         component: ListarEventosRouteComponent
+      },
+      {
+        path: 'event/details/:id_event',
+        component: DetalhesEventosRouteComponent
       },
       {
         path: 'events/new',

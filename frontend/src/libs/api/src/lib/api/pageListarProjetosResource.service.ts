@@ -17,6 +17,8 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
+import { FiltroListarProjetosAllDto } from '../model/filtroListarProjetosAllDto';
+// @ts-ignore
 import { ListarProjetosBasicInfoDto } from '../model/listarProjetosBasicInfoDto';
 
 // @ts-ignore
@@ -91,13 +93,17 @@ export class PageListarProjetosResourceService {
     }
 
     /**
+     * @param filtroListarProjetosAllDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarProjetosAll(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarProjetosBasicInfoDto>>;
-    public listarProjetosAll(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarProjetosBasicInfoDto>>>;
-    public listarProjetosAll(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarProjetosBasicInfoDto>>>;
-    public listarProjetosAll(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarProjetosBasicInfoDto>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarProjetosBasicInfoDto>>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarProjetosBasicInfoDto>>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (filtroListarProjetosAllDto === null || filtroListarProjetosAllDto === undefined) {
+            throw new Error('Required parameter filtroListarProjetosAllDto was null or undefined when calling listarProjetosAll.');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -124,6 +130,15 @@ export class PageListarProjetosResourceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -136,9 +151,10 @@ export class PageListarProjetosResourceService {
         }
 
         let localVarPath = `/api/listar-projetos/all`;
-        return this.httpClient.request<Array<ListarProjetosBasicInfoDto>>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ListarProjetosBasicInfoDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: filtroListarProjetosAllDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

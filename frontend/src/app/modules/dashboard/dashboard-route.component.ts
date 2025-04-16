@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { RoutingService } from "@synergia-frontend/services";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
+import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { of } from "rxjs";
 
 @Component({
@@ -12,9 +12,12 @@ import { of } from "rxjs";
     imports: []
 })
 export class DashboardRouteComponent 
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
   public readonly data$ = of(['teste', 'abc']);
 
+  constructor (
+    private readonly SessionService: SessionService
+  ) {}
   private readonly routingService = inject(RoutingService);
 
   public ngOnInit(): void {

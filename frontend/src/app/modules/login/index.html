@@ -1,6 +1,9 @@
 <div id="form-container">
     <div>
-        {{ tenantSelecionado()?.title }}
+        @if (tenantSelecionado() != null) {
+            <b>Tenant:</b>
+            {{ tenantSelecionado()?.title }}
+        }
     </div>
 
     <mat-form-field [appearance]="'outline'">
