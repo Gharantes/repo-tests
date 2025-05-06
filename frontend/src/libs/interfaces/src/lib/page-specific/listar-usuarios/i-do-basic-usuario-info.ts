@@ -1,4 +1,7 @@
 export interface IDoBasicUsuarioInfo {
-    id: number, 
-    name: string
+    idAccount: number;
+    login: string;
+    idPerson?: number;
+    firstName?: string;
+    lastName?: string;
 }

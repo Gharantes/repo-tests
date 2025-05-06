@@ -8,6 +8,7 @@
     <th mat-header-cell *matHeaderCellDef=""></th>
     <td mat-cell *matCellDef="let element">
       <lib-gm-icon-button
+        [matMenuTriggerFor]="actionsMenu"
         [image]="'more_vert'"
         [type]="'rounded'"
       ></lib-gm-icon-button>
@@ -16,3 +17,10 @@
   <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
   <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
 </table>
+
+<mat-menu #actionsMenu="matMenu">
+  <button mat-menu-item>
+    <mat-icon>dialpad</mat-icon>
+    <span>Redial</span>
+  </button>
+</mat-menu>

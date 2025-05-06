@@ -1,8 +1,7 @@
 <div id="form-container">
-    <mat-form-field [appearance]="'outline'">
-        <mat-label>Tenanat</mat-label>
-        <input matInput type="text" [formControl]="form.controls.tenant">
-    </mat-form-field>
+    <div>
+        {{ tenantSelecionado()?.title }}
+    </div>
 
     <mat-form-field [appearance]="'outline'">
         <mat-label>Usuário</mat-label>
@@ -15,6 +14,25 @@
     </mat-form-field>
 
     <div id="buttons-container">
-        <button matRipple (click)="attemptLogin()">Confirmar</button>
+        <button 
+            class="login-button"
+            matRipple 
+            [disabled]="!form.valid"
+            (click)="attemptLogin()">
+            Login
+        </button>
     </div>
+</div>
+
+<div id="tenant-list-container">
+    <div id="tenant-list-iterator">
+        @for (item of listaTenants(); track $index) {
+            <button matRipple class="tenant-option" (click)="selecionarTenant(item)">
+                {{item.title}}
+            </button>
+        }
+    </div>
+    <button id="create-new-tenant-option" (click)="createTenant()">
+        Criar Novo Tenant
+    </button>
 </div>
