@@ -1,21 +1,23 @@
 import { Component, inject, OnInit } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { RoutingService } from "@synergia-frontend/services";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
+import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { of } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-dashboard-route',
-  template: `
+    selector: 'app-dashboard-route',
+    template: `
     Teste
   `,
-  styleUrl: `./style.scss`,
-  imports: [],
+    styleUrl: `./style.scss`,
+    imports: []
 })
 export class DashboardRouteComponent 
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
   public readonly data$ = of(['teste', 'abc']);
 
+  constructor (
+    private readonly SessionService: SessionService
+  ) {}
   private readonly routingService = inject(RoutingService);
 
   public ngOnInit(): void {

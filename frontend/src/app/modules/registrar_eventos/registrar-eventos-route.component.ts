@@ -1,45 +1,47 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
+import { Component, OnInit, signal } from "@angular/core";
 import { AbsClassChildRoute, AbsClassInsertRoute } from "@synergia-frontend/abstracts";
-import { EventCreateDto, EventResourceService } from "@synergia-frontend/api";
+import { CreateEventoDto, PageCreateEventoResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo, IDoRegistrarEvento } from "@synergia-frontend/interfaces";
-import { SnackbarService } from "@synergia-frontend/services";
+import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { RegistrarEventosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-registrar-eventos-route',
-  template: `
+    selector: 'app-registrar-eventos-route',
+    template: `
     <lib-registrar-eventos-view
-      (goToParentPageEvent)="goToParentPage()"
+      (goToParentPageEvent)="goToParentRoute()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-eventos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [RegistrarEventosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [RegistrarEventosViewComponent]
 })
 export class RegistrarEventosRouteComponent
-extends AbsClassChildRoute
-implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
+implements OnInit, AbsClassChildRoute, AbsClassInsertRoute<IDoRegistrarEvento> {
   public readonly data$ = signal<IDoBasicEventInfo[]>([]);
 
-  override parentRoute = this.routingService.events();
 
-  private readonly snackService = inject(SnackbarService);
-  private readonly eventRService = inject(EventResourceService);
+  constructor(
+    private readonly routingService: RoutingService,
+    private readonly sessionService: SessionService,
+    private readonly snackService: SnackbarService,
+    private readonly pageService: PageCreateEventoResourceService
+  ) {}
   
+
   public ngOnInit() {
     this.setRouteInfo();
   }
-  public setRouteInfo() {
+  private setRouteInfo() {
     this.routingService.setRouteInfo(this.routingService.newEvents());
   }
-  goToParentPage() {
+  public goToParentRoute() {
     this.routingService.goTo(this.routingService.events());
   }
   public registrarEntidade($event: IDoRegistrarEvento) {
     const dto = this.mapToDto($event);
-    this.eventRService.createEvent(dto).pipe(
+    this.pageService.createEvento(dto).pipe(
       catchError(() => {
         this.snackService.addMessage('Erro ao registrar evento.');
         return EMPTY;
@@ -50,11 +52,11 @@ implements OnInit, AbsClassInsertRoute<IDoRegistrarEvento> {
       }),
     ).subscribe()
   }
-  private mapToDto($event: IDoRegistrarEvento): EventCreateDto {
+  private mapToDto($event: IDoRegistrarEvento): CreateEventoDto {
     return {
       title: $event.title,
       description: $event.description,
-      idTenant: this.sessionService.getTenantId()
+      idTenant: this.sessionService.getTenantId() as number
     }
   }
 }

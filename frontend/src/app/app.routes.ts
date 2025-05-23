@@ -1,6 +1,5 @@
 import { Route } from '@angular/router';
 import { LoginRouteComponent } from './modules/login/login-route.component';
-import { LoginAdminRouteComponent } from './modules/login_admin/login-admin-route.component';
 import { NormalLayoutComponent } from './layout/normal-layout/normal-layout.component';
 import { ListarUsuariosRouteComponent } from './modules/listar_usuarios/listar-usuarios-route.component';
 import { ListarEventosRouteComponent } from './modules/listar_eventos/listar-eventos-route.component';
@@ -9,6 +8,9 @@ import { DashboardRouteComponent } from './modules/dashboard/dashboard-route.com
 import { RegistrarEventosRouteComponent } from './modules/registrar_eventos/registrar-eventos-route.component';
 import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
 import { RegistrarProjetosRouteComponent } from './modules/registrar_projetos/registrar-projetos-route.component';
+import { RegistrarTenantRouteComponent } from './modules/registrar_tenant/registrar-tenant-route.component';
+import { HasActiveTenant } from './security/routing/has-active-tenant';
+import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
 
 export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -17,12 +19,12 @@ export const appRoutes: Route[] = [
     component: LoginRouteComponent
   },
   {
-    path: 'admin',
-    component: LoginAdminRouteComponent
+    path: 'create-tenant',
+    component: RegistrarTenantRouteComponent
   },
   {
     path: 't/:id_tenant',
-    canActivate: [],
+    canActivate: [HasActiveTenant],
     component: NormalLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
@@ -43,6 +45,10 @@ export const appRoutes: Route[] = [
       {
         path: 'events',
         component: ListarEventosRouteComponent
+      },
+      {
+        path: 'event/details/:id_event',
+        component: DetalhesEventosRouteComponent
       },
       {
         path: 'events/new',

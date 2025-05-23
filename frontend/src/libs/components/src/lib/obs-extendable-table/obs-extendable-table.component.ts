@@ -5,11 +5,10 @@ import { Observable } from 'rxjs';
 import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-  selector: 'lib-obs-extendable-table',
-  standalone: true,
-  imports: [CommonModule, MatTableModule],
-  templateUrl: 'index.html',
-  styleUrl: './style.scss',
+    selector: 'lib-obs-extendable-table',
+    imports: [CommonModule, MatTableModule],
+    templateUrl: 'index.html',
+    styleUrl: './style.scss'
 })
 export class ObsExtendableTableComponent<T> implements AfterViewInit {
   @Input()

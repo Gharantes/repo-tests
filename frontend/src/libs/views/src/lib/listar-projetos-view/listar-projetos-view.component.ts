@@ -1,15 +1,13 @@
-import { MatIconModule } from '@angular/material/icon';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
-import { ObsExtendableTableComponent } from '@synergia-frontend/components';
-import { Observable } from 'rxjs';
+import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { SigExtendableTableComponent } from "@synergia-frontend/components";
+import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-  selector: 'lib-listar-projetos-view',
-  standalone: true,
-  template: ` 
+    selector: 'lib-listar-projetos-view',
+    template: ` 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewProjectsPage()">
         <span>Criar novo projeto</span>
@@ -17,31 +15,52 @@ import { MatButtonModule } from '@angular/material/button';
       </button>
     </div>
 
-    <lib-obs-extendable-table
+    <lib-sig-extendable-table
       [data$]="data$" 
       [columns]="columns"
-    ></lib-obs-extendable-table>
+      [actions]="tableActions"
+    ></lib-sig-extendable-table>
   `,
-  styleUrl: 'style.scss',
-  imports: [
-    CommonModule, 
-    MatIconModule, 
-    ObsExtendableTableComponent,
-    MatButtonModule
-  ],
+    styleUrl: 'style.scss',
+    imports: [
+        CommonModule,
+        MatIconModule,
+        MatButtonModule,
+        SigExtendableTableComponent
+    ]
 })
 export class ListarProjetosViewComponent {
-  @Input() data$!: Observable<string[]>;
+  @Input() data$!: Signal<IDoBasicProjectInfo[]>;
 
   @Output() toNewProjectsPageEvent = new EventEmitter<void>();
-  public toNewProjectsPage() {
-    this.toNewProjectsPageEvent.emit();
-  }
+  public toNewProjectsPage() { this.toNewProjectsPageEvent.emit(); }
   
-  public readonly columns: IDoExtendableTableColumnInfo<string>[] =[
-    { def: 'a', header: 'Textp', 
-      value: (element: string) => { return element; }
+  @Output() readonly editEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
+  @Output() readonly deleteEntryEvent = new EventEmitter<IDoBasicProjectInfo>();
+  public editEntry(el: IDoBasicProjectInfo) { this.editEntryEvent.emit(el) }
+  public deleteEntry(el: IDoBasicProjectInfo) { this.deleteEntryEvent.emit(el) }
+
+  public readonly columns: IDoExtendableTableColumnInfo<IDoBasicProjectInfo>[] =[
+    { def: 'title', header: 'Nome', 
+      value: (element: IDoBasicProjectInfo) => { return element.title; },
+    },
+    { def: 'description', header: 'Descrição', 
+      value: (element: IDoBasicProjectInfo) => { return element.description; },
     },
   ]
 
+  public readonly tableActions: IDoExtendableTableActions<IDoBasicProjectInfo>[] = [
+    { 
+      label: 'Editar Projeto',
+      icon: '', 
+      action: (el: IDoBasicProjectInfo) => { this.editEntry.bind(this)(el) },
+      isAllowed: () => { return true; }
+    },
+    { 
+      label: 'Deletar Projeto',
+      icon: '', 
+      action: (el: IDoBasicProjectInfo) => { this.deleteEntry.bind(this)(el) },
+      isAllowed: () => { return true; }
+    },
+  ]
 }

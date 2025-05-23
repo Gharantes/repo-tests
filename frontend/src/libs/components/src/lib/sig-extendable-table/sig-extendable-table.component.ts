@@ -1,16 +1,20 @@
 import { CommonModule } from '@angular/common';
 import { AfterViewInit, ChangeDetectorRef, Component, Input, Signal } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
-import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import { IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 import { GmIconComponent } from "../google-material-icon/gm-icon.component";
-import { GmIconButtonComponent } from "../gm-icon-button/gm-icon-button.component";
 
 @Component({
-  selector: 'lib-sig-extendable-table',
-  standalone: true,
-  imports: [CommonModule, MatTableModule, GmIconComponent, GmIconButtonComponent],
-  templateUrl: 'index.html',
-  styleUrl: './style.scss',
+    selector: 'lib-sig-extendable-table',
+    templateUrl: 'index.html',
+    styleUrl: './style.scss',
+    imports: [
+    CommonModule, MatTableModule,
+    MatMenuModule, MatIconModule,
+    GmIconComponent
+]
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input()
@@ -19,7 +23,7 @@ export class SigExtendableTableComponent<T> implements AfterViewInit {
   actions: IDoExtendableTableActions<T>[] = [];
 
   @Input()
-  data$!: Signal<IDoBasicEventInfo[]>;
+  data$!: Signal<T[]>;
 
   displayedColumns: string[] = []
   constructor (

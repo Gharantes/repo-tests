@@ -1,0 +1,29 @@
+package com.example.synergia.rest.pageListarProjetos
+
+import com.example.synergia.rest.pageListarProjetos.dto.input.FiltroListarProjetosAllDto
+import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosBasicInfoDto
+import com.example.synergia.services.PageListarProjetosService
+import com.example.synergia.utils.objects.ResponseMessenger
+import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.*
+
+@RestController
+@RequestMapping("/api/listar-projetos")
+class PageListarProjetosResource (
+    private val service: PageListarProjetosService
+) {
+    @PostMapping("/all")
+    fun listarProjetosAll(
+        @RequestBody params: FiltroListarProjetosAllDto
+    ): ResponseEntity<List<ListarProjetosBasicInfoDto>> =
+        ResponseMessenger.buildResponse {
+            service.listarProjetosAll(params)
+        }
+
+    @DeleteMapping("/delete/{id}")
+    fun deletarProjeto(
+        @PathVariable("id") id: Long
+    ): ResponseEntity<Void> = ResponseMessenger.responseWithoutReturn {
+        service.deletarProjeto(id)
+    }
+}

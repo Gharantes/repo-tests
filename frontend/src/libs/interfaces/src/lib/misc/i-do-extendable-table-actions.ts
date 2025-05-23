@@ -1,5 +1,5 @@
 export interface IDoExtendableTableActions <T> { 
-    label: 'Editar Evento',
+    label: string,
     icon: '', 
     action: (el: T) => void,
     isAllowed: (el: T) => boolean

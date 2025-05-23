@@ -1,34 +1,38 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { AbsClassNonParameterizedRoute } from "@synergia-frontend/abstracts";
-import { EventDto, EventResourceService } from "@synergia-frontend/api";
+import { Component, OnInit, signal } from "@angular/core";
+import { AbsBaseRoute } from "@synergia-frontend/abstracts";
+import { ListarEventosBasicInfoDto, PageListarEventosResourceService } from "@synergia-frontend/api";
 import { IDoBasicEventInfo } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService } from "@synergia-frontend/services";
+import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { ListarEventosViewComponent } from '@synergia-frontend/views';
-import { map, tap } from "rxjs";
+import { catchError, concatMap, EMPTY, map, tap } from "rxjs";
 
 @Component({
-  standalone: true,
-  selector: 'app-listar-eventos-route',
-  template: `
-    <lib-listar-eventos-view
-      [data$]="data$"
-      (toNewEventPageEvent)="toNewEventPageEvent()"
-    ></lib-listar-eventos-view>
+    selector: 'app-listar-eventos-route',
+    template: `
+      <lib-listar-eventos-view
+        [data$]="data$"
+        (toNewEventPageEvent)="toNewEventPageEvent()"
+        (viewDetailsEvent)="viewDetails($event)"
+        (deleteEntryEvent)="deleteEntry($event)"
+      ></lib-listar-eventos-view>
   `,
-  styleUrl: `./style.scss`,
-  imports: [ListarEventosViewComponent],
+    styleUrl: `./style.scss`,
+    imports: [ListarEventosViewComponent]
 })
 export class ListarEventosRouteComponent
-implements AbsClassNonParameterizedRoute, OnInit {
+implements AbsBaseRoute, OnInit {
   public readonly data$ = signal<IDoBasicEventInfo[]>([]);
 
-  private readonly routingService = inject(RoutingService);
-  private readonly sessionService = inject(SessionService);
-  private readonly eventsRService = inject(EventResourceService);
+  constructor (
+    private readonly routingService: RoutingService,
+    private readonly sessionService: SessionService,
+    private readonly pageService: PageListarEventosResourceService,
+    private readonly snackService: SnackbarService
+  ) {}
   
   public ngOnInit() {
     this.setRouteInfo();
-    this.getData();
+    this.getData().subscribe();
   }
 
   public setRouteInfo() {
@@ -40,16 +44,31 @@ implements AbsClassNonParameterizedRoute, OnInit {
 
 
   public getData() {
-    this.eventsRService.getAllEvent(
-      this.sessionService.getTenantId()
-    ).pipe(
+    return this.pageService.listarEventosAll({
+      idTenant: this.sessionService.getTenantId() as number
+    }).pipe(
       map(res => this.mapResponse(res)),
       tap(res => this.data$.set(res))
-    ).subscribe()
+    );
   }
-  private mapResponse(res: EventDto[]): IDoBasicEventInfo[] {
+  private mapResponse(res: ListarEventosBasicInfoDto[]): IDoBasicEventInfo[] {
     return res.map(v => ({
       ...v
     }))
+  }
+
+  public viewDetails($event: IDoBasicEventInfo) {
+    const destiny = this.routingService.eventDetails($event.id);
+    this.routingService.goTo(destiny)
+  }
+  public deleteEntry($event: IDoBasicEventInfo) {
+    this.pageService.deletarEvento($event.id).pipe(
+      catchError(() => {
+        this.snackService.addMessage("Erro ao deletar Evento.");
+        return EMPTY;
+      }),
+      concatMap(() => this.getData()),
+      tap(() => this.snackService.addMessage("Evento deletado com sucesso."))
+    ).subscribe()
   }
 }
