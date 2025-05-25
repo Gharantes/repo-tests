@@ -6,7 +6,7 @@ import { ListarEventosRouteComponent } from './modules/listar_eventos/listar-eve
 import { ListarProjetosRouteComponent } from './modules/listar_projetos/listar-projetos-route.component';
 import { DashboardRouteComponent } from './modules/dashboard/dashboard-route.component';
 import { RegistrarEventosRouteComponent } from './modules/registrar_eventos/registrar-eventos-route.component';
-import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
+import { RegistrarTagsRouteComponent } from './modules/registrar_usuarios/registrar-tags-route.component';
 import { RegistrarProjetosRouteComponent } from './modules/registrar_projetos/registrar-projetos-route.component';
 import { RegistrarTenantRouteComponent } from './modules/registrar_tenant/registrar-tenant-route.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
@@ -39,7 +39,7 @@ export const appRoutes: Route[] = [
       },
       {
         path: 'users/new',
-        component: RegistrarUsuariosRouteComponent
+        component: RegistrarTagsRouteComponent
       },
       // Eventos
       {

@@ -10,6 +10,7 @@ api/pageCreateUsuarioResource.service.ts
 api/pageDetalhesEventoResource.service.ts
 api/pageListarEventosResource.service.ts
 api/pageListarProjetosResource.service.ts
+api/pageListarTagsResource.service.ts
 api/pageListarUsuariosResource.service.ts
 api/pageLoginResource.service.ts
 configuration.ts
@@ -23,10 +24,13 @@ model/createUsuarioDto.ts
 model/filtroListarEventosAllDto.ts
 model/filtroListarProjetosAllDto.ts
 model/filtroListarProjetosOfEventoDto.ts
+model/filtroListarTagsAllDto.ts
 model/filtroListarUsuariosAllDto.ts
+model/insertTagDto.ts
 model/listarEventosBasicInfoDto.ts
 model/listarProjetosBasicInfoDto.ts
 model/listarProjetosOfEventoDto.ts
+model/listarTagDto.ts
 model/listarUsuariosBasicInfoDto.ts
 model/loginInformationInputDto.ts
 model/loginInformationResponseDto.ts

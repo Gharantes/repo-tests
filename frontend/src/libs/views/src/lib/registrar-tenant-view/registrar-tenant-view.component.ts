@@ -11,7 +11,7 @@ import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
 @Component({
     selector: 'lib-registrar-tenant-view',
     template: `
-    <form>
+    <div id="form">
       <mat-form-field [appearance]="'outline'">
         <mat-label>Título</mat-label>
         <input type="text" matInput [formControl]="form.controls.title"/>
@@ -26,7 +26,7 @@ import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
         <button mat-raised-button (click)="voltar()">Voltar</button>
         <button mat-raised-button [disabled]="!isFormValid()" (click)="registrarEntidade()">Registrar</button>
       </div>
-    </form>
+    </div>
   `,
     styleUrl: 'style.scss',
     imports: [

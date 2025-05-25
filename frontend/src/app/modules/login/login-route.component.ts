@@ -13,87 +13,99 @@ import { LoginTenantInformationDto, PageLoginResourceService } from '@synergia-f
 import { IDoLoginTenantInformation } from '@synergia-frontend/interfaces';
 import { RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
+import { TenantPickerLoginComponent } from './components/tenant-picker-login/tenant-picker-login.component';
 
 @Component({
-    selector: 'app-login-route',
-    templateUrl: 'index.html',
-    styleUrl: 'style.scss',
-    providers: [],
-    imports: [
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule,
-        MatRippleModule
-    ]
+  selector: 'app-login-route',
+  templateUrl: 'index.html',
+  styleUrl: 'style.scss',
+  providers: [],
+  imports: [
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule,
+    MatRippleModule,
+    TenantPickerLoginComponent,
+  ],
 })
 export class LoginRouteComponent implements AfterViewInit {
   public readonly listaTenants = signal<IDoLoginTenantInformation[]>([]);
-  public readonly tenantSelecionado = signal<IDoLoginTenantInformation | null>(null);
-  
-  private readonly fb = inject(NonNullableFormBuilder);
-  private readonly routingService = inject(RoutingService);
-  private readonly pageService = inject(PageLoginResourceService);
-  private readonly snackService = inject(SnackbarService);
-  private readonly sessionService = inject(SessionService);
+  public readonly tenantSelecionado = signal<IDoLoginTenantInformation | null>(
+    null
+  );
 
   public readonly form: FormGroup<{
-    idTenant: FormControl<number | null>,
+    idTenant: FormControl<number | null>;
     user: FormControl<string>;
     password: FormControl<string>;
-  }> = this.fb.group({
-    idTenant: this.fb.control<number | null>(null, [Validators.required]),
-    user: this.fb.control<string>('', [Validators.required]),
-    password: this.fb.control<string>('', [Validators.required]),
-  });
+  }>;
 
+  constructor(
+    private readonly fb: NonNullableFormBuilder,
+    private readonly routingService: RoutingService,
+    private readonly pageService: PageLoginResourceService,
+    private readonly snackService: SnackbarService,
+    private readonly sessionService: SessionService
+  ) {
+    this.form = this.instanceForm();
+  }
+
+  private instanceForm() {
+    return this.fb.group({
+      idTenant: this.fb.control<number | null>(null, [Validators.required]),
+      user: this.fb.control<string>('', [Validators.required]),
+      password: this.fb.control<string>('', [Validators.required]),
+    });
+  }
   public attemptLogin() {
     const idTenant = this.form.controls.idTenant.value;
     if (idTenant == null) {
       return;
     }
 
-    this.pageService.checkLoginInformation({
-      idTenant: idTenant,
-      login: this.form.controls.user.value,
-      password: this.form.controls.password.value
-    }).pipe(
-      catchError(() => {
-        this.snackService.addMessage('Nâo foi possível realizar login.')
-        return EMPTY;
-      }),
-      tap(res => {
-        this.sessionService.setTenant({
-          id: idTenant,
-          label: res.tenantTitle
-        })
-        this.sessionService.setUser({
-          id: res.idAccount,
-          label: res.login
-        })
-        this.routingService.goTo(this.routingService.dashboard())
+    this.pageService
+      .checkLoginInformation({
+        idTenant: idTenant,
+        login: this.form.controls.user.value,
+        password: this.form.controls.password.value,
       })
-    ).subscribe()
+      .pipe(
+        catchError(() => {
+          this.snackService.addMessage('Nâo foi possível realizar login.');
+          return EMPTY;
+        }),
+        tap((res) => {
+          this.sessionService.setTenant({
+            id: idTenant,
+            label: res.tenantTitle,
+          });
+          this.sessionService.setUser({
+            id: res.idAccount,
+            label: res.login,
+          });
+          this.routingService.goTo(this.routingService.dashboard());
+        })
+      )
+      .subscribe();
   }
 
   ngAfterViewInit(): void {
-    
-    this.pageService.listarTenantsLogin().pipe(
-      map(res => this.mapListarTenantsLoginRes(res)),
-      tap(res => this.listaTenants.set(res))
-    ).subscribe()
+    this.pageService
+      .listarTenantsLogin()
+      .pipe(
+        map((res) => this.mapListarTenantsLoginRes(res)),
+        tap((res) => this.listaTenants.set(res))
+      )
+      .subscribe();
   }
-  private mapListarTenantsLoginRes(res: LoginTenantInformationDto[]): IDoLoginTenantInformation[] {
-    return res.map(v => ({
-      ...v
-    }))
+  private mapListarTenantsLoginRes(
+    res: LoginTenantInformationDto[]
+  ): IDoLoginTenantInformation[] {
+    return res.map((v) => ({ ...v }));
   }
 
-
-  public selecionarTenant($event: IDoLoginTenantInformation) {
+  setNewTenant($event: IDoLoginTenantInformation) {
     this.form.controls.idTenant.setValue($event.id);
     this.tenantSelecionado.set($event);
-  }
-  public createTenant() {
-    this.routingService.goTo(this.routingService.createTenant());
   }
 }

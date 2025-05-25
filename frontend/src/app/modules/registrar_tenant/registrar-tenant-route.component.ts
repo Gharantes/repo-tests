@@ -7,48 +7,48 @@ import { RegistrarTenantViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from "rxjs";
 
 @Component({
-    selector: 'app-registrar-tenant-route',
-    template: `
+  selector: 'app-registrar-tenant-route',
+  template: `
     <lib-registrar-tenant-view
       (goToParentPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-tenant-view>
   `,
-    styleUrl: `./style.scss`,
-    imports: [RegistrarTenantViewComponent]
+  styleUrl: `./style.scss`,
+  imports: [RegistrarTenantViewComponent]
 })
 export class RegistrarTenantRouteComponent
-implements AbsBaseRoute, OnInit {
+  implements AbsBaseRoute, OnInit {
 
   constructor(
     private readonly routingService: RoutingService,
     private readonly snackService: SnackbarService,
-    private readonly pageService: PageCreateTenantResourceService)
+    private readonly pageService: PageCreateTenantResourceService
   ) {}
 
-  public ngOnInit() {
-    this.setRouteInfo();
-  }
-  public setRouteInfo() {
-    this.routingService.setRouteInfo(this.routingService.createTenant());
-  }
-  public goToLastPage() {
-    this.routingService.goTo(this.routingService.login());
-  }
-  public registrarEntidade($event: IDoRegistrarTenant) {
-    this.pageService.createTenant({
-      identifier: $event.identifier,
-      title: $event.title
-    }).pipe(
-      catchError(() => {
-        this.snackService.addMessage('Erro ao criar Tenant.');
-        return EMPTY;
-      }),
-      tap(() => {
-        this.snackService.addMessage('Tenant criado com sucesso.');
-        this.routingService.goTo(this.routingService.login());
-      })
-    ).subscribe()
+public ngOnInit() {
+  this.setRouteInfo();
+}
+public setRouteInfo() {
+  this.routingService.setRouteInfo(this.routingService.createTenant());
+}
+public goToLastPage() {
+  this.routingService.goTo(this.routingService.login());
+}
+public registrarEntidade($event: IDoRegistrarTenant) {
+  this.pageService.createTenant({
+    identifier: $event.identifier,
+    title: $event.title
+  }).pipe(
+    catchError(() => {
+      this.snackService.addMessage('Erro ao criar Tenant.');
+      return EMPTY;
+    }),
+    tap(() => {
+      this.snackService.addMessage('Tenant criado com sucesso.');
+      this.routingService.goTo(this.routingService.login());
+    })
+  ).subscribe()
 
-  }
+}
 }

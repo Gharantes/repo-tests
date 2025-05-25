@@ -10,27 +10,7 @@ import { IDoRegistrarEvento } from '@synergia-frontend/interfaces';
 
 @Component({
     selector: 'lib-registrar-eventos-view',
-    template: `
-    <mat-form-field [appearance]="'outline'">
-      <mat-label>Título</mat-label>
-      <input type="text" matInput [formControl]="form.controls.title"/>
-    </mat-form-field>
-
-    <mat-form-field [appearance]="'outline'">
-      <mat-label>Descrição</mat-label>
-      <input type="text" matInput [formControl]="form.controls.description" />
-    </mat-form-field>
-
-    <div class="btn-line">
-      <button mat-raised-button (click)="goToParentPage()">Voltar</button>
-      <button 
-        mat-raised-button 
-        [disabled]="!isFormValid()"
-        (click)="registrarEntidade()">
-        Salvar
-      </button>
-    </div>
-  `,
+    templateUrl: 'index.html',
     styleUrl: 'style.scss',
     imports: [
         CommonModule,
@@ -47,12 +27,9 @@ extends AbsClassInsertView<IDoRegistrarEvento> {
   @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarEvento>();
 
   public readonly form = this.fb.group<ControlsOf<IDoRegistrarEvento>>({
-    title: this.fb.control('', [
-      Validators.required
-    ]),
-    description: this.fb.control('', [
-      Validators.required
-    ])
+    title: this.fb.control('', [Validators.required]),
+    description: this.fb.control('', [Validators.required]),
+    urlBanner: this.fb.control('', [Validators.required])
   });
 
   override mapFormData(v: Partial<IDoRegistrarEvento>): IDoRegistrarEvento | null {
@@ -64,7 +41,8 @@ extends AbsClassInsertView<IDoRegistrarEvento> {
     }
     return {
       description: v.description,
-      title: v.title
+      title: v.title,
+      urlBanner: v.urlBanner ?? ''
     }
   } 
 }

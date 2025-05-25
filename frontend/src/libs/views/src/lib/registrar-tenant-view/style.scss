@@ -11,7 +11,7 @@
     @include m.center-child-w-col();
 }
 
-form {
+#form {
     @include m.col();
     padding: 20px;
     row-gap: 20px;
