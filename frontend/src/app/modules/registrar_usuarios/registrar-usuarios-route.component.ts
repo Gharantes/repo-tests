@@ -1,10 +1,10 @@
-import { PageCreateUsuarioResourceService } from './../../../libs/api/src/lib/api/pageCreateUsuarioResource.service';
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsBaseRoute } from "@synergia-frontend/abstracts";
 import { IDoBasicEventInfo, IDoRegistrarUsuario } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { RegistrarUsuariosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from 'rxjs';
+import { PageCreateUsuarioResourceService } from '@synergia-frontend/api';
 
 @Component({
     selector: 'app-registrar-usuarios-route',

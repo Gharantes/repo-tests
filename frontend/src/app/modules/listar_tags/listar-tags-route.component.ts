@@ -3,7 +3,7 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-  selector: 'app-registrar-tags-route',
+  selector: 'app-listar-tags-route',
   template: `
     <div></div>
     <lib-sig-extendable-table
@@ -15,7 +15,7 @@ import { IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
   styleUrl: `./style.scss`,
   imports: [SigExtendableTableComponent],
 })
-export class RegistrarTagsRouteComponent {
+export class ListarTagsRouteComponent {
   public readonly data$ = signal([]);
 
   constructor(
