@@ -20,9 +20,11 @@ import { catchError, EMPTY, tap } from "rxjs";
 export class RegistrarTenantRouteComponent
 implements AbsBaseRoute, OnInit {
 
-  private readonly routingService = inject(RoutingService);
-  private readonly snackService = inject(SnackbarService);
-  private readonly pageService = inject(PageCreateTenantResourceService);
+  constructor(
+    private readonly routingService: RoutingService,
+    private readonly snackService: SnackbarService,
+    private readonly pageService: PageCreateTenantResourceService)
+  ) {}
 
   public ngOnInit() {
     this.setRouteInfo();

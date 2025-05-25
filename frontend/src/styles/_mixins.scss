@@ -1,0 +1,26 @@
+@mixin base {
+    box-sizing: border-box;
+}
+@mixin fill {
+    @include base;
+    width: 100%;
+    height: 100%;
+}
+@mixin col {
+    display: flex;
+    flex-direction: column;
+}
+@mixin row {
+    display: flex;
+    flex-direction: row;
+}
+@mixin center-child-w-row {
+    @include row();
+    justify-content: center;
+    align-items: center;
+}
+@mixin center-child-w-col {
+    @include col();
+    justify-content: center;
+    align-items: center;
+}
