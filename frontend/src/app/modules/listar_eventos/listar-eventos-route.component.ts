@@ -5,6 +5,7 @@ import { IDoListarEventos } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { ListarEventosViewComponent } from '@synergia-frontend/views';
 import { catchError, concatMap, EMPTY, map, tap } from "rxjs";
+import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-frontend/mappers';
 
 @Component({
   selector: 'app-page-listar-eventos-route',
@@ -47,15 +48,9 @@ implements AbsBaseRoute, OnInit {
     return this.pageService.listarEventosAll({
       idTenant: this.sessionService.getTenantId() as number
     }).pipe(
-      map(res => this.mapResponse(res)),
+      map(res => mapFromListarEventosDtoToIDoListarEventosArray(res)),
       tap(res => this.data$.set(res))
     );
-  }
-
-  private mapResponse(res: ListarEventosDto[]): IDoListarEventos[] {
-    return res.map(v => ({
-      ...v
-    }))
   }
 
   public viewDetails($event: IDoListarEventos) {

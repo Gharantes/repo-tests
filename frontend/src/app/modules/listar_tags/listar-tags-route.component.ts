@@ -8,7 +8,6 @@ import {
 import { PageListarTagsResourceService } from '@synergia-frontend/api';
 import { SessionService, Snackbar2Service } from '@synergia-frontend/services';
 import { catchError, debounceTime, EMPTY, map, tap } from 'rxjs';
-import { listarTagsDtoToIDoArray } from '../../mappers/page-listar-tags';
 import { MatInput, MatLabel } from '@angular/material/input';
 import { MatFormField } from '@angular/material/form-field';
 import {
@@ -16,6 +15,7 @@ import {
   NonNullableFormBuilder,
   ReactiveFormsModule,
 } from '@angular/forms';
+import { listarTagsDtoToIDoArray } from '@synergia-frontend/mappers';
 
 @Component({
   selector: 'app-listar-tags-route',

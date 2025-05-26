@@ -4,5 +4,5 @@ export interface IDoListarEventos {
     description: string;
     createdByIdAccount: number;
     createdByNameAccount: string;
-    urlBanner?: string;
+    bannerUrl?: string;
 }

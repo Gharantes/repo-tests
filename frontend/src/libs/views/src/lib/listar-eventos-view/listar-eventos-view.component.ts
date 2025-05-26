@@ -1,14 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { Component, computed, EventEmitter, Input, Output, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { SigExtendableTableComponent } from '@synergia-frontend/components';
+import { CardGridComponent, SigExtendableTableComponent } from '@synergia-frontend/components';
 import {
   IDoExtendableTableActions,
   IDoExtendableTableColumnInfo,
   IDoListarEventos,
 } from '@synergia-frontend/interfaces';
 import { FiltroListarEventosComponent } from './components/filtro-listar-eventos/filtro-listar-eventos.component';
+import { mapFromIDoListarEventosToIDoCardGridArray } from '@synergia-frontend/mappers';
 
 @Component({
   selector: 'lib-page-listar-eventos-view',
@@ -22,9 +23,9 @@ import { FiltroListarEventosComponent } from './components/filtro-listar-eventos
       </button>
     </div>
 
-    <!--    <lib-card-grid-->
-    <!--      [data$]=""-->
-    <!--    ></lib-card-grid>-->
+    <lib-card-grid
+      [data$]="cardGridData$()"
+    ></lib-card-grid>
 
     <lib-sig-extendable-table
       [data$]="data$"
@@ -39,10 +40,15 @@ import { FiltroListarEventosComponent } from './components/filtro-listar-eventos
     MatIconModule,
     MatButtonModule,
     FiltroListarEventosComponent,
+    CardGridComponent
   ],
 })
 export class ListarEventosViewComponent {
   @Input() data$!: Signal<IDoListarEventos[]>;
+  public cardGridData$ = computed(() => {
+    return mapFromIDoListarEventosToIDoCardGridArray(this.data$())
+  })
+
 
   @Output() toNewEventPageEvent = new EventEmitter<void>();
   public toNewEventPage() {

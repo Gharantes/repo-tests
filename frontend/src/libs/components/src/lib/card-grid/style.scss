@@ -1,23 +1,12 @@
+@use '../../../../../styles/mixins' as m;
+
+* {
+  @include m.base();
+}
+:host {
+}
 #card-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr 1fr;
-
-  .card {
-    min-height: 300px;
-    width: 300px;
-
-
-    .banner {
-      .banner-color-block {
-      }
-      .banner-img {
-        width: 100%;
-        height: auto;
-      }
-    }
-    .card-information {
-      .card-primary {}
-      .card-secondary {}
-    }
-  }
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
 }

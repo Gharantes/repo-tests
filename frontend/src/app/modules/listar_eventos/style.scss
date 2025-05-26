@@ -1,9 +1,11 @@
+@use '../../../styles/mixins' as m;
+
 * {
-    box-sizing: border-box;
+    @include m.base();
 }
 :host {
-    display: flex;
+    @include m.fill();
+    @include m.row();
     flex: 1;
-    height: 100%;
-    overflow: auto;
+    overflow: hidden;
 }
