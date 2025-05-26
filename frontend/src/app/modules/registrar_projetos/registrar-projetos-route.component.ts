@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from "@angular/core";
 import { AbsBaseRoute } from "@synergia-frontend/abstracts";
 import { PageCreateProjetoResourceService, PageListarEventosResourceService } from "@synergia-frontend/api";
-import { IDoBasicEventInfo, IDoRegistrarProjeto } from "@synergia-frontend/interfaces";
+import { IDoListarEventos, IDoRegistrarProjeto } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { RegistrarProjetosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, map, tap } from "rxjs";
@@ -20,7 +20,7 @@ import { catchError, EMPTY, map, tap } from "rxjs";
 })
 export class RegistrarProjetosRouteComponent
 implements AbsBaseRoute, OnInit {
-  public readonly listaEventos = signal<IDoBasicEventInfo[]>([]);
+  public readonly listaEventos = signal<IDoListarEventos[]>([]);
 
 
   private idTenant: number;
@@ -48,7 +48,7 @@ implements AbsBaseRoute, OnInit {
     this.listarEventosPageService.listarEventosAll({
       idTenant: this.idTenant
     }).pipe(
-      map(res => res.map(v => ({ ...v } as IDoBasicEventInfo))),
+      map(res => res.map(v => ({ ...v } as IDoListarEventos))),
       tap(res => this.listaEventos.set(res)) 
     ).subscribe()
   }

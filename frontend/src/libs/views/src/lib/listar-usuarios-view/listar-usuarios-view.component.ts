@@ -8,7 +8,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { SigExtendableTableComponent } from "../../../../components/src/lib/sig-extendable-table/sig-extendable-table.component";
 
 @Component({
-    selector: 'lib-listar-usuarios-view',
+    selector: 'lib-page-listar-usuarios-view',
     template: ` 
     <lib-sig-extendable-table
       [data$]="data$" 

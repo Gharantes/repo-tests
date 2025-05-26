@@ -6,7 +6,7 @@ import { SigExtendableTableComponent } from "@synergia-frontend/components";
 import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-    selector: 'lib-listar-projetos-view',
+    selector: 'lib-page-listar-projetos-view',
     template: ` 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewProjectsPage()">

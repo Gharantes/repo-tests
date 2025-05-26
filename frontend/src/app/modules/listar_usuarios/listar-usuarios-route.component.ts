@@ -7,12 +7,12 @@ import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { catchError, EMPTY, map, tap } from "rxjs";
 
 @Component({
-    selector: 'app-listar-usuarios-route',
+    selector: 'app-page-listar-usuarios-route',
     template: `
-    <lib-listar-usuarios-view
+    <lib-page-listar-usuarios-view
       [data$]="data$"
       (toNewUserPageEvent)="toNewUserPage()"
-    ></lib-listar-usuarios-view>
+    ></lib-page-listar-usuarios-view>
   `,
     styleUrl: `./style.scss`,
     imports: [ListarUsuariosViewComponent]

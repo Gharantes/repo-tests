@@ -7,13 +7,13 @@ import { ListarProjetosViewComponent } from '@synergia-frontend/views';
 import { catchError, concat, concatMap, EMPTY, map, tap } from "rxjs";
 
 @Component({
-    selector: 'app-listar-projetos-route',
+    selector: 'app-page-listar-projetos-route',
     template: `
-    <lib-listar-projetos-view
+    <lib-page-listar-projetos-view
       [data$]="data$"
       (toNewProjectsPageEvent)="toNewProjectsPage()"
       (deleteEntryEvent)="deleteEntry($event)"
-    ></lib-listar-projetos-view>
+    ></lib-page-listar-projetos-view>
   `,
     styleUrl: `./style.scss`,
     imports: [ListarProjetosViewComponent]

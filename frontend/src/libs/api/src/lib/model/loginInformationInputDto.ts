@@ -13,5 +13,6 @@ export interface LoginInformationInputDto {
     idTenant: number;
     login: string;
     password: string;
+    checkLastSeen: boolean;
 }
 

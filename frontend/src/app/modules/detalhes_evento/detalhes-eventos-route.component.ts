@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { ListarEventosBasicInfoDto, PageDetalhesEventoResourceService } from "@synergia-frontend/api";
-import { IDoBasicEventInfo } from "@synergia-frontend/interfaces";
+import { ListarEventosDto, PageDetalhesEventoResourceService } from "@synergia-frontend/api";
+import { IDoListarEventos } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { tap } from "rxjs";
 import { ListarProjetosOfEventoDto } from "src/libs/api/src/lib/model/listarProjetosOfEventoDto";
@@ -63,7 +63,7 @@ implements AbsBaseRoute, OnInit {
       })
     ).subscribe()
   }
-  private mapResponse(res: ListarEventosBasicInfoDto[]): IDoBasicEventInfo[] {
+  private mapResponse(res: ListarEventosDto[]): IDoListarEventos[] {
     return res.map(v => ({
       ...v
     }))

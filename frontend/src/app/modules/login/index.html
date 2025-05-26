@@ -1,17 +1,17 @@
-<div id="form-container">
-    <div>
-        @if (tenantSelecionado() != null) {
-            <b>Tenant:</b>
-            {{ tenantSelecionado()?.title }}
-        }
+<div id="form">
+  @if (tenantSelecionado() !== null) {
+    <div id="tenant-label">
+      <b>Tenant:</b>
+      {{ tenantSelecionado()?.title }}
     </div>
+  }
 
-    <mat-form-field [appearance]="'outline'">
+    <mat-form-field [appearance]="'outline'" class="field">
         <mat-label>Usuário</mat-label>
         <input matInput type="text" [formControl]="form.controls.user">
     </mat-form-field>
 
-    <mat-form-field [appearance]="'outline'">
+    <mat-form-field [appearance]="'outline'" class="field">
         <mat-label>Senha</mat-label>
         <input matInput type="password" [formControl]="form.controls.password">
     </mat-form-field>
@@ -27,15 +27,7 @@
     </div>
 </div>
 
-<div id="tenant-list-container">
-    <div id="tenant-list-iterator">
-        @for (item of listaTenants(); track $index) {
-            <button matRipple class="tenant-option" (click)="selecionarTenant(item)">
-                {{item.title}}
-            </button>
-        }
-    </div>
-    <button id="create-new-tenant-option" (click)="createTenant()">
-        Criar Novo Tenant
-    </button>
-</div>
+<app-tenant-picker-login
+[tenants]="listaTenants()"
+(setNewTenant)="setNewTenant($event)"
+></app-tenant-picker-login>

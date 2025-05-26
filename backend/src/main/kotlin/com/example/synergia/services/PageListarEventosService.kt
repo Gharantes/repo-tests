@@ -3,7 +3,7 @@ package com.example.synergia.services
 import com.example.synergia.repositories.pageListarEventos.DeletarEventoSql
 import com.example.synergia.repositories.pageListarEventos.ListarEventosAllSql
 import com.example.synergia.rest.pageListarEventos.dto.input.FiltroListarEventosAllDto
-import com.example.synergia.rest.pageListarEventos.dto.output.ListarEventosBasicInfoDto
+import com.example.synergia.rest.pageListarEventos.dto.output.ListarEventosDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
@@ -13,7 +13,7 @@ class PageListarEventosService (
 ) {
     fun listarEventosAll(
         params: FiltroListarEventosAllDto
-    ): List<ListarEventosBasicInfoDto> =
+    ): List<ListarEventosDto> =
         ListarEventosAllSql(params).query(template)
 
     fun deletarEvento(id: Long) = DeletarEventoSql(id).executeStatement(template)

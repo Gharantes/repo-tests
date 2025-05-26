@@ -22,7 +22,8 @@
       "@synergia-frontend/interfaces": ["src/libs/interfaces/src/index.ts"],
       "@synergia-frontend/services": ["src/libs/services/src/index.ts"],
       "@synergia-frontend/utils": ["src/libs/utils/src/index.ts"],
-      "@synergia-frontend/views": ["src/libs/views/src/index.ts"]
+      "@synergia-frontend/views": ["src/libs/views/src/index.ts"],
+      "@synergia-frontend/mappers": ["src/libs/mappers/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

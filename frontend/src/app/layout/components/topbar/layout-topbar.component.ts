@@ -25,7 +25,6 @@ import { GmIconComponent } from "@synergia-frontend/components";
     <mat-menu #userMenu="matMenu">
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
-
   `,
     styleUrl: `./style.scss`,
     imports: [GmIconComponent, MatMenuModule]
@@ -37,7 +36,7 @@ export class LayoutTopbarComponent {
   ) {}
 
   public logout() {
-    this.sessionService.clearTenant()
+    this.sessionService.logout()
     this.routingService.goTo(this.routingService.login());
   }
 }
