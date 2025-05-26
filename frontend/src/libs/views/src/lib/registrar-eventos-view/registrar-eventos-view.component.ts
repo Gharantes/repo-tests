@@ -29,7 +29,7 @@ extends AbsClassInsertView<IDoRegistrarEvento> {
   public readonly form = this.fb.group<ControlsOf<IDoRegistrarEvento>>({
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
-    urlBanner: this.fb.control('', [Validators.required])
+    urlBanner: this.fb.control(null, [])
   });
 
   override mapFormData(v: Partial<IDoRegistrarEvento>): IDoRegistrarEvento | null {
@@ -42,7 +42,7 @@ extends AbsClassInsertView<IDoRegistrarEvento> {
     return {
       description: v.description,
       title: v.title,
-      urlBanner: v.urlBanner ?? ''
+      urlBanner: v.urlBanner ?? null
     }
   } 
 }

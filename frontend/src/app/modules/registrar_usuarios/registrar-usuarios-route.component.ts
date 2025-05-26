@@ -1,6 +1,6 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { IDoBasicEventInfo, IDoRegistrarUsuario } from "@synergia-frontend/interfaces";
+import { IDoListarEventos, IDoRegistrarUsuario } from "@synergia-frontend/interfaces";
 import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
 import { RegistrarUsuariosViewComponent } from "@synergia-frontend/views";
 import { catchError, EMPTY, tap } from 'rxjs';
@@ -19,7 +19,7 @@ import { PageCreateUsuarioResourceService } from '@synergia-frontend/api';
 })
 export class RegistrarUsuariosRouteComponent
 implements AbsBaseRoute, OnInit {
-  public readonly data$ = signal<IDoBasicEventInfo[]>([]);
+  public readonly data$ = signal<IDoListarEventos[]>([]);
 
   private readonly pageService = inject(PageCreateUsuarioResourceService);
   private readonly routingService = inject(RoutingService);

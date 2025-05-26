@@ -15,7 +15,7 @@ import {
 import { MatFormField } from '@angular/material/form-field';
 
 @Component({
-  selector: 'lib-filtro-listar-eventos',
+  selector: 'lib-filtro-page-listar-eventos',
   templateUrl: 'index.html',
   styleUrl: 'style.scss',
   imports: [

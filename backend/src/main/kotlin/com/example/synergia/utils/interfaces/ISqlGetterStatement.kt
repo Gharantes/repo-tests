@@ -1,5 +1,6 @@
 package com.example.synergia.utils.interfaces
 
+import org.springframework.dao.EmptyResultDataAccessException
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -22,11 +23,13 @@ interface ISqlGetterStatement <Result, Params> : ISql {
 
     fun queryForObject (template: JdbcTemplate): Result? =
         queryForObject(NamedParameterJdbcTemplate(template))
-    fun queryForObject (template: NamedParameterJdbcTemplate): Result? {
-        return template.queryForObject(
-            getSqlStatement(),
-            MapSqlParameterSource().apply { setParams(this) },
-            rowMapper
-        )
-    }
+
+    fun queryForObject (template: NamedParameterJdbcTemplate): Result? =
+        try {
+            template.queryForObject(
+                getSqlStatement(),
+                MapSqlParameterSource().apply { setParams(this) },
+                rowMapper
+            )
+        } catch (_: EmptyResultDataAccessException) { null }
 }

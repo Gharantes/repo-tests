@@ -95,12 +95,20 @@ export class RoutingService {
         }
     }
 
-    public getRouteLabels(): IDoRouteDetails[] { 
-        return [
-            this.dashboard(),
-            this.users(),
-            this.projects(),
-            this.events()
-        ]
+    public listarTags(): IDoRouteDetails {
+        return {
+            label: 'Tags',
+            path: [...this.activeTenant(), 'tags']
+        }
+    }
+
+    public getRouteLabels(): IDoRouteDetails[] {
+      return [
+        this.dashboard(),
+        this.users(),
+        this.projects(),
+        this.events(),
+        this.listarTags()
+      ]
     }
 }

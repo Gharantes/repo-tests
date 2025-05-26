@@ -1,6 +1,7 @@
 package com.example.synergia.repositories.pageListarTags
 
 import com.example.synergia.rest.pageListarTags.dto.input.InsertTagDto
+import com.example.synergia.utils.extensions.cleanString
 import com.example.synergia.utils.interfaces.ISqlUpdateStatement
 import com.example.synergia.utils.models.generics.GenericIdTextDto
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -10,7 +11,13 @@ class InsertTagSql (
     override val params: InsertTagDto
 ) : ISqlUpdateStatement<InsertTagDto> {
     override val sql: String = """
-        insert into tags (id_tenant, name) values (:id_tenant, :name);
+        insert into tags (
+            id_tenant, 
+            name
+        ) values (
+            :id_tenant, 
+            :name
+        );
     """.trimIndent()
     override fun setParams(paramMap: MapSqlParameterSource) {
         paramMap

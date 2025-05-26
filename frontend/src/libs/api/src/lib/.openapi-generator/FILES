@@ -27,7 +27,7 @@ model/filtroListarProjetosOfEventoDto.ts
 model/filtroListarTagsAllDto.ts
 model/filtroListarUsuariosAllDto.ts
 model/insertTagDto.ts
-model/listarEventosBasicInfoDto.ts
+model/listarEventosDto.ts
 model/listarProjetosBasicInfoDto.ts
 model/listarProjetosOfEventoDto.ts
 model/listarTagDto.ts

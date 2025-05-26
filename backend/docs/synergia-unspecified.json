@@ -227,7 +227,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ListarEventosBasicInfoDto"
+                    "$ref": "#/components/schemas/ListarEventosDto"
                   }
                 }
               }
@@ -375,6 +375,37 @@
         }
       }
     },
+    "/api/listar-tags/delete/{id}": {
+      "delete": {
+        "tags": [
+          "page-listar-tags-resource"
+        ],
+        "operationId": "deleteTag",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/listar-projetos/delete/{id}": {
       "delete": {
         "tags": [
@@ -428,6 +459,7 @@
     "schemas": {
       "LoginInformationInputDto": {
         "required": [
+          "checkLastSeen",
           "idTenant",
           "login",
           "password"
@@ -443,12 +475,16 @@
           },
           "password": {
             "type": "string"
+          },
+          "checkLastSeen": {
+            "type": "boolean"
           }
         }
       },
       "LoginInformationResponseDto": {
         "required": [
           "idAccount",
+          "idTenant",
           "login",
           "tenantTitle"
         ],
@@ -458,15 +494,19 @@
             "type": "integer",
             "format": "int64"
           },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idPerson": {
+            "type": "integer",
+            "format": "int64"
+          },
           "login": {
             "type": "string"
           },
           "tenantTitle": {
             "type": "string"
-          },
-          "idPerson": {
-            "type": "integer",
-            "format": "int64"
           },
           "firstName": {
             "type": "string"
@@ -650,8 +690,10 @@
           }
         }
       },
-      "ListarEventosBasicInfoDto": {
+      "ListarEventosDto": {
         "required": [
+          "createdByIdAccount",
+          "createdByNameAccount",
           "description",
           "id",
           "title"
@@ -666,6 +708,16 @@
             "type": "string"
           },
           "description": {
+            "type": "string"
+          },
+          "createdByIdAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdByNameAccount": {
+            "type": "string"
+          },
+          "bannerUrl": {
             "type": "string"
           }
         }
@@ -743,6 +795,7 @@
       },
       "CreateEventoDto": {
         "required": [
+          "createdByIdAccount",
           "description",
           "idTenant",
           "title"
@@ -757,6 +810,13 @@
             "type": "string"
           },
           "description": {
+            "type": "string"
+          },
+          "createdByIdAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "urlBanner": {
             "type": "string"
           }
         }

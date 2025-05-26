@@ -9,9 +9,12 @@
  */
 
 
-export interface ListarEventosBasicInfoDto { 
+export interface ListarEventosDto { 
     id: number;
     title: string;
     description: string;
+    createdByIdAccount: number;
+    createdByNameAccount: string;
+    bannerUrl?: string;
 }
 

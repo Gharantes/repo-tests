@@ -1,5 +1,5 @@
 export interface IDoRegistrarEvento {
   title: string,
   description: string,
-  urlBanner: string,
+  urlBanner: string | null,
 }

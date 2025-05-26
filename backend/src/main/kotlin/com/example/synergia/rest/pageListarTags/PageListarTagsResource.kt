@@ -8,6 +8,8 @@ import com.example.synergia.rest.pageListarTags.dto.output.ListarTagDto
 import com.example.synergia.services.PageListarTagsService
 import com.example.synergia.utils.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -29,4 +31,8 @@ class PageListarTagsResource (
         @RequestBody params: InsertTagDto
     ): ResponseEntity<Unit> =
         ResponseMessenger.buildResponse { service.insertTag(params) }
+
+    @DeleteMapping("/delete/{id}")
+    fun deleteTag(@PathVariable("id") id: Long): ResponseEntity<Unit> =
+        ResponseMessenger.buildResponse { service.deleteTag(id) }
 }

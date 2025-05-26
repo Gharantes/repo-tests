@@ -19,15 +19,11 @@ class PageLoginResource (
 ) {
     @GetMapping("/listar-tenants")
     fun listarTenantsLogin(): ResponseEntity<List<LoginTenantInformationDto>> =
-        ResponseMessenger.buildResponse {
-            service.listarTenantsLogin()
-        }
+        ResponseMessenger.buildResponse { service.listarTenantsLogin() }
 
     @PostMapping("/check-login-information")
     fun checkLoginInformation(
         @RequestBody params: LoginInformationInputDto
     ): ResponseEntity<LoginInformationResponseDto?> =
-        ResponseMessenger.buildResponse {
-            service.checkLoginInformation(params)
-        }
+        ResponseMessenger.buildResponse { service.checkLoginInformation(params) }
 }

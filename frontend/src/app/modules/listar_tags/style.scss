@@ -1,9 +1,36 @@
+@use '../../../styles/mixins' as m;
+@use '../../../styles/variables' as v;
+
 * {
-    box-sizing: border-box;
+    @include m.base();
 }
 :host {
-    display: flex;
+    @include m.fill();
+    @include m.col();
     flex: 1;
     height: 100%;
     overflow: auto;
+    row-gap: 25px;
+    padding: 10px;
+}
+#topline {
+    @include m.row();
+    height: 70px;
+    column-gap: 10px;
+    align-items: center;
+    .field { flex: 1; }
+    button {
+        @include m.clean-button-defaults();
+        background: v.$blue1;
+        color: v.$white1;
+        padding: 10px;
+        border-radius: 5px;
+        height: 45px;
+        font-weight: 600;
+        font-size: 0.90rem;
+        &:hover {
+            background: v.$blue2;
+            cursor: pointer;
+        }
+    }
 }

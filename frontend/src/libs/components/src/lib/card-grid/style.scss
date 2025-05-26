@@ -1,0 +1,23 @@
+#card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+
+  .card {
+    min-height: 300px;
+    width: 300px;
+
+
+    .banner {
+      .banner-color-block {
+      }
+      .banner-img {
+        width: 100%;
+        height: auto;
+      }
+    }
+    .card-information {
+      .card-primary {}
+      .card-secondary {}
+    }
+  }
+}

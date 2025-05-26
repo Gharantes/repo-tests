@@ -13,5 +13,7 @@ export interface CreateEventoDto {
     idTenant: number;
     title: string;
     description: string;
+    createdByIdAccount: number;
+    urlBanner?: string;
 }
 

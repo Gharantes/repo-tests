@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { FiltroListarEventosAllDto } from '../model/filtroListarEventosAllDto';
 // @ts-ignore
-import { ListarEventosBasicInfoDto } from '../model/listarEventosBasicInfoDto';
+import { ListarEventosDto } from '../model/listarEventosDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -159,9 +159,9 @@ export class PageListarEventosResourceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosBasicInfoDto>>;
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosBasicInfoDto>>>;
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosBasicInfoDto>>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosDto>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosDto>>>;
+    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosDto>>>;
     public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (filtroListarEventosAllDto === null || filtroListarEventosAllDto === undefined) {
             throw new Error('Required parameter filtroListarEventosAllDto was null or undefined when calling listarEventosAll.');
@@ -213,7 +213,7 @@ export class PageListarEventosResourceService {
         }
 
         let localVarPath = `/api/listar-eventos/all`;
-        return this.httpClient.request<Array<ListarEventosBasicInfoDto>>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ListarEventosDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: filtroListarEventosAllDto,

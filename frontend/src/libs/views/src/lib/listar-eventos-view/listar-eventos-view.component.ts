@@ -3,13 +3,17 @@ import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { SigExtendableTableComponent } from '@synergia-frontend/components';
-import { IDoBasicEventInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
+import {
+  IDoExtendableTableActions,
+  IDoExtendableTableColumnInfo,
+  IDoListarEventos,
+} from '@synergia-frontend/interfaces';
 import { FiltroListarEventosComponent } from './components/filtro-listar-eventos/filtro-listar-eventos.component';
 
 @Component({
-  selector: 'lib-listar-eventos-view',
+  selector: 'lib-page-listar-eventos-view',
   template: `
-    <lib-filtro-listar-eventos></lib-filtro-listar-eventos>
+    <lib-filtro-page-listar-eventos></lib-filtro-page-listar-eventos>
 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewEventPage()">
@@ -17,6 +21,10 @@ import { FiltroListarEventosComponent } from './components/filtro-listar-eventos
         <mat-icon class="material-symbols-outlined">add</mat-icon>
       </button>
     </div>
+
+    <!--    <lib-card-grid-->
+    <!--      [data$]=""-->
+    <!--    ></lib-card-grid>-->
 
     <lib-sig-extendable-table
       [data$]="data$"
@@ -34,50 +42,57 @@ import { FiltroListarEventosComponent } from './components/filtro-listar-eventos
   ],
 })
 export class ListarEventosViewComponent {
-  @Input() data$!: Signal<IDoBasicEventInfo[]>;
+  @Input() data$!: Signal<IDoListarEventos[]>;
 
   @Output() toNewEventPageEvent = new EventEmitter<void>();
   public toNewEventPage() {
     return this.toNewEventPageEvent.emit();
   }
 
-  @Output() editEntryEvent = new EventEmitter<IDoBasicEventInfo>();
-  @Output() deleteEntryEvent = new EventEmitter<IDoBasicEventInfo>();
-  @Output() viewDetailsEvent = new EventEmitter<IDoBasicEventInfo>();
-  public editEntry(el: IDoBasicEventInfo) {
+  @Output() editEntryEvent = new EventEmitter<IDoListarEventos>();
+  @Output() deleteEntryEvent = new EventEmitter<IDoListarEventos>();
+  @Output() viewDetailsEvent = new EventEmitter<IDoListarEventos>();
+  public editEntry(el: IDoListarEventos) {
     this.editEntryEvent.emit(el);
   }
-  public viewDetails(el: IDoBasicEventInfo) {
+  public viewDetails(el: IDoListarEventos) {
     this.viewDetailsEvent.emit(el);
   }
-  public deleteEntry(el: IDoBasicEventInfo) {
+  public deleteEntry(el: IDoListarEventos) {
     this.deleteEntryEvent.emit(el);
   }
 
-  public readonly tableColumns: IDoExtendableTableColumnInfo<IDoBasicEventInfo>[] =
+  public readonly tableColumns: IDoExtendableTableColumnInfo<IDoListarEventos>[] =
     [
       {
         def: 'title',
         header: 'Nome',
-        value: (element: IDoBasicEventInfo) => {
+        value: (element: IDoListarEventos) => {
           return element.title;
         },
       },
       {
         def: 'description',
         header: 'Descrição',
-        value: (element: IDoBasicEventInfo) => {
+        value: (element: IDoListarEventos) => {
           return element.description;
+        },
+      },
+      {
+        def: 'created_by_id',
+        header: 'Criado por',
+        value: (element: IDoListarEventos) => {
+          return element.createdByNameAccount;
         },
       },
     ];
 
-  public readonly tableActions: IDoExtendableTableActions<IDoBasicEventInfo>[] =
+  public readonly tableActions: IDoExtendableTableActions<IDoListarEventos>[] =
     [
       {
         label: 'Ver Detalhes',
         icon: '',
-        action: (el: IDoBasicEventInfo) => {
+        action: (el: IDoListarEventos) => {
           this.viewDetails.bind(this)(el);
         },
         isAllowed: () => {
@@ -87,7 +102,7 @@ export class ListarEventosViewComponent {
       {
         label: 'Editar Evento',
         icon: '',
-        action: (el: IDoBasicEventInfo) => {
+        action: (el: IDoListarEventos) => {
           this.editEntry.bind(this)(el);
         },
         isAllowed: () => {
@@ -97,7 +112,7 @@ export class ListarEventosViewComponent {
       {
         label: 'Deletar Evento',
         icon: '',
-        action: (el: IDoBasicEventInfo) => {
+        action: (el: IDoListarEventos) => {
           this.deleteEntry.bind(this)(el);
         },
         isAllowed: () => {

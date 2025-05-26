@@ -6,14 +6,23 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.sql.Types
 
 class CreateEventoSql (
-    override val params: CreateEventoDto
+    override val params: CreateEventoDto,
+    private val idBanner: Long?
 ) : ISqlUpdateStatement<CreateEventoDto> {
     override val sql: String = """
         INSERT INTO event (
             id_tenant, 
             title, 
-            description
-        ) values (:id_tenant, :title, :description);
+            description,
+            created_by,
+            id_banner
+        ) values (
+            :id_tenant, 
+            :title, 
+            :description,
+            :created_by,
+            :id_banner
+        );
     """.trimIndent()
 
     override fun setParams(paramMap: MapSqlParameterSource) {
@@ -29,5 +38,7 @@ class CreateEventoSql (
         paramMap.addValue("id_tenant", params.idTenant, Types.BIGINT)
         paramMap.addValue("title", params.title, Types.VARCHAR)
         paramMap.addValue("description", params.description, Types.VARCHAR)
+        paramMap.addValue("created_by", params.createdByIdAccount, Types.BIGINT)
+        paramMap.addValue("id_banner", idBanner, Types.BIGINT)
     }
 }

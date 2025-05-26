@@ -6,7 +6,7 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
-import { IDoBasicEventInfo, IDoRegistrarEvento, IDoRegistrarProjeto } from '@synergia-frontend/interfaces';
+import { IDoListarEventos, IDoRegistrarEvento, IDoRegistrarProjeto } from '@synergia-frontend/interfaces';
 
 @Component({
     selector: 'lib-registrar-projetos-view',
@@ -56,7 +56,7 @@ import { IDoBasicEventInfo, IDoRegistrarEvento, IDoRegistrarProjeto } from '@syn
 })
 export class RegistrarProjetosViewComponent
 extends AbsClassInsertView<IDoRegistrarProjeto> {
-  @Input() listaEventos: IDoBasicEventInfo[] = [];
+  @Input() listaEventos: IDoListarEventos[] = [];
 
   @Output() goToParentPageEvent = new EventEmitter<void>;
   @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarProjeto>();
@@ -82,12 +82,12 @@ extends AbsClassInsertView<IDoRegistrarProjeto> {
     }
   } 
 
-  public readonly eventosSelecionados = signal<IDoBasicEventInfo[]>([]);
+  public readonly eventosSelecionados = signal<IDoListarEventos[]>([]);
 
-  public isEventoSelecionado(evento: IDoBasicEventInfo) {
+  public isEventoSelecionado(evento: IDoListarEventos) {
     return this.eventosSelecionados().findIndex((re) => re.id == evento.id) != -1;
   }
-  public toggleEvento(evento: IDoBasicEventInfo) {
+  public toggleEvento(evento: IDoListarEventos) {
     this.eventosSelecionados.update((res) => {
       const i = res.findIndex((re) => re.id == evento.id);
       if (i == -1) {

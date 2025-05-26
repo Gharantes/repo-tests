@@ -1,0 +1,17 @@
+<div id="card-grid">
+  @for (entry of data$; track entry.id) {
+    <div class="card">
+      <div class="banner">
+        @if (entry.urlBanner === undefined || entry.urlBanner === '') {
+          <div class="banner-color-block"></div>
+        } @else {
+          <img class="banner-img" [src]="entry.urlBanner" alt="" />
+        }
+      </div>
+      <div class="card-information">
+        <div class="card-primary">{{ entry.primary }}</div>
+        <div class="card-secondary">{{ entry.secondary }}</div>
+      </div>
+    </div>
+  }
+</div>

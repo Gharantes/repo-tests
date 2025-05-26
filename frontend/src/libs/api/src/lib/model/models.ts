@@ -8,7 +8,7 @@ export * from './filtroListarProjetosOfEventoDto';
 export * from './filtroListarTagsAllDto';
 export * from './filtroListarUsuariosAllDto';
 export * from './insertTagDto';
-export * from './listarEventosBasicInfoDto';
+export * from './listarEventosDto';
 export * from './listarProjetosBasicInfoDto';
 export * from './listarProjetosOfEventoDto';
 export * from './listarTagDto';

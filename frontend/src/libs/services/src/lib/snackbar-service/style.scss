@@ -1,0 +1,83 @@
+#snackbars-container {
+    max-height: 100%;
+    max-width: 60%;
+    overflow: hidden;
+
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    padding: 8px;
+    padding-top: 0;
+
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    align-items: flex-end;
+    gap: 5px;
+
+    .message-box {
+      max-width: 100%;
+      width: fit-content;
+
+      background: black;
+      color: white;
+
+      border: 1px solid black;
+      border-radius: 4px;
+
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.2);
+
+      .message {
+        box-sizing: border-box;
+        padding: 8px 12px;
+        display: inline-block;
+
+        .mat-mdc-progress-spinner {
+          display: inline-flex;
+          margin-left: 6px;
+          position: relative;
+          bottom: -3px;
+          .mdc-circular-progress__determinate-circle,
+          .mdc-circular-progress__indeterminate-circle-graphic {
+            stroke: white;
+          }
+        }
+      }
+      .progress-bar {
+        height: 3px;
+        animation: extend-bar 3s ease-in-out forwards;
+
+        &.info {
+          background: #00cdff;
+        }
+        &.error {
+          background: #ff0000;
+        }
+      }
+
+      &.closing {
+        animation: vanish 0.5s ease-in-out forwards;
+      }
+    }
+  }
+
+  @keyframes extend-bar {
+    from {
+      width: 0;
+    }
+    to {
+      width: 100%;
+    }
+  }
+  @keyframes vanish {
+    from {
+      opacity: 1;
+      position: relative;
+      bottom: 0;
+    }
+    to {
+      opacity: 0;
+      position: relative;
+      bottom: 7px;
+    }
+  }
