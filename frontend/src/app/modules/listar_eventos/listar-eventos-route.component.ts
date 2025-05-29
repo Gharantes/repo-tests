@@ -1,10 +1,14 @@
-import { Component, OnInit, signal } from "@angular/core";
-import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { ListarEventosDto, PageListarEventosResourceService } from '@synergia-frontend/api';
-import { IDoListarEventos } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
+import { Component, OnInit, signal } from '@angular/core';
+import { AbsBaseRoute } from '@synergia-frontend/abstracts';
+import { PageListarEventosResourceService } from '@synergia-frontend/api';
+import { IDoListarEventos } from '@synergia-frontend/interfaces';
+import {
+  RoutingService,
+  SessionService,
+  SnackbarService,
+} from '@synergia-frontend/services';
 import { ListarEventosViewComponent } from '@synergia-frontend/views';
-import { catchError, concatMap, EMPTY, map, tap } from "rxjs";
+import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
 import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-frontend/mappers';
 
 @Component({
@@ -19,19 +23,18 @@ import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-fronte
     ></lib-page-listar-eventos-view>
   `,
   styleUrl: `./style.scss`,
-  imports: [ListarEventosViewComponent]
+  imports: [ListarEventosViewComponent],
 })
-export class ListarEventosRouteComponent
-implements AbsBaseRoute, OnInit {
+export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
   public readonly data$ = signal<IDoListarEventos[]>([]);
 
-  constructor (
+  constructor(
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
     private readonly pageService: PageListarEventosResourceService,
     private readonly snackService: SnackbarService
   ) {}
-  
+
   public ngOnInit() {
     this.setRouteInfo();
     this.getData().subscribe();
@@ -41,31 +44,35 @@ implements AbsBaseRoute, OnInit {
     this.routingService.setRouteInfo(this.routingService.events());
   }
   public toNewEventPageEvent() {
-    this.routingService.goTo(this.routingService.newEvents())
+    this.routingService.goTo(this.routingService.newEvents());
   }
 
-
   public getData() {
-    return this.pageService.listarEventosAll({
-      idTenant: this.sessionService.getTenantId() as number
-    }).pipe(
-      map(res => mapFromListarEventosDtoToIDoListarEventosArray(res)),
-      tap(res => this.data$.set(res))
-    );
+    return this.pageService
+      .listarEventosAll({
+        idTenant: this.sessionService.getTenantId() as number,
+      })
+      .pipe(
+        map((res) => mapFromListarEventosDtoToIDoListarEventosArray(res)),
+        tap((res) => this.data$.set(res))
+      );
   }
 
   public viewDetails($event: IDoListarEventos) {
     const destiny = this.routingService.eventDetails($event.id);
-    this.routingService.goTo(destiny)
+    this.routingService.goTo(destiny);
   }
   public deleteEntry($event: IDoListarEventos) {
-    this.pageService.deletarEvento($event.id).pipe(
-      catchError(() => {
-        this.snackService.addMessage("Erro ao deletar Evento.");
-        return EMPTY;
-      }),
-      concatMap(() => this.getData()),
-      tap(() => this.snackService.addMessage("Evento deletado com sucesso."))
-    ).subscribe()
+    this.pageService
+      .deletarEvento($event.id)
+      .pipe(
+        catchError(() => {
+          this.snackService.addMessage('Erro ao deletar Evento.');
+          return EMPTY;
+        }),
+        concatMap(() => this.getData()),
+        tap(() => this.snackService.addMessage('Evento deletado com sucesso.'))
+      )
+      .subscribe();
   }
 }

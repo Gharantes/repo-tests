@@ -11,9 +11,11 @@
     padding: 10px;
 }
 
-.btn-line {
-    @include m.col();
-    align-items: flex-end;
-    justify-content: center;
-    padding: 10px;
+#topline {
+    @include m.row();
+    width: 100%;
+    height: 70px;
+    column-gap: 10px;
+    align-items: center;
+    .field { flex: 1; }
 }

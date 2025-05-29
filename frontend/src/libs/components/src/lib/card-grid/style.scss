@@ -4,6 +4,7 @@
   @include m.base();
 }
 :host {
+  padding: 5px;
 }
 #card-grid {
   display: grid;

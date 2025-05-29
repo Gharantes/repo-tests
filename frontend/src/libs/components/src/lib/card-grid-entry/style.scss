@@ -11,15 +11,18 @@
   @include m.col();
   @include m.fill();
   overflow: hidden;
-  box-shadow: rgba(0, 0, 0, 0.05) 0px 0px 0px 1px, rgb(209, 213, 219) 0px 0px 0px 1px inset;
+  box-shadow:
+          rgba(0, 0, 0, 0.05) 0 0 0 1px,
+          rgb(209, 213, 219) 0 0 0 1px inset;
 
   border-radius: 10px;
   padding: 1px;
 
   &:hover {
-    transform: scale(1.03);
     cursor: pointer;
-    box-shadow: rgba(0, 0, 0, 0.07) 0px 1px 2px, rgba(0, 0, 0, 0.07) 0px 2px 4px, rgba(0, 0, 0, 0.07) 0px 4px 8px, rgba(0, 0, 0, 0.07) 0px 8px 16px, rgba(0, 0, 0, 0.07) 0px 16px 32px, rgba(0, 0, 0, 0.07) 0px 32px 64px;
+    box-shadow:
+            rgba(0, 0, 0, 0.05) 0 0 0 2px,
+            rgb(209, 213, 219) 0 0 0 2px inset;
   }
 }
 .banner {
@@ -30,7 +33,6 @@
   .banner-color-block {
     width: 100%;
     height: 150px;
-    background: coral;
   }
   .banner-img {
     width: 100%;
