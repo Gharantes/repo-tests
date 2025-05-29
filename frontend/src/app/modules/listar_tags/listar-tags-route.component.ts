@@ -19,6 +19,7 @@ import { listarTagsDtoToIDoArray } from '@synergia-frontend/mappers';
 
 @Component({
   selector: 'app-listar-tags-route',
+  standalone: true,
   template: `
     <div id="topline">
       <mat-form-field class="field">

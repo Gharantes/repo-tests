@@ -5,6 +5,7 @@ import { RoutingService } from '@synergia-frontend/services';
 
 @Component({
   selector: 'app-tenant-picker-login',
+  standalone: true,
   templateUrl: 'index.html',
   styleUrl: 'style.scss',
   imports: [MatRipple],

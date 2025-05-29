@@ -7,14 +7,15 @@ import { IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synerg
 import { GmIconComponent } from "../google-material-icon/gm-icon.component";
 
 @Component({
-    selector: 'lib-sig-extendable-table',
-    templateUrl: 'index.html',
-    styleUrl: './style.scss',
-    imports: [
+  selector: 'lib-sig-extendable-table',
+  templateUrl: 'index.html',
+  styleUrl: './style.scss',
+  standalone: true,
+  imports: [
     CommonModule, MatTableModule,
     MatMenuModule, MatIconModule,
     GmIconComponent
-]
+  ]
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input()

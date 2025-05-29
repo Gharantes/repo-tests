@@ -13,6 +13,7 @@ import { mapFromIDoListarEventosToIDoCardGridArray } from '@synergia-frontend/ma
 
 @Component({
   selector: 'lib-page-listar-eventos-view',
+  standalone: true,
   template: `
     <lib-filtro-page-listar-eventos></lib-filtro-page-listar-eventos>
 

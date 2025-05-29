@@ -1,37 +1,43 @@
-import { Component, inject, OnInit, signal } from "@angular/core";
-import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { ListarUsuariosBasicInfoDto, PageListarUsuariosResourceService } from "@synergia-frontend/api";
-import { IDoBasicUsuarioInfo } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
+import { Component, OnInit, signal } from '@angular/core';
+import { AbsBaseRoute } from '@synergia-frontend/abstracts';
+import {
+  ListarUsuariosBasicInfoDto,
+  PageListarUsuariosResourceService,
+} from '@synergia-frontend/api';
+import { IDoBasicUsuarioInfo } from '@synergia-frontend/interfaces';
+import {
+  RoutingService,
+  SessionService,
+  SnackbarService,
+} from '@synergia-frontend/services';
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
-import { catchError, EMPTY, map, tap } from "rxjs";
+import { catchError, EMPTY, map, tap } from 'rxjs';
 
 @Component({
-    selector: 'app-page-listar-usuarios-route',
-    template: `
+  selector: 'app-page-listar-usuarios-route',
+  standalone: true,
+  template: `
     <lib-page-listar-usuarios-view
       [data$]="data$"
       (toNewUserPageEvent)="toNewUserPage()"
     ></lib-page-listar-usuarios-view>
   `,
-    styleUrl: `./style.scss`,
-    imports: [ListarUsuariosViewComponent]
+  styleUrl: `./style.scss`,
+  imports: [ListarUsuariosViewComponent],
 })
-export class ListarUsuariosRouteComponent
-implements AbsBaseRoute, OnInit {
+export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
   public readonly data$ = signal<IDoBasicUsuarioInfo[]>([]);
 
-  constructor (
+  constructor(
     private readonly sessionService: SessionService,
     private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
     private readonly pageService: PageListarUsuariosResourceService
   ) {}
 
-  
   public ngOnInit(): void {
-      this.setRouteInfo();
-      this.getData()
+    this.setRouteInfo();
+    this.getData();
   }
   public setRouteInfo(): void {
     this.routingService.setRouteInfo(this.routingService.users());
@@ -40,19 +46,22 @@ implements AbsBaseRoute, OnInit {
     this.routingService.goTo(this.routingService.newUsers());
   }
   public getData() {
-    return this.pageService.listarUsuariosAll({
-      idTenant: this.sessionService.getTenantId() as number
-    }).pipe(
-      catchError(err => {
-        this.snackService.addMessage('Erro ao trazer usuários.');
-        return EMPTY;
-      }),
-      map(res => this.mapData(res)),
-      tap(res => this.data$.set(res))
-    ).subscribe()
+    return this.pageService
+      .listarUsuariosAll({
+        idTenant: this.sessionService.getTenantId() as number,
+      })
+      .pipe(
+        catchError((err) => {
+          this.snackService.addMessage('Erro ao trazer usuários.');
+          return EMPTY;
+        }),
+        map((res) => this.mapData(res)),
+        tap((res) => this.data$.set(res))
+      )
+      .subscribe();
   }
 
   private mapData(res: ListarUsuariosBasicInfoDto[]): IDoBasicUsuarioInfo[] {
-    return res.map(v => ({ ...v }))
+    return res.map((v) => ({ ...v }));
   }
 }

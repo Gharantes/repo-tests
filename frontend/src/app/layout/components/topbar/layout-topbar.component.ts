@@ -4,8 +4,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { GmIconComponent } from "@synergia-frontend/components";
 
 @Component({
-    selector: 'app-layout-topbar',
-    template: `
+  selector: 'app-layout-topbar',
+  standalone: true,
+  template: `
     <div>
       Synergia
     </div>
@@ -26,8 +27,8 @@ import { GmIconComponent } from "@synergia-frontend/components";
       <button mat-menu-item (click)="logout()">Logout</button>
     </mat-menu>
   `,
-    styleUrl: `./style.scss`,
-    imports: [GmIconComponent, MatMenuModule]
+  styleUrl: `./style.scss`,
+  imports: [GmIconComponent, MatMenuModule]
 })
 export class LayoutTopbarComponent {
   constructor(

@@ -6,11 +6,11 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
-import { IDoListarEventos, IDoRegistrarEvento, IDoRegistrarProjeto } from '@synergia-frontend/interfaces';
+import { IDoListarEventos, IDoRegistrarProjeto } from '@synergia-frontend/interfaces';
 
 @Component({
-    selector: 'lib-registrar-projetos-view',
-    template: `
+  selector: 'lib-registrar-projetos-view',
+  template: `
     <form>
       <mat-form-field [appearance]="'outline'" class="field">
         <mat-label>Título</mat-label>
@@ -43,16 +43,17 @@ import { IDoListarEventos, IDoRegistrarEvento, IDoRegistrarProjeto } from '@syne
       <button mat-raised-button [disabled]="!isFormValid()" (click)="registrarEntidade()">Salvar</button>
     </div>
   `,
-    styleUrl: 'style.scss',
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ReactiveFormsModule
-    ]
+  styleUrl: 'style.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule
+  ]
 })
 export class RegistrarProjetosViewComponent
 extends AbsClassInsertView<IDoRegistrarProjeto> {

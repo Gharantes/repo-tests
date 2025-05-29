@@ -4,13 +4,11 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatLabel } from '@angular/material/input';
 import {
-  FormBuilder,
   FormControl,
   FormGroup,
   FormsModule,
   NonNullableFormBuilder,
-  ReactiveFormsModule,
-  Validators
+  ReactiveFormsModule
 } from '@angular/forms';
 import { MatFormField } from '@angular/material/form-field';
 
@@ -18,6 +16,7 @@ import { MatFormField } from '@angular/material/form-field';
   selector: 'lib-filtro-page-listar-eventos',
   templateUrl: 'index.html',
   styleUrl: 'style.scss',
+  standalone: true,
   imports: [
     CommonModule,
     MatIconModule,

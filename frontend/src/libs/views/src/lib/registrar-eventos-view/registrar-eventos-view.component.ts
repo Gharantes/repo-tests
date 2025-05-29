@@ -9,17 +9,18 @@ import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import { IDoRegistrarEvento } from '@synergia-frontend/interfaces';
 
 @Component({
-    selector: 'lib-registrar-eventos-view',
-    templateUrl: 'index.html',
-    styleUrl: 'style.scss',
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        ReactiveFormsModule
-    ]
+  selector: 'lib-registrar-eventos-view',
+  templateUrl: 'index.html',
+  styleUrl: 'style.scss',
+  standalone: true,
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    ReactiveFormsModule
+  ]
 })
 export class RegistrarEventosViewComponent 
 extends AbsClassInsertView<IDoRegistrarEvento> {

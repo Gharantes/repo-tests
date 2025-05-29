@@ -4,12 +4,13 @@ import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { of } from "rxjs";
 
 @Component({
-    selector: 'app-dashboard-route',
-    template: `
+  selector: 'app-dashboard-route',
+  standalone: true,
+  template: `
     Teste
   `,
-    styleUrl: `./style.scss`,
-    imports: []
+  styleUrl: `./style.scss`,
+  imports: []
 })
 export class DashboardRouteComponent 
 implements AbsBaseRoute, OnInit {

@@ -9,6 +9,7 @@ import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-fronte
 
 @Component({
   selector: 'app-page-listar-eventos-route',
+  standalone: true,
   template: `
     <lib-page-listar-eventos-view
       [data$]="data$"

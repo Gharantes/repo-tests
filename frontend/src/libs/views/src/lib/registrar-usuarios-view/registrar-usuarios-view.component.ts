@@ -10,8 +10,9 @@ import { IDoRegistrarUsuario } from '@synergia-frontend/interfaces';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 @Component({
-    selector: 'lib-registrar-usuarios-view',
-    template: `
+  selector: 'lib-registrar-usuarios-view',
+  standalone: true,
+  template: `
     <div id="form-container">
       <mat-form-field [appearance]="'outline'">
         <mat-label>Nome</mat-label>
@@ -43,16 +44,16 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
       </button>
     </div>
   `,
-    styleUrl: 'style.scss',
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ReactiveFormsModule
-    ]
+  styleUrl: 'style.scss',
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule
+  ]
 })
 export class RegistrarUsuariosViewComponent 
 extends AbsClassInsertView<IDoRegistrarUsuario> {

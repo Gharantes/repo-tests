@@ -3,8 +3,9 @@ import { MatRippleModule } from "@angular/material/core";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 
 @Component({
-    selector: 'app-layout-sidebar',
-    template: `
+  selector: 'app-layout-sidebar',
+  standalone: true,
+  template: `
     <div class="routes-container">
       @for (item of routingService.getRouteLabels(); track $index) {
         <div matRipple (click)="routingService.goTo(item)" class="link">
@@ -13,8 +14,8 @@ import { RoutingService, SessionService } from "@synergia-frontend/services";
       }
     </div>
   `,
-    styleUrl: `./style.scss`,
-    imports: [MatRippleModule]
+  styleUrl: `./style.scss`,
+  imports: [MatRippleModule]
 })
 export class LayoutSidebarComponent {
   constructor(
