@@ -97,7 +97,7 @@ export class RoutingService {
   public editEvents(id: number): IDoRouteDetails {
     return {
       label: 'Editar Eventos',
-      path: [...this.activeTenant(), 'events', 'edit', id.toString()]
+      path: [...this.activeTenant(), 'event', 'edit', id.toString()]
     }
   }
 
