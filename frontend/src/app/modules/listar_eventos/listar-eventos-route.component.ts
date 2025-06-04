@@ -10,6 +10,9 @@ import {
 import { ListarEventosViewComponent } from '@synergia-frontend/views';
 import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
 import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-frontend/mappers';
+import { MatDialog } from '@angular/material/dialog';
+import { IDoCardGridEntryInteraction } from '@synergia-frontend/components';
+import { EventoCardDialogComponent } from './evento-card/evento-card-dialog.component';
 
 @Component({
   selector: 'app-page-listar-eventos-route',
@@ -20,6 +23,7 @@ import { mapFromListarEventosDtoToIDoListarEventosArray } from '@synergia-fronte
       (toNewEventPageEvent)="toNewEventPageEvent()"
       (viewDetailsEvent)="viewDetails($event)"
       (deleteEntryEvent)="deleteEntry($event)"
+      (cardInteractionEvent)="cardInteraction($event)"
     ></lib-page-listar-eventos-view>
   `,
   styleUrl: `./style.scss`,
@@ -32,7 +36,8 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
     private readonly pageService: PageListarEventosResourceService,
-    private readonly snackService: SnackbarService
+    private readonly snackService: SnackbarService,
+    private readonly dialog: MatDialog,
   ) {}
 
   public ngOnInit() {
@@ -74,5 +79,12 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
         tap(() => this.snackService.addMessage('Evento deletado com sucesso.'))
       )
       .subscribe();
+  }
+
+  cardInteraction($event: IDoCardGridEntryInteraction) {
+    console.log($event);
+    this.dialog.open(EventoCardDialogComponent, { data: $event.entry }).afterClosed().pipe(
+      tap(res => console.log(res))
+    ).subscribe()
   }
 }

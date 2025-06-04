@@ -44,6 +44,8 @@ export class ListarEventosViewComponent {
   });
 
   @Output() toNewEventPageEvent = new EventEmitter<void>();
+  @Output() cardInteractionEvent = new EventEmitter<IDoCardGridEntryInteraction>();
+
   public toNewEventPage() {
     return this.toNewEventPageEvent.emit();
   }
@@ -121,7 +123,7 @@ export class ListarEventosViewComponent {
     ];
 
   cardInteraction($event: IDoCardGridEntryInteraction) {
-    console.log($event);
+    this.cardInteractionEvent.emit($event)
   }
 
   public activeDisplayType: DisplayType = 'GRID';

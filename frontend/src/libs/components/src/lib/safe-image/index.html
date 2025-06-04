@@ -1,0 +1,13 @@
+@if (hasValidImage() && !errorOnLoadingImage) {
+  <img
+    class="banner-img"
+    [src]="url"
+    (error)="errorOnLoad()"
+    alt="Card's banner"
+  />
+} @else {
+  <div
+    class="banner-color-block"
+    [style]="'background: ' + this.altColor"
+  ></div>
+}

@@ -11,3 +11,5 @@ export * from './lib/card-grid/card-grid.component'
 export * from './lib/card-grid-entry/card-grid-entry.component'
 export * from './lib/card-grid-entry/card-grid-entry-interaction-type'
 export * from './lib/card-grid-entry/i-do-card-grid-entry-interaction'
+
+export * from './lib/safe-image/safe-image.component'

@@ -23,6 +23,12 @@ class PageListarEventosResource (
     ): ResponseEntity<List<ListarEventosDto>> =
         ResponseMessenger.buildResponse { service.listarEventosAll(params) }
 
+    @PostMapping("/all/{id}")
+    fun listarEventosById(
+        @PathVariable("id") id: Long
+    ): ResponseEntity<ListarEventosDto> =
+        ResponseMessenger.buildResponse { service.listarEventosById(id) }
+
     @DeleteMapping("/delete/{id}")
     fun deletarEvento(
         @PathVariable("id") id: Long
