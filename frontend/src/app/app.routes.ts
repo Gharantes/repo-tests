@@ -31,6 +31,10 @@ const registrarEventos = {
   path: 'events/new',
   component: RegistrarEventosRouteComponent
 }
+const editarEvento = {
+  path: 'event/edit/:id',
+  component: RegistrarEventosRouteComponent
+}
 
 
 const listarUsuarios = {
@@ -81,6 +85,7 @@ export const appRoutes: Route[] = [
       listarEventos,
       registrarEventos,
       detalhesEvento,
+      editarEvento,
       // Projetos
       listarProjetosRoute,
       registrarProjetosRoute,

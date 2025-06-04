@@ -6,8 +6,9 @@ import { SigExtendableTableComponent } from "@synergia-frontend/components";
 import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColumnInfo } from '@synergia-frontend/interfaces';
 
 @Component({
-    selector: 'lib-page-listar-projetos-view',
-    template: ` 
+  selector: 'lib-page-listar-projetos-view',
+  standalone: true,
+  template: ` 
     <div class="btn-line">
       <button mat-raised-button (click)="toNewProjectsPage()">
         <span>Criar novo projeto</span>
@@ -21,13 +22,13 @@ import { IDoBasicProjectInfo, IDoExtendableTableActions, IDoExtendableTableColum
       [actions]="tableActions"
     ></lib-sig-extendable-table>
   `,
-    styleUrl: 'style.scss',
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        SigExtendableTableComponent
-    ]
+  styleUrl: 'style.scss',
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    SigExtendableTableComponent
+  ]
 })
 export class ListarProjetosViewComponent {
   @Input() data$!: Signal<IDoBasicProjectInfo[]>;

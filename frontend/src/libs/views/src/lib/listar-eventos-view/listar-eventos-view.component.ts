@@ -1,8 +1,19 @@
 import { CommonModule } from '@angular/common';
-import { Component, computed, EventEmitter, Input, Output, Signal } from '@angular/core';
+import {
+  Component,
+  computed,
+  EventEmitter,
+  Input,
+  Output,
+  Signal,
+} from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { CardGridComponent, SigExtendableTableComponent } from '@synergia-frontend/components';
+import {
+  CardGridComponent,
+  IDoCardGridEntryInteraction,
+  SigExtendableTableComponent,
+} from '@synergia-frontend/components';
 import {
   IDoExtendableTableActions,
   IDoExtendableTableColumnInfo,
@@ -10,29 +21,12 @@ import {
 } from '@synergia-frontend/interfaces';
 import { FiltroListarEventosComponent } from './components/filtro-listar-eventos/filtro-listar-eventos.component';
 import { mapFromIDoListarEventosToIDoCardGridArray } from '@synergia-frontend/mappers';
+import { DisplayType, toggleDisplayType } from '@synergia-frontend/utils';
 
 @Component({
   selector: 'lib-page-listar-eventos-view',
-  template: `
-    <lib-filtro-page-listar-eventos></lib-filtro-page-listar-eventos>
-
-    <div class="btn-line">
-      <button mat-raised-button (click)="toNewEventPage()">
-        <span>Criar novo evento</span>
-        <mat-icon class="material-symbols-outlined">add</mat-icon>
-      </button>
-    </div>
-
-    <lib-card-grid
-      [data$]="cardGridData$()"
-    ></lib-card-grid>
-
-    <lib-sig-extendable-table
-      [data$]="data$"
-      [columns]="tableColumns"
-      [actions]="tableActions"
-    ></lib-sig-extendable-table>
-  `,
+  standalone: true,
+  templateUrl: './index.html',
   styleUrl: 'style.scss',
   imports: [
     CommonModule,
@@ -40,17 +34,18 @@ import { mapFromIDoListarEventosToIDoCardGridArray } from '@synergia-frontend/ma
     MatIconModule,
     MatButtonModule,
     FiltroListarEventosComponent,
-    CardGridComponent
+    CardGridComponent,
   ],
 })
 export class ListarEventosViewComponent {
   @Input() data$!: Signal<IDoListarEventos[]>;
   public cardGridData$ = computed(() => {
-    return mapFromIDoListarEventosToIDoCardGridArray(this.data$())
-  })
-
+    return mapFromIDoListarEventosToIDoCardGridArray(this.data$());
+  });
 
   @Output() toNewEventPageEvent = new EventEmitter<void>();
+  @Output() cardInteractionEvent = new EventEmitter<IDoCardGridEntryInteraction>();
+
   public toNewEventPage() {
     return this.toNewEventPageEvent.emit();
   }
@@ -126,4 +121,13 @@ export class ListarEventosViewComponent {
         },
       },
     ];
+
+  cardInteraction($event: IDoCardGridEntryInteraction) {
+    this.cardInteractionEvent.emit($event)
+  }
+
+  public activeDisplayType: DisplayType = 'GRID';
+  switchDisplayType() {
+    this.activeDisplayType = toggleDisplayType(this.activeDisplayType);
+  }
 }

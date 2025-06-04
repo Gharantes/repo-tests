@@ -5,20 +5,21 @@ import { GmIconImage } from "./gm-icon-image";
 import { CommonModule } from "@angular/common";
 
 @Component({
-    selector: 'lib-gm-icon',
-    template: `
-        <mat-icon [ngClass]="getClass()">{{ image }}</mat-icon>
-    `,
-    styles: [`
-        :host {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: min-content;
-            width: min-content;
-        }   
-    `],
-    imports: [MatIcon, CommonModule]
+  selector: 'lib-gm-icon',
+  standalone: true,
+  template: `
+    <mat-icon [ngClass]="getClass()">{{ image }}</mat-icon>
+  `,
+  styles: [`
+    :host {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: min-content;
+      width: min-content;
+    }   
+  `],
+  imports: [MatIcon, CommonModule]
 })
 export class GmIconComponent {
     @Input() type?: GmIconType = 'outlined';

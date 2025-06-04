@@ -5,8 +5,9 @@ import { LayoutSidebarComponent } from "../components/sidebar/layout-sidebar.com
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
-    selector: 'app-normal-layout',
-    template: `
+  selector: 'app-normal-layout',
+  standalone: true,
+  template: `
     <app-layout-topbar></app-layout-topbar>
 
     <div id="page" class="h-full">
@@ -19,13 +20,13 @@ import { MatCardModule } from "@angular/material/card";
         </div>
     </div>
   `,
-    styleUrl: `./style.scss`,
-    imports: [
-        RouterOutlet,
-        LayoutTopbarComponent,
-        LayoutSidebarComponent,
-        MatCardModule
-    ]
+  styleUrl: `./style.scss`,
+  imports: [
+    RouterOutlet,
+    LayoutTopbarComponent,
+    LayoutSidebarComponent,
+    MatCardModule
+  ]
 })
 export class NormalLayoutComponent {
 

@@ -7,16 +7,17 @@ import { ListarProjetosViewComponent } from '@synergia-frontend/views';
 import { catchError, concat, concatMap, EMPTY, map, tap } from "rxjs";
 
 @Component({
-    selector: 'app-page-listar-projetos-route',
-    template: `
+  selector: 'app-page-listar-projetos-route',
+  standalone: true,
+  template: `
     <lib-page-listar-projetos-view
       [data$]="data$"
       (toNewProjectsPageEvent)="toNewProjectsPage()"
       (deleteEntryEvent)="deleteEntry($event)"
     ></lib-page-listar-projetos-view>
   `,
-    styleUrl: `./style.scss`,
-    imports: [ListarProjetosViewComponent]
+  styleUrl: `./style.scss`,
+  imports: [ListarProjetosViewComponent]
 })
 export class ListarProjetosRouteComponent
 implements AbsBaseRoute, OnInit {
@@ -45,7 +46,7 @@ implements AbsBaseRoute, OnInit {
     return this.pageService.listarProjetosAll({
       idTenant: this.sessionService.getTenantId() as number
     }).pipe(
-      catchError(err => {
+      catchError(() => {
         this.snackService.addMessage('Erro ao listar projetos');
         return EMPTY;
       }),

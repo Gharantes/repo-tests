@@ -236,6 +236,37 @@
         }
       }
     },
+    "/api/listar-eventos/all/{id}": {
+      "post": {
+        "tags": [
+          "page-listar-eventos-resource"
+        ],
+        "operationId": "listarEventosById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarEventosDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/create-usuario/store": {
       "post": {
         "tags": [

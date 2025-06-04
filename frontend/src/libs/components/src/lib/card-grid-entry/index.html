@@ -1,10 +1,9 @@
 <div class="card" (click)="interact('CARD')">
   <div class="banner" (click)="interact('BANNER')">
-    @if (hasBanner()) {
-      <img class="banner-img" [src]="entry.urlBanner" alt="" />
-    } @else {
-      <div class="banner-color-block"></div>
-    }
+    <lib-safe-image
+      [url]="entry.urlBanner"
+      [altColor]="entry.backgroundColor"
+    ></lib-safe-image>
   </div>
 
   <div class="card-information">

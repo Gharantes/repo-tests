@@ -7,15 +7,16 @@ import { catchError, EMPTY, tap } from 'rxjs';
 import { PageCreateUsuarioResourceService } from '@synergia-frontend/api';
 
 @Component({
-    selector: 'app-registrar-usuarios-route',
-    template: `
+  selector: 'app-registrar-usuarios-route',
+  standalone: true,
+  template: `
     <lib-registrar-usuarios-view
       (goToParentPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="registrarEntidade($event)"
     ></lib-registrar-usuarios-view>
   `,
-    styleUrl: `./style.scss`,
-    imports: [RegistrarUsuariosViewComponent]
+  styleUrl: `./style.scss`,
+  imports: [RegistrarUsuariosViewComponent]
 })
 export class RegistrarUsuariosRouteComponent
 implements AbsBaseRoute, OnInit {

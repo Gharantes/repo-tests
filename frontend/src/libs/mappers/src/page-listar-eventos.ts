@@ -1,5 +1,6 @@
 import { IDoCardGrid, IDoListarEventos } from '@synergia-frontend/interfaces';
 import { ListarEventosDto } from '@synergia-frontend/api';
+import { getRandomColor } from '@synergia-frontend/utils';
 
 export function mapFromListarEventosDtoToIDoListarEventosArray(
   res: ListarEventosDto[]
@@ -31,6 +32,7 @@ function mapFromIDoListarEventosToIDoCardGrid(
     id: res.id,
     primary: res.title,
     secondary: res.createdByNameAccount,
-    urlBanner: res.bannerUrl
+    urlBanner: res.bannerUrl,
+    backgroundColor: getRandomColor()
   }
 }

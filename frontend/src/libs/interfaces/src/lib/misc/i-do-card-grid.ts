@@ -3,4 +3,5 @@ export interface IDoCardGrid {
   primary: string;
   secondary: string;
   urlBanner?: string;
+  backgroundColor: string;
 }

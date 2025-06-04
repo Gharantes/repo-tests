@@ -9,14 +9,15 @@ import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
 
 @Component({
-    selector: 'lib-registrar-tenant-view',
-    template: `
+  selector: 'lib-registrar-tenant-view',
+  standalone: true,
+  template: `
     <div id="form">
       <mat-form-field [appearance]="'outline'">
         <mat-label>Título</mat-label>
         <input type="text" matInput [formControl]="form.controls.title"/>
       </mat-form-field>
-
+  
       <mat-form-field [appearance]="'outline'">
         <mat-label>Identifier</mat-label>
         <input type="text" matInput [formControl]="form.controls.identifier" />
@@ -28,16 +29,16 @@ import { IDoRegistrarTenant } from '@synergia-frontend/interfaces';
       </div>
     </div>
   `,
-    styleUrl: 'style.scss',
-    imports: [
-        CommonModule,
-        MatIconModule,
-        MatButtonModule,
-        MatFormFieldModule,
-        MatInputModule,
-        MatButtonModule,
-        ReactiveFormsModule
-    ]
+  styleUrl: 'style.scss',
+  imports: [
+    CommonModule,
+    MatIconModule,
+    MatButtonModule,
+    MatFormFieldModule,
+    MatInputModule,
+    MatButtonModule,
+    ReactiveFormsModule
+  ]
 })
 export class RegistrarTenantViewComponent
 extends AbsClassInsertView<IDoRegistrarTenant> {
