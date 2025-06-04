@@ -20,6 +20,15 @@
   padding: 15px 15px 10px 15px;
   flex: 1;
   row-gap: 10px;
+  @include m.col();
+
+  .button-container {
+    @include m.row();
+    button {
+      width: 100%;
+      outline: none;
+    }
+  }
 }
 .section {
   padding: 10px;

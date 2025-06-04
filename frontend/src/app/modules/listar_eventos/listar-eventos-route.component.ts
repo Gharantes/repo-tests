@@ -83,8 +83,9 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
 
   cardInteraction($event: IDoCardGridEntryInteraction) {
     console.log($event);
-    this.dialog.open(EventoCardDialogComponent, { data: $event.entry }).afterClosed().pipe(
-      tap(res => console.log(res))
-    ).subscribe()
+    this.dialog.open(
+      EventoCardDialogComponent,
+      { data: $event.entry }
+    ).afterClosed().pipe().subscribe()
   }
 }

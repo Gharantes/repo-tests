@@ -2,7 +2,7 @@ import { Injectable, signal } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { IDoRouteDetails } from '@synergia-frontend/interfaces';
 import { SessionService } from "./session.service";
-import { firstValueFrom } from "rxjs";
+import { firstValueFrom, tap } from 'rxjs';
 
 @Injectable({
     providedIn: 'root',
@@ -16,7 +16,7 @@ export class RoutingService {
     public readonly activeRouteInfo = signal<IDoRouteDetails | null>(null)
 
     public async getParamFromRoute(route: ActivatedRoute, key: string): Promise<string | null> {
-        return (await firstValueFrom(route.paramMap)).get(key)
+      return (await firstValueFrom(route.paramMap)).get(key)
     }
     public setRouteInfo(r: IDoRouteDetails) {
         this.activeRouteInfo.set(r)
