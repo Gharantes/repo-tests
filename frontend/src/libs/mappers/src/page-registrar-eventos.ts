@@ -8,6 +8,7 @@ export function mapFromListarEventosDtoToIDoRegistrarEvento(
   res: IDoListarEventos
 ): IDoRegistrarEvento {
   return {
+    id: res.id,
     title: res.title,
     description: res.description,
     urlBanner: res.bannerUrl ?? null,

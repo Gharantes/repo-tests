@@ -58,6 +58,7 @@ export class RegistrarEventosViewComponent
   }
 
   public readonly form = this.fb.group<ControlsOf<IDoRegistrarEvento>>({
+    id: this.fb.control(null),
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     urlBanner: this.fb.control(null, []),
@@ -73,6 +74,7 @@ export class RegistrarEventosViewComponent
       return null;
     }
     return {
+      id: v.id ?? null,
       description: v.description,
       title: v.title,
       urlBanner: v.urlBanner ?? null,

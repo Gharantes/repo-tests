@@ -5,6 +5,5 @@ data class UpdateEventoDto(
     val idTenant: Long,
     val title: String,
     val description: String,
-    val createdByIdAccount: Long,
     val urlBanner: String?
 )
