@@ -6,6 +6,7 @@ import com.example.synergia.services.PageCreateEventoService
 import com.example.synergia.utils.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -18,7 +19,7 @@ class PageCreateEventoResource(
 ) {
     @GetMapping("get-by-id/{id}")
     fun getCreateEventoDtoById(
-        id: Long
+        @PathVariable("id") id: Long
     ): ResponseEntity<CreateEventoDto?> = ResponseMessenger.buildResponse {
         service.getCreateEventoDtoById(id)
     }
@@ -27,6 +28,7 @@ class PageCreateEventoResource(
     fun createEvento(
         @RequestBody params: CreateEventoDto
     ): ResponseEntity<Void> = ResponseMessenger.responseWithoutReturn {
+        throw Exception()
         service.createEvento(params)
     }
 

@@ -7,7 +7,15 @@ import { of } from "rxjs";
   selector: 'app-dashboard-route',
   standalone: true,
   template: `
-    Teste
+    <div class="row">
+      <div class="col">
+        <b>Meus Projetos:</b>
+        <b>Meus Eventos:</b>
+      </div>
+      <div class="col">
+        <div>Prazo:</div>
+      </div>
+    </div>
   `,
   styleUrl: `./style.scss`,
   imports: []
@@ -19,6 +27,7 @@ implements AbsBaseRoute, OnInit {
   constructor (
     private readonly SessionService: SessionService
   ) {}
+
   private readonly routingService = inject(RoutingService);
 
   public ngOnInit(): void {

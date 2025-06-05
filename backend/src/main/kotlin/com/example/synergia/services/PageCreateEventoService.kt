@@ -3,6 +3,7 @@ package com.example.synergia.services
 import com.example.synergia.repositories.attachments.InsertAttachmentSql
 import com.example.synergia.repositories.pageCreateEvento.CreateEventoSql
 import com.example.synergia.repositories.pageCreateEvento.GetCreateEventoDtoByIdSql
+import com.example.synergia.repositories.pageCreateEvento.UpdateEventoSql
 import com.example.synergia.rest.pageCreateEvento.dto.input.CreateEventoDto
 import com.example.synergia.rest.pageCreateEvento.dto.input.UpdateEventoDto
 import com.example.synergia.utils.enums.AttachmentTypeEnum
@@ -34,6 +35,6 @@ class PageCreateEventoService (
         GetCreateEventoDtoByIdSql(id).queryForObject(template)
 
     fun updateEvento(params: UpdateEventoDto) {
-
+        UpdateEventoSql(params).executeStatement(template)
     }
 }

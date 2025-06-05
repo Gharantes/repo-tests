@@ -9,7 +9,8 @@
  */
 
 
-export interface CreateProjetoDto { 
+export interface UpdateProjetoDto { 
+    id: number;
     idTenant: number;
     title: string;
     description: string;

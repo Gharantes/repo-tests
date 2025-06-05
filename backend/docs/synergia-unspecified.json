@@ -313,6 +313,29 @@
         }
       }
     },
+    "/api/create-projeto/update": {
+      "post": {
+        "tags": [
+          "page-create-projeto-resource"
+        ],
+        "operationId": "updateProjeto",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateProjetoDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/create-projeto/store": {
       "post": {
         "tags": [
@@ -324,6 +347,29 @@
             "application/json": {
               "schema": {
                 "$ref": "#/components/schemas/CreateProjetoDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/create-evento/update": {
+      "post": {
+        "tags": [
+          "page-create-evento-resource"
+        ],
+        "operationId": "updateEvento",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateEventoDto"
               }
             }
           },
@@ -375,6 +421,68 @@
                   "items": {
                     "$ref": "#/components/schemas/LoginTenantInformationDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-projeto/get-by-id/{id}": {
+      "get": {
+        "tags": [
+          "page-create-projeto-resource"
+        ],
+        "operationId": "getCreateProjetoDtoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateProjetoDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-evento/get-by-id/{id}": {
+      "get": {
+        "tags": [
+          "page-create-evento-resource"
+        ],
+        "operationId": "getCreateEventoDtoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEventoDto"
                 }
               }
             }
@@ -796,10 +904,34 @@
           }
         }
       },
+      "UpdateProjetoDto": {
+        "required": [
+          "description",
+          "id",
+          "idTenant",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        }
+      },
       "CreateProjetoDto": {
         "required": [
           "description",
-          "eventosSelecionados",
           "idTenant",
           "title"
         ],
@@ -814,13 +946,34 @@
           },
           "description": {
             "type": "string"
+          }
+        }
+      },
+      "UpdateEventoDto": {
+        "required": [
+          "description",
+          "id",
+          "idTenant",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
           },
-          "eventosSelecionados": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "urlBanner": {
+            "type": "string"
           }
         }
       },

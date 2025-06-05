@@ -16,3 +16,5 @@ export * from './listarUsuariosBasicInfoDto';
 export * from './loginInformationInputDto';
 export * from './loginInformationResponseDto';
 export * from './loginTenantInformationDto';
+export * from './updateEventoDto';
+export * from './updateProjetoDto';

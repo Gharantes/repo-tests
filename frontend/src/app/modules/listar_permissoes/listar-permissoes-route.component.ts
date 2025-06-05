@@ -44,7 +44,7 @@ import { listarTagsDtoToIDoArray } from '@synergia-frontend/mappers';
     ReactiveFormsModule,
   ],
 })
-export class ListarTagsRouteComponent {
+export class ListarPermissoesRouteComponent {
   public readonly data$ = signal<IDoListarTags[]>([]);
 
   public readonly textfieldControl: FormControl<string>;

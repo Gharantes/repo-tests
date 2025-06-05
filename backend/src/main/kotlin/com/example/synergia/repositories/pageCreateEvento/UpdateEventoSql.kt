@@ -1,6 +1,5 @@
 package com.example.synergia.repositories.pageCreateEvento
 
-import com.example.synergia.rest.pageCreateEvento.dto.input.CreateEventoDto
 import com.example.synergia.rest.pageCreateEvento.dto.input.UpdateEventoDto
 import com.example.synergia.utils.interfaces.ISqlUpdateStatement
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -12,7 +11,7 @@ class UpdateEventoSql (
     override val sql: String = """
         UPDATE event e SET
             title = :title, 
-            description = :description,
+            description = :description
         WHERE e.id = :id
     """.trimIndent()
 

@@ -17,8 +17,8 @@ class GetCreateEventoDtoByIdSql (
             e.description,
             e.created_by AS created_by,
             a.url AS url_banner
-        FROM evento e
-        INNER JOIN attachment a ON a.id = e.id_banner
+        FROM event e
+        INNER JOIN attachments a ON a.id = e.id_banner
         WHERE e.id = :id
     """.trimIndent()
 

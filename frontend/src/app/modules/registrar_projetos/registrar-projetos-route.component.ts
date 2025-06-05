@@ -1,10 +1,20 @@
-import { Component, OnInit, signal } from "@angular/core";
-import { AbsBaseRoute } from "@synergia-frontend/abstracts";
-import { PageCreateProjetoResourceService, PageListarEventosResourceService } from "@synergia-frontend/api";
-import { IDoListarEventos, IDoRegistrarProjeto } from "@synergia-frontend/interfaces";
-import { RoutingService, SessionService, SnackbarService } from "@synergia-frontend/services";
-import { RegistrarProjetosViewComponent } from "@synergia-frontend/views";
-import { catchError, EMPTY, map, tap } from "rxjs";
+import { Component, OnInit, signal } from '@angular/core';
+import { InsertUpdateHandler } from '@synergia-frontend/abstracts';
+import {
+  CreateProjetoDto,
+  PageCreateProjetoResourceService,
+  UpdateProjetoDto,
+} from '@synergia-frontend/api';
+import {
+  IDoListarEventos,
+  IDoRegistrarProjeto,
+} from '@synergia-frontend/interfaces';
+import { RoutingService, SessionService } from '@synergia-frontend/services';
+import { RegistrarProjetosViewComponent } from '@synergia-frontend/views';
+import {
+  mapFromCreateProjetoDtoToIDoRegistrarProjeto,
+  mapFromIDoRegistrarProjetoToCreateProjetoDto, mapFromIDoRegistrarProjetoToUpdateProjetoDto
+} from '@synergia-frontend/mappers';
 
 @Component({
   selector: 'app-registrar-projetos-route',
@@ -12,63 +22,69 @@ import { catchError, EMPTY, map, tap } from "rxjs";
   template: `
     <lib-registrar-projetos-view
       [listaEventos]="listaEventos()"
+      [populateForm]="insertUpdateHandler.populateForm"
       (goToParentPageEvent)="goToLastPage()"
-      (registrarEntidadeEvent)="registrarEntidade($event)"
+      (registrarEntidadeEvent)="insertUpdateHandler.save($event)"
     ></lib-registrar-projetos-view>
   `,
   styleUrl: `./style.scss`,
-  imports: [RegistrarProjetosViewComponent]
+  imports: [RegistrarProjetosViewComponent],
 })
-export class RegistrarProjetosRouteComponent
-implements AbsBaseRoute, OnInit {
+export class RegistrarProjetosRouteComponent implements OnInit {
   public readonly listaEventos = signal<IDoListarEventos[]>([]);
 
+  public readonly insertUpdateHandler = new InsertUpdateHandler<
+    IDoRegistrarProjeto,
+    CreateProjetoDto,
+    UpdateProjetoDto
+  >();
 
-  private idTenant: number;
-  constructor (
+  constructor(
     private readonly sessionService: SessionService,
     private readonly routingService: RoutingService,
-    private readonly pageService: PageCreateProjetoResourceService,
-    private readonly listarEventosPageService: PageListarEventosResourceService,
-    private readonly snackService: SnackbarService
+    private readonly pageService: PageCreateProjetoResourceService
   ) {
-    this.idTenant = this.sessionService.getTenantId() as number;
+    this.insertUpdateHandler.parentRoute = this.routingService.projects();
+
+    this.insertUpdateHandler.setGetByIdFn((id: number) =>
+      this.pageService.getCreateProjetoDtoById(id)
+    );
+    this.insertUpdateHandler.setRegistrarEntidadeFn((el: CreateProjetoDto) =>
+      this.pageService.createProjeto(el)
+    );
+    this.insertUpdateHandler.setAtualizarEntidadeFn((el: UpdateProjetoDto) =>
+      this.pageService.updateProjeto(el)
+    );
+    this.insertUpdateHandler.setReverseInsertMapper((el: CreateProjetoDto) =>
+      mapFromCreateProjetoDtoToIDoRegistrarProjeto(el)
+    );
+    this.insertUpdateHandler.setInsertMapper((el: IDoRegistrarProjeto) =>
+      mapFromIDoRegistrarProjetoToCreateProjetoDto(
+        el,
+        this.sessionService.getTenantId() as number
+      )
+    );
+    this.insertUpdateHandler.setUpdateMapper(
+      (el: IDoRegistrarProjeto, id: number) =>
+        mapFromIDoRegistrarProjetoToUpdateProjetoDto(
+          el,
+          id,
+          this.sessionService.getTenantId() as number
+        )
+    );
+
+    this.insertUpdateHandler.getPrimaryKey()
   }
-  
+
   public ngOnInit() {
     this.setRouteInfo();
-    this.buscarListaEventos();
   }
   public setRouteInfo() {
-    this.routingService.setRouteInfo(this.routingService.newProjects());
+    const id = this.insertUpdateHandler.primaryKey()
+    const route = id ? this.routingService.editProject(id) : this.routingService.newProjects()
+    this.routingService.setRouteInfo(route);
   }
   public goToLastPage() {
     this.routingService.goTo(this.routingService.projects());
-  }
-  private buscarListaEventos() {
-    this.listarEventosPageService.listarEventosAll({
-      idTenant: this.idTenant
-    }).pipe(
-      map(res => res.map(v => ({ ...v } as IDoListarEventos))),
-      tap(res => this.listaEventos.set(res)) 
-    ).subscribe()
-  }
-
-  public registrarEntidade($event: IDoRegistrarProjeto) {
-    this.pageService.createProjeto({
-      idTenant: this.idTenant,
-      title: $event.title,
-      description: $event.description,
-      eventosSelecionados: $event.eventosSelecionados
-    }).pipe(
-      catchError(err => {
-        this.snackService.addMessage('Erro ao criar Projeto');
-        return EMPTY;
-      }),
-      tap(() => {
-        this.snackService.addMessage('Projeto criado com sucesso.');
-        this.goToLastPage();
-      })
-    ).subscribe();
   }
 }

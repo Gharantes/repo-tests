@@ -9,9 +9,11 @@
  */
 
 
-export interface CreateProjetoDto { 
+export interface UpdateEventoDto { 
+    id: number;
     idTenant: number;
     title: string;
     description: string;
+    urlBanner?: string;
 }
 

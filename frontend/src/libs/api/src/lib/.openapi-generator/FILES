@@ -36,5 +36,7 @@ model/loginInformationInputDto.ts
 model/loginInformationResponseDto.ts
 model/loginTenantInformationDto.ts
 model/models.ts
+model/updateEventoDto.ts
+model/updateProjetoDto.ts
 param.ts
 variables.ts

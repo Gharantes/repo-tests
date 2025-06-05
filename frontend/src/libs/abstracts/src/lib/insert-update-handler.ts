@@ -1,15 +1,20 @@
 import { inject, signal } from '@angular/core';
-import { map, Observable, Subject, tap } from 'rxjs';
-import { RoutingService } from '@synergia-frontend/services';
+import { catchError, EMPTY, map, Observable, Subject, tap } from 'rxjs';
+import { RoutingService, Snackbar2Service } from '@synergia-frontend/services';
 import { ActivatedRoute } from '@angular/router';
+import { IDoRouteDetails } from '@synergia-frontend/interfaces';
 
 export class InsertUpdateHandler<T, Y, Z> {
+  private readonly routingService = inject(RoutingService);
+  private readonly activatedRoute = inject(ActivatedRoute);
+  public readonly snackbarService: Snackbar2Service = inject(Snackbar2Service);
+
   public readonly primaryKey = signal<number | undefined>(undefined);
 
   public readonly populateForm = new Subject<T | null>();
+  public parentRoute?: IDoRouteDetails;
 
-  private readonly routingService = inject(RoutingService);
-  private readonly activatedRoute = inject(ActivatedRoute);
+
   public getPrimaryKey() {
     this.routingService
       .getParamFromRoute(this.activatedRoute, 'id')
@@ -25,7 +30,7 @@ export class InsertUpdateHandler<T, Y, Z> {
 
         fn(id)
           .pipe(
-            map((res) => mapper(res)),
+            map((res) => mapper(res, id)),
             tap((res) => this.populateForm.next(res))
           )
           .subscribe();
@@ -36,12 +41,12 @@ export class InsertUpdateHandler<T, Y, Z> {
   public setInsertMapper(mapper: (el: T) => Y) {
     this.insertMapper = mapper;
   }
-  private reverseInsertMapper: ((el: Y) => T) | undefined;
-  public setReverseInsertMapper(mapper: (el: Y) => T) {
+  private reverseInsertMapper: ((el: Y, id: number) => T) | undefined;
+  public setReverseInsertMapper(mapper: (el: Y, id: number) => T) {
     this.reverseInsertMapper = mapper;
   }
-  private updateMapper: ((el: T) => Z) | undefined;
-  public setUpdateMapper(mapper: (el: T) => Z) {
+  private updateMapper: ((el: T, id: number) => Z) | undefined;
+  public setUpdateMapper(mapper: (el: T, id: number) => Z) {
     this.updateMapper = mapper;
   }
 
@@ -53,8 +58,8 @@ export class InsertUpdateHandler<T, Y, Z> {
   public setAtualizarEntidadeFn($event: (el: Z) => Observable<unknown>) {
     this.atualizarEntidadeFn = $event;
   }
-  private getByIdFn: ((el: number) => Observable<Y>) | undefined;
-  public setGetByIdFn($event: (el: number) => Observable<Y>) {
+  private getByIdFn: ((id: number) => Observable<Y>) | undefined;
+  public setGetByIdFn($event: (id: number) => Observable<Y>) {
     this.getByIdFn = $event;
   }
 
@@ -71,14 +76,22 @@ export class InsertUpdateHandler<T, Y, Z> {
       return;
     }
     const mapped = this.insertMapper($event);
-    this.registrarEntidadeFn(mapped).pipe().subscribe();
+    this.registrarEntidadeFn(mapped).pipe(
+      catchError(err => {
+        this.snackbarService.catchError(err, 'Erro ao registrar Entidade')
+        return EMPTY
+      }),
+      tap(() => {
+        this.snackbarService.message('Entidade registrada com sucesso');
+      })
+    ).subscribe();
   }
 
   private atualizar($event: T) {
     if (this.atualizarEntidadeFn == null || this.updateMapper == null) {
       return;
     }
-    const mapped = this.updateMapper($event);
+    const mapped = this.updateMapper($event, this.primaryKey() as number);
     this.atualizarEntidadeFn(mapped).pipe().subscribe();
   }
 }

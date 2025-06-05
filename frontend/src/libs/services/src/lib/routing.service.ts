@@ -96,8 +96,14 @@ export class RoutingService {
     }
   public editEvents(id: number): IDoRouteDetails {
     return {
-      label: 'Editar Eventos',
+      label: 'Editar Evento',
       path: [...this.activeTenant(), 'event', 'edit', id.toString()]
+    }
+  }
+  editProject(id: number): IDoRouteDetails {
+    return {
+      label: 'Editar Projeto',
+      path: [...this.activeTenant(), 'project', 'edit', id.toString()]
     }
   }
 
