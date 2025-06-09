@@ -19,7 +19,7 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { FiltroListarProjetosAllDto } from '../model/filtroListarProjetosAllDto';
 // @ts-ignore
-import { ListarProjetosBasicInfoDto } from '../model/listarProjetosBasicInfoDto';
+import { ListarProjetosAllDto } from '../model/listarProjetosAllDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -159,9 +159,9 @@ export class PageListarProjetosResourceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarProjetosBasicInfoDto>>;
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarProjetosBasicInfoDto>>>;
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarProjetosBasicInfoDto>>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarProjetosAllDto>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarProjetosAllDto>>>;
+    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarProjetosAllDto>>>;
     public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (filtroListarProjetosAllDto === null || filtroListarProjetosAllDto === undefined) {
             throw new Error('Required parameter filtroListarProjetosAllDto was null or undefined when calling listarProjetosAll.');
@@ -213,7 +213,7 @@ export class PageListarProjetosResourceService {
         }
 
         let localVarPath = `/api/listar-projetos/all`;
-        return this.httpClient.request<Array<ListarProjetosBasicInfoDto>>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<ListarProjetosAllDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 body: filtroListarProjetosAllDto,

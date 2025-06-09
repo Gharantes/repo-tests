@@ -105,7 +105,7 @@ export class ListarTagsRouteComponent {
       })
       .pipe(
         catchError((err) => {
-          this.snackbarService.handleCatchError(err);
+          this.snackbarService.catchError(err);
           return EMPTY;
         }),
         tap(() => this.searchForTags())

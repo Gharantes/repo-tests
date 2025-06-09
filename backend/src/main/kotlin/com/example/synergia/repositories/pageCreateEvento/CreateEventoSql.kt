@@ -36,9 +36,9 @@ class CreateEventoSql (
             "Identifier não pod estar vazio."
         }
         paramMap.addValue("id_tenant", params.idTenant, Types.BIGINT)
+        paramMap.addValue("created_by", params.idAccount, Types.BIGINT)
         paramMap.addValue("title", params.title, Types.VARCHAR)
         paramMap.addValue("description", params.description, Types.VARCHAR)
-        paramMap.addValue("created_by", params.createdByIdAccount, Types.BIGINT)
         paramMap.addValue("id_banner", idBanner, Types.BIGINT)
     }
 }

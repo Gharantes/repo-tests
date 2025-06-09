@@ -1,6 +1,7 @@
 package com.example.synergia.rest.pageListarEventos
 
 import com.example.synergia.rest.pageListarEventos.dto.input.FiltroListarEventosAllDto
+import com.example.synergia.rest.pageListarEventos.dto.input.FiltroListarEventosByIdDto
 import com.example.synergia.rest.pageListarEventos.dto.output.ListarEventosDto
 import com.example.synergia.services.PageListarEventosService
 import com.example.synergia.utils.objects.ResponseMessenger
@@ -23,11 +24,11 @@ class PageListarEventosResource (
     ): ResponseEntity<List<ListarEventosDto>> =
         ResponseMessenger.buildResponse { service.listarEventosAll(params) }
 
-    @PostMapping("/all/{id}")
+    @PostMapping("/by-id")
     fun listarEventosById(
-        @PathVariable("id") id: Long
+        @RequestBody params: FiltroListarEventosByIdDto
     ): ResponseEntity<ListarEventosDto> =
-        ResponseMessenger.buildResponse { service.listarEventosById(id) }
+        ResponseMessenger.buildResponse { service.listarEventosById(params) }
 
     @DeleteMapping("/delete/{id}")
     fun deletarEvento(

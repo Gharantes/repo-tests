@@ -23,6 +23,7 @@ import { EventoCardDialogComponent } from './evento-card/evento-card-dialog.comp
       (toNewEventPageEvent)="toNewEventPageEvent()"
       (viewDetailsEvent)="viewDetails($event)"
       (deleteEntryEvent)="deleteEntry($event)"
+      (editEntryEvent)="editEntry($event)"
       (cardInteractionEvent)="cardInteraction($event)"
     ></lib-page-listar-eventos-view>
   `,
@@ -51,11 +52,11 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
   public toNewEventPageEvent() {
     this.routingService.goTo(this.routingService.newEvents());
   }
-
   public getData() {
     return this.pageService
       .listarEventosAll({
         idTenant: this.sessionService.getTenantId() as number,
+        idAccount: this.sessionService.getUserId() as number
       })
       .pipe(
         map((res) => mapFromListarEventosDtoToIDoListarEventosArray(res)),
@@ -65,6 +66,10 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
 
   public viewDetails($event: IDoListarEventos) {
     const destiny = this.routingService.eventDetails($event.id);
+    this.routingService.goTo(destiny);
+  }
+  public editEntry($event: IDoListarEventos) {
+    const destiny = this.routingService.editEvents($event.id);
     this.routingService.goTo(destiny);
   }
   public deleteEntry($event: IDoListarEventos) {
@@ -83,8 +88,9 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
 
   cardInteraction($event: IDoCardGridEntryInteraction) {
     console.log($event);
-    this.dialog.open(EventoCardDialogComponent, { data: $event.entry }).afterClosed().pipe(
-      tap(res => console.log(res))
-    ).subscribe()
+    this.dialog.open(
+      EventoCardDialogComponent,
+      { data: $event.entry }
+    ).afterClosed().pipe().subscribe()
   }
 }

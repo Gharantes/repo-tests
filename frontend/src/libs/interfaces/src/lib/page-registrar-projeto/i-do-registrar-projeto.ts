@@ -1,5 +1,5 @@
 export interface IDoRegistrarProjeto {
-    title: string,
-    description: string,
-    eventosSelecionados: number[]
+  title: string,
+  description: string,
+  urlBanner: string | null
 }

@@ -17,9 +17,10 @@ class CreateProjetoEventoRelationship (
     """.trimIndent()
 
     private fun buildSql(): String {
-        return params.eventosSelecionados.joinToString(",") {
-            "(${params.idTenant},$idProjeto,$it)"
-        }
+//        return params.eventosSelecionados.joinToString(",") {
+//            "(${params.idTenant},$idProjeto,$it)"
+//        }
+        return ""
     }
     override fun setParams(paramMap: MapSqlParameterSource) {}
 }

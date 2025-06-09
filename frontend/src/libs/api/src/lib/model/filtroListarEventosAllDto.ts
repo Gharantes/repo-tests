@@ -11,5 +11,6 @@
 
 export interface FiltroListarEventosAllDto { 
     idTenant: number;
+    idAccount: number;
 }
 

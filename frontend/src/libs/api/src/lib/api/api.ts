@@ -1,3 +1,5 @@
+export * from './pageAtribuirPermissoesResource.service';
+import { PageAtribuirPermissoesResourceService } from './pageAtribuirPermissoesResource.service';
 export * from './pageCreateEventoResource.service';
 import { PageCreateEventoResourceService } from './pageCreateEventoResource.service';
 export * from './pageCreateProjetoResource.service';
@@ -18,4 +20,6 @@ export * from './pageListarUsuariosResource.service';
 import { PageListarUsuariosResourceService } from './pageListarUsuariosResource.service';
 export * from './pageLoginResource.service';
 import { PageLoginResourceService } from './pageLoginResource.service';
-export const APIS = [PageCreateEventoResourceService, PageCreateProjetoResourceService, PageCreateTenantResourceService, PageCreateUsuarioResourceService, PageDetalhesEventoResourceService, PageListarEventosResourceService, PageListarProjetosResourceService, PageListarTagsResourceService, PageListarUsuariosResourceService, PageLoginResourceService];
+export * from './pageRegistrarProjetoEmEventoResource.service';
+import { PageRegistrarProjetoEmEventoResourceService } from './pageRegistrarProjetoEmEventoResource.service';
+export const APIS = [PageAtribuirPermissoesResourceService, PageCreateEventoResourceService, PageCreateProjetoResourceService, PageCreateTenantResourceService, PageCreateUsuarioResourceService, PageDetalhesEventoResourceService, PageListarEventosResourceService, PageListarProjetosResourceService, PageListarTagsResourceService, PageListarUsuariosResourceService, PageLoginResourceService, PageRegistrarProjetoEmEventoResourceService];

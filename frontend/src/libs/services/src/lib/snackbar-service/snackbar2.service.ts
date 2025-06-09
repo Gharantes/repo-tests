@@ -4,6 +4,7 @@ import { map } from 'rxjs/operators';
 import { SnackbarStackComponent } from './snackbar-stack.component';
 import { SnackbarMessageType } from './snackbar-message-type';
 import { IDoSnackbarMessage } from './i-do-snackbar-message';
+import { isBlankOrNull } from '@synergia-frontend/utils';
 
 @Injectable({
   providedIn: 'root',
@@ -12,30 +13,10 @@ export class Snackbar2Service {
   private messageList = signal<IDoSnackbarMessage[]>([]);
   private readonly messageDuration = 3000; // 3 Seconds
 
-  private readonly isBlankOrNull = (str: string | null | undefined) => !str || str.trim().length === 0;
   constructor(
     private environmentInjector: EnvironmentInjector,
     private readonly appRef: ApplicationRef,
   ) {}
-
-  /** Para quando o retorno da operação não importa,
-   * somente se foi realizada ou não. **/
-  public executeSimpleFunction(
-    observable: Observable<unknown>,
-    alternativeErrorMessage: string | undefined = undefined,
-    alternativeSuccessMessage: string | undefined = undefined,
-  ): Observable<boolean | null> {
-    return observable.pipe(
-      tap(() => {
-        this.addTimedMessageToList(alternativeSuccessMessage ?? 'Operação realizada com sucesso!');
-      }),
-      map(() => true),
-      catchError(err => {
-        this.handleCatchError(err, alternativeErrorMessage);
-        return of(null);
-      }),
-    );
-  }
 
   public initializeStackedSnackbarsComponent() {
     const component: ComponentRef<SnackbarStackComponent> = createComponent(SnackbarStackComponent, {
@@ -46,7 +27,7 @@ export class Snackbar2Service {
   }
 
 
-  public handleCatchError(err: any, altMessage: string | undefined = undefined) {
+  public catchError(err: any, altMessage: string | undefined = undefined) {
     let message = null;
 
     if (!navigator.onLine) {
@@ -93,21 +74,21 @@ export class Snackbar2Service {
     }
 
 
-    if (this.isBlankOrNull(message)) {
+    if (isBlankOrNull(message)) {
       message = err.headers.get('x-error');
     }
-    if (this.isBlankOrNull(message)) {
+    if (isBlankOrNull(message)) {
       message = altMessage;
     }
-    if (this.isBlankOrNull(message)) {
+    if (isBlankOrNull(message)) {
       return;
     }
-    this.addTimedMessageToList(message, 'error');
+    this.message(message, 'error');
   }
 
 
 
-  public addTimedMessageToList(message: string, type: SnackbarMessageType = 'info') {
+  public message(message: string, type: SnackbarMessageType = 'info') {
     const id = this.generateUniqueId();
     this.messageList.update(v => [
       ...v,
@@ -158,7 +139,7 @@ export class Snackbar2Service {
     return remove;
   }
 
-  public addIdeterminateMessageShortcut(message: string, forceRemove: DestroyRef, type: SnackbarMessageType = 'info') {
+  public infiniteMessage(message: string, forceRemove: DestroyRef, type: SnackbarMessageType = 'info') {
     const subject = this.addIdeterminateMessageToList(message, forceRemove, type);
 
     return () => {

@@ -44,7 +44,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 
 	/** Bancos de Dados **/
-	runtimeOnly("org.postgresql:postgresql")
+	implementation("org.postgresql:postgresql")
+//	runtimeOnly("org.postgresql:postgresql")
 
 	/** READ AND WRITE FILES **/
 //	implementation("org.apache.poi:poi-ooxml:5.2.3")

@@ -1,7 +1,7 @@
 package com.example.synergia.rest.pageListarProjetos
 
 import com.example.synergia.rest.pageListarProjetos.dto.input.FiltroListarProjetosAllDto
-import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosBasicInfoDto
+import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosAllDto
 import com.example.synergia.services.PageListarProjetosService
 import com.example.synergia.utils.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
@@ -15,7 +15,7 @@ class PageListarProjetosResource (
     @PostMapping("/all")
     fun listarProjetosAll(
         @RequestBody params: FiltroListarProjetosAllDto
-    ): ResponseEntity<List<ListarProjetosBasicInfoDto>> =
+    ): ResponseEntity<List<ListarProjetosAllDto>> =
         ResponseMessenger.buildResponse {
             service.listarProjetosAll(params)
         }

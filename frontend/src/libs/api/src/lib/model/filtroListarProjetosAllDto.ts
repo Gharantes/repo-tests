@@ -11,5 +11,6 @@
 
 export interface FiltroListarProjetosAllDto { 
     idTenant: number;
+    idAccount: number;
 }
 

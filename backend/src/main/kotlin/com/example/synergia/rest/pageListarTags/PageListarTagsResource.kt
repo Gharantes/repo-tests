@@ -1,7 +1,5 @@
 package com.example.synergia.rest.pageListarTags
 
-import com.example.synergia.rest.pageListarProjetos.dto.input.FiltroListarProjetosAllDto
-import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosBasicInfoDto
 import com.example.synergia.rest.pageListarTags.dto.input.FiltroListarTagsAllDto
 import com.example.synergia.rest.pageListarTags.dto.input.InsertTagDto
 import com.example.synergia.rest.pageListarTags.dto.output.ListarTagDto

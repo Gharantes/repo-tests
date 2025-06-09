@@ -12,6 +12,7 @@ import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
 import { ListarTagsRouteComponent } from './modules/listar_tags/listar-tags-route.component';
 import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
+import { ListarPermissoesRouteComponent } from './modules/listar_permissoes/listar-permissoes-route.component';
 
 
 const dashboard = {
@@ -55,11 +56,20 @@ const registrarProjetosRoute = {
   path: 'projects/new',
   component: RegistrarProjetosRouteComponent
 }
+const editarProjeto = {
+  path: 'project/edit/:id',
+  component: RegistrarProjetosRouteComponent
+}
 
 const listarTagsRoute = {
   path: 'tags',
   component: ListarTagsRouteComponent
 }
+const listarPermissoesRoute = {
+  path: 'permissions',
+  component: ListarPermissoesRouteComponent
+}
+
 
 export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
@@ -89,8 +99,11 @@ export const appRoutes: Route[] = [
       // Projetos
       listarProjetosRoute,
       registrarProjetosRoute,
+      editarProjeto,
       // Tags
-      listarTagsRoute
+      listarTagsRoute,
+      // Permissões
+      listarPermissoesRoute
     ]
   },
 ];

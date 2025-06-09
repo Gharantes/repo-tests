@@ -19,6 +19,8 @@ import { Observable }                                        from 'rxjs';
 // @ts-ignore
 import { FiltroListarEventosAllDto } from '../model/filtroListarEventosAllDto';
 // @ts-ignore
+import { FiltroListarEventosByIdDto } from '../model/filtroListarEventosByIdDto';
+// @ts-ignore
 import { ListarEventosDto } from '../model/listarEventosDto';
 
 // @ts-ignore
@@ -228,16 +230,16 @@ export class PageListarEventosResourceService {
     }
 
     /**
-     * @param id 
+     * @param filtroListarEventosByIdDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarEventosById(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ListarEventosDto>;
-    public listarEventosById(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ListarEventosDto>>;
-    public listarEventosById(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ListarEventosDto>>;
-    public listarEventosById(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling listarEventosById.');
+    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ListarEventosDto>;
+    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ListarEventosDto>>;
+    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ListarEventosDto>>;
+    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (filtroListarEventosByIdDto === null || filtroListarEventosByIdDto === undefined) {
+            throw new Error('Required parameter filtroListarEventosByIdDto was null or undefined when calling listarEventosById.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -265,6 +267,15 @@ export class PageListarEventosResourceService {
         }
 
 
+        // to determine the Content-Type header
+        const consumes: string[] = [
+            'application/json'
+        ];
+        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
+        if (httpContentTypeSelected !== undefined) {
+            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
+        }
+
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -276,10 +287,11 @@ export class PageListarEventosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-eventos/all/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/api/listar-eventos/by-id`;
         return this.httpClient.request<ListarEventosDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                body: filtroListarEventosByIdDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

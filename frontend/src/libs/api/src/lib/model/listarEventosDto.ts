@@ -16,5 +16,6 @@ export interface ListarEventosDto {
     createdByIdAccount: number;
     createdByNameAccount: string;
     bannerUrl?: string;
+    userIsMember: boolean;
 }
 

@@ -1,10 +1,9 @@
 package com.example.synergia.services
 
-import com.example.synergia.repositories.pageListarEventos.DeletarEventoSql
 import com.example.synergia.repositories.pageListarProjetos.DeletarProjetoSql
 import com.example.synergia.repositories.pageListarProjetos.ListarProjetosAllSql
 import com.example.synergia.rest.pageListarProjetos.dto.input.FiltroListarProjetosAllDto
-import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosBasicInfoDto
+import com.example.synergia.rest.pageListarProjetos.dto.output.ListarProjetosAllDto
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.stereotype.Service
 
@@ -14,7 +13,7 @@ class PageListarProjetosService (
 ) {
     fun listarProjetosAll(
         params: FiltroListarProjetosAllDto
-    ): List<ListarProjetosBasicInfoDto> =
+    ): List<ListarProjetosAllDto> =
         ListarProjetosAllSql(params).query(template)
 
     fun deletarProjeto(id: Long) = DeletarProjetoSql(id).executeStatement(template)
