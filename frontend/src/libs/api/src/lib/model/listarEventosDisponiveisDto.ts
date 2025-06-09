@@ -9,13 +9,8 @@
  */
 
 
-export interface ListarEventosDto { 
+export interface ListarEventosDisponiveisDto { 
     id: number;
-    title: string;
-    description: string;
-    createdByIdAccount: number;
-    createdByNameAccount: string;
-    bannerUrl?: string;
-    userIsMember: boolean;
+    label: string;
 }
 

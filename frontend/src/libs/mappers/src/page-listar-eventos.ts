@@ -22,7 +22,8 @@ export function mapFromListarEventosDtoToIDoListarEventos(
     createdByNameAccount: res.createdByNameAccount,
     title: res.title,
     createdByIdAccount: res.createdByIdAccount,
-    description: res.description
+    description: res.description,
+    userIsMember: res.userIsMember
   }
 }
 function mapFromIDoListarEventosToIDoCardGrid(

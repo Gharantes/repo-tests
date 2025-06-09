@@ -61,7 +61,8 @@ export class RegistrarProjetosRouteComponent implements OnInit {
     this.insertUpdateHandler.setInsertMapper((el: IDoRegistrarProjeto) =>
       mapFromIDoRegistrarProjetoToCreateProjetoDto(
         el,
-        this.sessionService.getTenantId() as number
+        this.sessionService.getTenantId() as number,
+        this.sessionService.getUserId() as number
       )
     );
     this.insertUpdateHandler.setUpdateMapper(

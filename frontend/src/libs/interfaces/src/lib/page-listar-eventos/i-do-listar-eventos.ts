@@ -5,4 +5,5 @@ export interface IDoListarEventos {
     createdByIdAccount: number;
     createdByNameAccount: string;
     bannerUrl?: string;
+    userIsMember: boolean;
 }

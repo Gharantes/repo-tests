@@ -36,7 +36,7 @@ export function mapFromIDoRegistrarEventoToCreateEventoDto(
     title: $event.title,
     description: $event.description,
     idTenant: idTenant,
-    createdByIdAccount: idAccount,
+    idAccount: idAccount,
     urlBanner: $event.urlBanner ?? undefined,
   };
 }

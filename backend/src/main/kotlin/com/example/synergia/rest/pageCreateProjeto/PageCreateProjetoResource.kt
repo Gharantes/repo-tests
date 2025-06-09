@@ -21,7 +21,7 @@ class PageCreateProjetoResource (
     @GetMapping("get-by-id/{id}")
     fun getCreateProjetoDtoById(
         @PathVariable("id") id: Long
-    ): ResponseEntity<CreateProjetoDto> = ResponseMessenger.buildResponse {
+    ): ResponseEntity<CreateProjetoDto?> = ResponseMessenger.buildResponse {
         service.getCreateProjetoDtoById(id)
     }
 

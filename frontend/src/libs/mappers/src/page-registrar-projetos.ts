@@ -7,16 +7,20 @@ export function mapFromCreateProjetoDtoToIDoRegistrarProjeto(
   return {
     title: el.title,
     description: el.description,
+    urlBanner: el.urlBanner ?? null
   }
 }
 export function mapFromIDoRegistrarProjetoToCreateProjetoDto(
   el: IDoRegistrarProjeto,
-  idTenant: number
+  idTenant: number,
+  idAccount: number
 ): CreateProjetoDto {
   return {
     idTenant: idTenant,
+    idAccount: idAccount,
     title: el.title,
     description: el.description,
+    urlBanner: el.urlBanner ?? undefined
   }
 }
 export function mapFromIDoRegistrarProjetoToUpdateProjetoDto(
@@ -29,5 +33,6 @@ export function mapFromIDoRegistrarProjetoToUpdateProjetoDto(
     idTenant,
     title: el.title,
     description: el.description,
+    urlBanner: el.urlBanner ?? undefined
   }
 }

@@ -1,6 +1,6 @@
 package com.example.synergia.rest.pageListarEventos.dto.input
 
-data class FiltroListarEventosAllDto(
-    val idTenant: Long,
+data class FiltroListarEventosByIdDto(
+    val idEvent: Long,
     val idAccount: Long
 )

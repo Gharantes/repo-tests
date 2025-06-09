@@ -1,6 +1,6 @@
-package com.example.synergia.rest.pageListarEventos.dto.output
+package com.example.synergia.rest.pageListarProjetos.dto.output
 
-data class ListarEventosDto(
+data class ListarProjetosAllDto(
     val id: Long,
     val title: String,
     val description: String,

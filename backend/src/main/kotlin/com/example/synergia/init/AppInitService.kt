@@ -13,9 +13,9 @@ class AppInitService (
 ) {
     fun init() {
         CreateTablesSql().executeStatement(template)
-        exec(AlterTablesSql.tenantUniqueIdentifierSql())
-        exec(AlterTablesSql.uniqueTagByTenantSql())
-        exec(AlterTablesSql.uniqueNameByTenantSql())
+//        exec(AlterTablesSql.tenantUniqueIdentifierSql())
+//        exec(AlterTablesSql.uniqueTagByTenantSql())
+//        exec(AlterTablesSql.uniqueNameByTenantSql())
     }
     fun exec(iSql: ISqlUpdateStatement<Unit>) {
         try {

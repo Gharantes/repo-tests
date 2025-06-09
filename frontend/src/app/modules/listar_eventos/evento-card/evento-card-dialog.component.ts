@@ -1,7 +1,7 @@
 import { Component, inject, signal } from '@angular/core';
 import { PageListarEventosResourceService } from '@synergia-frontend/api';
 import { IDoCardGrid, IDoListarEventos } from '@synergia-frontend/interfaces';
-import { RoutingService } from '@synergia-frontend/services';
+import { RoutingService, SessionService } from '@synergia-frontend/services';
 import { map, tap } from 'rxjs';
 import { mapFromListarEventosDtoToIDoListarEventos } from '@synergia-frontend/mappers';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
@@ -42,18 +42,23 @@ import { MatTooltip } from '@angular/material/tooltip';
     </div>
 
     <div class="column-section actions-section" style="width: 200px">
-      @if (this.isMember()) {
-        <div class="button-container" [matTooltip]="'Você já faz parte do grupo'">
-          <button disabled>Enviar Pedido</button>
-        </div>
-      } @else {
-        <div class="button-container">
-          <button>Enviar Pedido</button>
-        </div>
-      }
+      <div 
+        class="button-container" 
+        [matTooltip]="evento$()?.userIsMember === true ? 'Você já faz parte do evento' : ''">
+        <button 
+          [disabled]="evento$()?.userIsMember === true">
+          Enviar Pedido
+        </button>
+      </div>
       
-      <div class="button-container">
-        <button (click)="editar()">Editar Evento</button>
+      <div 
+        class="button-container" 
+        [matTooltip]="evento$()?.userIsMember === true ? '' : 'Você não faz parte do evento'">
+        <button 
+          [disabled]="evento$()?.userIsMember === false"
+          (click)="editar()">
+          Editar Evento
+        </button>
       </div>
     </div>
   `,
@@ -61,28 +66,26 @@ import { MatTooltip } from '@angular/material/tooltip';
   imports: [SafeImageComponent, MatTooltip],
 })
 export class EventoCardDialogComponent {
-  isMember(): boolean {
-    return true;
-  }
   public readonly injectData: IDoCardGrid = inject(MAT_DIALOG_DATA);
 
   public readonly evento$ = signal<IDoListarEventos | null>(null);
+
   constructor(
     private readonly dialog: MatDialogRef<EventoCardDialogComponent>,
     private readonly pageService: PageListarEventosResourceService,
-    private readonly routingService: RoutingService
+    private readonly routingService: RoutingService,
+    private readonly sessionService: SessionService
   ) {
     this.pageService
-      .listarEventosById(this.injectData.id)
+      .listarEventosById({
+        idEvent: this.injectData.id,
+        idAccount: this.sessionService.getUserId() as number
+      })
       .pipe(
         map((res) => mapFromListarEventosDtoToIDoListarEventos(res)),
         tap((res) => this.evento$.set(res))
       )
       .subscribe();
-  }
-
-  close() {
-    this.dialog.close(null);
   }
 
   public editar() {

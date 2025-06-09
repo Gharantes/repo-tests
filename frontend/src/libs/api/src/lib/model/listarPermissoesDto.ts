@@ -9,13 +9,8 @@
  */
 
 
-export interface ListarEventosDto { 
+export interface ListarPermissoesDto { 
     id: number;
-    title: string;
-    description: string;
-    createdByIdAccount: number;
-    createdByNameAccount: string;
-    bannerUrl?: string;
-    userIsMember: boolean;
+    label: string;
 }
 

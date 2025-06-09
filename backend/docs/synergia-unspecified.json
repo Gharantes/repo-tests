@@ -11,6 +11,46 @@
     }
   ],
   "paths": {
+    "/api/page-registrar-projeto-em-evento/registrar-projeto-em-evento": {
+      "post": {
+        "tags": [
+          "page-registrar-projeto-em-evento-resource"
+        ],
+        "operationId": "registrarProjetoEmEvento",
+        "parameters": [
+          {
+            "name": "id-evento",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-projeto",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LoginInformationResponseDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/login/check-login-information": {
       "post": {
         "tags": [
@@ -161,7 +201,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ListarProjetosBasicInfoDto"
+                    "$ref": "#/components/schemas/ListarProjetosAllDto"
                   }
                 }
               }
@@ -203,6 +243,36 @@
         }
       }
     },
+    "/api/listar-eventos/by-id": {
+      "post": {
+        "tags": [
+          "page-listar-eventos-resource"
+        ],
+        "operationId": "listarEventosById",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/FiltroListarEventosByIdDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListarEventosDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/listar-eventos/all": {
       "post": {
         "tags": [
@@ -229,37 +299,6 @@
                   "items": {
                     "$ref": "#/components/schemas/ListarEventosDto"
                   }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/listar-eventos/all/{id}": {
-      "post": {
-        "tags": [
-          "page-listar-eventos-resource"
-        ],
-        "operationId": "listarEventosById",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ListarEventosDto"
                 }
               }
             }
@@ -401,6 +440,98 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/atribuir-permissoes/one-account-many-permissions": {
+      "post": {
+        "tags": [
+          "page-atribuir-permissoes-resource"
+        ],
+        "operationId": "oneAccountManyPermissionsUpdate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OneAccountManyPermissionsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/atribuir-permissoes/many-accounts-one-permission": {
+      "post": {
+        "tags": [
+          "page-atribuir-permissoes-resource"
+        ],
+        "operationId": "manyAccountsOnePermissionUpdate",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ManyAccountsOnePermissionDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/atribuir-permissoes/all-permissions": {
+      "post": {
+        "tags": [
+          "page-atribuir-permissoes-resource"
+        ],
+        "operationId": "listarPermissoesAll",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListarPermissoesDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/page-registrar-projeto-em-evento/listar-eventos-disponiveis": {
+      "get": {
+        "tags": [
+          "page-registrar-projeto-em-evento-resource"
+        ],
+        "operationId": "listarEventosDisponiveis",
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ListarEventosDisponiveisDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -596,30 +727,6 @@
   },
   "components": {
     "schemas": {
-      "LoginInformationInputDto": {
-        "required": [
-          "checkLastSeen",
-          "idTenant",
-          "login",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "login": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "checkLastSeen": {
-            "type": "boolean"
-          }
-        }
-      },
       "LoginInformationResponseDto": {
         "required": [
           "idAccount",
@@ -652,6 +759,30 @@
           },
           "lastName": {
             "type": "string"
+          }
+        }
+      },
+      "LoginInformationInputDto": {
+        "required": [
+          "checkLastSeen",
+          "idTenant",
+          "login",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "checkLastSeen": {
+            "type": "boolean"
           }
         }
       },
@@ -750,6 +881,7 @@
       },
       "FiltroListarProjetosAllDto": {
         "required": [
+          "idAccount",
           "idTenant"
         ],
         "type": "object",
@@ -757,14 +889,21 @@
           "idTenant": {
             "type": "integer",
             "format": "int64"
+          },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
-      "ListarProjetosBasicInfoDto": {
+      "ListarProjetosAllDto": {
         "required": [
+          "createdByIdAccount",
+          "createdByNameAccount",
           "description",
           "id",
-          "title"
+          "title",
+          "userIsMember"
         ],
         "type": "object",
         "properties": {
@@ -777,6 +916,19 @@
           },
           "description": {
             "type": "string"
+          },
+          "createdByIdAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "createdByNameAccount": {
+            "type": "string"
+          },
+          "bannerUrl": {
+            "type": "string"
+          },
+          "userIsMember": {
+            "type": "boolean"
           }
         }
       },
@@ -817,13 +969,18 @@
           }
         }
       },
-      "FiltroListarEventosAllDto": {
+      "FiltroListarEventosByIdDto": {
         "required": [
-          "idTenant"
+          "idAccount",
+          "idEvent"
         ],
         "type": "object",
         "properties": {
-          "idTenant": {
+          "idEvent": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idAccount": {
             "type": "integer",
             "format": "int64"
           }
@@ -835,7 +992,8 @@
           "createdByNameAccount",
           "description",
           "id",
-          "title"
+          "title",
+          "userIsMember"
         ],
         "type": "object",
         "properties": {
@@ -858,6 +1016,26 @@
           },
           "bannerUrl": {
             "type": "string"
+          },
+          "userIsMember": {
+            "type": "boolean"
+          }
+        }
+      },
+      "FiltroListarEventosAllDto": {
+        "required": [
+          "idAccount",
+          "idTenant"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
           }
         }
       },
@@ -926,12 +1104,16 @@
           },
           "description": {
             "type": "string"
+          },
+          "urlBanner": {
+            "type": "string"
           }
         }
       },
       "CreateProjetoDto": {
         "required": [
           "description",
+          "idAccount",
           "idTenant",
           "title"
         ],
@@ -941,10 +1123,17 @@
             "type": "integer",
             "format": "int64"
           },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
           "title": {
             "type": "string"
           },
           "description": {
+            "type": "string"
+          },
+          "urlBanner": {
             "type": "string"
           }
         }
@@ -979,8 +1168,8 @@
       },
       "CreateEventoDto": {
         "required": [
-          "createdByIdAccount",
           "description",
+          "idAccount",
           "idTenant",
           "title"
         ],
@@ -990,17 +1179,69 @@
             "type": "integer",
             "format": "int64"
           },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
           "title": {
             "type": "string"
           },
           "description": {
             "type": "string"
           },
-          "createdByIdAccount": {
+          "urlBanner": {
+            "type": "string"
+          }
+        }
+      },
+      "OneAccountManyPermissionsDto": {
+        "required": [
+          "idAccount",
+          "idPermissions"
+        ],
+        "type": "object",
+        "properties": {
+          "idAccount": {
             "type": "integer",
             "format": "int64"
           },
-          "urlBanner": {
+          "idPermissions": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "ManyAccountsOnePermissionDto": {
+        "type": "object"
+      },
+      "ListarPermissoesDto": {
+        "required": [
+          "id",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "label": {
+            "type": "string"
+          }
+        }
+      },
+      "ListarEventosDisponiveisDto": {
+        "required": [
+          "id",
+          "label"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "label": {
             "type": "string"
           }
         }

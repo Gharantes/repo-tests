@@ -9,9 +9,8 @@
  */
 
 
-export interface ListarProjetosBasicInfoDto { 
-    id: number;
-    title: string;
-    description: string;
+export interface OneAccountManyPermissionsDto { 
+    idAccount: number;
+    idPermissions: number;
 }
 

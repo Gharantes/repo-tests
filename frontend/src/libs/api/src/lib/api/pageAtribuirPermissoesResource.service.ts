@@ -17,11 +17,9 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { FiltroListarEventosAllDto } from '../model/filtroListarEventosAllDto';
+import { ListarPermissoesDto } from '../model/listarPermissoesDto';
 // @ts-ignore
-import { FiltroListarEventosByIdDto } from '../model/filtroListarEventosByIdDto';
-// @ts-ignore
-import { ListarEventosDto } from '../model/listarEventosDto';
+import { OneAccountManyPermissionsDto } from '../model/oneAccountManyPermissionsDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -32,7 +30,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class PageListarEventosResourceService {
+export class PageAtribuirPermissoesResourceService {
 
     protected basePath = 'http://localhost:8080';
     public defaultHeaders = new HttpHeaders();
@@ -95,17 +93,13 @@ export class PageListarEventosResourceService {
     }
 
     /**
-     * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deletarEvento(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deletarEvento(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deletarEvento(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deletarEvento(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deletarEvento.');
-        }
+    public listarPermissoesAll(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarPermissoesDto>>;
+    public listarPermissoesAll(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarPermissoesDto>>>;
+    public listarPermissoesAll(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarPermissoesDto>>>;
+    public listarPermissoesAll(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -113,6 +107,7 @@ export class PageListarEventosResourceService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -142,8 +137,8 @@ export class PageListarEventosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-eventos/delete/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/atribuir-permissoes/all-permissions`;
+        return this.httpClient.request<Array<ListarPermissoesDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -157,16 +152,16 @@ export class PageListarEventosResourceService {
     }
 
     /**
-     * @param filtroListarEventosAllDto 
+     * @param body 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosDto>>;
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosDto>>>;
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosDto>>>;
-    public listarEventosAll(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (filtroListarEventosAllDto === null || filtroListarEventosAllDto === undefined) {
-            throw new Error('Required parameter filtroListarEventosAllDto was null or undefined when calling listarEventosAll.');
+    public manyAccountsOnePermissionUpdate(body: object, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public manyAccountsOnePermissionUpdate(body: object, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public manyAccountsOnePermissionUpdate(body: object, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public manyAccountsOnePermissionUpdate(body: object, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (body === null || body === undefined) {
+            throw new Error('Required parameter body was null or undefined when calling manyAccountsOnePermissionUpdate.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -175,7 +170,6 @@ export class PageListarEventosResourceService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -214,11 +208,11 @@ export class PageListarEventosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-eventos/all`;
-        return this.httpClient.request<Array<ListarEventosDto>>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/atribuir-permissoes/many-accounts-one-permission`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: filtroListarEventosAllDto,
+                body: body,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -230,16 +224,16 @@ export class PageListarEventosResourceService {
     }
 
     /**
-     * @param filtroListarEventosByIdDto 
+     * @param oneAccountManyPermissionsDto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ListarEventosDto>;
-    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ListarEventosDto>>;
-    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ListarEventosDto>>;
-    public listarEventosById(filtroListarEventosByIdDto: FiltroListarEventosByIdDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (filtroListarEventosByIdDto === null || filtroListarEventosByIdDto === undefined) {
-            throw new Error('Required parameter filtroListarEventosByIdDto was null or undefined when calling listarEventosById.');
+    public oneAccountManyPermissionsUpdate(oneAccountManyPermissionsDto: OneAccountManyPermissionsDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public oneAccountManyPermissionsUpdate(oneAccountManyPermissionsDto: OneAccountManyPermissionsDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public oneAccountManyPermissionsUpdate(oneAccountManyPermissionsDto: OneAccountManyPermissionsDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public oneAccountManyPermissionsUpdate(oneAccountManyPermissionsDto: OneAccountManyPermissionsDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (oneAccountManyPermissionsDto === null || oneAccountManyPermissionsDto === undefined) {
+            throw new Error('Required parameter oneAccountManyPermissionsDto was null or undefined when calling oneAccountManyPermissionsUpdate.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -248,7 +242,6 @@ export class PageListarEventosResourceService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
-                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -287,11 +280,11 @@ export class PageListarEventosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-eventos/by-id`;
-        return this.httpClient.request<ListarEventosDto>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/atribuir-permissoes/one-account-many-permissions`;
+        return this.httpClient.request<any>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: filtroListarEventosByIdDto,
+                body: oneAccountManyPermissionsDto,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

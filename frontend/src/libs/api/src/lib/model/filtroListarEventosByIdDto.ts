@@ -9,8 +9,8 @@
  */
 
 
-export interface FiltroListarProjetosAllDto { 
-    idTenant: number;
+export interface FiltroListarEventosByIdDto { 
+    idEvent: number;
     idAccount: number;
 }
 

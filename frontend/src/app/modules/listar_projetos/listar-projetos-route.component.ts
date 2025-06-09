@@ -1,8 +1,8 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { AbsBaseRoute } from '@synergia-frontend/abstracts';
 import {
-  ListarProjetosBasicInfoDto,
-  PageListarProjetosResourceService,
+  ListarProjetosAllDto,
+  PageListarProjetosResourceService
 } from '@synergia-frontend/api';
 import { IDoBasicProjectInfo } from '@synergia-frontend/interfaces';
 import {
@@ -52,6 +52,7 @@ export class ListarProjetosRouteComponent implements AbsBaseRoute, OnInit {
     return this.pageService
       .listarProjetosAll({
         idTenant: this.sessionService.getTenantId() as number,
+        idAccount: this.sessionService.getUserId() as number
       })
       .pipe(
         catchError(() => {
@@ -63,7 +64,7 @@ export class ListarProjetosRouteComponent implements AbsBaseRoute, OnInit {
       );
   }
   private mapResponse(
-    res: ListarProjetosBasicInfoDto[]
+    res: ListarProjetosAllDto[]
   ): IDoBasicProjectInfo[] {
     return res.map((v) => ({
       id: v.id,

@@ -14,5 +14,6 @@ export interface UpdateProjetoDto {
     idTenant: number;
     title: string;
     description: string;
+    urlBanner?: string;
 }
 

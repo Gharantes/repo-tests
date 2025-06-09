@@ -28,7 +28,6 @@ class PageCreateEventoResource(
     fun createEvento(
         @RequestBody params: CreateEventoDto
     ): ResponseEntity<Void> = ResponseMessenger.responseWithoutReturn {
-        throw Exception()
         service.createEvento(params)
     }
 

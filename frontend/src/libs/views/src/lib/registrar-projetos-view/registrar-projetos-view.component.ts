@@ -23,6 +23,11 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
         <mat-label>Descrição</mat-label>
         <input type="text" matInput [formControl]="form.controls.description" />
       </mat-form-field>
+
+      <mat-form-field [appearance]="'outline'" class="field">
+        <mat-label>URL do Banner</mat-label>
+        <input type="text" matInput [formControl]="form.controls.urlBanner" />
+      </mat-form-field>
     </form>
 
     <div class="btn-line">
@@ -67,6 +72,7 @@ export class RegistrarProjetosViewComponent
   public readonly form = this.fb.group<ControlsOf<IDoRegistrarProjeto>>({
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
+    urlBanner: this.fb.control(null),
   });
 
   override mapFormData(
@@ -78,6 +84,7 @@ export class RegistrarProjetosViewComponent
     return {
       description: v.description,
       title: v.title,
+      urlBanner: v.urlBanner ?? null
     };
   }
   ngAfterViewInit() {

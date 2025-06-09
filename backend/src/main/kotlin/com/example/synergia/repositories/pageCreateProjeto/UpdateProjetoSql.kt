@@ -1,22 +1,22 @@
-package com.example.synergia.repositories.pageCreateEvento
+package com.example.synergia.repositories.pageCreateProjeto
 
-import com.example.synergia.rest.pageCreateEvento.dto.input.UpdateEventoDto
+import com.example.synergia.rest.pageCreateProjeto.dto.input.UpdateProjetoDto
 import com.example.synergia.utils.interfaces.ISqlUpdateStatement
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.sql.Types
 
-class UpdateEventoSql (
-    override val params: UpdateEventoDto,
+class UpdateProjetoSql (
+    override val params: UpdateProjetoDto,
     private val idBanner: Long?
-) : ISqlUpdateStatement<UpdateEventoDto> {
+) : ISqlUpdateStatement<UpdateProjetoDto> {
     override val sql: String = """
-        UPDATE event e SET
-            title = :title, 
+        UPDATE project SET
+            title = :title,
             description = :description,
-            id_banner = CASE 
-                WHEN id_banner IS NULL AND :id_banner IS NOT NULL THEN :id_banner 
+            id_banner = CASE
+                WHEN id_banner IS NULL AND :id_banner IS NOT NULL THEN :id_banner
                 ELSE id_banner END
-        WHERE e.id = :id
+        WHERE id = :id;
     """.trimIndent()
 
     override fun setParams(paramMap: MapSqlParameterSource) {
@@ -25,9 +25,6 @@ class UpdateEventoSql (
         }
         require(params.title.isNotBlank()) {
             "Titúlo não pode estar vazio."
-        }
-        require(params.description.isNotBlank()) {
-            "Identifier não pod estar vazio."
         }
         paramMap.addValue("id", params.id, Types.BIGINT)
         paramMap.addValue("title", params.title, Types.VARCHAR)

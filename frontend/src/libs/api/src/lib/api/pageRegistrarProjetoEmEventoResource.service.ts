@@ -17,9 +17,9 @@ import { CustomHttpParameterCodec }                          from '../encoder';
 import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
-import { FiltroListarProjetosAllDto } from '../model/filtroListarProjetosAllDto';
+import { ListarEventosDisponiveisDto } from '../model/listarEventosDisponiveisDto';
 // @ts-ignore
-import { ListarProjetosAllDto } from '../model/listarProjetosAllDto';
+import { LoginInformationResponseDto } from '../model/loginInformationResponseDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -30,7 +30,7 @@ import { Configuration }                                     from '../configurat
 @Injectable({
   providedIn: 'root'
 })
-export class PageListarProjetosResourceService {
+export class PageRegistrarProjetoEmEventoResourceService {
 
     protected basePath = 'http://localhost:8080';
     public defaultHeaders = new HttpHeaders();
@@ -93,17 +93,13 @@ export class PageListarProjetosResourceService {
     }
 
     /**
-     * @param id 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deletarProjeto(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deletarProjeto(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deletarProjeto(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deletarProjeto(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deletarProjeto.');
-        }
+    public listarEventosDisponiveis(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarEventosDisponiveisDto>>;
+    public listarEventosDisponiveis(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarEventosDisponiveisDto>>>;
+    public listarEventosDisponiveis(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarEventosDisponiveisDto>>>;
+    public listarEventosDisponiveis(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -111,6 +107,7 @@ export class PageListarProjetosResourceService {
         if (localVarHttpHeaderAcceptSelected === undefined) {
             // to determine the Accept header
             const httpHeaderAccepts: string[] = [
+                'application/json'
             ];
             localVarHttpHeaderAcceptSelected = this.configuration.selectHeaderAccept(httpHeaderAccepts);
         }
@@ -140,8 +137,8 @@ export class PageListarProjetosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-projetos/delete/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/page-registrar-projeto-em-evento/listar-eventos-disponiveis`;
+        return this.httpClient.request<Array<ListarEventosDisponiveisDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,
@@ -155,16 +152,30 @@ export class PageListarProjetosResourceService {
     }
 
     /**
-     * @param filtroListarProjetosAllDto 
+     * @param idEvento 
+     * @param idProjeto 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ListarProjetosAllDto>>;
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ListarProjetosAllDto>>>;
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ListarProjetosAllDto>>>;
-    public listarProjetosAll(filtroListarProjetosAllDto: FiltroListarProjetosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (filtroListarProjetosAllDto === null || filtroListarProjetosAllDto === undefined) {
-            throw new Error('Required parameter filtroListarProjetosAllDto was null or undefined when calling listarProjetosAll.');
+    public registrarProjetoEmEvento(idEvento: number, idProjeto: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<LoginInformationResponseDto>;
+    public registrarProjetoEmEvento(idEvento: number, idProjeto: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<LoginInformationResponseDto>>;
+    public registrarProjetoEmEvento(idEvento: number, idProjeto: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<LoginInformationResponseDto>>;
+    public registrarProjetoEmEvento(idEvento: number, idProjeto: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (idEvento === null || idEvento === undefined) {
+            throw new Error('Required parameter idEvento was null or undefined when calling registrarProjetoEmEvento.');
+        }
+        if (idProjeto === null || idProjeto === undefined) {
+            throw new Error('Required parameter idProjeto was null or undefined when calling registrarProjetoEmEvento.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (idEvento !== undefined && idEvento !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>idEvento, 'id-evento');
+        }
+        if (idProjeto !== undefined && idProjeto !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>idProjeto, 'id-projeto');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -192,15 +203,6 @@ export class PageListarProjetosResourceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -212,11 +214,11 @@ export class PageListarProjetosResourceService {
             }
         }
 
-        let localVarPath = `/api/listar-projetos/all`;
-        return this.httpClient.request<Array<ListarProjetosAllDto>>('post', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/page-registrar-projeto-em-evento/registrar-projeto-em-evento`;
+        return this.httpClient.request<LoginInformationResponseDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: filtroListarProjetosAllDto,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -11,7 +11,9 @@
 
 export interface CreateProjetoDto { 
     idTenant: number;
+    idAccount: number;
     title: string;
     description: string;
+    urlBanner?: string;
 }
 

@@ -16,7 +16,9 @@ class CreateTablesSql : ISqlUpdateStatement<Unit> {
         createProjectSql(),
         createPersonSql(),
         createProjectEventRelationshipSql(),
-        createTagsSql()
+        createTagsSql(),
+        createEventMembersSql(),
+        createProjectMembersSql()
     )
     override val sql: String = ""
     override fun executeStatement(template: NamedParameterJdbcTemplate): Int {
@@ -99,6 +101,20 @@ class CreateTablesSql : ISqlUpdateStatement<Unit> {
         	name varchar(255) not null,
         	created_at timestamp not null default now()
         )
+    """.trimIndent()
+
+    private fun createEventMembersSql() = """
+        create table event_members (
+            id_event bigint references event,
+            id_account bigint references account
+        );
+    """.trimIndent()
+
+    private fun createProjectMembersSql() = """
+        create table project_members (
+            id_project bigint references project,
+            id_account bigint references account
+        );
     """.trimIndent()
 
 

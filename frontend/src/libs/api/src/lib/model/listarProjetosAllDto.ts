@@ -9,7 +9,7 @@
  */
 
 
-export interface ListarEventosDto { 
+export interface ListarProjetosAllDto { 
     id: number;
     title: string;
     description: string;

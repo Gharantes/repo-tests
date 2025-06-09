@@ -18,7 +18,7 @@ class GetCreateEventoDtoByIdSql (
             e.created_by AS created_by,
             a.url AS url_banner
         FROM event e
-        INNER JOIN attachments a ON a.id = e.id_banner
+        LEFT JOIN attachments a ON a.id = e.id_banner
         WHERE e.id = :id
     """.trimIndent()
 
@@ -29,9 +29,9 @@ class GetCreateEventoDtoByIdSql (
     override val rowMapper = RowMapper<CreateEventoDto> { rs, _ ->
         CreateEventoDto(
             idTenant=rs.getLong("id_tenant"),
+            idAccount=rs.getLong("created_by"),
             title=rs.getString("title"),
             description=rs.getString("description"),
-            createdByIdAccount=rs.getLong("created_by"),
             urlBanner=rs.getString("url_banner"),
         )
     }

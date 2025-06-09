@@ -3,6 +3,7 @@
 README.md
 api.module.ts
 api/api.ts
+api/pageAtribuirPermissoesResource.service.ts
 api/pageCreateEventoResource.service.ts
 api/pageCreateProjetoResource.service.ts
 api/pageCreateTenantResource.service.ts
@@ -13,6 +14,7 @@ api/pageListarProjetosResource.service.ts
 api/pageListarTagsResource.service.ts
 api/pageListarUsuariosResource.service.ts
 api/pageLoginResource.service.ts
+api/pageRegistrarProjetoEmEventoResource.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -22,13 +24,16 @@ model/createProjetoDto.ts
 model/createTenantDto.ts
 model/createUsuarioDto.ts
 model/filtroListarEventosAllDto.ts
+model/filtroListarEventosByIdDto.ts
 model/filtroListarProjetosAllDto.ts
 model/filtroListarProjetosOfEventoDto.ts
 model/filtroListarTagsAllDto.ts
 model/filtroListarUsuariosAllDto.ts
 model/insertTagDto.ts
+model/listarEventosDisponiveisDto.ts
 model/listarEventosDto.ts
-model/listarProjetosBasicInfoDto.ts
+model/listarPermissoesDto.ts
+model/listarProjetosAllDto.ts
 model/listarProjetosOfEventoDto.ts
 model/listarTagDto.ts
 model/listarUsuariosBasicInfoDto.ts
@@ -36,6 +41,7 @@ model/loginInformationInputDto.ts
 model/loginInformationResponseDto.ts
 model/loginTenantInformationDto.ts
 model/models.ts
+model/oneAccountManyPermissionsDto.ts
 model/updateEventoDto.ts
 model/updateProjetoDto.ts
 param.ts

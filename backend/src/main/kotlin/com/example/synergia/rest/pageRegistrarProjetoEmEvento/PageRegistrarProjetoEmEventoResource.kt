@@ -23,7 +23,7 @@ class PageRegistrarProjetoEmEventoResource (
         ResponseMessenger.buildResponse { emptyList() }
 
     @PostMapping("/registrar-projeto-em-evento")
-    fun checkLoginInformation(
+    fun registrarProjetoEmEvento(
         @RequestParam("id-evento") idEvento: Long,
         @RequestParam("id-projeto") idProjeto: Long
     ): ResponseEntity<LoginInformationResponseDto?> =
