@@ -9,6 +9,7 @@ import com.example.synergia.pageRepositories.pageDetalhesProjeto.GetProjectDetai
 import com.example.synergia.pageRepositories.pageDetalhesProjeto.GetTagsOfProjectSql
 import com.example.synergia.rest.pageDetalhesProjeto.dto.output.ProjectDetailsDto
 import com.example.synergia.utils.models.generics.GenericIdTextDto
+import jakarta.transaction.Transactional
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 
@@ -42,6 +43,8 @@ class PageDetalhesProjetoService (
         entity.idTag = idTag
         projectTagRelationshipRepository.save(entity)
     }
+
+    @Transactional
     fun removeTagFromProject(idProject: Long, idTag: Long) {
         projectTagRelationshipRepository.deleteByIdProjectAndIdTag(idProject, idTag)
     }
