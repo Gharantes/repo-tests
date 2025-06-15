@@ -8,7 +8,7 @@ import { Snackbar2Service } from './snackbar2.service';
   standalone: true,
   template: `
     <div id="snackbars-container">
-      @for (message of snackbarService.getMessageList(); track message) {
+      @for (message of snackbarService.messageList(); track message) {
         <div class="message-box" [ngClass]="message.closing ? 'closing' : ''">
           <div class="message">
             {{ message.message }}

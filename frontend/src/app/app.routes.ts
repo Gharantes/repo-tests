@@ -46,6 +46,10 @@ const registrarUsuarios = {
   path: 'users/new',
   component: RegistrarUsuariosRouteComponent
 }
+const editarUsuarios = {
+  path: 'users/edit/:id',
+  component: RegistrarUsuariosRouteComponent
+}
 
 
 const listarProjetosRoute = {
@@ -91,6 +95,7 @@ export const appRoutes: Route[] = [
       // Usuários
       listarUsuarios,
       registrarUsuarios,
+      editarUsuarios,
       // Eventos
       listarEventos,
       registrarEventos,

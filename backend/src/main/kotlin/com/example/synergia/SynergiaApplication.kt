@@ -1,6 +1,5 @@
 package com.example.synergia
 
-import com.example.synergia.init.AppInitService
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
@@ -10,8 +9,8 @@ import org.springframework.context.annotation.Bean
 class SynergiaApplication {
 
 	@Bean
-	fun startupRunner(service: AppInitService) = CommandLineRunner {
-		service.init()
+	fun startupRunner(initService: InitService) = CommandLineRunner {
+		initService.initTestData()
 	}
 }
 

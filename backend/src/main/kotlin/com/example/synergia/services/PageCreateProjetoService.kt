@@ -1,52 +1,74 @@
 package com.example.synergia.services
 
-import com.example.synergia.repositories.attachments.DeleteAttachmentSql
-import com.example.synergia.repositories.attachments.GetIdBannerProject
-import com.example.synergia.repositories.attachments.InsertAttachmentSql
-import com.example.synergia.repositories.attachments.UpdateAttachmentUrlSql
-import com.example.synergia.repositories.pageCreateProjeto.CreateProjetoSql
-import com.example.synergia.repositories.pageCreateProjeto.GetCreateProjetoDtoByIdSql
-import com.example.synergia.repositories.pageCreateProjeto.UpdateProjetoSql
+import com.example.synergia.domain.AttachmentsEntity
+import com.example.synergia.domain.EventEntity
+import com.example.synergia.domain.ProjectEntity
+import com.example.synergia.domainRepositories.AttachmentsRepository
+import com.example.synergia.domainRepositories.ProjectRepository
+import com.example.synergia.pageRepositories.pageCreateProjeto.GetCreateProjetoDtoByIdSql
 import com.example.synergia.rest.pageCreateProjeto.dto.input.CreateProjetoDto
 import com.example.synergia.rest.pageCreateProjeto.dto.input.UpdateProjetoDto
 import com.example.synergia.utils.enums.AttachmentTypeEnum
-import com.example.synergia.utils.models.attachments.InsertAttachmentDto
-import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
+import kotlin.jvm.optionals.getOrNull
 
 @Service
 class PageCreateProjetoService (
-    private val template: NamedParameterJdbcTemplate
+    private val template: NamedParameterJdbcTemplate,
+    private val projectRepository: ProjectRepository,
+    private val attachmentsRepository: AttachmentsRepository
 ) {
 
     fun getCreateProjetoDtoById(id: Long): CreateProjetoDto? = GetCreateProjetoDtoByIdSql(id).queryForObject(template)
 
     fun createProjeto(params: CreateProjetoDto) {
         require(params.title.isNotBlank()) { "Titúlo não pode estar vazio." }
-        val idBanner = InsertAttachmentSql
-            .ofImage(params.idTenant, params.urlBanner)
-            ?.executeStatementWithReturnKey(template, "id")
-            ?.toLong()
 
-        CreateProjetoSql(params, idBanner).executeStatement(template)
+        var projectEntity = ProjectEntity()
+        projectEntity.idTenant = params.idTenant
+        projectEntity.title = params.title
+        projectEntity.description = params.description
+        projectEntity.createdBy = params.idAccount
+        projectEntity = projectRepository.save(projectEntity)
+
+        updateBanner(projectEntity.id!!, params.urlBanner, projectEntity)
     }
 
     fun updateProjeto(params: UpdateProjetoDto) {
         require(params.title.isNotBlank()) { "Título não pode estar vazio." }
-        val oldIdBanner = GetIdBannerProject(params.id).queryForObject(template)
-        val oldUrlBanner = getCreateProjetoDtoById(params.id)?.urlBanner
 
-        val newIdBanner = if (oldUrlBanner == null && params.urlBanner != null) {
-            InsertAttachmentSql.ofImage(params.idTenant, params.urlBanner)?.returnId(template)
-        } else null
+        var projectEntity = projectRepository.findById(params.id).get()
+        projectEntity.title = params.title
+        projectEntity.description = params.description
+        projectEntity = projectRepository.save(projectEntity)
 
-        UpdateProjetoSql(params, newIdBanner).executeStatement(template)
+        updateBanner(params.id, params.urlBanner, projectEntity)
+    }
 
-        if (!oldUrlBanner.isNullOrBlank() && !params.urlBanner.isNullOrBlank() && oldUrlBanner != params.urlBanner) {
-            UpdateAttachmentUrlSql(requireNotNull(oldIdBanner), params.urlBanner).executeStatement(template)
-        } else if (!oldUrlBanner.isNullOrBlank() && params.urlBanner.isNullOrBlank()) {
-            DeleteAttachmentSql(requireNotNull(oldIdBanner)).executeStatement(template)
+    private fun updateBanner(idEvent: Long, url: String?, projectEntity: ProjectEntity) {
+        val oldIdBanner = projectRepository.findById(idEvent).getOrNull()?.idBanner
+
+        if (url.isNullOrBlank() && oldIdBanner == null) {
+            return
+        } else if (url.isNullOrBlank() && oldIdBanner != null) {
+            attachmentsRepository.deleteById(oldIdBanner)
+            return
+        } else if (!url.isNullOrBlank() && oldIdBanner == null) {
+            var attachmentEntity = AttachmentsEntity()
+            attachmentEntity.url = url
+            attachmentEntity.attachmentType = AttachmentTypeEnum.IMAGE
+            attachmentEntity.idTenant = projectEntity.idTenant
+            attachmentEntity = attachmentsRepository.save(attachmentEntity)
+            projectEntity.idBanner = attachmentEntity.id
+            projectRepository.save(projectEntity)
+            return
+        } else if (!url.isNullOrBlank() && oldIdBanner != null) {
+            val attachmentEntity = attachmentsRepository.findById(oldIdBanner).get()
+            if (attachmentEntity.url == url) { return }
+            attachmentEntity.url = url
+            attachmentsRepository.save(attachmentEntity)
+            return
         }
     }
 }

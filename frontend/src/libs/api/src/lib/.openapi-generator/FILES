@@ -44,5 +44,6 @@ model/models.ts
 model/oneAccountManyPermissionsDto.ts
 model/updateEventoDto.ts
 model/updateProjetoDto.ts
+model/updateUsuarioDto.ts
 param.ts
 variables.ts

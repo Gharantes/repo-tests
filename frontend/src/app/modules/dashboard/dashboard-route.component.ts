@@ -6,18 +6,8 @@ import { of } from "rxjs";
 @Component({
   selector: 'app-dashboard-route',
   standalone: true,
-  template: `
-    <div class="row">
-      <div class="col">
-        <b>Meus Projetos:</b>
-        <b>Meus Eventos:</b>
-      </div>
-      <div class="col">
-        <div>Prazo:</div>
-      </div>
-    </div>
-  `,
-  styleUrl: `./style.scss`,
+  templateUrl: 'index.html',
+  styleUrl: `style.scss`,
   imports: []
 })
 export class DashboardRouteComponent 

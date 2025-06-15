@@ -1,11 +1,13 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
-	id("org.springframework.boot") version "3.4.0"
-	id("io.spring.dependency-management") version "1.1.6"
-	kotlin("jvm") version "1.9.23"
-	kotlin("plugin.spring") version "1.9.23"
-	kotlin("plugin.jpa") version "1.9.24"
+	kotlin("jvm") version "1.9.25"
+	kotlin("plugin.spring") version "1.9.25"
+	kotlin("plugin.jpa") version "1.9.25"
+
+	id("org.springframework.boot") version "3.5.0"
+	id("io.spring.dependency-management") version "1.1.7"
+
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
 }
 
@@ -35,30 +37,26 @@ repositories {
 tasks.getByName("generateOpenApiDocs") { project.ext.set("profile", "openapi") }
 
 dependencies {
-	implementation("org.springframework.boot:spring-boot-starter-web")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
-	/** JDBC **/
+	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	implementation("org.jetbrains.kotlin:kotlin-reflect")
+
+	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
 	/** Bancos de Dados **/
 	implementation("org.postgresql:postgresql")
-//	runtimeOnly("org.postgresql:postgresql")
 
-	/** READ AND WRITE FILES **/
-//	implementation("org.apache.poi:poi-ooxml:5.2.3")
-
-//	implementation("jakarta.persistence:jakarta.persistence-api")
-	/** JPA **/
-//	implementation("org.springframework.data:spring-data-jpa")
 	/** OPEN API **/
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
+
 	if (project.ext.has("profile") && project.ext.get("profile") == "openapi") {
 		runtimeOnly("org.hsqldb:hsqldb")
 	}
+
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 
 	/* Test Dependencies */
 	val kotestVersion = "5.9.1"
