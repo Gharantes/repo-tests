@@ -1,6 +1,6 @@
 import { RoutingService } from '@synergia-frontend/services';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { AfterViewInit, Component, DestroyRef, EventEmitter, inject, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,6 +8,8 @@ import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import { IDoRegistrarUsuario } from '@synergia-frontend/interfaces';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Subject, take, tap } from 'rxjs';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'lib-registrar-usuarios-view',
@@ -56,9 +58,19 @@ import { ReactiveFormsModule, Validators } from '@angular/forms';
   ]
 })
 export class RegistrarUsuariosViewComponent 
-extends AbsClassInsertView<IDoRegistrarUsuario> {
+extends AbsClassInsertView<IDoRegistrarUsuario>
+implements AfterViewInit
+{
   @Output() registrarEntidadeEvent = new EventEmitter<IDoRegistrarUsuario>();
   @Output() goToParentPageEvent = new EventEmitter<void>;
+  @Input() populateForm!: Subject<IDoRegistrarUsuario | null>;
+
+  constructor(
+    private readonly destroyRef: DestroyRef
+  ) {
+    super();
+  }
+
 
   public form = this.fb.group<ControlsOf<IDoRegistrarUsuario>>({
     login: this.fb.control<string>('', [Validators.required]),
@@ -82,6 +94,21 @@ extends AbsClassInsertView<IDoRegistrarUsuario> {
   }
   voltar() {
     return this.routingService.goTo(this.routingService.users()); 
+  }
+
+  ngAfterViewInit() {
+    this.populateForm.pipe(
+      tap(res => {
+        if (res) {
+          this.form.controls.firstName.setValue(res.firstName)
+          this.form.controls.login.setValue(res.login)
+          this.form.controls.password.setValue(res.password)
+          this.form.controls.lastName.setValue(res.lastName)
+        }
+      }),
+      take(1),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe()
   }
 
 }

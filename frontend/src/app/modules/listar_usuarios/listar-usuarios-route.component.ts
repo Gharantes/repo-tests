@@ -8,10 +8,10 @@ import { IDoBasicUsuarioInfo } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
-  SnackbarService,
+  Snackbar2Service,
 } from '@synergia-frontend/services';
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
-import { catchError, EMPTY, map, tap } from 'rxjs';
+import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
 
 @Component({
   selector: 'app-page-listar-usuarios-route',
@@ -20,6 +20,8 @@ import { catchError, EMPTY, map, tap } from 'rxjs';
     <lib-page-listar-usuarios-view
       [data$]="data$"
       (toNewUserPageEvent)="toNewUserPage()"
+      (deleteEntryEvent)="deleteEntry($event)"
+      (editEntryEvent)="editEntry($event)"
     ></lib-page-listar-usuarios-view>
   `,
   styleUrl: `./style.scss`,
@@ -30,14 +32,14 @@ export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly snackService: SnackbarService,
+    private readonly snackService: Snackbar2Service,
     private readonly routingService: RoutingService,
     private readonly pageService: PageListarUsuariosResourceService
   ) {}
 
   public ngOnInit(): void {
     this.setRouteInfo();
-    this.getData();
+    this.getData().subscribe();
   }
   public setRouteInfo(): void {
     this.routingService.setRouteInfo(this.routingService.users());
@@ -52,16 +54,29 @@ export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
       })
       .pipe(
         catchError((err) => {
-          this.snackService.addMessage('Erro ao trazer usuários.');
+          this.snackService.catchError(err, 'Erro ao trazer usuários.');
           return EMPTY;
         }),
         map((res) => this.mapData(res)),
         tap((res) => this.data$.set(res))
       )
-      .subscribe();
   }
 
   private mapData(res: ListarUsuariosBasicInfoDto[]): IDoBasicUsuarioInfo[] {
     return res.map((v) => ({ ...v }));
+  }
+
+  deleteEntry($event: IDoBasicUsuarioInfo) {
+    this.pageService.deletarUsuario($event.idAccount).pipe(
+      catchError(err => {
+        this.snackService.catchError(err);
+        return EMPTY;
+      }),
+      concatMap(() => this.getData())
+    ).subscribe()
+  }
+
+  editEntry($event: number) {
+    this.routingService.goTo(this.routingService.editUser($event))
   }
 }

@@ -62,6 +62,12 @@ export class RoutingService {
             path: [...this.activeTenant(), 'users', 'new']
         }
     }
+    public editUser(idAccount: number): IDoRouteDetails {
+      return {
+        label: 'Editar Usuário',
+        path: [...this.activeTenant(), 'users', 'edit', idAccount.toString()]
+      }
+    }
 
     public projects(): IDoRouteDetails {
         return {

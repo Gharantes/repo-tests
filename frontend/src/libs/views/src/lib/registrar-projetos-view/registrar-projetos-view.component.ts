@@ -1,12 +1,22 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, Component, DestroyRef, EventEmitter, Input, Output, signal } from '@angular/core';
+import {
+  AfterViewInit,
+  Component,
+  DestroyRef,
+  EventEmitter,
+  Input,
+  Output,
+} from '@angular/core';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
-import { IDoListarEventos, IDoRegistrarProjeto } from '@synergia-frontend/interfaces';
+import {
+  IDoListarEventos,
+  IDoRegistrarProjeto,
+} from '@synergia-frontend/interfaces';
 import { Subject, take, tap } from 'rxjs';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
@@ -93,6 +103,7 @@ export class RegistrarProjetosViewComponent
         if (res != null) {
           this.form.controls.title.setValue(res.title)
           this.form.controls.description.setValue(res.description)
+          this.form.controls.urlBanner.setValue(res.urlBanner);
         }
       }),
       take(1),

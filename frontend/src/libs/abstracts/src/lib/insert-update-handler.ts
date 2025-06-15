@@ -14,7 +14,6 @@ export class InsertUpdateHandler<T, Y, Z> {
   public readonly populateForm = new Subject<T | null>();
   public parentRoute?: IDoRouteDetails;
 
-
   public getPrimaryKey() {
     this.routingService
       .getParamFromRoute(this.activatedRoute, 'id')
@@ -37,6 +36,11 @@ export class InsertUpdateHandler<T, Y, Z> {
       });
   }
 
+  public log() {
+    console.log(this.insertMapper);
+    console.log(this.reverseInsertMapper)
+    console.log(this.updateMapper)
+  }
   private insertMapper: ((el: T) => Y) | undefined;
   public setInsertMapper(mapper: (el: T) => Y) {
     this.insertMapper = mapper;
@@ -82,7 +86,8 @@ export class InsertUpdateHandler<T, Y, Z> {
         return EMPTY
       }),
       tap(() => {
-        this.snackbarService.message('Entidade registrada com sucesso');
+        this.snackbarService.showMessage('Entidade registrada com sucesso');
+        this.goToParentRoute()
       })
     ).subscribe();
   }
@@ -92,6 +97,21 @@ export class InsertUpdateHandler<T, Y, Z> {
       return;
     }
     const mapped = this.updateMapper($event, this.primaryKey() as number);
-    this.atualizarEntidadeFn(mapped).pipe().subscribe();
+    this.atualizarEntidadeFn(mapped).pipe(
+      catchError(err => {
+        this.snackbarService.catchError(err, 'Erro ao atualizar Entidade')
+        return EMPTY
+      }),
+      tap(() => {
+        this.snackbarService.showMessage("Entidade atualziada com sucesso!")
+        this.goToParentRoute()
+      })
+    ).subscribe();
+  }
+
+  public goToParentRoute () {
+    if (this.parentRoute) {
+      this.routingService.goTo(this.parentRoute)
+    }
   }
 }

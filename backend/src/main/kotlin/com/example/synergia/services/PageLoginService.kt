@@ -1,17 +1,19 @@
 package com.example.synergia.services
 
-import com.example.synergia.repositories.pageLogin.CheckLoginInformationSql
-import com.example.synergia.repositories.pageLogin.ListarTenantsLoginSql
-import com.example.synergia.repositories.pageLogin.UpdateAccountLastSeenSql
+import com.example.synergia.domainRepositories.AccountRepository
+import com.example.synergia.pageRepositories.pageLogin.CheckLoginInformationSql
+import com.example.synergia.pageRepositories.pageLogin.ListarTenantsLoginSql
 import com.example.synergia.rest.pageLogin.dto.input.LoginInformationInputDto
 import com.example.synergia.rest.pageLogin.dto.output.LoginInformationResponseDto
 import com.example.synergia.rest.pageLogin.dto.output.LoginTenantInformationDto
-import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
+import java.time.LocalDateTime
 
 @Service
 class PageLoginService (
-    private val template: JdbcTemplate
+    private val template: NamedParameterJdbcTemplate,
+    private val accountRepository: AccountRepository,
 ) {
     fun listarTenantsLogin(): List<LoginTenantInformationDto> =
         ListarTenantsLoginSql(Unit).query(template)
@@ -19,10 +21,13 @@ class PageLoginService (
     fun checkLoginInformation(
         params: LoginInformationInputDto
     ): LoginInformationResponseDto? {
-        val res = CheckLoginInformationSql(params).queryForObject(template)
-        if (res == null) { return res }
-
-        UpdateAccountLastSeenSql(res.idAccount).executeStatement(template)
-        return res
+        return CheckLoginInformationSql(params).queryForObject(template)?.apply {
+            updateLastSeen(this.idAccount)
+        }
+    }
+    private fun updateLastSeen(idAccount: Long) {
+        val accountEntity = accountRepository.findById(idAccount).get()
+        accountEntity.lastSeen = LocalDateTime.now()
+        accountRepository.save(accountEntity)
     }
 }

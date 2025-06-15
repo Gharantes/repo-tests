@@ -306,6 +306,29 @@
         }
       }
     },
+    "/api/create-usuario/update": {
+      "post": {
+        "tags": [
+          "page-create-usuario-resource"
+        ],
+        "operationId": "updateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateUsuarioDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
     "/api/create-usuario/store": {
       "post": {
         "tags": [
@@ -552,6 +575,37 @@
                   "items": {
                     "$ref": "#/components/schemas/LoginTenantInformationDto"
                   }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/create-usuario/{id}": {
+      "get": {
+        "tags": [
+          "page-create-usuario-resource"
+        ],
+        "operationId": "getCreateUsuarioDtoById",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateUsuarioDto"
                 }
               }
             }
@@ -1036,6 +1090,39 @@
           "idAccount": {
             "type": "integer",
             "format": "int64"
+          }
+        }
+      },
+      "UpdateUsuarioDto": {
+        "required": [
+          "firstName",
+          "id",
+          "idTenant",
+          "lastName",
+          "login",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
           }
         }
       },

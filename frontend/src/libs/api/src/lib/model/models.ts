@@ -22,3 +22,4 @@ export * from './loginTenantInformationDto';
 export * from './oneAccountManyPermissionsDto';
 export * from './updateEventoDto';
 export * from './updateProjetoDto';
+export * from './updateUsuarioDto';

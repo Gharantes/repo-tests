@@ -13,18 +13,18 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
   selector: 'lib-page-listar-usuarios-view',
   standalone: true,
   template: `
-    <lib-sig-extendable-table
-      [data$]="data$"
-      [columns]="columns"
-      [actions]="tableActions"
-    ></lib-sig-extendable-table>
-
     <div class="btn-line">
       <button mat-raised-button (click)="toNewUserPage()">
         <span>Criar novo usuário</span>
         <mat-icon class="material-symbols-outlined">add</mat-icon>
       </button>
     </div>
+    
+    <lib-sig-extendable-table
+      [data$]="data$"
+      [columns]="columns"
+      [actions]="tableActions"
+    ></lib-sig-extendable-table>
   `,
   styleUrl: 'style.scss',
   imports: [
@@ -38,6 +38,7 @@ export class ListarUsuariosViewComponent {
   @Input() data$!: Signal<IDoBasicUsuarioInfo[]>;
 
   @Output() public readonly toNewUserPageEvent = new EventEmitter<void>();
+  @Output() public readonly editEntryEvent = new EventEmitter<number>();
   public toNewUserPage() {
     return this.toNewUserPageEvent.emit();
   }
@@ -75,11 +76,17 @@ export class ListarUsuariosViewComponent {
         label: 'Deletar Usuário',
         icon: '',
         action: (el: IDoBasicUsuarioInfo) => {
-          this.deleteEntryEvent.bind(this).emit(el);
+          this.deleteEntryEvent.emit(el);
         },
-        isAllowed: () => {
-          return true;
+        isAllowed: () => true
+      },
+      {
+        label: 'Editar Usuário',
+        icon: '',
+        action: (el: IDoBasicUsuarioInfo) => {
+          this.editEntryEvent.emit(el.idAccount);
         },
+        isAllowed: () => true
       },
     ];
 }

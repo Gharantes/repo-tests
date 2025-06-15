@@ -6,14 +6,15 @@ spring:
       max-file-size: 1024MB
       max-request-size: 1024MB
   datasource:
-    url: jdbc:postgresql://localhost:5432/test_dev
-    username: evoge_user
-    password: evoge_pass
+    url: jdbc:postgresql://localhost:5432/synergia_dev
+    username: postgres
+    password: admin
     name: synergia
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: none
+      ddl-auto: create-drop
+      generate-ddl: true
   output:
     ansi:
       enabled: always
