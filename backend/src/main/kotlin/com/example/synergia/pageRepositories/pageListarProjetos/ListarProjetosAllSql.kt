@@ -31,7 +31,7 @@ class ListarProjetosAllSql (
         INNER JOIN account a ON p.created_by = a.id
         LEFT JOIN attachments at ON
             p.id_banner = at.id AND
-            at.attachment_type = 1
+            at.attachment_type = 0
         LEFT JOIN is_member im ON im.id_project = p.id
         WHERE 
             p.id_tenant = :id_tenant

@@ -33,7 +33,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 
       <mat-form-field [appearance]="'outline'">
         <mat-label>Senha</mat-label>
-        <input type="text" matInput [formControl]="form.controls.password" />
+        <input type="password" matInput [formControl]="form.controls.password" />
       </mat-form-field>
     </div>
     <div class="btn-line">

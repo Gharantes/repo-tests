@@ -32,7 +32,7 @@ class ListarEventosAllSql (
             e.created_by = a.id
         LEFT JOIN attachments at ON
             e.id_banner = at.id AND
-            at.attachment_type = 1
+            at.attachment_type = 0
         LEFT JOIN is_member im ON im.id_event = e.id
         wHERE e.id_tenant = :id_tenant;
     """.trimIndent()

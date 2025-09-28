@@ -10,7 +10,7 @@ class SynergiaApplication {
 
 	@Bean
 	fun startupRunner(initService: InitService) = CommandLineRunner {
-		initService.initTestData()
+		// initService.initTestData()
 	}
 }
 

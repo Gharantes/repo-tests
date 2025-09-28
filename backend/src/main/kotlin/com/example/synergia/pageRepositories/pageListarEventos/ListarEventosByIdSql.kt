@@ -34,7 +34,7 @@ class ListarEventosByIdSql (
             e.created_by = a.id
         LEFT JOIN attachments at ON
             e.id_banner = at.id AND
-            at.attachment_type = 1 --IMAGE
+            at.attachment_type = 0
         LEFT JOIN is_member im ON im.id_event = e.id
         wHERE e.id = :id_event;
     """.trimIndent()

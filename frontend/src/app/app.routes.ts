@@ -64,6 +64,10 @@ const editarProjeto = {
   path: 'project/edit/:id',
   component: RegistrarProjetosRouteComponent
 }
+const projectPage = {
+  path: 'project-page/:id',
+  component: RegistrarProjetosRouteComponent
+}
 
 const listarTagsRoute = {
   path: 'tags',
@@ -105,6 +109,7 @@ export const appRoutes: Route[] = [
       listarProjetosRoute,
       registrarProjetosRoute,
       editarProjeto,
+      projectPage,
       // Tags
       listarTagsRoute,
       // Permissões

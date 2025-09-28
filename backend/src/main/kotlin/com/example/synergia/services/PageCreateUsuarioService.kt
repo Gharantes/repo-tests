@@ -54,7 +54,7 @@ class PageCreateUsuarioService (
 
     fun getCreateUsuarioDtoById(id: Long): CreateUsuarioDto? {
         val accountEntity = accountRepository.findById(id).get()
-        val personEntity = personRepository.findById(accountEntity.id!!).getOrNull()
+        val personEntity = personRepository.findByIdAccount(accountEntity.id!!).getOrNull()
         return CreateUsuarioDto(
             idTenant = accountEntity.idTenant!!,
             login = accountEntity.login ?: "",

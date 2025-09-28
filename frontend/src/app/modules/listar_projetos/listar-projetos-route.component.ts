@@ -22,6 +22,7 @@ import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
       (toNewProjectsPageEvent)="toNewProjectsPage()"
       (deleteEntryEvent)="deleteEntry($event)"
       (editEntryEvent)="editEntry($event)"
+      (toProjectPageEvent)="toProjectPage($event)"
     ></lib-page-listar-projetos-view>
   `,
   styleUrl: `./style.scss`,
@@ -89,5 +90,8 @@ export class ListarProjetosRouteComponent implements AbsBaseRoute, OnInit {
 
   editEntry($event: IDoBasicProjectInfo) {
     this.routingService.goTo(this.routingService.editProject($event.id));
+  }
+  toProjectPage($event: IDoBasicProjectInfo) {
+    this.routingService.goTo(this.routingService.projectPage($event.id));
   }
 }

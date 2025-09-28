@@ -1,2 +1,16 @@
-<b>Meus Projetos:</b>
-<b>Meus Eventos:</b>
+<div>
+    <b>Meus Projetos:</b>
+</div>
+@for (projeto of projetos(); track $index) {
+    <div matRipple (click)="{}">
+      {{ projeto.title }} - {{ projeto.description }}
+    </div>
+}
+<div>
+    <b>Meus Eventos:</b>
+</div>
+@for (evento of eventos(); track $index) {
+    <div matRipple (click)="{}">
+      {{ evento.title }} - {{ evento.description }}
+    </div>
+}
