@@ -15,5 +15,6 @@ export interface UpdateEventoDto {
     title: string;
     description: string;
     urlBanner?: string;
+    tags: Array<number>;
 }
 

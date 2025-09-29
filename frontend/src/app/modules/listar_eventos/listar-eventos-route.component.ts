@@ -1,6 +1,6 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { AbsBaseRoute } from '@synergia-frontend/abstracts';
-import { PageListarEventosResourceService } from '@synergia-frontend/api';
+import { PageListarEventosResourceService, StatisticsResourceService } from '@synergia-frontend/api';
 import { IDoListarEventos } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
@@ -20,6 +20,7 @@ import { EventoCardDialogComponent } from './evento-card/evento-card-dialog.comp
   template: `
     <lib-page-listar-eventos-view
       [data$]="data$"
+      (updateFiltrosEvent)="updateFiltros($event)"
       (toNewEventPageEvent)="toNewEventPageEvent()"
       (viewDetailsEvent)="viewDetails($event)"
       (deleteEntryEvent)="deleteEntry($event)"
@@ -37,9 +38,16 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
     private readonly pageService: PageListarEventosResourceService,
+    private readonly statisticsService: StatisticsResourceService,
     private readonly snackService: SnackbarService,
     private readonly dialog: MatDialog,
   ) {}
+
+  private filtros: Partial<{ textfield: string|undefined }> = {}
+  public updateFiltros($event: Partial<{ textfield: string|undefined }>) {
+    this.filtros = $event;
+    this.getData().subscribe()
+  }
 
   public ngOnInit() {
     this.setRouteInfo();
@@ -56,7 +64,8 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
     return this.pageService
       .listarEventosAll({
         idTenant: this.sessionService.getTenantId() as number,
-        idAccount: this.sessionService.getUserId() as number
+        idAccount: this.sessionService.getUserId() as number,
+        text: this.filtros.textfield
       })
       .pipe(
         map((res) => mapFromListarEventosDtoToIDoListarEventosArray(res)),
@@ -87,10 +96,16 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
   }
 
   cardInteraction($event: IDoCardGridEntryInteraction) {
-    console.log($event);
+    this.statisticsService.registerView({
+      entityRef: 'EVENT',
+      idAccount: this.sessionService.getUserId() as number,
+      idRef: $event.entry.id,
+      idTenant: this.sessionService.getTenantId() as number
+    }).pipe().subscribe();
+
     this.dialog.open(
       EventoCardDialogComponent,
       { data: $event.entry }
-    ).afterClosed().pipe().subscribe()
+    ).afterClosed().pipe().subscribe();
   }
 }

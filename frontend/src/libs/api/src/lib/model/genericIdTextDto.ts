@@ -9,9 +9,8 @@
  */
 
 
-export interface ListarEventosBasicInfoDto { 
+export interface GenericIdTextDto { 
     id: number;
-    title: string;
-    description: string;
+    text: string;
 }
 

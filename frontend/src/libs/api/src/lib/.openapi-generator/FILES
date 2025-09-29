@@ -9,12 +9,14 @@ api/pageCreateProjetoResource.service.ts
 api/pageCreateTenantResource.service.ts
 api/pageCreateUsuarioResource.service.ts
 api/pageDetalhesEventoResource.service.ts
+api/pageDetalhesProjetoResource.service.ts
 api/pageListarEventosResource.service.ts
 api/pageListarProjetosResource.service.ts
 api/pageListarTagsResource.service.ts
 api/pageListarUsuariosResource.service.ts
 api/pageLoginResource.service.ts
 api/pageRegistrarProjetoEmEventoResource.service.ts
+api/statisticsResource.service.ts
 configuration.ts
 encoder.ts
 git_push.sh
@@ -29,6 +31,7 @@ model/filtroListarProjetosAllDto.ts
 model/filtroListarProjetosOfEventoDto.ts
 model/filtroListarTagsAllDto.ts
 model/filtroListarUsuariosAllDto.ts
+model/genericIdTextDto.ts
 model/insertTagDto.ts
 model/listarEventosDisponiveisDto.ts
 model/listarEventosDto.ts
@@ -42,6 +45,8 @@ model/loginInformationResponseDto.ts
 model/loginTenantInformationDto.ts
 model/models.ts
 model/oneAccountManyPermissionsDto.ts
+model/projectDetailsDto.ts
+model/registerViewDto.ts
 model/updateEventoDto.ts
 model/updateProjetoDto.ts
 model/updateUsuarioDto.ts

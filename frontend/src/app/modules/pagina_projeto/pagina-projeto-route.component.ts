@@ -1,20 +1,17 @@
+import { AfterViewInit, Component, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { AfterViewInit, Component, OnInit, signal } from '@angular/core';
-import { AbsBaseRoute } from '@synergia-frontend/abstracts';
 import {
-    CreateProjetoDto,
-  ListarUsuariosBasicInfoDto,
+  CreateProjetoDto,
   PageCreateProjetoResourceService,
   PageListarUsuariosResourceService,
+  StatisticsResourceService
 } from '@synergia-frontend/api';
-import { IDoBasicUsuarioInfo } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
   Snackbar2Service,
 } from '@synergia-frontend/services';
-import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
-import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
+import { concatMap, tap } from 'rxjs';
 
 @Component({
   selector: 'app-page-listar-usuarios-route',
@@ -25,7 +22,7 @@ import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
     </div>
   `,
   styleUrl: `./style.scss`,
-  imports: [ListarUsuariosViewComponent],
+  imports: [],
 })
 export class PaginaProjetoRouteComponent implements AfterViewInit {
   public readonly projeto = signal<CreateProjetoDto | null>(null)
@@ -36,23 +33,36 @@ export class PaginaProjetoRouteComponent implements AfterViewInit {
     private readonly snackService: Snackbar2Service,
     private readonly routingService: RoutingService,
     private readonly pageService: PageListarUsuariosResourceService,
+    private readonly statisticsResourceService: StatisticsResourceService,
     private readonly activatedRoute: ActivatedRoute,
     private readonly pageService2: PageCreateProjetoResourceService
   ) {}
 
     ngAfterViewInit(): void {
-        this.routingService.getParamFromRoute(this.activatedRoute, "id").then((res) => {
-            if (res == null || res == "") {
-                this.routingService.goTo(this.routingService.projects());
-                return
-            } else {
-                this.idProjeto.set(Number(res));
-                this.pageService2.getCreateProjetoDtoById(this.idProjeto()!).pipe(
-                    tap(res => {
-                        this.projeto.set(res);
-                    })
-                ).subscribe()
-            }
-        });
+      this.getProjectInfo(); 
     }
+
+  private getProjectInfo() {
+    const promise = this.routingService.getParamFromRoute(this.activatedRoute, "id");
+    promise.then((res) => {
+      if (res == null || res == "") {
+        this.routingService.goTo(this.routingService.projects());
+        return
+      } else {
+        this.idProjeto.set(Number(res));
+        this.getCreateProjectById();
+      }
+    });
+  }
+  private getCreateProjectById() {
+    this.pageService2.getCreateProjetoDtoById(this.idProjeto()!).pipe(
+      tap(res => this.projeto.set(res)),
+      concatMap(() => this.statisticsResourceService.registerView({
+        entityRef: 'PROJECT',
+        idRef: this.idProjeto() as number,
+        idAccount: this.sessionService.getUserId() as number,
+        idTenant: this.sessionService.getTenantId() as number
+      }))
+    ).subscribe()
+  }
 }

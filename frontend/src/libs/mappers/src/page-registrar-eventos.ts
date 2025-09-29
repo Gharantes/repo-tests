@@ -10,6 +10,7 @@ export function mapFromCreateEventoDtoToIDoRegistrarEvento(
     title: res.title,
     description: res.description,
     urlBanner: res.urlBanner ?? null,
+    tags: res.tags
   };
 }
 
@@ -23,7 +24,8 @@ export function mapFromIDoRegistrarEventoToUpdateEventoDto(
     title: res.title,
     description: res.description,
     idTenant,
-    urlBanner: res.urlBanner ?? undefined
+    urlBanner: res.urlBanner ?? undefined,
+    tags: res.tags
   }
 }
 
@@ -38,5 +40,6 @@ export function mapFromIDoRegistrarEventoToCreateEventoDto(
     idTenant: idTenant,
     idAccount: idAccount,
     urlBanner: $event.urlBanner ?? undefined,
+    tags: $event.tags
   };
 }

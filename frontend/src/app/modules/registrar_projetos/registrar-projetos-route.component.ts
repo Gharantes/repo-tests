@@ -7,14 +7,17 @@ import {
 } from '@synergia-frontend/api';
 import {
   IDoListarEventos,
+  IDoListarTags,
   IDoRegistrarProjeto,
 } from '@synergia-frontend/interfaces';
-import { RoutingService, SessionService } from '@synergia-frontend/services';
-import { RegistrarProjetosViewComponent } from '@synergia-frontend/views';
 import {
   mapFromCreateProjetoDtoToIDoRegistrarProjeto,
   mapFromIDoRegistrarProjetoToCreateProjetoDto, mapFromIDoRegistrarProjetoToUpdateProjetoDto
 } from '@synergia-frontend/mappers';
+import { RoutingService, SessionService } from '@synergia-frontend/services';
+import { RegistrarProjetosViewComponent } from '@synergia-frontend/views';
+import { PageListarTagsResourceService } from './../../../libs/api/src/lib/api/pageListarTagsResource.service';
+import { tap } from 'rxjs';
 
 @Component({
   selector: 'app-registrar-projetos-route',
@@ -22,6 +25,7 @@ import {
   template: `
     <lib-registrar-projetos-view
       [listaEventos]="listaEventos()"
+      [tags]="tags()"
       [populateForm]="insertUpdateHandler.populateForm"
       (goToParentPageEvent)="goToLastPage()"
       (registrarEntidadeEvent)="insertUpdateHandler.save($event)"
@@ -39,10 +43,13 @@ export class RegistrarProjetosRouteComponent implements OnInit {
     UpdateProjetoDto
   >();
 
+  public readonly tags = signal<IDoListarTags[]>([]);
+
   constructor(
     private readonly sessionService: SessionService,
     private readonly routingService: RoutingService,
-    private readonly pageService: PageCreateProjetoResourceService
+    private readonly pageService: PageCreateProjetoResourceService,
+    private readonly pageListarTagsService: PageListarTagsResourceService
   ) {
     this.insertUpdateHandler.parentRoute = this.routingService.projects();
 
@@ -78,6 +85,13 @@ export class RegistrarProjetosRouteComponent implements OnInit {
   }
 
   public ngOnInit() {
+    this.pageListarTagsService.listarTagsAll({
+      idTenant: this.sessionService.getTenantId() as number,
+      text: undefined,
+    }).pipe(
+      tap(res => this.tags.set(res))
+    ).subscribe()
+    
     this.setRouteInfo();
   }
   public setRouteInfo() {

@@ -1,4 +1,5 @@
 import { CommonModule } from '@angular/common';
+import {MatSelectModule} from '@angular/material/select';
 import {
   AfterViewInit,
   Component,
@@ -15,6 +16,7 @@ import { MatInputModule } from '@angular/material/input';
 import { AbsClassInsertView, ControlsOf } from '@synergia-frontend/abstracts';
 import {
   IDoListarEventos,
+  IDoListarTags,
   IDoRegistrarProjeto,
 } from '@synergia-frontend/interfaces';
 import { Subject, take, tap } from 'rxjs';
@@ -37,6 +39,15 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
       <mat-form-field [appearance]="'outline'" class="field">
         <mat-label>URL do Banner</mat-label>
         <input type="text" matInput [formControl]="form.controls.urlBanner" />
+      </mat-form-field>
+
+      <mat-form-field [appearance]="'outline'" class="field">
+        <mat-label>Tags</mat-label>
+        <mat-select [multiple]="true" [formControl]="form.controls.tags">
+          @for (tag of tags; track $index) {
+            <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+          }  
+        </mat-select>
       </mat-form-field>
     </form>
 
@@ -61,6 +72,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    MatSelectModule
   ],
 })
 export class RegistrarProjetosViewComponent
@@ -68,6 +80,8 @@ export class RegistrarProjetosViewComponent
   implements AfterViewInit
 {
   @Input() listaEventos: IDoListarEventos[] = [];
+  @Input() tags: IDoListarTags[] = [];
+
   @Input() populateForm!: Subject<IDoRegistrarProjeto | null>;
 
   @Output() goToParentPageEvent = new EventEmitter<void>();
@@ -83,6 +97,7 @@ export class RegistrarProjetosViewComponent
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     urlBanner: this.fb.control(null),
+    tags: this.fb.control([])
   });
 
   override mapFormData(
@@ -94,7 +109,8 @@ export class RegistrarProjetosViewComponent
     return {
       description: v.description,
       title: v.title,
-      urlBanner: v.urlBanner ?? null
+      urlBanner: v.urlBanner ?? null,
+      tags: v.tags ?? []
     };
   }
   ngAfterViewInit() {
@@ -104,6 +120,7 @@ export class RegistrarProjetosViewComponent
           this.form.controls.title.setValue(res.title)
           this.form.controls.description.setValue(res.description)
           this.form.controls.urlBanner.setValue(res.urlBanner);
+          this.form.controls.tags.setValue(res.tags);
         }
       }),
       take(1),

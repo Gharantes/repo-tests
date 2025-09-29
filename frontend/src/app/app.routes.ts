@@ -13,6 +13,7 @@ import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhe
 import { ListarTagsRouteComponent } from './modules/listar_tags/listar-tags-route.component';
 import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
 import { ListarPermissoesRouteComponent } from './modules/listar_permissoes/listar-permissoes-route.component';
+import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
 
 
 const dashboard = {
@@ -66,7 +67,7 @@ const editarProjeto = {
 }
 const projectPage = {
   path: 'project-page/:id',
-  component: RegistrarProjetosRouteComponent
+  component: PaginaProjetoRouteComponent
 }
 
 const listarTagsRoute = {

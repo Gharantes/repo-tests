@@ -9,9 +9,10 @@
  */
 
 
-export interface ListarProjetosBasicInfoDto { 
+export interface ProjectDetailsDto { 
     id: number;
     title: string;
-    description: string;
+    description?: string;
+    urlBanner?: string;
 }
 
