@@ -7,13 +7,13 @@ spring:
       max-request-size: 1024MB
   datasource:
     url: jdbc:postgresql://localhost:5432/synergia_dev
-    username: postgres
-    password: admin
+    username: raindrop
+    password: doorway
     name: synergia
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
-      ddl-auto: create-drop
+      ddl-auto: update
       generate-ddl: true
   output:
     ansi:

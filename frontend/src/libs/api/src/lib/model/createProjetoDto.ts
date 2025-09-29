@@ -15,5 +15,6 @@ export interface CreateProjetoDto {
     title: string;
     description: string;
     urlBanner?: string;
+    tags: Array<number>;
 }
 

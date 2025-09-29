@@ -11,6 +11,36 @@
     }
   ],
   "paths": {
+    "/api/statistics/register-view": {
+      "post": {
+        "tags": [
+          "statistics-resource"
+        ],
+        "operationId": "registerView",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RegisterViewDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unit"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/page-registrar-projeto-em-evento/registrar-projeto-em-evento": {
       "post": {
         "tags": [
@@ -1012,6 +1042,40 @@
   },
   "components": {
     "schemas": {
+      "RegisterViewDto": {
+        "required": [
+          "entityRef",
+          "idAccount",
+          "idRef",
+          "idTenant"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idRef": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "entityRef": {
+            "type": "string",
+            "enum": [
+              "EVENT",
+              "PROJECT",
+              "TAG"
+            ]
+          }
+        }
+      },
+      "Unit": {
+        "type": "object"
+      },
       "LoginInformationResponseDto": {
         "required": [
           "idAccount",
@@ -1125,9 +1189,6 @@
           }
         }
       },
-      "Unit": {
-        "type": "object"
-      },
       "FiltroListarTagsAllDto": {
         "required": [
           "idTenant"
@@ -1178,6 +1239,9 @@
           "idAccount": {
             "type": "integer",
             "format": "int64"
+          },
+          "text": {
+            "type": "string"
           }
         }
       },
@@ -1321,6 +1385,9 @@
           "idAccount": {
             "type": "integer",
             "format": "int64"
+          },
+          "text": {
+            "type": "string"
           }
         }
       },
@@ -1405,6 +1472,7 @@
           "description",
           "id",
           "idTenant",
+          "tags",
           "title"
         ],
         "type": "object",
@@ -1425,6 +1493,13 @@
           },
           "urlBanner": {
             "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       },
@@ -1433,6 +1508,7 @@
           "description",
           "idAccount",
           "idTenant",
+          "tags",
           "title"
         ],
         "type": "object",
@@ -1453,6 +1529,13 @@
           },
           "urlBanner": {
             "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       },
@@ -1461,6 +1544,7 @@
           "description",
           "id",
           "idTenant",
+          "tags",
           "title"
         ],
         "type": "object",
@@ -1481,6 +1565,13 @@
           },
           "urlBanner": {
             "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       },
@@ -1489,6 +1580,7 @@
           "description",
           "idAccount",
           "idTenant",
+          "tags",
           "title"
         ],
         "type": "object",
@@ -1509,6 +1601,13 @@
           },
           "urlBanner": {
             "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       },
@@ -1603,8 +1702,7 @@
       "ProjectDetailsDto": {
         "required": [
           "id",
-          "title",
-          "urlBanner"
+          "title"
         ],
         "type": "object",
         "properties": {

@@ -1,31 +1,61 @@
 package com.example.synergia
 
-import com.example.synergia.rest.pageCreateProjeto.dto.input.CreateProjetoDto
-import com.example.synergia.rest.pageCreateTenant.dto.input.CreateTenantDto
-import com.example.synergia.rest.pageListarTags.dto.input.InsertTagDto
-import com.example.synergia.services.PageCreateProjetoService
-import com.example.synergia.services.PageCreateTenantService
-import com.example.synergia.services.PageListarTagsService
+import com.example.synergia.domain.system.InitActionsHistoryEntity
+import com.example.synergia.repositories.byDomain.system.InitActionsHistoryRepository
+import com.example.synergia.repositories.byDomain.statistics.StatisticsViewsRepository
+import com.example.synergia.repositories.statistics.AnonimizeViewsSql
+import com.example.synergia.utils.enums.ActionRefEnum
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Service
 class InitService (
-    private val pageCreateTenantService: PageCreateTenantService,
-    private val pageCreateProjetoService: PageCreateProjetoService,
-    private val pageListarTagsService: PageListarTagsService
+    private val initActionsHistoryRepository: InitActionsHistoryRepository,
+    private val statisticsViewsRepository: StatisticsViewsRepository,
+    private val template: NamedParameterJdbcTemplate
 ) {
-    fun initTestData() {
-        pageCreateTenantService.createTenant(CreateTenantDto(title = "ADMIN", identifier = "ADMIN"))
-        pageCreateProjetoService.createProjeto(CreateProjetoDto(
-            idTenant = 1L,
-            title = "ASDASD",
-            urlBanner = null,
-            idAccount = 1L,
-            description = "Descriptionasda"
-        ))
-        pageListarTagsService.insertTag(InsertTagDto(
-            idTenant = 1L,
-            name = "TESTE"
-        ))
+
+    fun checkActions() {
+        ActionRefEnum.entries.forEach { actionRef ->
+            val state = initActionsHistoryRepository.checkIfActionExecutedToday(actionRef.name)
+
+            when (state) {
+                true -> {
+                    val action = initActionsHistoryRepository.findByActionRef(actionRef)!!
+                    executeAction(action)
+                    updateAction(action)
+                }
+                false -> {} // Do nothing
+                null -> {
+                    val action = createEntity(actionRef)
+                    executeAction(action)
+                    updateAction(action)
+                }
+            }
+        }
+    }
+
+    private fun createEntity(action: ActionRefEnum): InitActionsHistoryEntity {
+        val entity = InitActionsHistoryEntity(
+            actionRef = action,
+            lastExecutedAt = LocalDate.of(1999, 1, 1).atStartOfDay()
+        )
+        return initActionsHistoryRepository.save(entity)
+    }
+    private fun executeAction(action: InitActionsHistoryEntity) {
+        when (action.actionRef) {
+            ActionRefEnum.ANONIMIZE_VIEWS -> anonimizePastData()
+        }
+    }
+    private fun updateAction(action: InitActionsHistoryEntity) {
+        action.lastExecutedAt = LocalDateTime.now()
+        initActionsHistoryRepository.save(action)
+        println("EXECUTED ${action.actionRef.name}")
+    }
+    private fun anonimizePastData() {
+        AnonimizeViewsSql().executeStatement(template)
+        statisticsViewsRepository.deleteAllFromPast()
     }
 }

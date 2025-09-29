@@ -112,6 +112,12 @@ export class RoutingService {
       path: [...this.activeTenant(), 'project', 'edit', id.toString()]
     }
   }
+  projectPage(id: number): IDoRouteDetails {
+    return {
+        label: 'Página do Projeto',
+        path: [...this.activeTenant(), 'project-page', id.toString()]
+    }
+  }
 
     public listarTags(): IDoRouteDetails {
         return {

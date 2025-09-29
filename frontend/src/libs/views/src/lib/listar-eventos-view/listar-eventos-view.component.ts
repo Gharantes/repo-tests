@@ -42,7 +42,10 @@ export class ListarEventosViewComponent {
   public cardGridData$ = computed(() => {
     return mapFromIDoListarEventosToIDoCardGridArray(this.data$());
   });
-
+  @Output() updateFiltrosEvent = new EventEmitter<Partial<{ textfield: string|undefined }>>();
+  public updateFiltros($event: Partial<{ textfield: string|undefined }>) {
+    this.updateFiltrosEvent.emit($event);
+  }
   @Output() toNewEventPageEvent = new EventEmitter<void>();
   @Output() cardInteractionEvent = new EventEmitter<IDoCardGridEntryInteraction>();
 

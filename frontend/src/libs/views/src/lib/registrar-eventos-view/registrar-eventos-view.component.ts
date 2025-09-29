@@ -61,6 +61,7 @@ export class RegistrarEventosViewComponent
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     urlBanner: this.fb.control(null, []),
+    tags: this.fb.control([])
   });
 
   override mapFormData(
@@ -76,6 +77,7 @@ export class RegistrarEventosViewComponent
       description: v.description,
       title: v.title,
       urlBanner: v.urlBanner ?? null,
+      tags: v.tags ?? []
     };
   }
 

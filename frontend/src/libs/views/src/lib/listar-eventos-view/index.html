@@ -1,5 +1,7 @@
 <div id="topline">
-  <lib-filtro-page-listar-eventos></lib-filtro-page-listar-eventos>
+  <lib-filtro-page-listar-eventos
+    (updateFiltrosEvent)="updateFiltros($event)"
+  ></lib-filtro-page-listar-eventos>
 
   <button mat-raised-button (click)="toNewEventPage()">
     <span>Criar novo evento</span>
