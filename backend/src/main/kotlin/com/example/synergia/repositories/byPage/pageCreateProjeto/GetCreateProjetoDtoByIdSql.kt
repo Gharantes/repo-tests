@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.sql.Types
 
 class GetCreateProjetoDtoByIdSql (
-    override val params: Long
+    override val params: Long,
+    private val tags: List<Long>
 ) : ISqlGetterStatement<CreateProjetoDto, Long> {
     override val sql: String = """
         SELECT 
@@ -31,7 +32,8 @@ class GetCreateProjetoDtoByIdSql (
             title = rs.getString("title"),
             description = rs.getString("description"),
             idAccount = rs.getLong("created_by"),
-            urlBanner = rs.getString("url_banner")
+            urlBanner = rs.getString("url_banner"),
+            tags = tags
         )
     }
 }

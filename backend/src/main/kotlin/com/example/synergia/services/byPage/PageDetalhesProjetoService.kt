@@ -1,9 +1,9 @@
 package com.example.synergia.services.byPage
 
-import com.example.synergia.domain.ProjectEventRelationshipEntity
-import com.example.synergia.domain.ProjectTagRelationshipEntity
-import com.example.synergia.repositories.byDomain.ProjectEventRelationshipRepository
-import com.example.synergia.repositories.byDomain.ProjectTagRelationshipRepository
+import com.example.synergia.domain.relationships.ProjectEventRelationshipEntity
+import com.example.synergia.domain.relationships.ProjectTagRelationshipEntity
+import com.example.synergia.repositories.byDomain.relationships.ProjectEventRelationshipRepository
+import com.example.synergia.repositories.byDomain.relationships.ProjectTagRelationshipRepository
 import com.example.synergia.repositories.byPage.pageDetalhesProjeto.GetEventsOfProjectSql
 import com.example.synergia.repositories.byPage.pageDetalhesProjeto.GetProjectDetailsDtoByIdSql
 import com.example.synergia.repositories.byPage.pageDetalhesProjeto.GetTagsOfProjectSql

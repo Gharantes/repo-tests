@@ -5,5 +5,6 @@ data class UpdateProjetoDto (
     val idTenant: Long,
     val title: String,
     val description: String,
-    val urlBanner: String?
+    val urlBanner: String?,
+    val tags: List<Long>
 )

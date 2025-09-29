@@ -2,7 +2,7 @@ package com.example.synergia.rest.byPage
 
 import com.example.synergia.models.byPage.pageDetalhesEvento.dto.input.FiltroListarProjetosOfEventoDto
 import com.example.synergia.models.byPage.pageDetalhesEvento.dto.output.ListarProjetosOfEventoDto
-import com.example.synergia.services.byPage.PageDetalhesEvento
+import com.example.synergia.services.byPage.PageDetalhesEventoService
 import com.example.synergia.utils.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/api/listar-projetos-of-evento")
 class PageDetalhesEventoResource (
-    private val service: PageDetalhesEvento
+    private val service: PageDetalhesEventoService
 ) {
     @PostMapping("/all")
     fun listarProjetosOfEvento(

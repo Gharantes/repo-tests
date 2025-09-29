@@ -1,6 +1,6 @@
-package com.example.synergia.repositories.byDomain
+package com.example.synergia.repositories.byDomain.relationships
 
-import com.example.synergia.domain.ProjectEventRelationshipEntity
+import com.example.synergia.domain.relationships.ProjectEventRelationshipEntity
 import org.springframework.data.jpa.repository.JpaRepository
 
 interface ProjectEventRelationshipRepository : JpaRepository<ProjectEventRelationshipEntity, Long> {

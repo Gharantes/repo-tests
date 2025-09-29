@@ -7,7 +7,8 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import java.sql.Types
 
 class GetCreateEventoDtoByIdSql (
-    override val params: Long
+    override val params: Long,
+    private val tags: List<Long>
 ) : ISqlGetterStatement<CreateEventoDto, Long> {
 
     override val sql: String = """
@@ -33,6 +34,7 @@ class GetCreateEventoDtoByIdSql (
             title = rs.getString("title"),
             description = rs.getString("description"),
             urlBanner = rs.getString("url_banner"),
+            tags = tags
         )
     }
 }

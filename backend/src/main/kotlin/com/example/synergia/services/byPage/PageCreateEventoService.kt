@@ -7,6 +7,7 @@ import com.example.synergia.repositories.byDomain.EventRepository
 import com.example.synergia.repositories.byPage.pageCreateEvento.GetCreateEventoDtoByIdSql
 import com.example.synergia.models.byPage.pageCreateEvento.dto.input.CreateEventoDto
 import com.example.synergia.models.byPage.pageCreateEvento.dto.input.UpdateEventoDto
+import com.example.synergia.services.byDomain.EventTagRelationshipService
 import com.example.synergia.utils.enums.AttachmentTypeEnum
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
@@ -16,10 +17,15 @@ import kotlin.jvm.optionals.getOrNull
 class PageCreateEventoService (
     private val template: NamedParameterJdbcTemplate,
     private val eventRepository: EventRepository,
-    private val attachmentsRepository: AttachmentsRepository
+    private val attachmentsRepository: AttachmentsRepository,
+    private val eventTagRelationshipService: EventTagRelationshipService
 ) {
 
-    fun getCreateEventoDtoById(id: Long): CreateEventoDto? = GetCreateEventoDtoByIdSql(id).queryForObject(template)
+    fun getCreateEventoDtoById(id: Long): CreateEventoDto? =
+        GetCreateEventoDtoByIdSql(
+            params=id,
+            tags=eventTagRelationshipService.getTags(id).toList()
+        ).queryForObject(template)
 
     fun createEvento(params: CreateEventoDto) {
         require(params.title.isNotBlank()) { "Título não pode estar vazio." }
@@ -32,6 +38,7 @@ class PageCreateEventoService (
         eventEntity = eventRepository.save(eventEntity)
 
         updateBanner(eventEntity.id!!, params.urlBanner, eventEntity)
+        eventTagRelationshipService.updateTags(eventEntity.id!!, params.tags)
     }
 
     fun updateEvento(params: UpdateEventoDto) {
@@ -43,6 +50,7 @@ class PageCreateEventoService (
         eventEntity = eventRepository.save(eventEntity)
 
         updateBanner(params.id, params.urlBanner, eventEntity)
+        eventTagRelationshipService.updateTags(params.id, params.tags)
     }
 
     private fun updateBanner(idEvent: Long, url: String?, eventEntity: EventEntity) {

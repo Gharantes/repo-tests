@@ -7,6 +7,8 @@ import com.example.synergia.repositories.byDomain.ProjectRepository
 import com.example.synergia.repositories.byPage.pageCreateProjeto.GetCreateProjetoDtoByIdSql
 import com.example.synergia.models.byPage.pageCreateProjeto.dto.input.CreateProjetoDto
 import com.example.synergia.models.byPage.pageCreateProjeto.dto.input.UpdateProjetoDto
+import com.example.synergia.repositories.byPage.pageDetalhesProjeto.GetTagsOfProjectSql
+import com.example.synergia.services.byDomain.ProjectTagRelationshipService
 import com.example.synergia.utils.enums.AttachmentTypeEnum
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
@@ -16,10 +18,15 @@ import kotlin.jvm.optionals.getOrNull
 class PageCreateProjetoService (
     private val template: NamedParameterJdbcTemplate,
     private val projectRepository: ProjectRepository,
-    private val attachmentsRepository: AttachmentsRepository
+    private val attachmentsRepository: AttachmentsRepository,
+    private val projectTagRelationshipService: ProjectTagRelationshipService
 ) {
 
-    fun getCreateProjetoDtoById(id: Long): CreateProjetoDto? = GetCreateProjetoDtoByIdSql(id).queryForObject(template)
+    fun getCreateProjetoDtoById(id: Long): CreateProjetoDto? =
+        GetCreateProjetoDtoByIdSql(
+            params=id,
+            tags=projectTagRelationshipService.getTags(id).toList()
+        ).queryForObject(template)
 
     fun createProjeto(params: CreateProjetoDto) {
         require(params.title.isNotBlank()) { "Titúlo não pode estar vazio." }
@@ -32,6 +39,7 @@ class PageCreateProjetoService (
         projectEntity = projectRepository.save(projectEntity)
 
         updateBanner(projectEntity.id!!, params.urlBanner, projectEntity)
+        projectTagRelationshipService.updateTags(projectEntity.id!!, params.tags)
     }
 
     fun updateProjeto(params: UpdateProjetoDto) {
@@ -43,6 +51,7 @@ class PageCreateProjetoService (
         projectEntity = projectRepository.save(projectEntity)
 
         updateBanner(params.id, params.urlBanner, projectEntity)
+        projectTagRelationshipService.updateTags(params.id, params.tags)
     }
 
     private fun updateBanner(idEvent: Long, url: String?, projectEntity: ProjectEntity) {

@@ -1,4 +1,4 @@
-package com.example.synergia.domain
+package com.example.synergia.domain.relationships
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -10,19 +10,20 @@ import jakarta.persistence.UniqueConstraint
 
 @Entity
 @Table(
-    name = "project_tag_relationship",
+    name = "event_members",
     uniqueConstraints = [
         UniqueConstraint(
-            name = "uk_project_tag_relationship_id_project_id_tag",
-            columnNames = ["id_project", "id_tag"]
+            name="uk_event_members_id_event_id_account",
+            columnNames = ["id_event", "id_account"]
         )
-    ])
-class ProjectTagRelationshipEntity {
+    ]
+)
+class EventMembersEntity {
     @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null
 
-    @Column(name = "id_project", nullable = false)
-    var idProject: Long? = null
+    @Column(name = "id_event", nullable = false)
+    var idEvent: Long? = null
 
-    @Column(name = "id_tag", nullable = false)
-    var idTag: Long? = null
+    @Column(name = "id_account", nullable = false)
+    var idAccount: Long? = null
 }

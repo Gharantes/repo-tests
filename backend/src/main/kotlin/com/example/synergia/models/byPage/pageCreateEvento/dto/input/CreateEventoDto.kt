@@ -5,5 +5,6 @@ data class CreateEventoDto(
     val idAccount: Long,
     val title: String,
     val description: String,
-    val urlBanner: String?
+    val urlBanner: String?,
+    val tags: List<Long>
 )

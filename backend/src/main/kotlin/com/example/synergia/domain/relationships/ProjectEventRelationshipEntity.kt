@@ -1,4 +1,4 @@
-package com.example.synergia.domain
+package com.example.synergia.domain.relationships
 
 import jakarta.persistence.Column
 import jakarta.persistence.Entity
@@ -7,7 +7,6 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 import jakarta.persistence.UniqueConstraint
-import kotlin.math.min
 
 @Entity
 @Table(

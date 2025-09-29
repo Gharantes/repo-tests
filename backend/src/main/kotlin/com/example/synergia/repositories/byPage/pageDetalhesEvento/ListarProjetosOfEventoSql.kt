@@ -17,10 +17,8 @@ class ListarProjetosOfEventoSql (
             p.description
         FROM event e 
         INNER JOIN project_event_relationship per ON
-            e.id_tenant = per.id_tenant AND 
             e.id = per.id_event
         INNER JOIN project p ON 
-            per.id_tenant = p.id_tenant AND
             per.id_project = p.id
         WHERE 
             e.id_tenant = :id_tenant AND

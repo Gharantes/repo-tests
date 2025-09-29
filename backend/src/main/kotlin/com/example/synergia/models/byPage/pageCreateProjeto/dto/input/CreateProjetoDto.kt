@@ -5,5 +5,6 @@ data class CreateProjetoDto(
     val idAccount: Long,
     val title: String,
     val description: String,
-    val urlBanner: String? = null
+    val urlBanner: String? = null,
+    val tags: List<Long>
 )

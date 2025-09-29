@@ -19,7 +19,7 @@ openApi {
 	apiDocsUrl.set("http://localhost:8080/v3/api-docs")
 	outputDir.set(layout.projectDirectory.dir("docs"))
 	outputFileName.set("${project.name}-${project.version}.json")
-	waitTimeInSeconds.set(10)
+	waitTimeInSeconds.set(30)
 	customBootRun { args.set(listOf("--spring.profiles.active=openapi")) }
 }
 

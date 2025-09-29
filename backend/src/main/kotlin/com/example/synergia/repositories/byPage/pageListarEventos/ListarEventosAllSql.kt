@@ -2,6 +2,7 @@ package com.example.synergia.repositories.byPage.pageListarEventos
 
 import com.example.synergia.models.byPage.pageListarEventos.dto.input.FiltroListarEventosAllDto
 import com.example.synergia.models.byPage.pageListarEventos.dto.output.ListarEventosDto
+import com.example.synergia.utils.extensions.parseStringToWildCard
 import com.example.synergia.utils.interfaces.ISqlGetterStatement
 import org.springframework.jdbc.core.RowMapper
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -34,11 +35,20 @@ class ListarEventosAllSql (
             e.id_banner = at.id AND
             at.attachment_type = 0
         LEFT JOIN is_member im ON im.id_event = e.id
-        wHERE e.id_tenant = :id_tenant;
+        wHERE 
+            e.id_tenant = :id_tenant
+            ${textParam()}
     """.trimIndent()
+
+    private fun textParam(): String {
+        return if (params.text.isNullOrBlank()) ""
+        else "AND e.title ILIKE :text"
+    }
+
     override fun setParams(paramMap: MapSqlParameterSource) {
         paramMap.addValue("id_tenant", params.idTenant, Types.BIGINT)
         paramMap.addValue("id_account", params.idAccount, Types.BIGINT)
+        paramMap.addValue("text", params.text.parseStringToWildCard(), Types.VARCHAR)
     }
     override val rowMapper = RowMapper<ListarEventosDto> { rs, _ ->
         ListarEventosDto(
