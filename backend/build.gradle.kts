@@ -1,11 +1,14 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "br.com.synergia"
+version = "0.0.1-SNAPSHOT"
+
 plugins {
 	kotlin("jvm") version "1.9.25"
 	kotlin("plugin.spring") version "1.9.25"
 	kotlin("plugin.jpa") version "1.9.25"
 
-	id("org.springframework.boot") version "3.5.0"
+	id("org.springframework.boot") version "3.5.0" apply false
 	id("io.spring.dependency-management") version "1.1.7"
 
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
@@ -23,9 +26,6 @@ openApi {
 	customBootRun { args.set(listOf("--spring.profiles.active=openapi")) }
 }
 
-group = "br.com.synergia"
-version = "0.0.1-SNAPSHOT"
-
 java {
 	sourceCompatibility = JavaVersion.VERSION_21
 }
@@ -37,28 +37,45 @@ repositories {
 tasks.getByName("generateOpenApiDocs") { project.ext.set("profile", "openapi") }
 
 dependencies {
+	implementation(project(":libs:actionAtribuirPermissoes"))
+	implementation(project(":libs:actionManageRelationships"))
+	implementation(project(":libs:pageExtendedEvento"))
+	implementation(project(":libs:pageExtendedProjeto"))
+	implementation(project(":libs:pageListEventos"))
+	implementation(project(":libs:pageListPermissoes"))
+	implementation(project(":libs:pageListProjetos"))
+	implementation(project(":libs:pageListTags"))
+	implementation(project(":libs:pageListUsuarios"))
+	implementation(project(":libs:pageLogin"))
+	implementation(project(":libs:pageUpsertEventos"))
+	implementation(project(":libs:pageUpsertProjetos"))
+	implementation(project(":libs:pageUpsertTenant"))
+	implementation(project(":libs:pageUpsertUsuario"))
+	implementation(project(":libs:utilsCommons"))
+	implementation(project(":libs:utilsInit"))
+	implementation(project(":libs:utilsSql"))
+
+
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
-
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
-
 	/** Bancos de Dados **/
 	implementation("org.postgresql:postgresql")
-
 	/** OPEN API **/
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
+	/**XLSX**/
+	implementation("org.apache.poi:poi:5.2.4")
+	implementation("org.apache.poi:poi-ooxml:5.2.4")
+
 
 	if (project.ext.has("profile") && project.ext.get("profile") == "openapi") {
 		runtimeOnly("org.hsqldb:hsqldb")
 	}
-
-	testImplementation("org.springframework.boot:spring-boot-starter-test")
-
 	/* Test Dependencies */
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	val kotestVersion = "5.9.1"
 	testImplementation("io.kotest:kotest-runner-junit5:$kotestVersion")
 	testImplementation("io.kotest:kotest-assertions-core:$kotestVersion")
@@ -76,4 +93,16 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+}
+
+subprojects {
+	apply(plugin = "io.spring.dependency-management")
+	repositories {
+		mavenCentral()
+	}
+	dependencyManagement {
+		imports {
+			mavenBom("org.springframework.boot:spring-boot-dependencies:3.5.0")
+		}
+	}
 }

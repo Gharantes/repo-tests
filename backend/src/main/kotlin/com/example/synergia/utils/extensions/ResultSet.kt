@@ -1,7 +1,0 @@
-package com.example.synergia.utils.extensions
-
-import java.sql.ResultSet
-
-fun ResultSet.getNullableLong(columnName: String) : Long? {
-    return this.getLong(columnName).takeUnless { this.wasNull() }
-}
