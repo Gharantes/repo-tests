@@ -1,0 +1,11 @@
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  disable-i18n: true
+  model-converters:
+    pageable-converter:
+      enabled: true
+  show-actuator: false
+  api-docs:
+    groups:
+      enabled: true
