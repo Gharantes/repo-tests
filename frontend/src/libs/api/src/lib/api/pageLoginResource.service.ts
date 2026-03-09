@@ -21,7 +21,7 @@ import { LoginInformationInputDto } from '../model/loginInformationInputDto';
 // @ts-ignore
 import { LoginInformationResponseDto } from '../model/loginInformationResponseDto';
 // @ts-ignore
-import { LoginTenantInformationDto } from '../model/loginTenantInformationDto';
+import { TenantDto } from '../model/tenantDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -152,7 +152,7 @@ export class PageLoginResourceService {
             }
         }
 
-        let localVarPath = `/api/login/check-login-information`;
+        let localVarPath = `/api/page-login/check-login-information`;
         return this.httpClient.request<LoginInformationResponseDto>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -171,10 +171,10 @@ export class PageLoginResourceService {
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listarTenantsLogin(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<LoginTenantInformationDto>>;
-    public listarTenantsLogin(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<LoginTenantInformationDto>>>;
-    public listarTenantsLogin(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<LoginTenantInformationDto>>>;
-    public listarTenantsLogin(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listarTenants(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TenantDto>>;
+    public listarTenants(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TenantDto>>>;
+    public listarTenants(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TenantDto>>>;
+    public listarTenants(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -212,8 +212,8 @@ export class PageLoginResourceService {
             }
         }
 
-        let localVarPath = `/api/login/listar-tenants`;
-        return this.httpClient.request<Array<LoginTenantInformationDto>>('get', `${this.configuration.basePath}${localVarPath}`,
+        let localVarPath = `/api/page-login/listar-tenants`;
+        return this.httpClient.request<Array<TenantDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

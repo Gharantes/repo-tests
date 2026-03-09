@@ -46,6 +46,6 @@ implements AbsBaseRoute, OnInit {
       this.setRouteInfo();
   }
   public setRouteInfo(): void {
-      this.routingService.setRouteInfo(this.routingService.dashboard());
+      this.routingService.setRouteInfo(this.routingService.goToDashboard());
   }
 }

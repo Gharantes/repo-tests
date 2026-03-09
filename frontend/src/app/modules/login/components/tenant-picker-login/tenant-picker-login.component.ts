@@ -20,6 +20,6 @@ export class TenantPickerLoginComponent {
     this.setNewTenant.emit($event);
   }
   public createTenant() {
-    this.routingService.goTo(this.routingService.createTenant());
+    this.routingService.goTo(this.routingService.goToCreateTenant());
   }
 }

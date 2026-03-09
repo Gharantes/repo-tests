@@ -119,7 +119,7 @@ export class LoginRouteComponent implements AfterViewInit {
             label: res.login,
           });
           this.sessionService.saveSessionOnLocalStorage();
-          this.routingService.goTo(this.routingService.dashboard());
+          this.routingService.goTo(this.routingService.goToDashboard());
         })
       )
       .subscribe();

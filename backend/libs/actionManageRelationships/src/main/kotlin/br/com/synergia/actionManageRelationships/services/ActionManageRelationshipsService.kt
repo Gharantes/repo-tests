@@ -6,22 +6,22 @@ import org.springframework.stereotype.Service
 class ActionManageRelationshipsService (
     private val sqlService: ActionManageRelationshipsSqlService
 ) {
-    fun createRelationshipEventoAndProjeto(
-        idEvento: Long,
-        idProjeto: Long,
+    fun createRelationshipEventAndProject(
+        idEvent: Long,
+        idProject: Long,
     ) {
-        sqlService.createRelationshipEventoAndProjeto(idEvento, idProjeto)
+        sqlService.createRelationshipEventAndProject(idEvent, idProject)
     }
-    fun removeRelationshipEventoAndProjeto(
-        idEvento: Long,
-        idProjeto: Long,
+    fun removeRelationshipEventAndProject(
+        idEvent: Long,
+        idProject: Long,
     ) {
-        sqlService.removeRelationshipEventoAndProjeto(idEvento, idProjeto)
+        sqlService.removeRelationshipEventAndProject(idEvent, idProject)
     }
-    fun createRelationshipTagAndProjeto(
+    fun createRelationshipTagAndProject(
         idTag: Long,
-        idProjeto: Long,
+        idProject: Long,
     ) {
-        sqlService.createRelationshipTagAndProjeto(idTag, idProjeto)
+        sqlService.createRelationshipTagAndProject(idTag, idProject)
     }
 }

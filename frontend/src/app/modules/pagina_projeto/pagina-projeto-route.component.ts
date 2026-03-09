@@ -9,7 +9,7 @@ import {
 import {
   RoutingService,
   SessionService,
-  Snackbar2Service,
+  SnackbarService,
 } from '@synergia-frontend/services';
 import { concatMap, tap } from 'rxjs';
 
@@ -30,7 +30,7 @@ export class PaginaProjetoRouteComponent implements AfterViewInit {
   private readonly idProjeto = signal<number | null>(null)
   constructor(
     private readonly sessionService: SessionService,
-    private readonly snackService: Snackbar2Service,
+    private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
     private readonly pageService: PageListarUsuariosResourceService,
     private readonly statisticsResourceService: StatisticsResourceService,

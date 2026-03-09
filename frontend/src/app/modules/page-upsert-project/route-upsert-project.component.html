@@ -1,0 +1,36 @@
+<form>
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Título</mat-label>
+    <input type="text" matInput [formControl]="form.controls.title" />
+  </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Descrição</mat-label>
+    <input type="text" matInput [formControl]="form.controls.description" />
+  </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>URL do Banner</mat-label>
+    <input type="text" matInput [formControl]="form.controls.urlBanner" />
+  </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Tags</mat-label>
+    <mat-select [multiple]="true" [formControl]="form.controls.tags">
+      @for (tag of tags; track $index) {
+        <mat-option [value]="tag.id">{{ tag.name }}</mat-option>
+      }
+    </mat-select>
+  </mat-form-field>
+</form>
+
+<div class="btn-line">
+  <button mat-raised-button (click)="goToParentPage()">Voltar</button>
+  <button
+    mat-raised-button
+    [disabled]="!isFormValid()"
+    (click)="registrarEntidade()"
+  >
+    Salvar
+  </button>
+</div>

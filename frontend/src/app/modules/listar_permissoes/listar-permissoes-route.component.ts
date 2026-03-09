@@ -6,7 +6,7 @@ import {
   IDoListarTags
 } from '@synergia-frontend/interfaces';
 import { PageListarTagsResourceService } from '@synergia-frontend/api';
-import { SessionService, Snackbar2Service } from '@synergia-frontend/services';
+import { SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, debounceTime, EMPTY, map, tap } from 'rxjs';
 import { MatInput, MatLabel } from '@angular/material/input';
 import { MatFormField } from '@angular/material/form-field';
@@ -52,7 +52,7 @@ export class ListarPermissoesRouteComponent {
   constructor(
     private readonly pageService: PageListarTagsResourceService,
     private readonly sessionService: SessionService,
-    private readonly snackbarService: Snackbar2Service,
+    private readonly snackbarService: SnackbarService,
     private readonly fb: NonNullableFormBuilder
   ) {
     this.textfieldControl = this.fb.control('');

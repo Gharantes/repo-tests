@@ -1,138 +1,87 @@
-import { Injectable, signal } from "@angular/core";
-import { ActivatedRoute, Router } from "@angular/router";
+import { Injectable, signal } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { IDoRouteDetails } from '@synergia-frontend/interfaces';
-import { SessionService } from "./session.service";
-import { firstValueFrom, tap } from 'rxjs';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
-    providedIn: 'root',
+  providedIn: 'root',
 })
 export class RoutingService {
-    constructor (
-        private readonly router: Router,
-        private readonly sessionService: SessionService
-    ) {}
+  constructor(private readonly router: Router) {}
 
-    public readonly activeRouteInfo = signal<IDoRouteDetails | null>(null)
+  public readonly routeLabel = signal<string>('');
 
-    public async getParamFromRoute(route: ActivatedRoute, key: string): Promise<string | null> {
-      return (await firstValueFrom(route.paramMap)).get(key)
-    }
-    public setRouteInfo(r: IDoRouteDetails) {
-        this.activeRouteInfo.set(r)
-    }
-    public goTo(r: IDoRouteDetails) {
-        this.setRouteInfo(r);
-        this.router.navigate(r.path).then(success => {
-            console.log('Navigation Success?', success);
-        }, error => {
-            console.log('Navigation Error?', error);
-        })
-    }
-
-
-    private activeTenant (): string[] {
-        const idTenant = this.sessionService.getTenantId()?.toString() ?? 'null';
-        return ['t', idTenant];
-    }
-
- 
-    public login(): IDoRouteDetails { 
-        return { label: 'Login', path: ['login'] }
-    }
-    public createTenant(): IDoRouteDetails {
-        return { label: 'Registrar Tenant', path: ['create-tenant'] }; 
-    }
-    public dashboard(): IDoRouteDetails {
-        return {
-            label: 'Dashboard',
-            path: [...this.activeTenant(), 'dashboard']
-        }
-    }
-
-    public users(): IDoRouteDetails {
-        return { 
-            label: 'Usuários', 
-            path: [...this.activeTenant(), 'users']
-        }
-    }
-    public newUsers(): IDoRouteDetails {
-        return { 
-            label: 'Registrar Usuários', 
-            path: [...this.activeTenant(), 'users', 'new']
-        }
-    }
-    public editUser(idAccount: number): IDoRouteDetails {
-      return {
-        label: 'Editar Usuário',
-        path: [...this.activeTenant(), 'users', 'edit', idAccount.toString()]
-      }
-    }
-
-    public projects(): IDoRouteDetails {
-        return {
-            label: 'Projetos',
-            path: [...this.activeTenant(), 'projects']
-        }
-    }
-    public newProjects(): IDoRouteDetails {
-        return { 
-            label: 'Registrar Projetos',
-            path: [...this.activeTenant(), 'projects', 'new']
-        }
-    }
-
-    public events(): IDoRouteDetails {
-        return { 
-            label: 'Eventos',
-            path: [...this.activeTenant(), 'events'] 
-        }
-    }
-    public eventDetails(idEvent: number): IDoRouteDetails {
-        return { 
-            label: 'Detalhes do Evento', 
-            path: [...this.activeTenant(), 'event', 'details', idEvent.toString()]
-        }
-    }
-    public newEvents(): IDoRouteDetails {
-        return { 
-            label: 'Registrar Eventos', 
-            path: [...this.activeTenant(), 'events', 'new']
-        }
-    }
-  public editEvents(id: number): IDoRouteDetails {
-    return {
-      label: 'Editar Evento',
-      path: [...this.activeTenant(), 'event', 'edit', id.toString()]
-    }
+  public async getParamFromRoute(
+    route: ActivatedRoute,
+    key: string
+  ): Promise<string | null> {
+    return (await firstValueFrom(route.paramMap)).get(key);
   }
-  editProject(id: number): IDoRouteDetails {
-    return {
-      label: 'Editar Projeto',
-      path: [...this.activeTenant(), 'project', 'edit', id.toString()]
-    }
-  }
-  projectPage(id: number): IDoRouteDetails {
-    return {
-        label: 'Página do Projeto',
-        path: [...this.activeTenant(), 'project-page', id.toString()]
-    }
+  public login(): IDoRouteDetails {
+    return { label: 'Login', path: ['login'] };
   }
 
-    public listarTags(): IDoRouteDetails {
-        return {
-            label: 'Tags',
-            path: [...this.activeTenant(), 'tags']
-        }
-    }
+  public goToDashboard() {
+    this.routeLabel.set('Dashboard');
+    this.router.navigate(['dashboard']).then();
+  }
+  public goToListAccounts() {
+    this.routeLabel.set('Usuários');
+    this.router.navigate(['users']).then();
+  }
+  public goToListProjects() {
+    this.routeLabel.set('Projetos');
+    this.router.navigate(['projects']).then();
+  }
+  public goToCreateTenant() {
+    this.routeLabel.set('Registrar Tenant');
+    this.router.navigate(['create-tenant']).then();
+  }
+  public goToCreateAccount() {
+    this.routeLabel.set('Registrar Usuários');
+    this.router.navigate(['create-account']).then();
+  }
+  public goToCreateEvent() {
+    this.routeLabel.set("Registrar Evento")
+    this.router.navigate(["create-event"]).then()
+  }
+  public goToCreateProject() {
+    this.routeLabel.set("Registrar Projetos")
+    this.router.navigate(["create-project"]).then()
+  }
+  public goToEditAccount(idAccount: number) {
+    this.routeLabel.set('Editar Usuário');
+    this.router.navigate(['edit-account'], idAccount).then();
+  }
+  public goToEditEvent(idEvent: number) {
+    this.routeLabel.set('Editar Evento')
+    this.router.navigate(["edit-event", idEvent]).then()
+  }
+  public goToEditProject(idProject: number): IDoRouteDetails {
+    this.routeLabel.set('Editar Projeto');
+    this.router.navigate(['edit-project', idProject]).then();
+  }
+  public goToListEvents() {
+    this.routeLabel.set('Eventos')
+    this.router.navigate(["events"]).then()
+  }
+  public goToListTags() {
+    this.routeLabel.set("Tags")
+    this.router.navigate(["tags"]).then()
+  }
 
-    public getRouteLabels(): IDoRouteDetails[] {
-      return [
-        this.dashboard(),
-        this.users(),
-        this.projects(),
-        this.events(),
-        this.listarTags()
-      ]
-    }
+
+  // public eventDetails(idEvent: number): IDoRouteDetails {
+  //   return {
+  //     label: 'Detalhes do Evento',
+  //     path: [...this.activeTenant(), 'event', 'details', idEvent.toString()],
+  //   };
+  // }
+
+    // projectPage(id: number): IDoRouteDetails {
+    //   return {
+    //     label: 'Página do Projeto',
+    //     path: [...this.activeTenant(), 'project-page', id.toString()],
+    //   };
+    // }
 }

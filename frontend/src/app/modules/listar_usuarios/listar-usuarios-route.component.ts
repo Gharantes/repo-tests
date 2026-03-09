@@ -8,7 +8,7 @@ import { IDoBasicUsuarioInfo } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
-  Snackbar2Service,
+  SnackbarService,
 } from '@synergia-frontend/services';
 import { ListarUsuariosViewComponent } from '@synergia-frontend/views';
 import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
@@ -32,7 +32,7 @@ export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
 
   constructor(
     private readonly sessionService: SessionService,
-    private readonly snackService: Snackbar2Service,
+    private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
     private readonly pageService: PageListarUsuariosResourceService
   ) {}
@@ -42,10 +42,10 @@ export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
     this.getData().subscribe();
   }
   public setRouteInfo(): void {
-    this.routingService.setRouteInfo(this.routingService.users());
+    this.routingService.setRouteInfo(this.routingService.goToListAccounts());
   }
   public toNewUserPage() {
-    this.routingService.goTo(this.routingService.newUsers());
+    this.routingService.goTo(this.routingService.goToCreateAccount());
   }
   public getData() {
     return this.pageService
@@ -77,6 +77,6 @@ export class ListarUsuariosRouteComponent implements AbsBaseRoute, OnInit {
   }
 
   editEntry($event: number) {
-    this.routingService.goTo(this.routingService.editUser($event))
+    this.routingService.goTo(this.routingService.goToEditAccount($event))
   }
 }

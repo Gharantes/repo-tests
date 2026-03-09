@@ -1,9 +1,10 @@
 package br.com.synergia.rest
 
-import br.com.synergia.pageUpsertTenant.models.CreateTenantDto
+import br.com.synergia.pageUpsertTenant.models.UpsertTenantDto
 import br.com.synergia.pageUpsertTenant.services.PageUpsertTenantService
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
@@ -16,10 +17,19 @@ class PageUpsertTenantResource (
 ) {
     @PostMapping("store")
     fun createTenant(
-        @RequestBody params: CreateTenantDto
+        @RequestBody params: UpsertTenantDto
+    ): ResponseEntity<String> {
+        return ResponseMessenger.buildResponse {
+            service.createTenant(params)
+        }
+    }
+    @PostMapping("update/{id-tenant}")
+    fun updateTenant(
+        @PathVariable("id-tenant") idTenant: Long,
+        @RequestBody params: UpsertTenantDto
     ): ResponseEntity<Void> {
         return ResponseMessenger.responseWithoutReturn {
-            service.createTenant(params)
+            service.updateTenant(idTenant, params)
         }
     }
 }

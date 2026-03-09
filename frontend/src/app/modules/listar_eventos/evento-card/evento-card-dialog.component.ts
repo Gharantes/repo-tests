@@ -90,7 +90,7 @@ export class EventoCardDialogComponent {
 
   public editar() {
     this.routingService.goTo(
-      this.routingService.editEvents(this.injectData.id)
+      this.routingService.goToEditEvent(this.injectData.id)
     );
     this.dialog.close(null);
   }

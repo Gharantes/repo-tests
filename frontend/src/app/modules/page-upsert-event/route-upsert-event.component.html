@@ -1,0 +1,5 @@
+<lib-registrar-eventos-view
+  (goToParentPageEvent)="goToParentRoute()"
+  (registrarEntidadeEvent)="insertUpdateHandler.save($event)"
+  [populateForm]="insertUpdateHandler.populateForm"
+></lib-registrar-eventos-view>

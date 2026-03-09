@@ -3,81 +3,18 @@ import { LoginRouteComponent } from './modules/login/login-route.component';
 import { NormalLayoutComponent } from './layout/normal-layout/normal-layout.component';
 import { ListarUsuariosRouteComponent } from './modules/listar_usuarios/listar-usuarios-route.component';
 import { ListarEventosRouteComponent } from './modules/listar_eventos/listar-eventos-route.component';
-import { ListarProjetosRouteComponent } from './modules/listar_projetos/listar-projetos-route.component';
+import { RouteListProjectsComponent } from './modules/page-list-projects/route-list-projects.component';
 import { DashboardRouteComponent } from './modules/dashboard/dashboard-route.component';
-import { RegistrarEventosRouteComponent } from './modules/registrar_eventos/registrar-eventos-route.component';
-import { RegistrarProjetosRouteComponent } from './modules/registrar_projetos/registrar-projetos-route.component';
-import { RegistrarTenantRouteComponent } from './modules/registrar_tenant/registrar-tenant-route.component';
+import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-upsert-event.component';
+import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
+import { RouteUpsertTenantComponent } from './modules/registrar_tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
-import { ListarTagsRouteComponent } from './modules/listar_tags/listar-tags-route.component';
+import { ListarTagsRouteComponent } from './modules/page-list-tags/listar-tags-route.component';
 import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
 import { ListarPermissoesRouteComponent } from './modules/listar_permissoes/listar-permissoes-route.component';
 import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
 
-
-const dashboard = {
-  path: 'dashboard',
-  component: DashboardRouteComponent
-}
-
-const listarEventos = {
-  path: 'events',
-  component: ListarEventosRouteComponent
-}
-const detalhesEvento = {
-  path: 'event/details/:id_event',
-  component: DetalhesEventosRouteComponent
-}
-const registrarEventos = {
-  path: 'events/new',
-  component: RegistrarEventosRouteComponent
-}
-const editarEvento = {
-  path: 'event/edit/:id',
-  component: RegistrarEventosRouteComponent
-}
-
-
-const listarUsuarios = {
-  path: 'users',
-  component: ListarUsuariosRouteComponent
-}
-const registrarUsuarios = {
-  path: 'users/new',
-  component: RegistrarUsuariosRouteComponent
-}
-const editarUsuarios = {
-  path: 'users/edit/:id',
-  component: RegistrarUsuariosRouteComponent
-}
-
-
-const listarProjetosRoute = {
-  path: 'projects',
-  component: ListarProjetosRouteComponent
-}
-const registrarProjetosRoute = {
-  path: 'projects/new',
-  component: RegistrarProjetosRouteComponent
-}
-const editarProjeto = {
-  path: 'project/edit/:id',
-  component: RegistrarProjetosRouteComponent
-}
-const projectPage = {
-  path: 'project-page/:id',
-  component: PaginaProjetoRouteComponent
-}
-
-const listarTagsRoute = {
-  path: 'tags',
-  component: ListarTagsRouteComponent
-}
-const listarPermissoesRoute = {
-  path: 'permissions',
-  component: ListarPermissoesRouteComponent
-}
 
 
 export const appRoutes: Route[] = [
@@ -88,7 +25,7 @@ export const appRoutes: Route[] = [
   },
   {
     path: 'create-tenant',
-    component: RegistrarTenantRouteComponent
+    component: RouteUpsertTenantComponent
   },
   {
     path: 't/:id_tenant',
@@ -96,25 +33,25 @@ export const appRoutes: Route[] = [
     component: NormalLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-      dashboard,
+      { path: 'dashboard', component: DashboardRouteComponent },
       // Usuários
-      listarUsuarios,
-      registrarUsuarios,
-      editarUsuarios,
+      { path: 'users', component: ListarUsuariosRouteComponent },
+      { path: 'users/new', component: RegistrarUsuariosRouteComponent },
+      { path: 'users/edit/:id', component: RegistrarUsuariosRouteComponent },
       // Eventos
-      listarEventos,
-      registrarEventos,
-      detalhesEvento,
-      editarEvento,
+      { path: 'events', component: ListarEventosRouteComponent },
+      { path: 'events/new', component: RouteUpsertEventComponent },
+      { path: 'event/details/:id_event', component: DetalhesEventosRouteComponent },
+      { path: 'event/edit/:id', component: RouteUpsertEventComponent },
       // Projetos
-      listarProjetosRoute,
-      registrarProjetosRoute,
-      editarProjeto,
-      projectPage,
+      { path: 'projects', component: RouteListProjectsComponent },
+      { path: 'projects/new', component: RouteUpsertProjectComponent },
+      { path: 'project/edit/:id', component: RouteUpsertProjectComponent },
+      { path: 'project-page/:id', component: PaginaProjetoRouteComponent },
       // Tags
-      listarTagsRoute,
+      { path: 'tags', component: ListarTagsRouteComponent },
       // Permissões
-      listarPermissoesRoute
+      { path: 'permissions', component: ListarPermissoesRouteComponent }
     ]
   },
 ];

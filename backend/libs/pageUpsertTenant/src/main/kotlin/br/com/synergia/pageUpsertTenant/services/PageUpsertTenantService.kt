@@ -1,27 +1,28 @@
 package br.com.synergia.pageUpsertTenant.services
 
+import br.com.synergia.pageUpsertTenant.models.UpsertTenantDto
+import br.com.synergia.utilsEntities.models.TenantDto
 import org.springframework.stereotype.Service
+import java.util.*
 
 @Service
 class PageUpsertTenantService (
-    private val slqService: PageUpsertTenantSqlService
+    private val sqlService: PageUpsertTenantSqlService
 ) {
-    fun createTenant(params: CreateTenantDto) {
-        var tenantEntity = TenantEntity()
-        tenantEntity.title = params.title
-        tenantEntity.identifier = params.identifier
-        tenantEntity = try {
-            tenantRepository.save(tenantEntity)
-        } catch (_: ConstraintViolationException) {
-            throw Exception("O Identifier do tenant deve ser único.")
+    fun getTenantByIdentifier(identifier: String): TenantDto? {
+        return sqlService.getTenantByIdentifier(identifier)
+    }
+    fun createTenant(params: UpsertTenantDto): String {
+        if (getTenantByIdentifier(params.identifier) != null) {
+            throw Exception("Já existe um tenant com esse mesmo identifier: ${params.identifier}")
         }
-
-        val accountEntity = AccountEntity()
-        accountEntity.idTenant = tenantEntity.id
-        accountEntity.createdAt = LocalDateTime.now()
-        accountEntity.login = "ADMIN"
-        accountEntity.password = "ADMIN"
-        accountEntity.updatedAt = LocalDateTime.now()
-        accountRepository.save(accountEntity)
+        sqlService.createTenant(params)
+        val idTenant = getTenantByIdentifier(params.identifier)?.id ?: throw Exception("Erro ao criar Tenant.")
+        val password = UUID.randomUUID().toString()
+        sqlService.createAdminAccount(idTenant, password)
+        return password
+    }
+    fun updateTenant(idTenant: Long, params: UpsertTenantDto) {
+        sqlService.updateTenant(idTenant, params)
     }
 }

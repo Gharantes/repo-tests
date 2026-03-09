@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { InsertUpdateHandler } from '@synergia-frontend/abstracts';
-import { IDoRegistrarUsuario } from '@synergia-frontend/interfaces';
+import { IUpsertAccount } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
@@ -28,7 +28,7 @@ import {
 })
 export class RegistrarUsuariosRouteComponent {
   public readonly handler = new InsertUpdateHandler<
-    IDoRegistrarUsuario,
+    IUpsertAccount,
     CreateUsuarioDto,
     UpdateUsuarioDto
   >()
@@ -40,7 +40,7 @@ export class RegistrarUsuariosRouteComponent {
 
 
   constructor() {
-    this.handler.parentRoute = this.routingService.users()
+    this.handler.parentRoute = this.routingService.goToListAccounts()
     this.handler.setAtualizarEntidadeFn((el: UpdateUsuarioDto) =>
       this.pageService.updateUser(el)
     )
@@ -61,8 +61,8 @@ export class RegistrarUsuariosRouteComponent {
     this.handler.log()
   }
 
-  private insertMapper(): (el: IDoRegistrarUsuario) => CreateUsuarioDto {
-    return (el: IDoRegistrarUsuario) => ({
+  private insertMapper(): (el: IUpsertAccount) => CreateUsuarioDto {
+    return (el: IUpsertAccount) => ({
       idTenant: this.sessionService.getTenantId() as number,
       firstName: el.firstName,
       lastName: el.lastName,
@@ -70,8 +70,8 @@ export class RegistrarUsuariosRouteComponent {
       password: el.password
     })
   }
-  private updateMapper(): (el: IDoRegistrarUsuario, id: number) => UpdateUsuarioDto {
-    return (el: IDoRegistrarUsuario, id: number) => ({
+  private updateMapper(): (el: IUpsertAccount, id: number) => UpdateUsuarioDto {
+    return (el: IUpsertAccount, id: number) => ({
       id: id,
       idTenant: this.sessionService.getTenantId() as number,
       firstName: el.firstName,
@@ -80,7 +80,7 @@ export class RegistrarUsuariosRouteComponent {
       password: el.password
     })
   }
-  private reverseInsertMapper(): (el: CreateUsuarioDto) => IDoRegistrarUsuario {
+  private reverseInsertMapper(): (el: CreateUsuarioDto) => IUpsertAccount {
     return (el: CreateUsuarioDto) => ({
       firstName: el.firstName,
       lastName: el.lastName,

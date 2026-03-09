@@ -55,10 +55,10 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
   }
 
   public setRouteInfo() {
-    this.routingService.setRouteInfo(this.routingService.events());
+    this.routingService.setRouteInfo(this.routingService.goToListEvents());
   }
   public toNewEventPageEvent() {
-    this.routingService.goTo(this.routingService.newEvents());
+    this.routingService.goTo(this.routingService.goToCreateEvent());
   }
   public getData() {
     return this.pageService
@@ -78,7 +78,7 @@ export class ListarEventosRouteComponent implements AbsBaseRoute, OnInit {
     this.routingService.goTo(destiny);
   }
   public editEntry($event: IDoListarEventos) {
-    const destiny = this.routingService.editEvents($event.id);
+    const destiny = this.routingService.goToEditEvent($event.id);
     this.routingService.goTo(destiny);
   }
   public deleteEntry($event: IDoListarEventos) {

@@ -41,7 +41,7 @@ implements AbsBaseRoute, OnInit {
     this.setRouteInfo();
     this.routingService.getParamFromRoute(this.activatedRoute, "id_event").then((id) => {
       if (id == null) { 
-        this.routingService.goTo(this.routingService.events()) 
+        this.routingService.goTo(this.routingService.goToListEvents())
         return;
       } else {
         this.idEvento.set(Number(id));
@@ -51,7 +51,7 @@ implements AbsBaseRoute, OnInit {
   }
 
   public setRouteInfo() {
-    this.routingService.setRouteInfo(this.routingService.events());
+    this.routingService.setRouteInfo(this.routingService.goToListEvents());
   }
   private buscarProjetosRegistrados() {
     this.pageService.listarProjetosOfEvento({

@@ -11,6 +11,8 @@ repositories {
 
 dependencies {
     compileOnly(project(":libs:utilsSql"))
+    compileOnly(project(":libs:utilsCommons"))
+    compileOnly(project(":libs:utilsEntities"))
     compileOnly("org.springframework.boot:spring-boot-starter-data-jdbc")
     testImplementation(kotlin("test"))
 }
