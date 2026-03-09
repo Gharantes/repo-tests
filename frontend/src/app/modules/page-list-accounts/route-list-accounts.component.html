@@ -1,0 +1,6 @@
+<app-view-list-accounts
+  [data$]="data$"
+  (createAccountEvent)="createAccount()"
+  (deleteAccountEvent)="deleteAccount($event)"
+  (editAccountEvent)="editAccount($event)"
+></app-view-list-accounts>

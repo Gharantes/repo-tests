@@ -18,8 +18,6 @@ import { Observable }                                        from 'rxjs';
 
 // @ts-ignore
 import { EventDto } from '../model/eventDto';
-// @ts-ignore
-import { FiltroListarEventosAllDto } from '../model/filtroListarEventosAllDto';
 
 // @ts-ignore
 import { BASE_PATH, COLLECTION_FORMATS }                     from '../variables';
@@ -93,16 +91,16 @@ export class PageListEventsResourceService {
     }
 
     /**
-     * @param id 
+     * @param idEvent 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public deleteEvent(id: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
-    public deleteEvent(id: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
-    public deleteEvent(id: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
-    public deleteEvent(id: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (id === null || id === undefined) {
-            throw new Error('Required parameter id was null or undefined when calling deleteEvent.');
+    public deleteEvent(idEvent: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any>;
+    public deleteEvent(idEvent: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<any>>;
+    public deleteEvent(idEvent: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<any>>;
+    public deleteEvent(idEvent: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: undefined, context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (idEvent === null || idEvent === undefined) {
+            throw new Error('Required parameter idEvent was null or undefined when calling deleteEvent.');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -140,7 +138,7 @@ export class PageListEventsResourceService {
             }
         }
 
-        let localVarPath = `/api/page-list-events/delete/${this.configuration.encodeParam({name: "id", value: id, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
+        let localVarPath = `/api/page-list-events/delete/${this.configuration.encodeParam({name: "idEvent", value: idEvent, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
         return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
@@ -155,16 +153,27 @@ export class PageListEventsResourceService {
     }
 
     /**
-     * @param filtroListarEventosAllDto 
+     * @param idTenant 
+     * @param text 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listEvents(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<EventDto>>;
-    public listEvents(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<EventDto>>>;
-    public listEvents(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<EventDto>>>;
-    public listEvents(filtroListarEventosAllDto: FiltroListarEventosAllDto, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
-        if (filtroListarEventosAllDto === null || filtroListarEventosAllDto === undefined) {
-            throw new Error('Required parameter filtroListarEventosAllDto was null or undefined when calling listEvents.');
+    public listEvents(idTenant: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<EventDto>>;
+    public listEvents(idTenant: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<EventDto>>>;
+    public listEvents(idTenant: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<EventDto>>>;
+    public listEvents(idTenant: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (idTenant === null || idTenant === undefined) {
+            throw new Error('Required parameter idTenant was null or undefined when calling listEvents.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (idTenant !== undefined && idTenant !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>idTenant, 'id-tenant');
+        }
+        if (text !== undefined && text !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>text, 'text');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -192,15 +201,6 @@ export class PageListEventsResourceService {
         }
 
 
-        // to determine the Content-Type header
-        const consumes: string[] = [
-            'application/json'
-        ];
-        const httpContentTypeSelected: string | undefined = this.configuration.selectHeaderContentType(consumes);
-        if (httpContentTypeSelected !== undefined) {
-            localVarHeaders = localVarHeaders.set('Content-Type', httpContentTypeSelected);
-        }
-
         let responseType_: 'text' | 'json' | 'blob' = 'json';
         if (localVarHttpHeaderAcceptSelected) {
             if (localVarHttpHeaderAcceptSelected.startsWith('text')) {
@@ -216,7 +216,7 @@ export class PageListEventsResourceService {
         return this.httpClient.request<Array<EventDto>>('post', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
-                body: filtroListarEventosAllDto,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

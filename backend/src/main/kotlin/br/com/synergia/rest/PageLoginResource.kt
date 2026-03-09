@@ -13,8 +13,10 @@ import org.springframework.web.bind.annotation.*
 class PageLoginResource (
     private val service: PageLoginService
 ) {
-    @GetMapping("/listar-tenants")
-    fun listarTenants(): ResponseEntity<List<TenantDto>> {
+    @GetMapping("/list-tenants")
+    fun listTenants(
+        @RequestParam("text", required = false) text: String?
+    ): ResponseEntity<List<TenantDto>> {
         return ResponseMessenger.buildResponse { service.listarTenants() }
     }
 

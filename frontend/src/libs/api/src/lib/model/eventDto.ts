@@ -16,7 +16,7 @@ export interface EventDto {
     idTenant: number;
     title: string;
     description: string;
-    owner: AccountDto;
+    owner?: AccountDto;
     tags: Array<TagDto>;
 }
 

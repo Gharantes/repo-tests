@@ -154,30 +154,22 @@ export class PageListProjectsResourceService {
 
     /**
      * @param idTenant 
-     * @param idAccount 
      * @param text 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listProjects(idTenant: number, idAccount: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProjectDto>>;
-    public listProjects(idTenant: number, idAccount: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProjectDto>>>;
-    public listProjects(idTenant: number, idAccount: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProjectDto>>>;
-    public listProjects(idTenant: number, idAccount: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listProjects(idTenant: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<ProjectDto>>;
+    public listProjects(idTenant: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<ProjectDto>>>;
+    public listProjects(idTenant: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<ProjectDto>>>;
+    public listProjects(idTenant: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idTenant === null || idTenant === undefined) {
             throw new Error('Required parameter idTenant was null or undefined when calling listProjects.');
-        }
-        if (idAccount === null || idAccount === undefined) {
-            throw new Error('Required parameter idAccount was null or undefined when calling listProjects.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (idTenant !== undefined && idTenant !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>idTenant, 'idTenant');
-        }
-        if (idAccount !== undefined && idAccount !== null) {
-          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
-            <any>idAccount, 'idAccount');
+            <any>idTenant, 'id-tenant');
         }
         if (text !== undefined && text !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

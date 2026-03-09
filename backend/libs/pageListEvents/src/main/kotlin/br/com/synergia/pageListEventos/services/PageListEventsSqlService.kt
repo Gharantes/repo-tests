@@ -1,6 +1,5 @@
 package br.com.synergia.pageListEventos.services
 
-import br.com.synergia.pageListEventos.models.FiltroListarEventosAllDto
 import br.com.synergia.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.utilsEntities.models.EventDto
 import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
@@ -15,13 +14,13 @@ class PageListEventsSqlService (
     private val template: NamedParameterJdbcTemplate
 ) {
     fun listEvents(
-        params: FiltroListarEventosAllDto
+        idTenant: Long,
+        text: String? = null
     ): List<EventDto> {
         val sql = SqlPath.PageListEvents.LIST_EVENTS.load()
         val paramMap = MapSqlParameterSource()
-            .addValue("id_tenant", params.idTenant, Types.BIGINT)
-            .addValue("id_account", params.idAccount, Types.BIGINT)
-            .addValue("text", params.text.parseStringToWildCard(), Types.VARCHAR)
+            .addValue("id_tenant", idTenant, Types.BIGINT)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.eventRowMapper)
     }
 }

@@ -1,5 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { AfterViewInit, ChangeDetectorRef, Component, Input, Signal } from '@angular/core';
+import {
+  AfterViewInit,
+  ChangeDetectorRef,
+  Component,
+  Input,
+} from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
@@ -11,8 +16,8 @@ import { GmIconComponent } from '../google-material-icon/gm-icon.component';
 
 @Component({
   selector: 'lib-sig-extendable-table',
-  templateUrl: 'index.html',
-  styleUrl: './style.scss',
+  templateUrl: 'sig-extendable-table.component.html',
+  styleUrl: './sig-extendable-table.component.scss',
   standalone: true,
   imports: [
     CommonModule,
@@ -25,7 +30,7 @@ import { GmIconComponent } from '../google-material-icon/gm-icon.component';
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input() columns!: IDoExtendableTableColumnInfo<T>[];
   @Input() actions: IDoExtendableTableActions<T>[] = [];
-  @Input() data$!: Signal<T[]>;
+  @Input() data$!: T[];
 
   displayedColumns: string[] = [];
 

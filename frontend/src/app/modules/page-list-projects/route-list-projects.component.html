@@ -1,7 +1,7 @@
-<lib-page-listar-projetos-view
-  [data$]="data$"
-  (toNewProjectsPageEvent)="toNewProjectsPage()"
-  (deleteEntryEvent)="deleteEntry($event)"
-  (editEntryEvent)="editEntry($event)"
+<app-view-list-projects
+  [data$]="data$()"
+  (createProjectEvent)="createProject()"
+  (deleteProjectEvent)="deleteEntry($event)"
+  (editProjectEvent)="updateProject($event)"
   (toProjectPageEvent)="toProjectPage($event)"
-></lib-page-listar-projetos-view>
+></app-view-list-projects>

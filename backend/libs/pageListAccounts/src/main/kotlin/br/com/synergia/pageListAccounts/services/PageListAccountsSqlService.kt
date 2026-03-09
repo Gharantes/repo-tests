@@ -12,9 +12,11 @@ import java.sql.Types
 class PageListAccountsSqlService (
     private val template: NamedParameterJdbcTemplate,
 ) {
-    fun listAccounts(idTenant: Long): List<AccountDto> {
+    fun listAccounts(idTenant: Long, text: String?): List<AccountDto> {
         val sql = SqlPath.PageListAccounts.LIST_ACCOUNTS.load()
-        val paramMap = MapSqlParameterSource().addValue("id_tenant", idTenant, Types.BIGINT)
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_tenant", idTenant, Types.BIGINT)
+            .addValue("text", text, Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
     }
 }

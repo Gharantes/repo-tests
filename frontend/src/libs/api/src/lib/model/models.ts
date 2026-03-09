@@ -1,7 +1,6 @@
 export * from './accountDto';
 export * from './attributePermissionsDto';
 export * from './eventDto';
-export * from './filtroListarEventosAllDto';
 export * from './loginInformationInputDto';
 export * from './loginInformationResponseDto';
 export * from './permissionDto';

@@ -9,8 +9,8 @@ class PageListProjectsService (
     private val sqlService: PageListProjetosSqlService,
     private val deleteByIdService: EntityDeleteByIdService
 ) {
-    fun listProjects(idTenant: Long, idAccount: Long, text: String?): List<ProjectDto> {
-        return sqlService.listProjects(idTenant, idAccount, text)
+    fun listProjects(idTenant: Long, text: String?): List<ProjectDto> {
+        return sqlService.listProjects(idTenant, text)
     }
     fun deleteProject(idProject: Long) {
         deleteByIdService.deleteProjectEventRelationshipByIdProject(idProject)

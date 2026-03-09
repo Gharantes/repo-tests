@@ -24,7 +24,6 @@ index.ts
 model/accountDto.ts
 model/attributePermissionsDto.ts
 model/eventDto.ts
-model/filtroListarEventosAllDto.ts
 model/loginInformationInputDto.ts
 model/loginInformationResponseDto.ts
 model/models.ts

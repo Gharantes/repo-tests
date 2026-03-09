@@ -1,18 +1,18 @@
 import { Route } from '@angular/router';
-import { LoginRouteComponent } from './modules/login/login-route.component';
+import { LoginRouteComponent } from './modules/page-login/login-route.component';
 import { NormalLayoutComponent } from './layout/normal-layout/normal-layout.component';
-import { ListarUsuariosRouteComponent } from './modules/listar_usuarios/listar-usuarios-route.component';
-import { ListarEventosRouteComponent } from './modules/listar_eventos/listar-eventos-route.component';
+import { RouteListAccountsComponent } from './modules/page-list-accounts/route-list-accounts.component';
+import { ListarEventosRouteComponent } from './modules/page-list-events/listar-eventos-route.component';
 import { RouteListProjectsComponent } from './modules/page-list-projects/route-list-projects.component';
-import { DashboardRouteComponent } from './modules/dashboard/dashboard-route.component';
+import { DashboardRouteComponent } from './modules/page-dashboard/dashboard-route.component';
 import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-upsert-event.component';
 import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
-import { RouteUpsertTenantComponent } from './modules/registrar_tenant/route-upsert-tenant.component';
+import { RouteUpsertTenantComponent } from './modules/page-upsert-tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
 import { ListarTagsRouteComponent } from './modules/page-list-tags/listar-tags-route.component';
-import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
-import { ListarPermissoesRouteComponent } from './modules/listar_permissoes/listar-permissoes-route.component';
+import { RegistrarUsuariosRouteComponent } from './modules/page-upsert-account/registrar-usuarios-route.component';
+import { ListarPermissoesRouteComponent } from './modules/page-list-permissions/listar-permissoes-route.component';
 import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
 
 
@@ -35,7 +35,7 @@ export const appRoutes: Route[] = [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: DashboardRouteComponent },
       // Usuários
-      { path: 'users', component: ListarUsuariosRouteComponent },
+      { path: 'users', component: RouteListAccountsComponent },
       { path: 'users/new', component: RegistrarUsuariosRouteComponent },
       { path: 'users/edit/:id', component: RegistrarUsuariosRouteComponent },
       // Eventos

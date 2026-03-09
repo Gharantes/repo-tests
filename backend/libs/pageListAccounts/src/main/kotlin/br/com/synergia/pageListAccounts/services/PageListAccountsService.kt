@@ -9,8 +9,8 @@ class PageListAccountsService (
     private val sqlService: PageListAccountsSqlService,
     private val entityDeleteByIdService: EntityDeleteByIdService
 ) {
-    fun listAccounts(idTenant: Long): List<AccountDto> {
-        return sqlService.listAccounts(idTenant)
+    fun listAccounts(idTenant: Long, text: String?): List<AccountDto> {
+        return sqlService.listAccounts(idTenant, text)
     }
 
     fun deleteAccount(idAccount: Long) {

@@ -1,6 +1,5 @@
 package br.com.synergia.pageListEventos.services
 
-import br.com.synergia.pageListEventos.models.FiltroListarEventosAllDto
 import br.com.synergia.utilsEntities.models.EventDto
 import br.com.synergia.utilsEntities.services.EntityDeleteByIdService
 import org.springframework.stereotype.Service
@@ -11,9 +10,10 @@ class PageListEventsService (
     private val deleteByIdService: EntityDeleteByIdService
 ) {
     fun listEvents(
-        params: FiltroListarEventosAllDto
+        idTenant: Long,
+        text: String? = null
     ): List<EventDto> {
-        return sqlService.listEvents(params)
+        return sqlService.listEvents(idTenant, text)
     }
     fun deleteEvent(idEvent: Long) {
         deleteByIdService.deleteProjectEventRelationshipByIdEvent(idEvent)

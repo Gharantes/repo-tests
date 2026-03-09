@@ -1,28 +1,57 @@
-import { Component, OnInit, signal } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import {
   RoutingService,
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { catchError, concatMap, EMPTY, map, tap } from 'rxjs';
-import { IProject } from '../../../libs/interfaces/src/lib/entities/i-project';
-import { PageListProjectsResourceService } from '@synergia-frontend/api';
+import { catchError, concatMap, EMPTY, map, Observable, of, tap } from 'rxjs';
+import {
+  PageListProjectsResourceService,
+  ProjectDto,
+} from '@synergia-frontend/api';
+import { IProject } from '@synergia-frontend/interfaces';
+import { ViewListProjectsComponent } from './view/view-list-projects.component';
 
 @Component({
   selector: 'app-page-list-projects-route',
   standalone: true,
   templateUrl: './route-list-projects.component.html',
   styleUrl: `./route-list-projects.component.scss`,
-  imports: [],
+  imports: [ViewListProjectsComponent],
 })
 export class RouteListProjectsComponent {
+  public readonly data$ = signal<IProject[]>([]);
+
   constructor(
     private readonly listProjectsService: PageListProjectsResourceService,
     private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
-    private readonly sessionService: SessionService,
-  ) {}
+    private readonly sessionService: SessionService
+  ) {
+    this.getListProjects().subscribe();
+  }
 
+  public getListProjects(): Observable<unknown> {
+    const idTenant = this.sessionService.getTenantId();
+    if (idTenant == null) {
+      this.data$.set([]);
+      return of([]);
+    }
+    return this.listProjectsService.listProjects(idTenant).pipe(
+      catchError((err) => {
+        this.snackService.catchError(err);
+        return of([]);
+      }),
+      map<ProjectDto[], IProject[]>((res) => {
+        return res.map((v) => ({
+          id: v.id,
+          title: v.title,
+          description: v.description,
+        }));
+      }),
+      tap((res) => this.data$.set(res))
+    );
+  }
   public deleteEntry(el: IProject) {
     this.listProjectsService
       .deleteProject(el.id)
@@ -31,16 +60,21 @@ export class RouteListProjectsComponent {
           this.snackService.showMessage('Erro ao deletar projeto.');
           return EMPTY;
         }),
-        concatMap(() => this.getData()),
-        tap(() => this.snackService.showMessage('Projeto deletado com sucesso.'))
+        concatMap(() => this.getListProjects()),
+        tap(() =>
+          this.snackService.showMessage('Projeto deletado com sucesso.')
+        )
       )
       .subscribe();
   }
 
-  editEntry($event: IProject) {
-    this.routingService.goTo(this.routingService.goToEditProject($event.id));
+  createProject() {
+    this.routingService.goToCreateProject()
   }
-  toProjectPage($event: IDoBasicProjectInfo) {
-    this.routingService.goTo(this.routingService.projectPage($event.id));
+  updateProject($event: IProject) {
+    this.routingService.goToEditProject($event.id);
+  }
+  toProjectPage($event: IProject) {
+    // this.routingService.goToP($event.id)
   }
 }

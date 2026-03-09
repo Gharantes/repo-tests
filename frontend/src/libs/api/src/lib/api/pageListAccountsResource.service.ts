@@ -153,13 +153,28 @@ export class PageListAccountsResourceService {
     }
 
     /**
+     * @param idTenant 
+     * @param text 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listAccounts(observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccountDto>>;
-    public listAccounts(observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccountDto>>>;
-    public listAccounts(observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccountDto>>>;
-    public listAccounts(observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listAccounts(idTenant: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccountDto>>;
+    public listAccounts(idTenant: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccountDto>>>;
+    public listAccounts(idTenant: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccountDto>>>;
+    public listAccounts(idTenant: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+        if (idTenant === null || idTenant === undefined) {
+            throw new Error('Required parameter idTenant was null or undefined when calling listAccounts.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (idTenant !== undefined && idTenant !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>idTenant, 'id-tenant');
+        }
+        if (text !== undefined && text !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>text, 'text');
+        }
 
         let localVarHeaders = this.defaultHeaders;
 
@@ -198,9 +213,10 @@ export class PageListAccountsResourceService {
         }
 
         let localVarPath = `/api/page-list-accounts/list-accounts`;
-        return this.httpClient.request<Array<AccountDto>>('post', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<Array<AccountDto>>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

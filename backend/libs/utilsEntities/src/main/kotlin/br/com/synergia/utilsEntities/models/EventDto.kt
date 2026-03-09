@@ -5,7 +5,7 @@ data class EventDto(
     val idTenant: Long,
     val title: String,
     val description: String,
-    val owner: AccountDto,
+    var owner: AccountDto?,
     var tags: List<TagDto>,
     var projects: List<ProjectDto>
 )

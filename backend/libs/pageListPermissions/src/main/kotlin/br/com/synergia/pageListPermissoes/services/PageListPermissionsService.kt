@@ -7,7 +7,7 @@ import org.springframework.stereotype.Service
 class PageListPermissionsService (
     private val sqlService: PageListPermissionsSqlService
 ) {
-    fun listPermissions(): List<PermissionDto> {
-        return sqlService.listPermissions()
+    fun listPermissions(text: String?): List<PermissionDto> {
+        return sqlService.listPermissions(text)
     }
 }

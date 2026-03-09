@@ -11,7 +11,7 @@ class EventRowMapper : RowMapper<EventDto> {
             idTenant = rs.getLong("id_tenant"),
             title = rs.getString("event_title"),
             description = rs.getString("event_description"),
-            owner = EntityRowMapper.accountRowMapper.mapRow(rs, rowNum),
+            owner = null, // EntityRowMapper.accountRowMapper.mapRow(rs, rowNum)
             tags = emptyList(),
             projects = emptyList()
         )

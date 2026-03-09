@@ -11,11 +11,12 @@ import org.springframework.web.bind.annotation.*
 class PageListAccountsResource (
     private val service: PageListAccountsService
 ) {
-    @PostMapping("/list-accounts")
+    @GetMapping("/list-accounts")
     fun listAccounts(
-        @PathVariable("id-tenant") idTenant: Long
+        @RequestParam("id-tenant") idTenant: Long,
+        @RequestParam("text", required = false) text: String?
     ): ResponseEntity<List<AccountDto>> {
-        return ResponseMessenger.buildResponse { service.listAccounts(idTenant) }
+        return ResponseMessenger.buildResponse { service.listAccounts(idTenant, text) }
     }
 
     @DeleteMapping("/delete-account/{id-account}")

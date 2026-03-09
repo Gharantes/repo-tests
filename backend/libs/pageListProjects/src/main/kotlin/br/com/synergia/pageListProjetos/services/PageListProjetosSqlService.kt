@@ -15,13 +15,11 @@ class PageListProjetosSqlService (
 ) {
     fun listProjects(
         idTenant: Long,
-        idAccount: Long,
         text: String?
     ): List<ProjectDto> {
         val sql = SqlPath.PageListProjects.LIST_PROJECTS.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
-            .addValue("id_account", idAccount, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.projectRowMapper)
     }

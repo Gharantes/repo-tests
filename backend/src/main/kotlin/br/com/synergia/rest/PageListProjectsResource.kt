@@ -13,12 +13,11 @@ class PageListProjectsResource (
 ) {
     @PostMapping("/list-projects")
     fun listProjects(
-        @RequestParam("idTenant") idTenant: Long,
-        @RequestParam("idAccount") idAccount: Long,
+        @RequestParam("id-tenant") idTenant: Long,
         @RequestParam("text", required = false) text: String? = null
     ): ResponseEntity<List<ProjectDto>> {
         return ResponseMessenger.buildResponse {
-            service.listProjects(idTenant, idAccount, text)
+            service.listProjects(idTenant, text)
         }
     }
 

@@ -1,6 +1,5 @@
 package br.com.synergia.rest
 
-import br.com.synergia.pageListEventos.models.FiltroListarEventosAllDto
 import br.com.synergia.pageListEventos.services.PageListEventsService
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.utilsEntities.models.EventDto
@@ -14,17 +13,20 @@ class PageListEventsResource (
 ) {
     @PostMapping("/list-events")
     fun listEvents(
-        @RequestBody params: FiltroListarEventosAllDto
+        @RequestParam("id-tenant") idTenant: Long,
+        @RequestParam("text", required = false) text: String? = null
     ): ResponseEntity<List<EventDto>> {
-        return ResponseMessenger.buildResponse { service.listEvents(params) }
+        return ResponseMessenger.buildResponse {
+            service.listEvents(idTenant, text)
+        }
     }
 
-    @DeleteMapping("/delete/{id}")
+    @DeleteMapping("/delete/{id-event}")
     fun deleteEvent(
-        @PathVariable("id") id: Long
+        @PathVariable("id-event") idEvent: Long
     ): ResponseEntity<Void> {
         return ResponseMessenger.responseWithoutReturn {
-            service.deleteEvent(id)
+            service.deleteEvent(idEvent)
         }
     }
 }

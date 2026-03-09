@@ -326,16 +326,7 @@
         "operationId": "listProjects",
         "parameters": [
           {
-            "name": "idTenant",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "idAccount",
+            "name": "id-tenant",
             "in": "query",
             "required": true,
             "schema": {
@@ -375,6 +366,16 @@
           "page-list-permissions-resource"
         ],
         "operationId": "listPermissions",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -398,16 +399,25 @@
           "page-list-events-resource"
         ],
         "operationId": "listEvents",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/FiltroListarEventosAllDto"
-              }
+        "parameters": [
+          {
+            "name": "id-tenant",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
             }
           },
-          "required": true
-        },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -417,30 +427,6 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/EventDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/page-list-accounts/list-accounts": {
-      "post": {
-        "tags": [
-          "page-list-accounts-resource"
-        ],
-        "operationId": "listAccounts",
-        "parameters": [],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AccountDto"
                   }
                 }
               }
@@ -760,12 +746,22 @@
         }
       }
     },
-    "/api/page-login/listar-tenants": {
+    "/api/page-login/list-tenants": {
       "get": {
         "tags": [
           "page-login-resource"
         ],
-        "operationId": "listarTenants",
+        "operationId": "listTenants",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
         "responses": {
           "200": {
             "description": "OK",
@@ -775,6 +771,48 @@
                   "type": "array",
                   "items": {
                     "$ref": "#/components/schemas/TenantDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/page-list-accounts/list-accounts": {
+      "get": {
+        "tags": [
+          "page-list-accounts-resource"
+        ],
+        "operationId": "listAccounts",
+        "parameters": [
+          {
+            "name": "id-tenant",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountDto"
                   }
                 }
               }
@@ -872,7 +910,7 @@
         }
       }
     },
-    "/api/page-list-events/delete/{id}": {
+    "/api/page-list-events/delete/{id-event}": {
       "delete": {
         "tags": [
           "page-list-events-resource"
@@ -880,7 +918,7 @@
         "operationId": "deleteEvent",
         "parameters": [
           {
-            "name": "id",
+            "name": "id-event",
             "in": "path",
             "required": true,
             "schema": {
@@ -1149,7 +1187,6 @@
           "description",
           "id",
           "idTenant",
-          "owner",
           "tags",
           "title"
         ],
@@ -1255,26 +1292,6 @@
             "format": "int64"
           },
           "name": {
-            "type": "string"
-          }
-        }
-      },
-      "FiltroListarEventosAllDto": {
-        "required": [
-          "idAccount",
-          "idTenant"
-        ],
-        "type": "object",
-        "properties": {
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "idAccount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "text": {
             "type": "string"
           }
         }
