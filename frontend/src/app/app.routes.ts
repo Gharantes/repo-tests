@@ -12,7 +12,7 @@ import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
 import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
 import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
-import { ListarPermissoesRouteComponent } from './modules/page-list-permissions/listar-permissoes-route.component';
+import { RouteListPermissionsComponent } from './modules/page-list-permissions/route-list-permissions.component';
 import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
 
 
@@ -51,7 +51,7 @@ export const appRoutes: Route[] = [
       // Tags
       { path: 'tags', component: RouteListTagsComponent },
       // Permissões
-      { path: 'permissions', component: ListarPermissoesRouteComponent }
+      { path: 'permissions', component: RouteListPermissionsComponent }
     ]
   },
 ];

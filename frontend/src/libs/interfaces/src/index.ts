@@ -14,3 +14,4 @@ export * from './lib/entities/i-account.model';
 export * from './lib/entities/i-project.model';
 export * from './lib/entities/i-tag.model';
 export * from './lib/entities/i-tenant.model';
+export * from './lib/entities/i-permission.model';
