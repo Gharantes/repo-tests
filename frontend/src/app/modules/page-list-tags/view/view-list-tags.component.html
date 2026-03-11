@@ -1,0 +1,12 @@
+<div id="topline">
+  <mat-form-field class="field" [appearance]="'outline'">
+    <mat-label>Nome</mat-label>
+    <input type="text" matInput [formControl]="connector.textfieldControl" />
+  </mat-form-field>
+</div>
+
+<lib-sig-extendable-table
+  [actions]="actions"
+  [columns]="columns"
+  [data$]="data$"
+></lib-sig-extendable-table>

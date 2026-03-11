@@ -6,7 +6,7 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import {
   IDoExtendableTableActions,
   IDoExtendableTableColumnInfo,
-  IProject,
+  IProjectModel,
 } from '@synergia-frontend/interfaces';
 
 @Component({
@@ -22,35 +22,35 @@ import {
   ]
 })
 export class ViewListProjectsComponent {
-  @Input() data$!: IProject[];
+  @Input() data$!: IProjectModel[];
 
   @Output() readonly createProjectEvent = new EventEmitter<void>();
-  @Output() readonly editProjectEvent = new EventEmitter<IProject>();
-  @Output() readonly deleteProjectEvent = new EventEmitter<IProject>();
-  @Output() readonly toProjectPageEvent = new EventEmitter<IProject>();
+  @Output() readonly editProjectEvent = new EventEmitter<IProjectModel>();
+  @Output() readonly deleteProjectEvent = new EventEmitter<IProjectModel>();
+  @Output() readonly toProjectPageEvent = new EventEmitter<IProjectModel>();
 
-  public readonly columns: IDoExtendableTableColumnInfo<IProject>[] =[
-    { def: 'title', header: 'Nome', value: (element: IProject) => element.title },
-    { def: 'description', header: 'Descrição', value: (element: IProject) => element.description },
+  public readonly columns: IDoExtendableTableColumnInfo<IProjectModel>[] =[
+    { def: 'title', header: 'Nome', value: (element: IProjectModel) => element.title },
+    { def: 'description', header: 'Descrição', value: (element: IProjectModel) => element.description },
   ]
 
-  public readonly tableActions: IDoExtendableTableActions<IProject>[] = [
+  public readonly tableActions: IDoExtendableTableActions<IProjectModel>[] = [
     { 
       label: 'Editar Projeto',
       icon: '', 
-      action: (el: IProject) => this.editProjectEvent.emit(el),
+      action: (el: IProjectModel) => this.editProjectEvent.emit(el),
       isAllowed: () => true
     },
     { 
       label: 'Deletar Projeto',
       icon: '', 
-      action: (el: IProject) => this.deleteProjectEvent.emit(el),
+      action: (el: IProjectModel) => this.deleteProjectEvent.emit(el),
       isAllowed: () => true
     },
     {
       label: 'Página do Projeto',
       icon: '',
-      action: (el: IProject) => this.toProjectPageEvent.emit(el),
+      action: (el: IProjectModel) => this.toProjectPageEvent.emit(el),
       isAllowed: () => true
     }
   ]

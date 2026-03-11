@@ -1,65 +1,83 @@
-import { Component } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
+import { PageUpsertEventResourceService } from '@synergia-frontend/api';
+import { ConnectorUpsertEvent } from './connector/connector-upsert-event';
+import { catchError, EMPTY, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
+import {
+  RoutingService,
+  SessionService,
+  SnackbarService,
+} from '@synergia-frontend/services';
+import { ViewUpsertEventComponent } from './view/view-upsert-event.component';
 
 @Component({
-  selector: 'app-registrar-eventos-route',
+  selector: 'app-route-upsert-event',
   standalone: true,
-  templateUrl: './',
+  templateUrl: './route-upsert-event.component.html',
   styleUrl: `./route-upsert-event.component.scss`,
-  imports: [RegistrarEventosViewComponent],
+  imports: [ViewUpsertEventComponent],
 })
 export class RouteUpsertEventComponent {
-  public readonly insertUpdateHandler = new InsertUpdateHandler<
-    IDoRegistrarEvento,
-    CreateEventoDto,
-    UpdateEventoDto
-  >();
+  public readonly connector = inject(ConnectorUpsertEvent);
+  public readonly idEvent = signal<number | null>(null);
 
+  public goToParentRoute() {
+    this.routingService.goToListEvents();
+  }
   constructor(
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
-    private readonly pageService: PageCreateEventoResourceService
+    private readonly snackbarService: SnackbarService,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly pageService: PageUpsertEventResourceService
   ) {
-    this.insertUpdateHandler.parentRoute = this.routingService.goToListEvents();
+    this.routingService
+      .getParamFromRoute(this.activatedRoute, 'id')
+      .then((id) => this.idEvent.set(id ? Number(id) : null));
+  }
 
-    this.insertUpdateHandler.setInsertMapper((el: IDoRegistrarEvento) =>
-      mapFromIDoRegistrarEventoToCreateEventoDto(
-        el,
-        this.sessionService.getTenantId() as number,
-        this.sessionService.getUserId() as number
+  public salvar() {
+    const idEvent = this.idEvent();
+    if (idEvent) {
+      this.update(idEvent);
+    } else {
+      this.insert();
+    }
+  }
+  public insert() {
+    const obj = this.connector.getFormValue();
+    if (obj == null) return;
+    this.pageService
+      .createEvent(obj)
+      .pipe(
+        tap(() => {
+          this.snackbarService.showMessage('Evento registrado.');
+          this.goToParentRoute();
+        }),
+        catchError((err) => {
+          this.snackbarService.catchError(err);
+          return EMPTY;
+        })
       )
-    );
-    this.insertUpdateHandler.setUpdateMapper(
-      (el: IDoRegistrarEvento, id: number) =>
-        mapFromIDoRegistrarEventoToUpdateEventoDto(
-          el,
-          id,
-          this.sessionService.getTenantId() as number
-        )
-    );
-    this.insertUpdateHandler.setReverseInsertMapper((el: CreateEventoDto) =>
-        mapFromCreateEventoDtoToIDoRegistrarEvento(el)
-    );
+      .subscribe();
+  }
+  public update(idEvent: number) {
+    const obj = this.connector.getFormValue();
 
-    this.insertUpdateHandler.setGetByIdFn((id: number) =>
-      this.pageService.getCreateEventoDtoById(id)
-    );
-    this.insertUpdateHandler.setRegistrarEntidadeFn((el: CreateEventoDto) =>
-      this.pageService.createEvento(el)
-    );
-    this.insertUpdateHandler.setAtualizarEntidadeFn((el: UpdateEventoDto) =>
-      this.pageService.updateEvento(el)
-    );
-
-    this.insertUpdateHandler.getPrimaryKey();
+    if (obj == null) return;
+    this.pageService
+      .updateEvent(idEvent, obj)
+      .pipe(
+        tap(() => {
+          this.snackbarService.showMessage('Evento atualizado.');
+          this.goToParentRoute();
+        }),
+        catchError((err) => {
+          this.snackbarService.catchError(err);
+          return EMPTY;
+        })
+      )
+      .subscribe();
   }
-
-  public ngOnInit() {
-    this.setRouteInfo();
-  }
-  private setRouteInfo() {
-    this.routingService.setRouteInfo(this.routingService.goToCreateEvent());
-  }
-  public goToParentRoute() {
-    this.routingService.goTo(this.routingService.goToListEvents());
-  }
+  public getById() {}
 }

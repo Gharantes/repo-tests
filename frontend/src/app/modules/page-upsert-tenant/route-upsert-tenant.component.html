@@ -1,4 +1,4 @@
-<lib-registrar-tenant-view
-  (goToParentPageEvent)="goToLastPage()"
+<app-view-upsert-tenant
+  (goToParentPageEvent)="routingService.goToLogin()"
   (registrarEntidadeEvent)="createTenant($event)"
-></lib-registrar-tenant-view>
+></app-view-upsert-tenant>

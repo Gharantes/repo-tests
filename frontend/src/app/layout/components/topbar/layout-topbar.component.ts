@@ -38,6 +38,6 @@ export class LayoutTopbarComponent {
 
   public logout() {
     this.sessionService.logout()
-    this.routingService.goTo(this.routingService.login());
+    this.routingService.goTo(this.routingService.goToLogin());
   }
 }

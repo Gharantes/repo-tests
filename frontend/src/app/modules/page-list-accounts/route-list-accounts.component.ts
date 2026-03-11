@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ViewListAccountsComponent } from './view/view-list-accounts.component';
-import { IAccount } from '@synergia-frontend/interfaces';
+import { IAccountModel } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
@@ -17,7 +17,7 @@ import { catchError, concatMap, EMPTY, map, Observable, of, tap } from 'rxjs';
   imports: [ViewListAccountsComponent],
 })
 export class RouteListAccountsComponent {
-  public readonly data$ = signal<IAccount[]>([]);
+  public readonly data$ = signal<IAccountModel[]>([]);
 
   constructor(
     private readonly sessionService: SessionService,
@@ -39,7 +39,7 @@ export class RouteListAccountsComponent {
         this.snackService.catchError(err, 'Erro ao trazer usuários.');
         return of([]);
       }),
-      map<AccountDto[], IAccount[]>((res) => {
+      map<AccountDto[], IAccountModel[]>((res) => {
         return res.map(v => ({
           id: v.id,
           email: v.email,
@@ -52,7 +52,7 @@ export class RouteListAccountsComponent {
     );
   }
 
-  public deleteAccount($event: IAccount) {
+  public deleteAccount($event: IAccountModel) {
     this.pageService
       .deleteAccount($event.id)
       .pipe(
@@ -68,7 +68,7 @@ export class RouteListAccountsComponent {
   public createAccount() {
     this.routingService.goToCreateAccount();
   }
-  public editAccount($event: IAccount) {
+  public editAccount($event: IAccountModel) {
     this.routingService.goToEditAccount($event.id);
   }
 }

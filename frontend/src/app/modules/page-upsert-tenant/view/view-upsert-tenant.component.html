@@ -1,0 +1,16 @@
+<div id="form">
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>Título</mat-label>
+    <input type="text" matInput [formControl]="form.controls.title"/>
+  </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>Identifier</mat-label>
+    <input type="text" matInput [formControl]="form.controls.identifier" />
+  </mat-form-field>
+
+  <div class="btn-line">
+    <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>
+    <button mat-raised-button [disabled]="!isFormValid()" (click)="registrarTenant()">Registrar</button>
+  </div>
+</div>

@@ -1,0 +1,34 @@
+<div id="form">
+  @if (tenantSelected !== null) {
+    <div id="tenant-label">
+      <b>Tenant:</b>
+      {{ tenantSelected?.title }}
+    </div>
+  }
+
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Usuário</mat-label>
+    <input matInput type="text" [formControl]="connector.form.controls.user">
+  </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Senha</mat-label>
+    <input matInput type="password" [formControl]="connector.form.controls.password">
+  </mat-form-field>
+
+  <div id="buttons-container">
+    <button
+      class="login-button"
+      matRipple
+      [disabled]="!connector.form.valid"
+      (click)="attemptLoginEvent.emit()">
+      Login
+    </button>
+  </div>
+</div>
+
+<app-tenant-picker
+  [tenants]="tenants$"
+  (createTenantEvent)="createTenantEvent.emit()"
+  (selectTenantEvent)="selectTenantEvent.emit($event)"
+></app-tenant-picker>

@@ -1,5 +1,5 @@
 import { Route } from '@angular/router';
-import { LoginRouteComponent } from './modules/page-login/login-route.component';
+import { RouteLoginComponent } from './modules/page-login/route-login.component';
 import { NormalLayoutComponent } from './layout/normal-layout/normal-layout.component';
 import { RouteListAccountsComponent } from './modules/page-list-accounts/route-list-accounts.component';
 import { ListarEventosRouteComponent } from './modules/page-list-events/listar-eventos-route.component';
@@ -10,8 +10,8 @@ import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route
 import { RouteUpsertTenantComponent } from './modules/page-upsert-tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
-import { ListarTagsRouteComponent } from './modules/page-list-tags/listar-tags-route.component';
-import { RegistrarUsuariosRouteComponent } from './modules/page-upsert-account/registrar-usuarios-route.component';
+import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
+import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
 import { ListarPermissoesRouteComponent } from './modules/page-list-permissions/listar-permissoes-route.component';
 import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
 
@@ -21,7 +21,7 @@ export const appRoutes: Route[] = [
   { path: '', pathMatch: 'full', redirectTo: '/login' },
   {
     path: 'login',
-    component: LoginRouteComponent
+    component: RouteLoginComponent
   },
   {
     path: 'create-tenant',
@@ -36,8 +36,8 @@ export const appRoutes: Route[] = [
       { path: 'dashboard', component: DashboardRouteComponent },
       // Usuários
       { path: 'users', component: RouteListAccountsComponent },
-      { path: 'users/new', component: RegistrarUsuariosRouteComponent },
-      { path: 'users/edit/:id', component: RegistrarUsuariosRouteComponent },
+      { path: 'users/new', component: RouteUpsertAccountComponent },
+      { path: 'users/edit/:id', component: RouteUpsertAccountComponent },
       // Eventos
       { path: 'events', component: ListarEventosRouteComponent },
       { path: 'events/new', component: RouteUpsertEventComponent },
@@ -49,7 +49,7 @@ export const appRoutes: Route[] = [
       { path: 'project/edit/:id', component: RouteUpsertProjectComponent },
       { path: 'project-page/:id', component: PaginaProjetoRouteComponent },
       // Tags
-      { path: 'tags', component: ListarTagsRouteComponent },
+      { path: 'tags', component: RouteListTagsComponent },
       // Permissões
       { path: 'permissions', component: ListarPermissoesRouteComponent }
     ]

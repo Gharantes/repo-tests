@@ -17,8 +17,9 @@ export class RoutingService {
   ): Promise<string | null> {
     return (await firstValueFrom(route.paramMap)).get(key);
   }
-  public login(): IDoRouteDetails {
-    return { label: 'Login', path: ['login'] };
+  public goToLogin() {
+    this.routeLabel.set("Login");
+    this.router.navigate(["login"]).then()
   }
 
   public goToDashboard() {
@@ -51,13 +52,13 @@ export class RoutingService {
   }
   public goToEditAccount(idAccount: number) {
     this.routeLabel.set('Editar Usuário');
-    this.router.navigate(['edit-account'], idAccount).then();
+    this.router.navigate(['edit-account', idAccount]).then();
   }
   public goToEditEvent(idEvent: number) {
     this.routeLabel.set('Editar Evento')
     this.router.navigate(["edit-event", idEvent]).then()
   }
-  public goToEditProject(idProject: number): IDoRouteDetails {
+  public goToEditProject(idProject: number) {
     this.routeLabel.set('Editar Projeto');
     this.router.navigate(['edit-project', idProject]).then();
   }

@@ -1,0 +1,8 @@
+<app-view-login
+[connector]="connector"
+[tenants$]="tenants$()"
+[tenantSelected]="tenantSelected()"
+(createTenantEvent)="routingService.goToCreateTenant()"
+(selectTenantEvent)="tenantSelected.set($event)"
+(attemptLoginEvent)="attemptLogin()"
+></app-view-login>

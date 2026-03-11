@@ -9,7 +9,7 @@ import {
   PageListProjectsResourceService,
   ProjectDto,
 } from '@synergia-frontend/api';
-import { IProject } from '@synergia-frontend/interfaces';
+import { IProjectModel } from '@synergia-frontend/interfaces';
 import { ViewListProjectsComponent } from './view/view-list-projects.component';
 
 @Component({
@@ -20,7 +20,7 @@ import { ViewListProjectsComponent } from './view/view-list-projects.component';
   imports: [ViewListProjectsComponent],
 })
 export class RouteListProjectsComponent {
-  public readonly data$ = signal<IProject[]>([]);
+  public readonly data$ = signal<IProjectModel[]>([]);
 
   constructor(
     private readonly listProjectsService: PageListProjectsResourceService,
@@ -42,7 +42,7 @@ export class RouteListProjectsComponent {
         this.snackService.catchError(err);
         return of([]);
       }),
-      map<ProjectDto[], IProject[]>((res) => {
+      map<ProjectDto[], IProjectModel[]>((res) => {
         return res.map((v) => ({
           id: v.id,
           title: v.title,
@@ -52,7 +52,7 @@ export class RouteListProjectsComponent {
       tap((res) => this.data$.set(res))
     );
   }
-  public deleteEntry(el: IProject) {
+  public deleteEntry(el: IProjectModel) {
     this.listProjectsService
       .deleteProject(el.id)
       .pipe(
@@ -71,10 +71,10 @@ export class RouteListProjectsComponent {
   createProject() {
     this.routingService.goToCreateProject()
   }
-  updateProject($event: IProject) {
+  updateProject($event: IProjectModel) {
     this.routingService.goToEditProject($event.id);
   }
-  toProjectPage($event: IProject) {
+  toProjectPage($event: IProjectModel) {
     // this.routingService.goToP($event.id)
   }
 }

@@ -1,0 +1,42 @@
+import { Component, inject, signal } from '@angular/core';
+import { PageListTagsResourceService } from '@synergia-frontend/api';
+import { SessionService, SnackbarService } from '@synergia-frontend/services';
+import { map, tap } from 'rxjs';
+import { ReactiveFormsModule } from '@angular/forms';
+import { ConnectorListTags } from './connector/connector-list-tags';
+import { ViewListTagsComponent } from './view/view-list-tags.component';
+import { TagDtoToModel } from '@synergia-frontend/mappers';
+import { ITagModel } from '@synergia-frontend/interfaces';
+
+@Component({
+  selector: 'app-route-list-tags',
+  standalone: true,
+  templateUrl: './route-list-tags.component.html',
+  styleUrl: `./route-list-tags.component.scss`,
+  imports: [ReactiveFormsModule, ViewListTagsComponent],
+})
+export class RouteListTagsComponent {
+  public readonly data$ = signal<ITagModel[]>([]);
+  public readonly connector = inject(ConnectorListTags);
+
+  constructor(
+    private readonly pageService: PageListTagsResourceService,
+    private readonly sessionService: SessionService,
+    private readonly snackbarService: SnackbarService
+  ) {
+    this.searchForTags();
+  }
+
+  public searchForTags() {
+    const idTenant = this.sessionService.getTenantId() as number;
+    const text = this.connector.textfieldControl.value;
+
+    this.pageService
+      .listTags(idTenant, text)
+      .pipe(
+        map((res) => res.map(v => TagDtoToModel(v))),
+        tap((res) => this.data$.set(res))
+      )
+      .subscribe();
+  }
+}
