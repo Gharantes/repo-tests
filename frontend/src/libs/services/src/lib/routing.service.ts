@@ -1,6 +1,5 @@
 import { Injectable, signal } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { IDoRouteDetails } from '@synergia-frontend/interfaces';
 import { firstValueFrom } from 'rxjs';
 
 @Injectable({
@@ -70,14 +69,10 @@ export class RoutingService {
     this.routeLabel.set("Tags")
     this.router.navigate(["tags"]).then()
   }
-
-
-  // public eventDetails(idEvent: number): IDoRouteDetails {
-  //   return {
-  //     label: 'Detalhes do Evento',
-  //     path: [...this.activeTenant(), 'event', 'details', idEvent.toString()],
-  //   };
-  // }
+  public goToEventDetails(idEvent: number) {
+    this.routeLabel.set('Detalhes do Evento');
+    this.router.navigate(['event', 'details', idEvent]).then()
+  }
 
     // projectPage(id: number): IDoRouteDetails {
     //   return {

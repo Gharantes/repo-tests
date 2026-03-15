@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output, Signal } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   IAccountModel,
   IDoExtendableTableActions,
@@ -22,11 +22,13 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
   ],
 })
 export class ViewListAccountsComponent {
-  @Input() data$!: Signal<IAccountModel[]>;
+  @Input() data$!: IAccountModel[];
 
   @Output() public readonly createAccountEvent = new EventEmitter<void>();
-  @Output() public readonly editAccountEvent = new EventEmitter<IAccountModel>();
-  @Output() public readonly deleteAccountEvent = new EventEmitter<IAccountModel>();
+  @Output() public readonly editAccountEvent =
+    new EventEmitter<IAccountModel>();
+  @Output() public readonly deleteAccountEvent =
+    new EventEmitter<IAccountModel>();
 
   public readonly columns: IDoExtendableTableColumnInfo<IAccountModel>[] = [
     {
@@ -37,12 +39,13 @@ export class ViewListAccountsComponent {
     {
       def: 'login',
       header: 'Login',
-      value: (element: IAccountModel) => element.login
+      value: (element: IAccountModel) => element.login,
     },
     {
       def: 'name',
       header: 'Nome',
-      value: (element: IAccountModel) => (element.firstName ?? '') + ' ' + (element.lastName ?? ''),
+      value: (element: IAccountModel) =>
+        (element.firstName ?? '') + ' ' + (element.lastName ?? ''),
     },
   ];
 
@@ -57,7 +60,7 @@ export class ViewListAccountsComponent {
       label: 'Editar Usuário',
       icon: '',
       action: (el: IAccountModel) => this.editAccountEvent.emit(el),
-      isAllowed: () => true
+      isAllowed: () => true,
     },
   ];
 }

@@ -1,0 +1,18 @@
+<div id="topline">
+  <app-header-list-events
+    [connector]="connector"
+    (lookupEvent)="lookupEvent.emit()"
+  ></app-header-list-events>
+
+  <button mat-raised-button (click)="insertEvent.emit()">
+    <span>Criar novo evento</span>
+    <mat-icon class="material-symbols-outlined">add</mat-icon>
+  </button>
+</div>
+
+
+<!--<lib-card-grid-->
+<!--  style="margin-top: 5px;"-->
+<!--  [data$]="cardGridData$()"-->
+<!--  (cardInteractionEvent)="cardInteraction($event)"-->
+<!--&gt;</lib-card-grid>-->

@@ -1,18 +1,16 @@
-@use '../../../../../styles/mixins' as m;
-
 * {
-    @include m.base();
+    box-sizing: border-box;
 }
-
 :host {
-    @include m.col();
-    @include m.fill();
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
     overflow: auto;
     padding: 10px;
 }
-
 #topline {
-    @include m.row();
+    display: flex;
     width: 100%;
     height: 70px;
     column-gap: 10px;

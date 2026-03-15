@@ -1,0 +1,7 @@
+<div class="routes-container">
+  @for (item of sidebarElements; track $index) {
+    <div matRipple (click)="item.goTo()" class="link">
+      {{ item.label }}
+    </div>
+  }
+</div>

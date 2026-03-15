@@ -1,0 +1,19 @@
+<div>
+  Synergia
+</div>
+
+<div>
+  {{ routingService.routeLabel() }}
+</div>
+
+<div>
+  {{ sessionService.getTenantId() }} - {{ sessionService.getTenantLabel() }}
+</div>
+<button
+  class="usr-btn"
+  [matMenuTriggerFor]="userMenu">
+  <lib-gm-icon [type]="'rounded'" [image]="'account_circle'"></lib-gm-icon>
+</button>
+<mat-menu #userMenu="matMenu">
+  <button mat-menu-item (click)="logout()">Logout</button>
+</mat-menu>

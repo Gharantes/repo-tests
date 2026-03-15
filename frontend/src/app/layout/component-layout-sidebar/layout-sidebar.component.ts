@@ -5,16 +5,8 @@ import { RoutingService, SessionService } from "@synergia-frontend/services";
 @Component({
   selector: 'app-layout-sidebar',
   standalone: true,
-  template: `
-    <div class="routes-container">
-      @for (item of routingService.getRouteLabels(); track $index) {
-        <div matRipple (click)="routingService.goTo(item)" class="link">
-          {{ item.label }}
-        </div>
-      }
-    </div>
-  `,
-  styleUrl: `./style.scss`,
+  templateUrl: './layout-sidebar.component.html',
+  styleUrl: `./layout-sidebar.component.scss`,
   imports: [MatRippleModule]
 })
 export class LayoutSidebarComponent {
@@ -22,5 +14,6 @@ export class LayoutSidebarComponent {
     public readonly routingService: RoutingService,
     public readonly sessionService: SessionService
   ) {}
-  ;
+
+  public sidebarElements: { label: string, goTo: () => void }[] = []
 }

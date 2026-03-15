@@ -1,0 +1,11 @@
+<app-layout-topbar></app-layout-topbar>
+
+<div id="page" class="h-full">
+    <app-layout-sidebar></app-layout-sidebar>
+
+    <div id="page-container">
+      <mat-card [appearance]="'outlined'" id="card">
+        <router-outlet id="router-outlet"></router-outlet>
+      </mat-card>
+    </div>
+</div>

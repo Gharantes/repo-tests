@@ -1,7 +1,7 @@
 import { Component } from "@angular/core";
 import { RouterOutlet } from "@angular/router";
-import { LayoutTopbarComponent } from "../components/topbar/layout-topbar.component";
-import { LayoutSidebarComponent } from "../components/sidebar/layout-sidebar.component";
+import { LayoutTopbarComponent } from "../component-layout-topbar/layout-topbar.component";
+import { LayoutSidebarComponent } from "../component-layout-sidebar/layout-sidebar.component";
 import { MatCardModule } from "@angular/material/card";
 
 @Component({
@@ -20,7 +20,7 @@ import { MatCardModule } from "@angular/material/card";
         </div>
     </div>
   `,
-  styleUrl: `./style.scss`,
+  styleUrl: `./normal-layout.component.scss`,
   imports: [
     RouterOutlet,
     LayoutTopbarComponent,

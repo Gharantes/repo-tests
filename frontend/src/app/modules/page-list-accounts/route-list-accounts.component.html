@@ -1,5 +1,5 @@
 <app-view-list-accounts
-  [data$]="data$"
+  [data$]="data$()"
   (createAccountEvent)="createAccount()"
   (deleteAccountEvent)="deleteAccount($event)"
   (editAccountEvent)="editAccount($event)"
