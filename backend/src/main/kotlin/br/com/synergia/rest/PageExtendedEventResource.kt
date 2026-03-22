@@ -34,13 +34,4 @@ class PageExtendedEventResource (
             service.listTagsOfEvent(idEvent)
         }
     }
-
-    @PostMapping("/get-detailed-event-by-id/{id-event}")
-    fun getDetailedEventById(
-        @PathVariable("id-event") idEvent: Long
-    ): ResponseEntity<EventDto?> {
-        return ResponseMessenger.buildResponse {
-            service.getDetailedEventById(idEvent)
-        }
-    }
 }

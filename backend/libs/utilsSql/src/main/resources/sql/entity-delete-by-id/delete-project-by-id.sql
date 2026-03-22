@@ -1,1 +1,0 @@
-DELETE FROM projeto WHERE id = :id_projeto

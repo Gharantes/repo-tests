@@ -1,7 +1,13 @@
 <table id="table" mat-table [dataSource]="data$">
   <ng-container *ngFor="let column of columns" [matColumnDef]="column.def">
     <th mat-header-cell *matHeaderCellDef>{{ column.header }}</th>
-    <td mat-cell *matCellDef="let element">{{ column.value(element) }}</td>
+    <td mat-cell *matCellDef="let element">
+      @if (column.special === 'BOOLEAN') {
+        <mat-checkbox [checked]="column.value(element)" [disabled]="true"></mat-checkbox>
+      } @else {
+        {{ column.value(element) }}
+      }
+    </td>
   </ng-container>
   
   <ng-container [matColumnDef]="'actions'">

@@ -17,7 +17,7 @@ class PageLoginResource (
     fun listTenants(
         @RequestParam("text", required = false) text: String?
     ): ResponseEntity<List<TenantDto>> {
-        return ResponseMessenger.buildResponse { service.listarTenants() }
+        return ResponseMessenger.buildResponse { service.listTenants() }
     }
 
     @PostMapping("/check-login-information")

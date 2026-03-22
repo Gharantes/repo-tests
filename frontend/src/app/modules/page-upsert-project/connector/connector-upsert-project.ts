@@ -1,9 +1,11 @@
 import { inject, Injectable } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { IUpsertProjectModel } from '@synergia-frontend/interfaces';
+import { IProjectModel, IUpsertProjectModel } from '@synergia-frontend/interfaces';
 import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
 import Session = ts.server.Session;
 import { SessionService } from '@synergia-frontend/services';
+import { IUpsertProjectToDto } from '@synergia-frontend/mappers';
+import { UpsertProjectDto } from '@synergia-frontend/api';
 
 @Injectable()
 export class ConnectorUpsertProject {
@@ -15,29 +17,28 @@ export class ConnectorUpsertProject {
     idAccount: this.fb.control<number>(this.sessionService.getUserId() as number, [Validators.required]),
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
-    urlBanner: this.fb.control<string|null>(null),
-    tags: this.fb.control<number[]>([]),
+    bannerUrl: this.fb.control<string|undefined>(undefined),
   });
 
-  public getFormValue(): IUpsertProjectModel | null {
+  public getFormValue(): UpsertProjectDto | null {
     const v = this.form.value;
     if (v.title == null || v.description == null || v.idTenant == null || v.idAccount == null) {
       return null;
     }
-    return {
+    const obj = {
       description: v.description,
       idAccount: v.idAccount,
       idTenant: v.idTenant,
       title: v.title,
-      urlBanner: v.urlBanner ?? null,
-      tags: v.tags ?? [],
+      bannerUrl: v.bannerUrl,
+      tags: []
     };
+    return IUpsertProjectToDto(obj)
   }
 
-  public populateForm(value: IUpsertProjectModel) {
+  public populateForm(value: IProjectModel) {
     this.form.controls.title.setValue(value.title);
     this.form.controls.description.setValue(value.description);
-    this.form.controls.tags.setValue(value.tags);
-    this.form.controls.urlBanner.setValue(value.urlBanner);
+    this.form.controls.bannerUrl.setValue(value.bannerUrl);
   }
 }

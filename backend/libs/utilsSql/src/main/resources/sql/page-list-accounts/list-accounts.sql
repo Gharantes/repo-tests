@@ -1,11 +1,9 @@
 SELECT
-    a.id,
-    a.login,
-    p.id as id_person,
-    p.first_name,
-    p.last_name
+    a.id as id_account,
+    a.id_tenant,
+    a.login as account_login,
+    a.email as account_email,
+    a.first_name as account_first_name,
+    a.last_name as account_last_name
 FROM account a
-LEFT JOIN person p ON
-    a.id_tenant = p.id_tenant AND
-    a.id = p.id_account
 WHERE a.id_tenant = :id_tenant

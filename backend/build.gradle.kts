@@ -48,6 +48,7 @@ dependencies {
 	implementation(project(":libs:pageListAccounts"))
 	implementation(project(":libs:pageLogin"))
 	implementation(project(":libs:pageUpsertEvents"))
+	implementation(project(":libs:pageUpsertTag"))
 	implementation(project(":libs:pageUpsertProjects"))
 	implementation(project(":libs:pageUpsertTenant"))
 	implementation(project(":libs:pageUpsertAccount"))

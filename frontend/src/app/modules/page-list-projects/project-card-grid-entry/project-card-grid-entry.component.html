@@ -1,0 +1,13 @@
+<div class="card" (click)="cardInteractionEvent.emit(entry)">
+  <div class="banner">
+    <lib-safe-image
+      [url]="entry.bannerUrl"
+      [altColor]="entry.bannerColor"
+    ></lib-safe-image>
+  </div>
+
+  <div class="card-information">
+    <div class="card-primary">{{ entry.title }}</div>
+    <div class="card-secondary"></div>
+  </div>
+</div>

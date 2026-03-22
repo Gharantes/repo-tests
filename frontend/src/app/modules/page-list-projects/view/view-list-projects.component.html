@@ -1,12 +1,19 @@
-<div class="btn-line">
+<div id="topline">
+  <app-form-list-projects
+    [connector]="connector"
+  ></app-form-list-projects>
+</div>
+
+<div id="page">
+  <app-project-card-grid
+    [data$]="data$"
+    (cardInteractionEvent)="openCardEvent.emit($event)"
+  ></app-project-card-grid>
+</div>
+
+<div id="btn-line">
   <button mat-raised-button (click)="createProjectEvent.emit()">
     <span>Criar novo projeto</span>
     <mat-icon class="material-symbols-outlined">add</mat-icon>
   </button>
 </div>
-
-<lib-sig-extendable-table
-  [data$]="data$"
-  [columns]="columns"
-  [actions]="tableActions"
-></lib-sig-extendable-table>

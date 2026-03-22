@@ -1,6 +1,6 @@
 import { Component, signal } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { PageExtendedEventResourceService } from '@synergia-frontend/api';
+import { EntityGetByIdResourceService, PageExtendedEventResourceService } from '@synergia-frontend/api';
 import { RoutingService, SessionService } from '@synergia-frontend/services';
 
 @Component({
@@ -14,7 +14,7 @@ export class RouteEventDetailsComponent {
   constructor (
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
-    private readonly pageService: PageExtendedEventResourceService,
+    private readonly entityService: EntityGetByIdResourceService,
     private readonly activatedRoute: ActivatedRoute
   ) {
     this.getFromRouteParams()
@@ -35,8 +35,7 @@ export class RouteEventDetailsComponent {
   public lookupEvent() {
     const idEvent = this.idEvent();
     if (idEvent == null) return;
-    this.pageService.getDetailedEventById(idEvent).pipe(
-
+    this.entityService.getEventById(idEvent).pipe(
     ).subscribe()
   }
 }

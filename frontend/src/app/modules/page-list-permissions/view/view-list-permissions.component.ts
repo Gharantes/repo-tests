@@ -25,7 +25,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   imports: [SigExtendableTableComponent, ReactiveFormsModule],
 })
 export class ViewListPermissionsComponent {
-  @Input() data$!: ITagModel[];
+  @Input() data$!: IPermissionModel[];
   @Input() connector!: ConnectorListPermissions;
   @Output() lookupEvent = new EventEmitter<void>();
 

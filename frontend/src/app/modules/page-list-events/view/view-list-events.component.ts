@@ -3,8 +3,9 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IEventModel } from '@synergia-frontend/interfaces';
-import { HeaderListEventsComponent } from '../component-header-list-events/header-list-events.component';
+import { FormListEventsComponent } from '../form/form-list-events.component';
 import { ConnectorListEvents } from '../connector/connector-list-events';
+import { EventCardGridComponent } from '../event-card-grid/event-card-grid.component';
 
 @Component({
   selector: 'app-view-list-events',
@@ -15,7 +16,8 @@ import { ConnectorListEvents } from '../connector/connector-list-events';
     CommonModule,
     MatIconModule,
     MatButtonModule,
-    HeaderListEventsComponent,
+    FormListEventsComponent,
+    EventCardGridComponent,
   ],
 })
 export class ViewListEventsComponent {

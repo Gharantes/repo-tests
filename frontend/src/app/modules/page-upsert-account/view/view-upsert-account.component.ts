@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ConnectorUpsertAccont } from '../connector/connector-upsert-accont';
+import { FormUpsertAccountComponent } from '../form/form-upsert-account.component';
 
 @Component({
   selector: 'app-view-upsert-account',
@@ -20,6 +21,7 @@ import { ConnectorUpsertAccont } from '../connector/connector-upsert-accont';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
+    FormUpsertAccountComponent,
   ],
 })
 export class ViewUpsertAccountComponent {

@@ -8,8 +8,8 @@ export class ConnectorUpsertAccont {
   private readonly sessionService = inject(SessionService);
 
   public form = this.fb.group({
-    idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number),
-    email: this.fb.control<string>('', [Validators.required]),
+    idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number, [Validators.required]),
+    email: this.fb.control<string|undefined>('', [Validators.email]),
     login: this.fb.control<string>('', [Validators.required]),
     password: this.fb.control<string>('', [Validators.required]),
     firstName: this.fb.control<string>('', [Validators.required]),

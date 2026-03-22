@@ -9,7 +9,7 @@ import {
 import { catchError, concatMap, debounceTime, EMPTY, map, tap } from 'rxjs';
 import { EventDtoToModel } from '@synergia-frontend/mappers';
 import { MatDialog } from '@angular/material/dialog';
-import { EventCardDialogComponent } from './component-event-card-dialog/event-card-dialog.component';
+import { EventCardDialogComponent } from './dialog-event-card/event-card-dialog.component';
 import { ViewListEventsComponent } from './view/view-list-events.component';
 import { ConnectorListEvents } from './connector/connector-list-events';
 
@@ -19,6 +19,7 @@ import { ConnectorListEvents } from './connector/connector-list-events';
   templateUrl: './route-list-events.component.html',
   styleUrl: `./route-list-events.component.scss`,
   imports: [ViewListEventsComponent],
+  providers: [ConnectorListEvents]
 })
 export class RouteListEventsComponent {
   public readonly data$ = signal<IEventModel[]>([]);
@@ -32,6 +33,7 @@ export class RouteListEventsComponent {
     private readonly dialog: MatDialog
   ) {
     this.watchForm()
+    this.listEvents()
   }
 
   public goToCreateEvent() {
@@ -50,7 +52,8 @@ export class RouteListEventsComponent {
   }
   public lookupData$() {
     const idTenant = this.sessionService.getTenantId() as number;
-    return this.pageService.listEvents(idTenant).pipe(
+    const text = this.connector.form.controls.text.value
+    return this.pageService.listEvents(idTenant, text).pipe(
       map((res) => res.map((v) => EventDtoToModel(v))),
       tap((res) => this.data$.set(res))
     );
@@ -75,8 +78,7 @@ export class RouteListEventsComponent {
       )
       .subscribe();
   }
-
-  openCard($event: IEventModel) {
+  public openCard($event: IEventModel) {
     this.dialog
       .open(EventCardDialogComponent, { data: $event })
       .afterClosed()

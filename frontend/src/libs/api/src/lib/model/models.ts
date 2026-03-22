@@ -10,4 +10,5 @@ export * from './tenantDto';
 export * from './upsertAccountDto';
 export * from './upsertEventDto';
 export * from './upsertProjectDto';
+export * from './upsertTagDto';
 export * from './upsertTenantDto';

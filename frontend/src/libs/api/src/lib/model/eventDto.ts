@@ -8,7 +8,6 @@
  * Do not edit the class manually.
  */
 import { TagDto } from './tagDto';
-import { AccountDto } from './accountDto';
 
 
 export interface EventDto { 
@@ -16,7 +15,8 @@ export interface EventDto {
     idTenant: number;
     title: string;
     description: string;
-    owner?: AccountDto;
+    bannerUrl?: string;
+    bannerColor: string;
     tags: Array<TagDto>;
 }
 

@@ -1,0 +1,8 @@
+<mat-form-field class="field" [appearance]="'outline'">
+  <mat-label>Título</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.title">
+</mat-form-field>
+
+<mat-checkbox [formControl]="connector.form.controls.forProjects">Disponível para Projetos</mat-checkbox>
+<mat-checkbox [formControl]="connector.form.controls.forEvents">Disponível para Eventos</mat-checkbox>
+<mat-checkbox [formControl]="connector.form.controls.forAccounts">Disponível para Usuários</mat-checkbox>

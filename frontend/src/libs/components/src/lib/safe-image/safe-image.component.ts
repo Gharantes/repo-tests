@@ -3,8 +3,8 @@ import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'lib-safe-image',
-  templateUrl: `index.html`,
-  styleUrl: 'style.scss',
+  templateUrl: `safe-image.component.html`,
+  styleUrl: 'safe-image.component.scss',
   imports: [CommonModule],
   standalone: true,
 })

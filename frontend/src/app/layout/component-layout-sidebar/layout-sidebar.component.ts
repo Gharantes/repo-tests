@@ -15,5 +15,11 @@ export class LayoutSidebarComponent {
     public readonly sessionService: SessionService
   ) {}
 
-  public sidebarElements: { label: string, goTo: () => void }[] = []
+  public sidebarElements: { label: string, goTo: () => void }[] = [
+    { label: 'Dashboard', goTo: () => this.routingService.goToDashboard() },
+    { label: 'Explorar Projetos', goTo: () => this.routingService.goToListProjects() },
+    { label: 'Explorar Eventos', goTo: () => this.routingService.goToListEvents() },
+    { label: 'Visualizar Tags', goTo: () => this.routingService.goToListTags() },
+    { label: 'Usuários', goTo: () => this.routingService.goToListAccounts() },
+  ]
 }

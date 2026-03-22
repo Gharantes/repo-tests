@@ -5,7 +5,7 @@ import org.springframework.stereotype.Service
 
 @Service
 class PageUpsertProjectService (
-    private val sqlService: PageUpsertProjectSqlService
+    private val sqlService: PageUpsertProjectSqlService,
 ) {
     fun createProject(params: UpsertProjectDto) {
         return sqlService.createProject(params)

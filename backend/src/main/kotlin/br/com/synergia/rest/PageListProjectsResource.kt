@@ -20,13 +20,4 @@ class PageListProjectsResource (
             service.listProjects(idTenant, text)
         }
     }
-
-    @DeleteMapping("/delete/{id-project}")
-    fun deleteProject(
-        @PathVariable("id-project") id: Long
-    ): ResponseEntity<Void> {
-        return ResponseMessenger.responseWithoutReturn {
-            service.deleteProject(id)
-        }
-    }
 }

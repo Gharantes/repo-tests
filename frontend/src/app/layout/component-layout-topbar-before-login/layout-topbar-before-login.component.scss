@@ -1,0 +1,22 @@
+* {
+    box-sizing: border-box;
+}
+:host {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    column-gap: 60px;
+    padding: 10px;
+    color: white;
+    background: #555;
+}
+
+#system-title {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+#route-label-title {
+    font-size: 1.3rem;
+}

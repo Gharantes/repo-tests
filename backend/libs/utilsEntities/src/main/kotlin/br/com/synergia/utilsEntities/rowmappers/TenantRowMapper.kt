@@ -7,9 +7,9 @@ import java.sql.ResultSet
 class TenantRowMapper : RowMapper<TenantDto> {
     override fun mapRow(rs: ResultSet, rowNum: Int): TenantDto {
         return TenantDto(
-            id = rs.getLong("id"),
-            title = rs.getString("title"),
-            identifier = rs.getString("identifier")
+            id = rs.getLong("id_tenant"),
+            title = rs.getString("tenant_title"),
+            identifier = rs.getString("tenant_identifier")
         )
     }
 }

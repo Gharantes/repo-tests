@@ -1,32 +1,30 @@
 package br.com.synergia.pageUpsertEvents.services
 
 import br.com.synergia.pageUpsertEvents.models.UpsertEventDto
-import br.com.synergia.utilsSql.SqlPath
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import br.com.synergia.utilsEntities.jpa.event.Event
+import br.com.synergia.utilsEntities.jpa.event.EventRepository
 import org.springframework.stereotype.Service
-import java.sql.Types
 
 @Service
 class PageUpsertEventoSqlService (
-    private val template: NamedParameterJdbcTemplate,
+    private val eventRepository: EventRepository
 ) {
     fun createEvent(params: UpsertEventDto) {
-        val sql = SqlPath.PageUpsertEvento.INSERT_EVENT.load()
-        val paramMap = MapSqlParameterSource()
-            .addValue("title", params.title, Types.VARCHAR)
-            .addValue("description", params.description, Types.VARCHAR)
-            .addValue("id_account_owner", params.idAccount, Types.BIGINT)
-            .addValue("id_tenant", params.idTenant, Types.BIGINT)
-        template.update(sql, paramMap)
+        val event = Event(
+            idTenant = params.idTenant,
+            title = params.title,
+            description = params.description,
+            bannerUrl = params.bannerUrl
+        )
+        eventRepository.save(event)
     }
 
     fun updateEvent(idEvent: Long, params: UpsertEventDto) {
-        val sql = SqlPath.PageUpsertEvento.UPDATE_EVENT.load()
-        val paramMap = MapSqlParameterSource()
-            .addValue("id_event", idEvent, Types.BIGINT)
-            .addValue("title", params.title, Types.VARCHAR)
-            .addValue("description", params.description, Types.VARCHAR)
-        template.update(sql, paramMap)
+        eventRepository.findById(idEvent).ifPresent { event ->
+            event.title = params.title
+            event.description = params.description
+            event.bannerUrl = params.bannerUrl
+            eventRepository.save(event)
+        }
     }
 }

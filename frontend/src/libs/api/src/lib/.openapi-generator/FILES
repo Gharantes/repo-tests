@@ -5,6 +5,8 @@ api.module.ts
 api/actionAttributePermissionsResource.service.ts
 api/actionManageRelationshipsResource.service.ts
 api/api.ts
+api/entityDeleteByIdResource.service.ts
+api/entityGetByIdResource.service.ts
 api/pageExtendedEventResource.service.ts
 api/pageExtendedProjectResource.service.ts
 api/pageListAccountsResource.service.ts
@@ -16,6 +18,7 @@ api/pageLoginResource.service.ts
 api/pageUpsertAccountResource.service.ts
 api/pageUpsertEventResource.service.ts
 api/pageUpsertProjectResource.service.ts
+api/pageUpsertTagResource.service.ts
 api/pageUpsertTenantResource.service.ts
 configuration.ts
 encoder.ts
@@ -34,6 +37,7 @@ model/tenantDto.ts
 model/upsertAccountDto.ts
 model/upsertEventDto.ts
 model/upsertProjectDto.ts
+model/upsertTagDto.ts
 model/upsertTenantDto.ts
 param.ts
 variables.ts

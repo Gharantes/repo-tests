@@ -1,0 +1,13 @@
+* {
+  box-sizing: border-box;
+}
+:host {
+  padding: 5px;
+  width: 100%;
+}
+#card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, 250px);
+  grid-auto-rows: 250px;
+  gap: 20px;
+}

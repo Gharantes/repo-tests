@@ -23,7 +23,7 @@ import { ViewLoginComponent } from './view/view-login.component';
   standalone: true,
   templateUrl: './route-login.component.html',
   styleUrl: './route-login.component.scss',
-  providers: [],
+  providers: [ConnectorLogin],
   imports: [
     MatFormFieldModule,
     MatInputModule,
@@ -33,9 +33,6 @@ import { ViewLoginComponent } from './view/view-login.component';
   ],
 })
 export class RouteLoginComponent implements AfterViewInit {
-  public readonly tenants$ = signal<ITenantModel[]>([]);
-  public readonly tenantSelected = signal<ITenantModel | null>(null);
-
   public readonly connector = inject(ConnectorLogin);
 
   constructor(
@@ -90,7 +87,7 @@ export class RouteLoginComponent implements AfterViewInit {
         filter((res) => res != null),
         tap((res) => {
           this.sessionService.setTenant({
-            id: res.idAccount,
+            id: res.idTenant,
             label: res.tenantTitle,
           });
           this.sessionService.setUser({
@@ -109,12 +106,9 @@ export class RouteLoginComponent implements AfterViewInit {
       .listTenants()
       .pipe(
         map((res) => res.map((v) => TenantDtoToModel(v))),
-        tap((res) => this.tenants$.set(res))
+        tap((res) => this.connector.tenants$.set(res)),
+        tap((res) => this.connector.tenantsFiltered$.set(res))
       )
       .subscribe();
-  }
-  public setNewTenant($event: ITenantModel) {
-    this.connector.form.controls.idTenant.setValue($event.id);
-    this.tenantSelected.set($event);
   }
 }

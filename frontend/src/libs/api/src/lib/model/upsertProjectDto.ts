@@ -14,6 +14,7 @@ export interface UpsertProjectDto {
     idAccount: number;
     title: string;
     description: string;
+    bannerUrl?: string;
     tags: Array<number>;
 }
 

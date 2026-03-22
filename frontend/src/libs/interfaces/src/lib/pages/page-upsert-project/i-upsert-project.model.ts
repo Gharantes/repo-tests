@@ -1,7 +1,7 @@
 export interface IUpsertProjectModel {
   title: string,
   description: string,
-  urlBanner: string | null,
+  bannerUrl: string | undefined,
   tags: number[],
   idAccount: number,
   idTenant: number

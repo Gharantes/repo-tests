@@ -1,1 +1,0 @@
-SELECT * FROM project WHERE id = :id_project

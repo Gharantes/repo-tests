@@ -13,6 +13,7 @@ dependencies {
     compileOnly(project(":libs:utilsSql"))
     compileOnly(project(":libs:utilsCommons"))
     compileOnly("org.springframework.boot:spring-boot-starter-data-jdbc")
+    compileOnly("org.springframework.boot:spring-boot-starter-data-jpa")
     testImplementation(kotlin("test"))
 }
 

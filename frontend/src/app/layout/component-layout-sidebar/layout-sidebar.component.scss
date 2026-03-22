@@ -1,7 +1,5 @@
-@use '../../../styles/mixins' as m;
-
 * {
-    @include m.base();
+    box-sizing: border-box;
 }
 :host {
     min-width: 240px;
@@ -13,10 +11,11 @@
 }
 
 .routes-container {
-    @include m.col();
+    display: flex;
+    flex-direction: column;
 
     .link {
-        @include m.row();
+        display: flex;
         padding: 10px;
         flex: 1;
         box-shadow: rgba(0, 0, 0, 0.05) 0 6px 24px 0, rgba(0, 0, 0, 0.08) 0 0 0 1px;

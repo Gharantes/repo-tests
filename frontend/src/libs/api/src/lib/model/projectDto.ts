@@ -17,7 +17,9 @@ export interface ProjectDto {
     idTenant: number;
     title: string;
     description: string;
-    tenant: TenantDto;
+    tenant?: TenantDto;
+    bannerUrl?: string;
+    bannerColor: string;
     tags: Array<TagDto>;
     events: Array<EventDto>;
 }

@@ -7,19 +7,7 @@ import { MatCardModule } from "@angular/material/card";
 @Component({
   selector: 'app-normal-layout',
   standalone: true,
-  template: `
-    <app-layout-topbar></app-layout-topbar>
-
-    <div id="page" class="h-full">
-        <app-layout-sidebar></app-layout-sidebar>
-
-        <div id="page-container">
-          <mat-card [appearance]="'outlined'" id="card">
-            <router-outlet id="router-outlet"></router-outlet>
-          </mat-card>
-        </div>
-    </div>
-  `,
+  templateUrl: './normal-layout.component.html',
   styleUrl: `./normal-layout.component.scss`,
   imports: [
     RouterOutlet,

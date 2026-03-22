@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service
 
 @Service
 class PageLoginService (
-    private val sqlService: PageLoginSqlService
+    private val sqlService: PageLoginSqlService,
 ) {
-    fun listarTenants(): List<TenantDto> {
-        return sqlService.listarTenants()
+    fun listTenants(): List<TenantDto> {
+        return sqlService.listTenants()
     }
     fun checkLoginInformation(
         params: LoginInformationInputDto

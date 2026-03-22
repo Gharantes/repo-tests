@@ -1,4 +1,10 @@
 export interface ITagModel {
   id: number;
-  name: string;
+  idTenant: number;
+  title: string;
+  forProjects: boolean;
+  forEvents: boolean;
+  forAccounts: boolean;
+  createdAt: string;
+  createdAtRaw: Date;
 }

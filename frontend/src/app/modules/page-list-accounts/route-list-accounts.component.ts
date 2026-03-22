@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { ViewListAccountsComponent } from './view/view-list-accounts.component';
 import { IAccountModel } from '@synergia-frontend/interfaces';
 import {
@@ -8,16 +8,20 @@ import {
 } from '@synergia-frontend/services';
 import { AccountDto, PageListAccountsResourceService } from '@synergia-frontend/api';
 import { catchError, concatMap, EMPTY, map, Observable, of, tap } from 'rxjs';
+import { ConnectorListAccounts } from './connector/connector-list-accounts';
+import { AccountDtoToModel } from '@synergia-frontend/mappers';
 
 @Component({
-  selector: 'app-page-listar-usuarios-route',
+  selector: 'app-route-list-accounts',
   standalone: true,
   templateUrl: './route-list-accounts.component.html',
   styleUrl: `./route-list-accounts.component.scss`,
   imports: [ViewListAccountsComponent],
+  providers: [ConnectorListAccounts]
 })
 export class RouteListAccountsComponent {
   public readonly data$ = signal<IAccountModel[]>([]);
+  public readonly connector = inject(ConnectorListAccounts);
 
   constructor(
     private readonly sessionService: SessionService,
@@ -39,15 +43,7 @@ export class RouteListAccountsComponent {
         this.snackService.catchError(err, 'Erro ao trazer usuários.');
         return of([]);
       }),
-      map<AccountDto[], IAccountModel[]>((res) => {
-        return res.map(v => ({
-          id: v.id,
-          email: v.email,
-          firstName: v.firstName,
-          lastName: v.lastName,
-          login: v.login,
-        }))
-      }),
+      map((res) => res.map(v => AccountDtoToModel(v))),
       tap((res) => this.data$.set(res))
     );
   }

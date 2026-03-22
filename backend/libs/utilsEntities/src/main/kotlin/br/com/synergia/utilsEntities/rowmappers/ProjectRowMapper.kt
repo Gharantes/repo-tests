@@ -11,7 +11,9 @@ class ProjectRowMapper : RowMapper<ProjectDto> {
             idTenant = rs.getLong("id_tenant"),
             title = rs.getString("project_title"),
             description = rs.getString("project_description"),
-            tenant = EntityRowMapper.tenantRowMapper.mapRow(rs, rowNum),
+            bannerUrl = rs.getString("project_banner_url"),
+            bannerColor = rs.getString("project_banner_color"),
+            tenant = null,
             tags = emptyList(),
             events = emptyList()
         )

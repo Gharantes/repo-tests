@@ -20,13 +20,4 @@ class PageListEventsResource (
             service.listEvents(idTenant, text)
         }
     }
-
-    @DeleteMapping("/delete/{id-event}")
-    fun deleteEvent(
-        @PathVariable("id-event") idEvent: Long
-    ): ResponseEntity<Void> {
-        return ResponseMessenger.responseWithoutReturn {
-            service.deleteEvent(idEvent)
-        }
-    }
 }

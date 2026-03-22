@@ -2,22 +2,26 @@ package br.com.synergia.pageLogin.services
 
 import br.com.synergia.pageLogin.models.LoginInformationInputDto
 import br.com.synergia.pageLogin.models.LoginInformationResponseDto
+import br.com.synergia.utilsEntities.jpa.account.AccountRepository
+import br.com.synergia.utilsEntities.jpa.tenant.TenantRepository
+import br.com.synergia.utilsEntities.jpa.tenant.toDto
 import br.com.synergia.utilsEntities.models.TenantDto
-import br.com.synergia.utilsEntities.rowmappers.TenantRowMapper
+import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import java.sql.Types
+import java.time.LocalDateTime
 
 @Service
 class PageLoginSqlService (
-    private val template: NamedParameterJdbcTemplate
+    private val template: NamedParameterJdbcTemplate,
+    private val tenantRepository: TenantRepository,
+    private val accountRepository: AccountRepository
 ) {
-    fun listarTenants(): List<TenantDto> {
-        val sql = SqlPath.PageLogin.LIST_TENANTS.load()
-        val paramMap = MapSqlParameterSource()
-        return template.query(sql, paramMap, TenantRowMapper())
+    fun listTenants(): List<TenantDto> {
+        return tenantRepository.findAll().map { it.toDto() }
     }
     fun checkLoginInformation(
         params: LoginInformationInputDto
@@ -34,15 +38,15 @@ class PageLoginSqlService (
                 login = rs.getString("login"),
                 idTenant = rs.getLong("id_tenant"),
                 tenantTitle = rs.getString("tenant_title"),
-                idPerson = rs.getLong("id_person").takeUnless { rs.wasNull() },
                 firstName = rs.getString("first_name"),
                 lastName = rs.getString("last_name"),
             )
         }.firstOrNull()
     }
     fun updateLastSeen(idAccount: Long) {
-        val sql = SqlPath.PageLogin.UPDATE_LAST_SEEN.load()
-        val paramMap = MapSqlParameterSource().addValue("id_account", idAccount, Types.BIGINT)
-        template.update(sql, paramMap)
+        accountRepository.findById(idAccount).ifPresent { account ->
+            account.lastSeen = LocalDateTime.now()
+            accountRepository.save(account)
+        }
     }
 }

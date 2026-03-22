@@ -11,6 +11,11 @@
 
 export interface TagDto { 
     id: number;
-    label: string;
+    idTenant: number;
+    title: string;
+    createdAt: string;
+    forProjects: boolean;
+    forEvents: boolean;
+    forAccounts: boolean;
 }
 

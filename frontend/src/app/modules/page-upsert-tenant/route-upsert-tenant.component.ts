@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, inject, Input } from '@angular/core';
 import { IUpsertTenantModel } from '@synergia-frontend/interfaces';
 import { RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { PageUpsertTenantResourceService } from '@synergia-frontend/api';
 import { ViewUpsertTenantComponent } from './view/view-upsert-tenant.component';
+import { ConnectorCreateTenant } from './connector/connector-create-tenant';
 
 @Component({
   selector: 'app-registrar-tenant-route',
@@ -11,18 +12,26 @@ import { ViewUpsertTenantComponent } from './view/view-upsert-tenant.component';
   templateUrl: './route-upsert-tenant.component.html',
   styleUrl: `./route-upsert-tenant.component.scss`,
   imports: [ViewUpsertTenantComponent],
+  providers: [ConnectorCreateTenant]
 })
 export class RouteUpsertTenantComponent {
+  public readonly connector = inject(ConnectorCreateTenant) ;
+
   constructor(
     public readonly routingService: RoutingService,
     private readonly snackService: SnackbarService,
     private readonly pageService: PageUpsertTenantResourceService
   ) {}
-  public createTenant($event: IUpsertTenantModel) {
+
+  public createTenant() {
+    const data$ = this.connector.form.value;
+
     this.pageService
       .createTenant({
-        identifier: $event.identifier,
-        title: $event.title,
+        identifier: data$.identifier as string,
+        title: data$.title as string,
+        password: data$.password as string,
+        isPrivate: data$.isPrivate as boolean,
       })
       .pipe(
         catchError((err) => {

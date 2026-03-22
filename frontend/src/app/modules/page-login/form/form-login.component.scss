@@ -1,0 +1,12 @@
+* {
+  box-sizing: border-box;
+}
+:host {
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+.field {
+  min-width: 450px;
+  width: 100%;
+}

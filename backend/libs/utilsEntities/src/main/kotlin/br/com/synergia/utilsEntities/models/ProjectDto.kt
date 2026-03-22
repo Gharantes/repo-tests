@@ -5,7 +5,9 @@ data class ProjectDto (
     val idTenant: Long,
     val title: String,
     val description: String,
-    val tenant: TenantDto,
+    val tenant: TenantDto?,
+    val bannerUrl: String?,
+    val bannerColor: String,
     var tags: List<TagDto>,
     var events: List<EventDto>
 )

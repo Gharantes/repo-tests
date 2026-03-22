@@ -1,19 +1,20 @@
-<div>
-  Synergia
+<div id="left">
+  <div id="system-title">Synergia</div>
+
+  <div id="route-label-title">{{ routingService.routeLabel() }}</div>
 </div>
 
-<div>
-  {{ routingService.routeLabel() }}
+<div id="right">
+  <button
+    class="usr-btn"
+    [matMenuTriggerFor]="userMenu">
+    <lib-gm-icon [type]="'rounded'" [image]="'account_circle'"></lib-gm-icon>
+  </button>
+  <mat-menu #userMenu="matMenu">
+    <div mat-menu-item>
+      {{ sessionService.getTenantId() }} - {{ sessionService.getTenantLabel() }}
+    </div>
+    <button mat-menu-item (click)="logout()">Logout</button>
+  </mat-menu>
 </div>
 
-<div>
-  {{ sessionService.getTenantId() }} - {{ sessionService.getTenantLabel() }}
-</div>
-<button
-  class="usr-btn"
-  [matMenuTriggerFor]="userMenu">
-  <lib-gm-icon [type]="'rounded'" [image]="'account_circle'"></lib-gm-icon>
-</button>
-<mat-menu #userMenu="matMenu">
-  <button mat-menu-item (click)="logout()">Logout</button>
-</mat-menu>

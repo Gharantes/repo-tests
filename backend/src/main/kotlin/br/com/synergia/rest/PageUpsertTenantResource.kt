@@ -4,11 +4,7 @@ import br.com.synergia.pageUpsertTenant.models.UpsertTenantDto
 import br.com.synergia.pageUpsertTenant.services.PageUpsertTenantService
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/page-upsert-tenant")
@@ -18,8 +14,8 @@ class PageUpsertTenantResource (
     @PostMapping("store")
     fun createTenant(
         @RequestBody params: UpsertTenantDto
-    ): ResponseEntity<String> {
-        return ResponseMessenger.buildResponse {
+    ): ResponseEntity<Void> {
+        return ResponseMessenger.responseWithoutReturn {
             service.createTenant(params)
         }
     }

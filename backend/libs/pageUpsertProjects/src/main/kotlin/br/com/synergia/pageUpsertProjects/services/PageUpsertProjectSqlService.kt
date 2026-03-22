@@ -1,32 +1,29 @@
 package br.com.synergia.pageUpsertProjects.services
 
 import br.com.synergia.pageUpsertProjects.models.UpsertProjectDto
-import br.com.synergia.utilsSql.SqlPath
-import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
-import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import br.com.synergia.utilsEntities.jpa.project.Project
+import br.com.synergia.utilsEntities.jpa.project.ProjectRepository
 import org.springframework.stereotype.Service
-import java.sql.Types
 
 @Service
 class PageUpsertProjectSqlService (
-    private val template: NamedParameterJdbcTemplate
+    private val projectRepository: ProjectRepository
 ) {
     fun createProject(params: UpsertProjectDto) {
-        val sql = SqlPath.PageUpsertProject.INSERT_PROJECT.load()
-        val paramMap = MapSqlParameterSource()
-            .addValue("title", params.title, Types.VARCHAR)
-            .addValue("id_tenant", params.idTenant, Types.BIGINT)
-            .addValue("description", params.title, Types.VARCHAR)
-            .addValue("id_account_owner", params.idAccount, Types.BIGINT)
-        template.update(sql, paramMap)
+        val project = Project(
+            idTenant = params.idTenant,
+            description = params.description,
+            title = params.title,
+            bannerUrl = params.bannerUrl
+        )
+        projectRepository.save(project)
     }
 
     fun updateProject(idProject: Long, params: UpsertProjectDto) {
-        val sql = SqlPath.PageUpsertProject.UPDATE_PROJECT.load()
-        val paramMap = MapSqlParameterSource()
-            .addValue("id_project", idProject, Types.BIGINT)
-            .addValue("title", params.title, Types.VARCHAR)
-            .addValue("description", params.description, Types.VARCHAR)
-        template.update(sql, paramMap)
+        val project = projectRepository.findById(idProject).orElseThrow()
+        project.title = params.title
+        project.description = params.description
+        project.bannerUrl = params.bannerUrl
+        projectRepository.save(project)
     }
 }

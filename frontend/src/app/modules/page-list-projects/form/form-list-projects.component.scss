@@ -1,0 +1,14 @@
+@use '../../../../styles/mixins' as m;
+
+* {
+  @include m.base();
+}
+:host {
+  width: 100%;
+}
+#form {
+  width: 100%;
+}
+.field {
+  width: 100%;
+}

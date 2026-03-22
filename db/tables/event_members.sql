@@ -4,6 +4,3 @@ CREATE TABLE event_members (
     id_account bigint references account not null
 );
 
-
--- uk_event_members_id_event_id_account",
-            -- columnNames = ["id_event", "id_account"]

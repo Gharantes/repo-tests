@@ -13,6 +13,7 @@ import {
   IDoExtendableTableColumnInfo,
 } from '@synergia-frontend/interfaces';
 import { GmIconComponent } from '../google-material-icon/gm-icon.component';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'lib-sig-extendable-table',
@@ -25,6 +26,7 @@ import { GmIconComponent } from '../google-material-icon/gm-icon.component';
     MatMenuModule,
     MatIconModule,
     GmIconComponent,
+    MatCheckbox,
   ],
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
@@ -36,7 +38,7 @@ export class SigExtendableTableComponent<T> implements AfterViewInit {
 
   constructor(private readonly cdr: ChangeDetectorRef) {}
   ngAfterViewInit() {
-    this.displayedColumns.push(...this.columns.map(v => v.def));
+    this.displayedColumns.push(...this.columns.map((v) => v.def));
     if (this.actions.length > 0) {
       this.displayedColumns.push('actions');
     }

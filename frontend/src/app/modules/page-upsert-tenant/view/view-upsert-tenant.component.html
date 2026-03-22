@@ -1,13 +1,20 @@
 <div id="form">
   <mat-form-field [appearance]="'outline'">
     <mat-label>Título</mat-label>
-    <input type="text" matInput [formControl]="form.controls.title"/>
+    <input type="text" matInput [formControl]="connector.form.controls.title"/>
   </mat-form-field>
 
   <mat-form-field [appearance]="'outline'">
     <mat-label>Identifier</mat-label>
-    <input type="text" matInput [formControl]="form.controls.identifier" />
+    <input type="text" matInput [formControl]="connector.form.controls.identifier" />
   </mat-form-field>
+
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>Sesnha do Administrador</mat-label>
+    <input type="password" matInput [formControl]="connector.form.controls.password" />
+  </mat-form-field>
+
+  <mat-checkbox [formControl]="connector.form.controls.isPrivate">Tenant Privado</mat-checkbox>
 
   <div class="btn-line">
     <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>

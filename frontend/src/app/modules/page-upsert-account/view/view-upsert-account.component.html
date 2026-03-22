@@ -1,24 +1,7 @@
-<div id="form-container">
-  <mat-form-field [appearance]="'outline'">
-    <mat-label>Nome</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.firstName"/>
-  </mat-form-field>
+<app-form-upsert-account
+  [connector]="connector"
+></app-form-upsert-account>
 
-  <mat-form-field [appearance]="'outline'">
-    <mat-label>Sobrenome</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.lastName"/>
-  </mat-form-field>
-
-  <mat-form-field [appearance]="'outline'">
-    <mat-label>Username</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.login"/>
-  </mat-form-field>
-
-  <mat-form-field [appearance]="'outline'">
-    <mat-label>Senha</mat-label>
-    <input type="password" matInput [formControl]="connector.form.controls.password" />
-  </mat-form-field>
-</div>
 <div class="btn-line">
   <button mat-raised-button (click)="goToParentRouteEvent.emit()">Voltar</button>
   <button

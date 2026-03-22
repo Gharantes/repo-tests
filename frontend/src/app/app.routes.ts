@@ -13,43 +13,58 @@ import { RouteEventDetailsComponent } from './modules/page-event-details/route-e
 import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
 import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
 import { RouteListPermissionsComponent } from './modules/page-list-permissions/route-list-permissions.component';
+import { LayoutBeforeLoginComponent } from './layout/component-layout-before-login/layout-before-login.component';
+import { RouteNotFoundComponent } from './modules/page-not-found/route-not-found.component';
+import { RouteProjectDetailsComponent } from './modules/page-project-details/route-project-details.component';
+import { RouteUpsertTagComponent } from './modules/page-upsert-tag/route-upsert-tag.component';
 
 
 
 export const appRoutes: Route[] = [
-  { path: '', pathMatch: 'full', redirectTo: '/login' },
+  { path: '', pathMatch: 'full', redirectTo: '/out' },
   {
-    path: 'login',
-    component: RouteLoginComponent
+    path: '',
+    component: LayoutBeforeLoginComponent,
+    children: [
+      {
+        path: 'login',
+        component: RouteLoginComponent
+      },
+      {
+        path: 'create-tenant',
+        component: RouteUpsertTenantComponent
+      },
+    ]
   },
   {
-    path: 'create-tenant',
-    component: RouteUpsertTenantComponent
-  },
-  {
-    path: 't/:id_tenant',
+    path: '',
     canActivate: [HasActiveTenant],
     component: NormalLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
       { path: 'dashboard', component: RouteDashboardComponent },
       // Usuários
-      { path: 'users', component: RouteListAccountsComponent },
-      { path: 'users/new', component: RouteUpsertAccountComponent },
-      { path: 'users/edit/:id', component: RouteUpsertAccountComponent },
+      { path: 'accounts', component: RouteListAccountsComponent },
+      { path: 'create-account', component: RouteUpsertAccountComponent },
+      { path: 'edit-account/:id', component: RouteUpsertAccountComponent },
       // Eventos
       { path: 'events', component: RouteListEventsComponent },
-      { path: 'events/new', component: RouteUpsertEventComponent },
-      { path: 'event/edit/:id', component: RouteUpsertEventComponent },
-      { path: 'event/details/:id_event', component: RouteEventDetailsComponent },
+      { path: 'create-event', component: RouteUpsertEventComponent },
+      { path: 'edit-event/:id', component: RouteUpsertEventComponent },
+      { path: 'event-details/:id', component: RouteEventDetailsComponent },
       // Projetos
       { path: 'projects', component: RouteListProjectsComponent },
-      { path: 'projects/new', component: RouteUpsertProjectComponent },
-      { path: 'project/edit/:id', component: RouteUpsertProjectComponent },
+      { path: 'create-project', component: RouteUpsertProjectComponent },
+      { path: 'edit-project/:id', component: RouteUpsertProjectComponent },
+      { path: 'project-details/:id', component: RouteProjectDetailsComponent },
       // Tags
       { path: 'tags', component: RouteListTagsComponent },
+      { path: 'create-tag', component: RouteUpsertTagComponent },
+      { path: 'edit-tag/:id', component: RouteUpsertTagComponent },
       // Permissões
       { path: 'permissions', component: RouteListPermissionsComponent }
     ]
   },
+  { path: 'out', component: RouteNotFoundComponent },
+  { path: '**', component: RouteNotFoundComponent },
 ];

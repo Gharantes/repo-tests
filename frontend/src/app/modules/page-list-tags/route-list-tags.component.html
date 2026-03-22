@@ -1,5 +1,7 @@
 <app-view-list-tags
   [data$]="data$()"
   [connector]="connector"
-  (lookupTagsEvent)="searchForTags()"
+  (createTagEvent)="createTag()"
+  (deleteTagEvent)="deleteTag($event)"
+  (editTagEvent)="editTag($event)"
 ></app-view-list-tags>

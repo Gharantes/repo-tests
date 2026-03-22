@@ -1,7 +1,6 @@
 <app-view-list-projects
   [data$]="data$()"
+  [connector]="connector"
   (createProjectEvent)="createProject()"
-  (deleteProjectEvent)="deleteEntry($event)"
-  (editProjectEvent)="updateProject($event)"
-  (toProjectPageEvent)="toProjectPage($event)"
+  (openCardEvent)="openCard($event)"
 ></app-view-list-projects>

@@ -2,7 +2,7 @@ package br.com.synergia.pageListTags.services
 
 import br.com.synergia.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.utilsEntities.models.TagDto
-import br.com.synergia.utilsEntities.rowmappers.TagRowMapper
+import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -18,6 +18,6 @@ class PageListTagsSqlService (
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
-        return template.query(sql, paramMap, TagRowMapper())
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
     }
 }

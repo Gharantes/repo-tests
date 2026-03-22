@@ -13,7 +13,7 @@ export interface AccountDto {
     id: number;
     idTenant: number;
     login: string;
-    email: string;
+    email?: string;
     firstName: string;
     lastName: string;
 }

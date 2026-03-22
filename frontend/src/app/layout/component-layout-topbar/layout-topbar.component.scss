@@ -1,38 +1,54 @@
-@mixin col {
-    display: flex;
-    flex-direction: column;
-}
-@mixin row {
-    display: flex;
-    flex-direction: row;
-}
 * {
     box-sizing: border-box;
 }
 :host {
-    @include row();
+    display: flex;
+    flex-direction: row;
+    align-items: center;
     height: 60px;
     width: 100%;
+    column-gap: 60px;
 
-    align-items: center;
+    overflow: hidden;
     justify-content: space-between;
-
+    padding: 10px;
     color: white;
     background: #555;
-    padding: 10px;
-    font-size: 1.4rem;
+}
+#left, #right {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    height: 60px;
+    width: 100%;
+    column-gap: 60px;
+}
+#right {
+    justify-content: flex-end;
+}
+
+#system-title {
+    font-size: 1.6rem;
+    font-weight: 500;
+}
+#route-label-title {
+    font-size: 1.3rem;
 }
 
 
+
 .usr-btn {
-    @include row();
+    display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
-    padding: 2px; 
+    padding: 2px;
     border: none;
     cursor: pointer;
     background: none;
     color: white;
+    height: 40px;
+    width: 40px;
 
     &:hover {
         background: #454545;

@@ -4,11 +4,12 @@ import {
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { PageUpsertAccountResourceService } from '@synergia-frontend/api';
+import { PageUpsertAccountResourceService, EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { ViewUpsertAccountComponent } from './view/view-upsert-account.component';
 import { ConnectorUpsertAccont } from './connector/connector-upsert-accont';
-import { IUpsertAccountToDto } from '@synergia-frontend/mappers';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { AccountDtoToModel, IUpsertAccountToDto } from '@synergia-frontend/mappers';
+import { catchError, EMPTY, map, tap } from 'rxjs';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-route-upsert-account',
@@ -16,14 +17,17 @@ import { catchError, EMPTY, tap } from 'rxjs';
   templateUrl: './route-upsert-account.component.html',
   styleUrl: `./route-upsert-account.component.scss`,
   imports: [ViewUpsertAccountComponent],
+  providers: [ConnectorUpsertAccont]
 })
 export class RouteUpsertAccountComponent {
   public readonly connector = inject(ConnectorUpsertAccont);
 
   private readonly pageService = inject(PageUpsertAccountResourceService);
+  private readonly entityService = inject(EntityGetByIdResourceService)
   private readonly routingService = inject(RoutingService);
   private readonly sessionService = inject(SessionService);
   private readonly snackService = inject(SnackbarService);
+  private readonly activatedRoute = inject(ActivatedRoute);
 
   public idAccount = signal<number | null>(null);
 
@@ -31,8 +35,28 @@ export class RouteUpsertAccountComponent {
     this.routingService.goToListAccounts();
   }
 
-  public getById() {
-    // this.pageService.getCreateUsuarioDtoById(id);
+  constructor() {
+    this.routingService.getParamFromRoute(this.activatedRoute, 'id').then(res => {
+      res ? this.idAccount.set(Number(res)) : undefined;
+
+      this.fillForm()
+    });
+  }
+  public fillForm() {
+    const id = this.idAccount()
+    if (id == null) {
+      return
+    }
+    this.entityService.getAccountById(id).pipe(
+      map(res => AccountDtoToModel(res)),
+      tap(res => {
+        const controls = this.connector.form.controls
+        controls.login.setValue(res.login);
+        controls.firstName.setValue(res.firstName);
+        controls.lastName.setValue(res.lastName);
+        controls.email.setValue(res.email);
+      })
+    ).subscribe();
   }
   public salvar() {
     const idAccount = this.idAccount();

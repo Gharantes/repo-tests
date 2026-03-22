@@ -1,1 +1,0 @@
-DELETE FROM account where id = :id_account

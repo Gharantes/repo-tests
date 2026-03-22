@@ -3,5 +3,5 @@ import { inject } from '@angular/core';
 
 export class ConnectorListTags {
   private readonly fb = inject(NonNullableFormBuilder);
-  public readonly textfieldControl = this.fb.control<string>('');
+  public readonly textFieldControl = this.fb.control<string>('');
 }

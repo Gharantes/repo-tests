@@ -1,1 +1,0 @@
-export type CardGridEntryInteractionType = 'CARD' | 'BANNER' | 'PRIMARY' | 'SECONDARY';

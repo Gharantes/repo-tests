@@ -5,6 +5,11 @@ html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 
 
+.primary-button {
+    background: #4687ff;
+    color: #eeeeee;
+    //$blue2: #3872e2;
+}
 
 .h-full {
     height: 100%;

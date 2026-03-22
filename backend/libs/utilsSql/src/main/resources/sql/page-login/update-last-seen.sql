@@ -1,1 +1,0 @@
-UPDATE account a SET last_seen = now() where id = :id_account;

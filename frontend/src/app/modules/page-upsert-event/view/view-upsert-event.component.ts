@@ -7,6 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { IUpsertEventModel } from '@synergia-frontend/interfaces';
 import { ConnectorUpsertEvent } from '../connector/connector-upsert-event';
+import { FormUpsertEventComponent } from '../form/form-upsert-event.component';
 
 @Component({
   selector: 'app-view-upsert-event',
@@ -20,6 +21,7 @@ import { ConnectorUpsertEvent } from '../connector/connector-upsert-event';
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
+    FormUpsertEventComponent,
   ],
 })
 export class ViewUpsertEventComponent {

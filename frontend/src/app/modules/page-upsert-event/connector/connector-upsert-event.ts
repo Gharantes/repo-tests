@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { IUpsertEventModel } from '@synergia-frontend/interfaces';
+import { IEventModel, IUpsertEventModel } from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
 
 @Injectable()
@@ -9,17 +9,26 @@ export class ConnectorUpsertEvent {
   private readonly sessionService = inject(SessionService);
 
   public readonly form = this.fb.group({
-    idAccount: this.fb.control<number>(this.sessionService.getUserId() as number),
-    idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number),
+    idAccount: this.fb.control<number>(
+      this.sessionService.getUserId() as number
+    ),
+    idTenant: this.fb.control<number>(
+      this.sessionService.getTenantId() as number
+    ),
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
-    urlBanner: this.fb.control<string|null>(null, []),
+    bannerUrl: this.fb.control<string | undefined>(undefined),
     tags: this.fb.control<number[]>([]),
   });
 
   public getFormValue(): IUpsertEventModel | null {
     const v = this.form.value;
-    if (v.title == null || v.description == null || v.idAccount == null || v.idTenant == null) {
+    if (
+      v.title == null ||
+      v.description == null ||
+      v.idAccount == null ||
+      v.idTenant == null
+    ) {
       return null;
     }
     return {
@@ -27,13 +36,13 @@ export class ConnectorUpsertEvent {
       idTenant: v.idTenant,
       description: v.description,
       title: v.title,
-      urlBanner: v.urlBanner ?? null,
+      bannerUrl: v.bannerUrl,
       tags: v.tags ?? [],
     };
   }
-  public populateForm(res: IUpsertEventModel) {
+  public populateForm(res: IEventModel) {
     this.form.controls.title.setValue(res.title);
     this.form.controls.description.setValue(res.description);
-    this.form.controls.urlBanner.setValue(res.urlBanner);
+    this.form.controls.bannerUrl.setValue(res.bannerUrl);
   }
 }

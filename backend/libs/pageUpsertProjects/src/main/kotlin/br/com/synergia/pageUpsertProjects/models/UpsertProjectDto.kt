@@ -5,5 +5,6 @@ data class UpsertProjectDto(
     val idAccount: Long,
     val title: String,
     val description: String,
+    val bannerUrl: String?,
     val tags: List<Long>
 )
