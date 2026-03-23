@@ -1,0 +1,24 @@
+<mat-form-field [appearance]="'outline'">
+  <mat-label>Nome</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.firstName" autocomplete="new-password"/>
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'">
+  <mat-label>Sobrenome</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.lastName" autocomplete="new-password"/>
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'">
+  <mat-label>Username</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.login" autocomplete="new-password"/>
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'">
+  <mat-label>Email</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.email" autocomplete="new-password"/>
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'">
+  <mat-label>Senha</mat-label>
+  <input type="password" matInput [formControl]="connector.form.controls.password" autocomplete="new-password"/>
+</mat-form-field>

@@ -13,25 +13,25 @@ import org.springframework.web.bind.annotation.RestController
 class ActionManageRelationshipsResource (
     private val service: ActionManageRelationshipsService
 ) {
-    @PostMapping("/create-relationship-evento-and-projeto")
-    fun createRelationshipEventoAndProjeto(
-        @RequestParam("id-evento") idEvento: Long,
-        @RequestParam("id-projeto") idProjeto: Long,
+    @PostMapping("/create-relationship-event-and-project")
+    fun createRelationshipEventAndProject(
+        @RequestParam("id-event") idEvent: Long,
+        @RequestParam("id-project") idProject: Long,
     ): ResponseEntity<Void> {
-        return ResponseMessenger.responseWithoutReturn { service.createRelationshipEventoAndProjeto(idEvento, idProjeto) }
+        return ResponseMessenger.responseWithoutReturn { service.createRelationshipEventAndProject(idEvent, idProject) }
     }
-    @PostMapping("/remove-relationship-evento-and-projeto")
-    fun removeRelationshipEventoAndProjeto(
-        @RequestParam("id-evento") idEvento: Long,
-        @RequestParam("id-projeto") idProjeto: Long,
+    @PostMapping("/remove-relationship-event-and-project")
+    fun removeRelationshipEventAndProject(
+        @RequestParam("id-event") idEvent: Long,
+        @RequestParam("id-project") idProject: Long,
     ): ResponseEntity<Void> {
-        return ResponseMessenger.responseWithoutReturn { service.removeRelationshipEventoAndProjeto(idEvento, idProjeto) }
+        return ResponseMessenger.responseWithoutReturn { service.removeRelationshipEventAndProject(idEvent, idProject) }
     }
-    @PostMapping("/create-relationship-tag-and-projeto")
-    fun createRelationshipTagAndProjeto(
+    @PostMapping("/create-relationship-tag-and-project")
+    fun createRelationshipTagAndProject(
         @RequestParam("id-tag") idTag: Long,
-        @RequestParam("id-projeto") idProjeto: Long,
+        @RequestParam("id-project") idProjeto: Long,
     ): ResponseEntity<Void> {
-        return ResponseMessenger.responseWithoutReturn { service.createRelationshipTagAndProjeto(idTag, idProjeto) }
+        return ResponseMessenger.responseWithoutReturn { service.createRelationshipTagAndProject(idTag, idProjeto) }
     }
 }

@@ -1,0 +1,5 @@
+<app-view-upsert-tenant
+  (goToParentPageEvent)="routingService.goToLogin()"
+  (registerEntityEvent)="createTenant()"
+  [connector]="connector"
+></app-view-upsert-tenant>

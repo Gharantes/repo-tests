@@ -1,0 +1,5 @@
+<app-view-login
+  [connector]="connector"
+  (createTenantEvent)="routingService.goToCreateTenant()"
+  (attemptLoginEvent)="attemptLogin()"
+></app-view-login>

@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
-import { Snackbar2Service } from './snackbar2.service';
+import { SnackbarService } from '../snackbar.service';
 
 @Component({
   selector: 'lib-stacked-snackbars',
@@ -28,5 +28,5 @@ import { Snackbar2Service } from './snackbar2.service';
   providers: [],
 })
 export class SnackbarStackComponent {
-  constructor(public readonly snackbarService: Snackbar2Service) {}
+  constructor(public readonly snackbarService: SnackbarService) {}
 }

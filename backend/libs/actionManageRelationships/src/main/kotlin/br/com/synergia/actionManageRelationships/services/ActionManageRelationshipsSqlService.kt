@@ -7,21 +7,21 @@ import org.springframework.stereotype.Service
 class ActionManageRelationshipsSqlService (
     private val template: NamedParameterJdbcTemplate
 ) {
-    fun createRelationshipEventoAndProjeto(
-        idEvento: Long,
-        idProjeto: Long,
+    fun createRelationshipEventAndProject(
+        idEvent: Long,
+        idProject: Long,
     ) {
 
     }
-    fun removeRelationshipEventoAndProjeto(
-        idEvento: Long,
-        idProjeto: Long,
+    fun removeRelationshipEventAndProject(
+        idEvent: Long,
+        idProject: Long,
     ) {
 
     }
-    fun createRelationshipTagAndProjeto(
+    fun createRelationshipTagAndProject(
         idTag: Long,
-        idProjeto: Long,
+        idProject: Long,
     ) {
 
     }

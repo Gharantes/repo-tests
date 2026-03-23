@@ -1,0 +1,37 @@
+<div id="banner">
+  <lib-safe-image
+    [url]="event$().bannerUrl"
+    [altColor]="event$().bannerColor"
+  ></lib-safe-image>
+</div>
+
+<div id="grid">
+  <div id="side-1">
+    <div id="event-title">
+      {{ event$().title }}
+    </div>
+
+    <div class="section">
+      <div class="section-title">Membros:</div>
+      <div class="section-content"></div>
+    </div>
+
+    <div class="section">
+      <div class="section-title">Descrição:</div>
+      <div class="section-content">{{ event$().description }}</div>
+    </div>
+  </div>
+
+  <div id="side-2">
+    <button
+      mat-stroked-button
+      (click)="editEvent()">
+      Editar Evento
+    </button>
+
+    <button mat-stroked-button (click)="registerProject()">
+      Registrar Projeto
+    </button>
+  </div>
+
+</div>

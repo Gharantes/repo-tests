@@ -1,0 +1,6 @@
+<app-view-dashboard
+  [projects$]="projects$()"
+  [events$]="events$()"
+  (eventCardInteractionEvent)="eventCardInteraction($event)"
+  (projectCardInteractionEvent)="projectCardInteraction($event)"
+></app-view-dashboard>

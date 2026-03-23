@@ -1,0 +1,19 @@
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>Tenant</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.tenant" [matAutocomplete]="auto">
+  <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTenant">
+    <mat-option *ngFor="let option of connector.tenantsFiltered$()" [value]="option">
+      {{ option.title }} [{{ option.identifier }}]
+    </mat-option>
+  </mat-autocomplete>
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>Usuário</mat-label>
+  <input matInput type="text" [formControl]="connector.form.controls.user">
+</mat-form-field>
+
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>Senha</mat-label>
+  <input matInput type="password" [formControl]="connector.form.controls.password">
+</mat-form-field>

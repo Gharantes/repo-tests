@@ -1,0 +1,21 @@
+<div id="container">
+  <div id="card">
+    <app-form-login
+      [connector]="connector"
+    ></app-form-login>
+
+    <div id="buttons-container">
+      <button
+        class="login-button"
+        matRipple
+        [disabled]="!connector.form.valid"
+        (click)="attemptLoginEvent.emit()">
+        Login
+      </button>
+    </div>
+  </div>
+
+  <button mat-raised-button id="create-new-tenant-option" (click)="createTenantEvent.emit()">
+    Criar Novo Tenant
+  </button>
+</div>

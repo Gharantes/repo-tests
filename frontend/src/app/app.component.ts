@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { Snackbar2Service } from '@synergia-frontend/services';
+import { SnackbarService } from '@synergia-frontend/services';
 
 @Component({
   selector: 'app-root',
@@ -10,7 +10,7 @@ import { Snackbar2Service } from '@synergia-frontend/services';
   imports: [RouterModule],
 })
 export class AppComponent {
-  constructor(private readonly snackbarService: Snackbar2Service) {
+  constructor(private readonly snackbarService: SnackbarService) {
     this.snackbarService.initializeStackedSnackbarsComponent();
   }
 }

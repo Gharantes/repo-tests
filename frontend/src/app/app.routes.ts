@@ -1,120 +1,70 @@
 import { Route } from '@angular/router';
-import { LoginRouteComponent } from './modules/login/login-route.component';
-import { NormalLayoutComponent } from './layout/normal-layout/normal-layout.component';
-import { ListarUsuariosRouteComponent } from './modules/listar_usuarios/listar-usuarios-route.component';
-import { ListarEventosRouteComponent } from './modules/listar_eventos/listar-eventos-route.component';
-import { ListarProjetosRouteComponent } from './modules/listar_projetos/listar-projetos-route.component';
-import { DashboardRouteComponent } from './modules/dashboard/dashboard-route.component';
-import { RegistrarEventosRouteComponent } from './modules/registrar_eventos/registrar-eventos-route.component';
-import { RegistrarProjetosRouteComponent } from './modules/registrar_projetos/registrar-projetos-route.component';
-import { RegistrarTenantRouteComponent } from './modules/registrar_tenant/registrar-tenant-route.component';
+import { RouteLoginComponent } from './modules/page-login/route-login.component';
+import { NormalLayoutComponent } from './layout/component-normal-layout/normal-layout.component';
+import { RouteListAccountsComponent } from './modules/page-list-accounts/route-list-accounts.component';
+import { RouteListEventsComponent } from './modules/page-list-events/route-list-events.component';
+import { RouteListProjectsComponent } from './modules/page-list-projects/route-list-projects.component';
+import { RouteDashboardComponent } from './modules/page-dashboard/route-dashboard.component';
+import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-upsert-event.component';
+import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
+import { RouteUpsertTenantComponent } from './modules/page-upsert-tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
-import { DetalhesEventosRouteComponent } from './modules/detalhes_evento/detalhes-eventos-route.component';
-import { ListarTagsRouteComponent } from './modules/listar_tags/listar-tags-route.component';
-import { RegistrarUsuariosRouteComponent } from './modules/registrar_usuarios/registrar-usuarios-route.component';
-import { ListarPermissoesRouteComponent } from './modules/listar_permissoes/listar-permissoes-route.component';
-import { PaginaProjetoRouteComponent } from './modules/pagina_projeto/pagina-projeto-route.component';
+import { RouteEventDetailsComponent } from './modules/page-event-details/route-event-details.component';
+import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
+import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
+import { RouteListPermissionsComponent } from './modules/page-list-permissions/route-list-permissions.component';
+import { LayoutBeforeLoginComponent } from './layout/component-layout-before-login/layout-before-login.component';
+import { RouteNotFoundComponent } from './modules/page-not-found/route-not-found.component';
+import { RouteProjectDetailsComponent } from './modules/page-project-details/route-project-details.component';
+import { RouteUpsertTagComponent } from './modules/page-upsert-tag/route-upsert-tag.component';
 
-
-const dashboard = {
-  path: 'dashboard',
-  component: DashboardRouteComponent
-}
-
-const listarEventos = {
-  path: 'events',
-  component: ListarEventosRouteComponent
-}
-const detalhesEvento = {
-  path: 'event/details/:id_event',
-  component: DetalhesEventosRouteComponent
-}
-const registrarEventos = {
-  path: 'events/new',
-  component: RegistrarEventosRouteComponent
-}
-const editarEvento = {
-  path: 'event/edit/:id',
-  component: RegistrarEventosRouteComponent
-}
-
-
-const listarUsuarios = {
-  path: 'users',
-  component: ListarUsuariosRouteComponent
-}
-const registrarUsuarios = {
-  path: 'users/new',
-  component: RegistrarUsuariosRouteComponent
-}
-const editarUsuarios = {
-  path: 'users/edit/:id',
-  component: RegistrarUsuariosRouteComponent
-}
-
-
-const listarProjetosRoute = {
-  path: 'projects',
-  component: ListarProjetosRouteComponent
-}
-const registrarProjetosRoute = {
-  path: 'projects/new',
-  component: RegistrarProjetosRouteComponent
-}
-const editarProjeto = {
-  path: 'project/edit/:id',
-  component: RegistrarProjetosRouteComponent
-}
-const projectPage = {
-  path: 'project-page/:id',
-  component: PaginaProjetoRouteComponent
-}
-
-const listarTagsRoute = {
-  path: 'tags',
-  component: ListarTagsRouteComponent
-}
-const listarPermissoesRoute = {
-  path: 'permissions',
-  component: ListarPermissoesRouteComponent
-}
 
 
 export const appRoutes: Route[] = [
-  { path: '', pathMatch: 'full', redirectTo: '/login' },
+  { path: '', pathMatch: 'full', redirectTo: '/out' },
   {
-    path: 'login',
-    component: LoginRouteComponent
+    path: '',
+    component: LayoutBeforeLoginComponent,
+    children: [
+      {
+        path: 'login',
+        component: RouteLoginComponent
+      },
+      {
+        path: 'create-tenant',
+        component: RouteUpsertTenantComponent
+      },
+    ]
   },
   {
-    path: 'create-tenant',
-    component: RegistrarTenantRouteComponent
-  },
-  {
-    path: 't/:id_tenant',
+    path: '',
     canActivate: [HasActiveTenant],
     component: NormalLayoutComponent,
     children: [
       { path: '', pathMatch: 'full', redirectTo: 'dashboard' },
-      dashboard,
+      { path: 'dashboard', component: RouteDashboardComponent },
       // Usuários
-      listarUsuarios,
-      registrarUsuarios,
-      editarUsuarios,
+      { path: 'accounts', component: RouteListAccountsComponent },
+      { path: 'create-account', component: RouteUpsertAccountComponent },
+      { path: 'edit-account/:id', component: RouteUpsertAccountComponent },
       // Eventos
-      listarEventos,
-      registrarEventos,
-      detalhesEvento,
-      editarEvento,
+      { path: 'events', component: RouteListEventsComponent },
+      { path: 'create-event', component: RouteUpsertEventComponent },
+      { path: 'edit-event/:id', component: RouteUpsertEventComponent },
+      { path: 'event-details/:id', component: RouteEventDetailsComponent },
       // Projetos
-      listarProjetosRoute,
-      registrarProjetosRoute,
-      editarProjeto,
-      projectPage,
+      { path: 'projects', component: RouteListProjectsComponent },
+      { path: 'create-project', component: RouteUpsertProjectComponent },
+      { path: 'edit-project/:id', component: RouteUpsertProjectComponent },
+      { path: 'project-details/:id', component: RouteProjectDetailsComponent },
       // Tags
-      listarTagsRoute,
+      { path: 'tags', component: RouteListTagsComponent },
+      { path: 'create-tag', component: RouteUpsertTagComponent },
+      { path: 'edit-tag/:id', component: RouteUpsertTagComponent },
       // Permissões
-      listarPermissoesRoute
+      { path: 'permissions', component: RouteListPermissionsComponent }
     ]
   },
+  { path: 'out', component: RouteNotFoundComponent },
+  { path: '**', component: RouteNotFoundComponent },
 ];

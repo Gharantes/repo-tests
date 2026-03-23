@@ -1,0 +1,27 @@
+:host {
+  width: 100%;
+  min-height: min-content;
+
+  box-sizing: border-box;
+}
+#table {
+  border: 1px solid #3331;
+}
+.actions-btn-cell {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: inherit;
+
+  .expand-action-menu-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 5px;
+    width: min-content;
+    &:hover {
+      background: #ccc;
+      cursor: pointer;
+    }
+  }
+}

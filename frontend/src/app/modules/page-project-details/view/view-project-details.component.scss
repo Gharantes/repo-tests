@@ -1,0 +1,34 @@
+@mixin col {
+    display: flex; flex-direction: column;
+}
+@mixin row {
+    display: flex; flex-direction: row;
+}
+* {
+    box-sizing: border-box;
+}
+:host {
+    display: flex;
+    flex: 1;
+    height: 100%;
+    overflow: auto;
+}
+
+#projetos-registrados-container {
+    @include col();
+    padding: 10px;
+    row-gap: 10px;
+    .label {
+        font-size: 1.1rem;
+        font-weight: 500;
+    }
+    #projetos-registrados-for-container {
+        @include row();
+        column-gap: 10px;
+        flex-wrap: wrap;
+        .entry {
+            padding: 10px;
+            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.30) 0px 0px 0px 1px;
+        }
+    }
+}

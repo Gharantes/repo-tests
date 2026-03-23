@@ -1,0 +1,7 @@
+<app-view-list-events
+  [data$]="data$()"
+  [connector]="connector"
+  (lookupEvent)="listEvents()"
+  (insertEvent)="goToCreateEvent()"
+  (openCardEvent)="openCard($event)"
+></app-view-list-events>

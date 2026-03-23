@@ -1,0 +1,13 @@
+<app-form-upsert-account
+  [connector]="connector"
+></app-form-upsert-account>
+
+<div class="btn-line">
+  <button mat-raised-button (click)="goToParentRouteEvent.emit()">Voltar</button>
+  <button
+    [disabled]="!connector.form.valid"
+    mat-raised-button
+    (click)="saveEvent.emit()">
+    Salvar
+  </button>
+</div>

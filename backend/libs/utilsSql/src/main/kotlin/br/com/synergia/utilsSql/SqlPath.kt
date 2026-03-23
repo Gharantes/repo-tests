@@ -1,40 +1,38 @@
 package br.com.synergia.utilsSql
 
 object SqlPath {
-    enum class PageUpsertEvento (override val path: String) : ISqlFile {
-        GET_CREATE_EVENTO_DTO_BY_ID("/sql/page-upsert-eventos/get-upsert-evento-by-id.sql"),
-        INSERT_EVENTO("/sql/page-upsert-eventos/insert-evento.sql"),
-        UPDATE_EVENTO("/sql/page-upsert-eventos/update-evento.sql")
+    enum class ActionAttributePermissions (override val path: String) : ISqlFile {
+        ATTRIBUTE_PERMISSIONS("/sql/action-attribute-permissions/attribute-permissions.sql")
     }
-    enum class PageUpsertProjeto (override val path: String) : ISqlFile {
-        GET_CREATE_EVENTO_DTO_BY_ID("/sql/page-upsert-projetos/get-upsert-projeto-by-id.sql"),
-        INSERT_PROJETO("/sql/page-upsert-projetos/insert-projeto.sql"),
-        UPDATE_PROJETO("/sql/page-upsert-projetos/update-projeto.sql")
+    enum class PageUpsertAccount (override val path: String) : ISqlFile {
+        GET_ACCOUNT_BY_LOGIN_OR_EMAIL("/sql/page-upsert-account/get-account-by-login-or-email.sql"),
+        INSERT_ACCOUNT("/sql/page-upsert-account/insert-account.sql"),
+        UPDATE_ACCOUNT("/sql/page-upsert-account/update-account.sql")
     }
-    enum class PageListEventos (override val path: String) : ISqlFile {
-        LISTAR_EVENTOS("/sql/page-list-eventos/listar-eventos.sql"),
-        GET_EVENTO_BY_ID("/sql/page-list-eventos/get-evento-by-id.sql"),
-        DELETE_EVENTO("/sql/page-list-eventos/delete-evento.sql"),
+    enum class PageLogin (override val path: String) : ISqlFile {
+        CHECK_LOGIN_INFORMATION("/sql/page-login/check-login-information.sql"),
+    }
+    enum class PageListEvents (override val path: String) : ISqlFile {
+        LIST_EVENTS("/sql/page-list-events/list-events.sql"),
     }
     enum class PageListTags (override val path: String) : ISqlFile {
-        LISTAR_TAGS("/sql/page-list-tags/listar-tags.sql")
+        LIST_TAGS("/sql/page-list-tags/list-tags.sql")
     }
-    enum class PageListProjetos (override val path: String) : ISqlFile {
-        LISTAR_PROJETOS("/sql/page-list-projetos/listar-projetos.sql"),
-        DELETAR_PROJETO("/sql/page-list-projetos/deletar-projeto.sql")
+    enum class PageListProjects (override val path: String) : ISqlFile {
+        LIST_PROJECTS("/sql/page-list-projects/list-projects.sql"),
     }
-    enum class PageListUsuarios (override val path: String) : ISqlFile {
-        LISTAR_USUARIOS("/sql/page-list-usuarios/listar-usuarios.sql")
+    enum class PageListPermissions (override val path: String) : ISqlFile {
+        LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")
     }
-    enum class PageUpsertTenant (override val path: String) : ISqlFile {
-        INSERT_TENANT("/sql/page-upsert-tenant/insert-tenant.sql"),
-        INSERT_ADMIN_ACCOUNT("/sql/page-upsert-tenant/insert-admin-account.sql")
+    enum class PageListAccounts (override val path: String) : ISqlFile {
+        LIST_ACCOUNTS("/sql/page-list-accounts/list-accounts.sql")
     }
-    enum class PageExtendedEvento (override val path: String) : ISqlFile {
-        LISTAR_PROJETOS_DO_EVENTO("/sql/page-extended-evento/listar-projetos-do-evento.sql"),
-        LISTAR_TAGS_DO_EVENTO("/sql/page-extended-evento/listar-tags-do-evento.sql")
+    enum class PageExtendedEvent (override val path: String) : ISqlFile {
+        LIST_PROJECTS_OF_EVENT("/sql/page-extended-event/list-projects-of-event.sql"),
+        LIST_TAGS_OF_EVENT("/sql/page-extended-event/list-tags-of-event.sql")
     }
-    enum class PageExtendedProjeto (override val path: String) : ISqlFile {
-        GET_EXTENDED_PROJETO_DETAILS_BY_ID("/sql/page-extended-projeto/get-extended-projeto-details-by-id.sql")
+    enum class PageExtendedProject (override val path: String) : ISqlFile {
+        LIST_EVENTS_OF_PROJECT("/sql/page-extended-project/list-events-of-project.sql"),
+        LIST_TAGS_OF_PROJECT("/sql/page-extended-project/list-tags-of-project.sql")
     }
 }

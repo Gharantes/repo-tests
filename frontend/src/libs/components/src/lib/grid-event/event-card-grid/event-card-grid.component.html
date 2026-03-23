@@ -1,0 +1,8 @@
+<div id="card-grid">
+  @for (entry of data$; track entry.id) {
+    <lib-event-card-grid-entry
+      [entry]="entry"
+      (cardInteractionEvent)="cardInteractionEvent.emit($event)"
+    ></lib-event-card-grid-entry>
+  }
+</div>
