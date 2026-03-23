@@ -4,10 +4,16 @@ import {
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { PageUpsertAccountResourceService, EntityGetByIdResourceService } from '@synergia-frontend/api';
+import {
+  EntityAccountResourceService,
+  EntityGetByIdResourceService,
+} from '@synergia-frontend/api';
 import { ViewUpsertAccountComponent } from './view/view-upsert-account.component';
 import { ConnectorUpsertAccont } from './connector/connector-upsert-accont';
-import { AccountDtoToModel, IUpsertAccountToDto } from '@synergia-frontend/mappers';
+import {
+  AccountDtoToModel,
+  IUpsertAccountToDto,
+} from '@synergia-frontend/mappers';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -17,13 +23,13 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './route-upsert-account.component.html',
   styleUrl: `./route-upsert-account.component.scss`,
   imports: [ViewUpsertAccountComponent],
-  providers: [ConnectorUpsertAccont]
+  providers: [ConnectorUpsertAccont],
 })
 export class RouteUpsertAccountComponent {
   public readonly connector = inject(ConnectorUpsertAccont);
 
-  private readonly pageService = inject(PageUpsertAccountResourceService);
-  private readonly entityService = inject(EntityGetByIdResourceService)
+  private readonly entityAccountService = inject(EntityAccountResourceService);
+  private readonly entityGetByIdService = inject(EntityGetByIdResourceService);
   private readonly routingService = inject(RoutingService);
   private readonly sessionService = inject(SessionService);
   private readonly snackService = inject(SnackbarService);
@@ -36,27 +42,32 @@ export class RouteUpsertAccountComponent {
   }
 
   constructor() {
-    this.routingService.getParamFromRoute(this.activatedRoute, 'id').then(res => {
-      res ? this.idAccount.set(Number(res)) : undefined;
+    this.routingService
+      .getParamFromRoute(this.activatedRoute, 'id')
+      .then((res) => {
+        res ? this.idAccount.set(Number(res)) : undefined;
 
-      this.fillForm()
-    });
+        this.fillForm();
+      });
   }
   public fillForm() {
-    const id = this.idAccount()
+    const id = this.idAccount();
     if (id == null) {
-      return
+      return;
     }
-    this.entityService.getAccountById(id).pipe(
-      map(res => AccountDtoToModel(res)),
-      tap(res => {
-        const controls = this.connector.form.controls
-        controls.login.setValue(res.login);
-        controls.firstName.setValue(res.firstName);
-        controls.lastName.setValue(res.lastName);
-        controls.email.setValue(res.email);
-      })
-    ).subscribe();
+    this.entityGetByIdService
+      .getAccountById(id)
+      .pipe(
+        map((res) => AccountDtoToModel(res)),
+        tap((res) => {
+          const controls = this.connector.form.controls;
+          controls.login.setValue(res.login);
+          controls.firstName.setValue(res.firstName);
+          controls.lastName.setValue(res.lastName);
+          controls.email.setValue(res.email);
+        })
+      )
+      .subscribe();
   }
   public salvar() {
     const idAccount = this.idAccount();
@@ -71,7 +82,7 @@ export class RouteUpsertAccountComponent {
     const obj = this.connector.getFormValue();
     if (obj == null) return;
     const params = IUpsertAccountToDto(obj);
-    this.pageService
+    this.entityAccountService
       .createAccount(params)
       .pipe(
         tap(() => {
@@ -90,7 +101,7 @@ export class RouteUpsertAccountComponent {
     if (obj == null) return;
     const params = IUpsertAccountToDto(obj);
 
-    this.pageService
+    this.entityAccountService
       .updateAccount(idAccount, params)
       .pipe(
         tap(() => {

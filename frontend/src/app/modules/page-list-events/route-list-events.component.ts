@@ -1,17 +1,17 @@
 import { Component, inject, signal } from '@angular/core';
-import { PageListEventsResourceService } from '@synergia-frontend/api';
 import { IEventModel } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { catchError, concatMap, debounceTime, EMPTY, map, tap } from 'rxjs';
+import { concatMap, debounceTime, map, tap } from 'rxjs';
 import { EventDtoToModel } from '@synergia-frontend/mappers';
 import { MatDialog } from '@angular/material/dialog';
-import { EventCardDialogComponent } from './dialog-event-card/event-card-dialog.component';
 import { ViewListEventsComponent } from './view/view-list-events.component';
 import { ConnectorListEvents } from './connector/connector-list-events';
+import { DialogCardEventComponent } from '@synergia-frontend/components';
+import { EntityEventResourceService } from '@synergia-frontend/api';
 
 @Component({
   selector: 'app-route-list-events',
@@ -19,7 +19,7 @@ import { ConnectorListEvents } from './connector/connector-list-events';
   templateUrl: './route-list-events.component.html',
   styleUrl: `./route-list-events.component.scss`,
   imports: [ViewListEventsComponent],
-  providers: [ConnectorListEvents]
+  providers: [ConnectorListEvents],
 })
 export class RouteListEventsComponent {
   public readonly data$ = signal<IEventModel[]>([]);
@@ -28,12 +28,12 @@ export class RouteListEventsComponent {
   constructor(
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
-    private readonly pageService: PageListEventsResourceService,
+    private readonly eventEntityService: EntityEventResourceService,
     private readonly snackService: SnackbarService,
     private readonly dialog: MatDialog
   ) {
-    this.watchForm()
-    this.listEvents()
+    this.watchForm();
+    this.listEvents();
   }
 
   public goToCreateEvent() {
@@ -52,35 +52,22 @@ export class RouteListEventsComponent {
   }
   public lookupData$() {
     const idTenant = this.sessionService.getTenantId() as number;
-    const text = this.connector.form.controls.text.value
-    return this.pageService.listEvents(idTenant, text).pipe(
+    const text = this.connector.form.controls.text.value;
+    return this.eventEntityService.listEventsByTenant(idTenant, text).pipe(
       map((res) => res.map((v) => EventDtoToModel(v))),
       tap((res) => this.data$.set(res))
     );
   }
 
-  public goToEventDetails($event: IEventModel) {
-    this.routingService.goToEventDetails($event.id);
-  }
-  public editEvent($event: IEventModel) {
-    this.routingService.goToEditEvent($event.id);
-  }
-  public deleteEntry($event: IEventModel) {
-    this.pageService
-      .deleteEvent($event.id)
-      .pipe(
-        catchError((err) => {
-          this.snackService.catchError(err, 'Erro ao deletar Evento.');
-          return EMPTY;
-        }),
-        concatMap(() => this.lookupData$()),
-        tap(() => this.snackService.showMessage('Evento deletado com sucesso.'))
-      )
-      .subscribe();
-  }
   public openCard($event: IEventModel) {
     this.dialog
-      .open(EventCardDialogComponent, { data: $event })
+      .open(DialogCardEventComponent, {
+        data: $event,
+        maxWidth: '100%',
+        maxHeight: '100%',
+        width: '80%',
+        height: '80%',
+      })
       .afterClosed()
       .pipe()
       .subscribe();

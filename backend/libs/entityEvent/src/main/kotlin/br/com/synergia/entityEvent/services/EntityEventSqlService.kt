@@ -1,0 +1,38 @@
+package br.com.synergia.entityEvent
+
+import br.com.synergia.utilsCommons.extensions.parseStringToWildCard
+import br.com.synergia.utilsEntities.models.EventDto
+import br.com.synergia.utilsEntities.models.ProjectDto
+import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
+import br.com.synergia.utilsSql.SqlPath
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Service
+import java.sql.Types
+
+@Service
+class EntityEventSqlService (
+    private val template: NamedParameterJdbcTemplate
+) {
+    fun listEventsByTenant(
+        idTenant: Long,
+        text: String? = null
+    ): List<EventDto> {
+        val sql = SqlPath.EntityEvent.LIST_EVENTS_BY_TENANT.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_tenant", idTenant, Types.BIGINT)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.eventRowMapper)
+    }
+
+    fun listEventsByAccount(
+        idAccount: Long,
+        text: String?
+    ): List<EventDto> {
+        val sql = SqlPath.EntityEvent.LIST_EVENTS_BY_ACCOUNT.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_account", idAccount, Types.BIGINT)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.eventRowMapper)
+    }
+}

@@ -1,9 +1,10 @@
-import { AfterViewInit, Component, inject, signal } from '@angular/core';
+import { AfterViewInit, Component, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatRippleModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import {
+  EntityTenantResourceService,
   LoginInformationResponseDto,
   PageLoginResourceService,
 } from '@synergia-frontend/api';
@@ -15,7 +16,6 @@ import {
 import { catchError, EMPTY, filter, map, Observable, of, tap } from 'rxjs';
 import { ConnectorLogin } from './connector/connector-login';
 import { TenantDtoToModel } from '@synergia-frontend/mappers';
-import { ITenantModel } from '@synergia-frontend/interfaces';
 import { ViewLoginComponent } from './view/view-login.component';
 
 @Component({
@@ -38,6 +38,7 @@ export class RouteLoginComponent implements AfterViewInit {
   constructor(
     public readonly routingService: RoutingService,
     private readonly pageService: PageLoginResourceService,
+    private readonly tenantService: EntityTenantResourceService,
     private readonly snackService: SnackbarService,
     private readonly sessionService: SessionService
   ) {
@@ -102,8 +103,8 @@ export class RouteLoginComponent implements AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.pageService
-      .listTenants()
+    this.tenantService
+      .listAllTenants()
       .pipe(
         map((res) => res.map((v) => TenantDtoToModel(v))),
         tap((res) => this.connector.tenants$.set(res)),

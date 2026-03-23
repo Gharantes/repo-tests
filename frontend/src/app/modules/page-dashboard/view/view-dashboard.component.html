@@ -1,0 +1,13 @@
+<div><b>Meus Projetos:</b></div>
+
+<lib-project-card-grid
+  [data$]="projects$"
+  (cardInteractionEvent)="projectCardInteractionEvent.emit($event)"
+></lib-project-card-grid>
+
+<div><b>Meus Eventos:</b></div>
+
+<lib-event-card-grid
+  [data$]="events$"
+  (cardInteractionEvent)="eventCardInteractionEvent.emit($event)"
+></lib-event-card-grid>

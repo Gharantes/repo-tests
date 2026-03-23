@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { IEventModel } from '@synergia-frontend/interfaces';
 import { FormListEventsComponent } from '../form/form-list-events.component';
 import { ConnectorListEvents } from '../connector/connector-list-events';
-import { EventCardGridComponent } from '../event-card-grid/event-card-grid.component';
+import { EventCardGridComponent } from '@synergia-frontend/components';
 
 @Component({
   selector: 'app-view-list-events',
@@ -26,8 +26,5 @@ export class ViewListEventsComponent {
 
   @Output() lookupEvent = new EventEmitter<void>();
   @Output() insertEvent = new EventEmitter<void>();
-  @Output() editEvent = new EventEmitter<IEventModel>();
-  @Output() deleteEvent = new EventEmitter<IEventModel>();
   @Output() openCardEvent = new EventEmitter<IEventModel>();
-  @Output() goToDetailsPageEvent = new EventEmitter<IEventModel>();
 }

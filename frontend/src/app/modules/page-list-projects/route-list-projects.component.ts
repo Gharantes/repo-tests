@@ -5,14 +5,14 @@ import {
   SnackbarService,
 } from '@synergia-frontend/services';
 import { catchError, concatMap, debounceTime, map, Observable, of, tap } from 'rxjs';
-import { PageListProjectsResourceService } from '@synergia-frontend/api';
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { ViewListProjectsComponent } from './view/view-list-projects.component';
 import { ConnectorListProjects } from './connector/connector-list-projects';
 import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { MatDialog } from '@angular/material/dialog';
-import { ProjectCardDialogComponent } from './dialog-project-card/project-card-dialog.component';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { EntityProjectResourceService } from '@synergia-frontend/api';
+import { DialogCardProjectComponent } from '@synergia-frontend/components';
 
 @Component({
   selector: 'app-page-list-projects-route',
@@ -27,7 +27,7 @@ export class RouteListProjectsComponent {
   public readonly connector = inject(ConnectorListProjects);
 
   constructor(
-    private readonly listProjectsService: PageListProjectsResourceService,
+    private readonly entityProjectService: EntityProjectResourceService,
     private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
@@ -54,7 +54,7 @@ export class RouteListProjectsComponent {
       this.data$.set([]);
       return of([]);
     }
-    return this.listProjectsService.listProjects(idTenant, text).pipe(
+    return this.entityProjectService.listProjectsByTenant(idTenant, text).pipe(
       catchError((err) => {
         this.snackService.catchError(err);
         return of([]);
@@ -68,6 +68,12 @@ export class RouteListProjectsComponent {
     this.routingService.goToCreateProject();
   }
   openCard($event: IProjectModel) {
-    this.dialog.open(ProjectCardDialogComponent, { data: $event });
+    this.dialog.open(DialogCardProjectComponent, {
+      data: $event,
+      maxWidth: '100%',
+      maxHeight: '100%',
+      width: '80%',
+      height: '80%'
+    });
   }
 }

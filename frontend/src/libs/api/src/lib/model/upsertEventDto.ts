@@ -10,8 +10,8 @@
 
 
 export interface UpsertEventDto { 
-    idAccount: number;
     idTenant: number;
+    idAccount: number;
     title: string;
     description: string;
     bannerUrl?: string;

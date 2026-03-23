@@ -4,8 +4,8 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { ConnectorListProjects } from '../connector/connector-list-projects';
-import { ProjectCardGridComponent } from '../project-card-grid/project-card-grid.component';
 import { FormListProjectsComponent } from '../form/form-list-projects.component';
+import { ProjectCardGridComponent } from '@synergia-frontend/components';
 
 @Component({
   selector: 'app-view-list-projects',
@@ -18,6 +18,7 @@ import { FormListProjectsComponent } from '../form/form-list-projects.component'
     MatButtonModule,
     ProjectCardGridComponent,
     FormListProjectsComponent,
+    ProjectCardGridComponent,
   ],
 })
 export class ViewListProjectsComponent {

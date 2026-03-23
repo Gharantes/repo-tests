@@ -10,7 +10,7 @@ import { ViewUpsertTagComponent } from './view/view-upsert-tag.component';
 import { ConnectorUpsertTag } from './connector/connector-upsert-tag';
 import { RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { ActivatedRoute } from '@angular/router';
-import { EntityGetByIdResourceService, PageUpsertTagResourceService } from '@synergia-frontend/api';
+import { EntityGetByIdResourceService, EntityTagResourceService } from '@synergia-frontend/api';
 import { catchError, EMPTY, tap } from 'rxjs';
 
 @Component({
@@ -36,8 +36,8 @@ export class RouteUpsertTagComponent {
   public readonly routingService = inject(RoutingService);
   public readonly activatedRoute = inject(ActivatedRoute);
   public readonly snackbarService = inject(SnackbarService);
-  public readonly entityService = inject(EntityGetByIdResourceService);
-  public readonly service = inject(PageUpsertTagResourceService);
+  public readonly entityGetByIdService = inject(EntityGetByIdResourceService);
+  public readonly entityTagService = inject(EntityTagResourceService);
 
   public readonly idTag = signal<number | null>(null);
 
@@ -59,7 +59,7 @@ export class RouteUpsertTagComponent {
   }
   private insert() {
     const obj = this.connector.getFormValue();
-    this.service
+    this.entityTagService
       .createTag(obj)
       .pipe(
         tap(() => {
@@ -75,7 +75,7 @@ export class RouteUpsertTagComponent {
   }
   private update(idTag: number) {
     const obj = this.connector.getFormValue();
-    this.service
+    this.entityTagService
       .updateTag(idTag, obj)
       .pipe(
         tap(() => {
@@ -95,7 +95,7 @@ export class RouteUpsertTagComponent {
   public fillForm() {
     const id = this.idTag();
     if (id == null) return;
-    this.entityService.getTagById(id).pipe(
+    this.entityGetByIdService.getTagById(id).pipe(
       tap(res => {
         this.connector.setFormValue(res)
       }),

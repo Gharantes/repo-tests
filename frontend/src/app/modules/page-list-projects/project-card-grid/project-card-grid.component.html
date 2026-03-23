@@ -1,8 +1,0 @@
-<div id="card-grid">
-  @for (entry of data$; track entry.id) {
-    <app-project-card-grid-entry
-      [entry]="entry"
-      (cardInteractionEvent)="cardInteractionEvent.emit($event)"
-    ></app-project-card-grid-entry>
-  }
-</div>

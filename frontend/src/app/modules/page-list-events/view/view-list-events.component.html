@@ -5,10 +5,10 @@
 </div>
 
 <div id="page">
-  <app-event-card-grid
+  <lib-event-card-grid
     [data$]="data$"
     (cardInteractionEvent)="openCardEvent.emit($event)"
-  ></app-event-card-grid>
+  ></lib-event-card-grid>
 </div>
 
 <div id="btn-line">

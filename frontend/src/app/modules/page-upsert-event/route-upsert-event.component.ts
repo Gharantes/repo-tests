@@ -1,5 +1,8 @@
 import { Component, inject, signal } from '@angular/core';
-import { EntityGetByIdResourceService, PageUpsertEventResourceService } from '@synergia-frontend/api';
+import {
+  EntityEventResourceService,
+  EntityGetByIdResourceService,
+} from '@synergia-frontend/api';
 import { ConnectorUpsertEvent } from './connector/connector-upsert-event';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
@@ -17,22 +20,21 @@ import { EventDtoToModel } from '@synergia-frontend/mappers';
   templateUrl: './route-upsert-event.component.html',
   styleUrl: `./route-upsert-event.component.scss`,
   imports: [ViewUpsertEventComponent],
-  providers: [ConnectorUpsertEvent]
+  providers: [ConnectorUpsertEvent],
 })
 export class RouteUpsertEventComponent {
   public readonly connector = inject(ConnectorUpsertEvent);
   public readonly idEvent = signal<number | null>(null);
-
 
   constructor(
     private readonly routingService: RoutingService,
     private readonly sessionService: SessionService,
     private readonly snackbarService: SnackbarService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly pageService: PageUpsertEventResourceService,
-    private readonly entityService: EntityGetByIdResourceService,
+    private readonly entityEventService: EntityEventResourceService,
+    private readonly entityService: EntityGetByIdResourceService
   ) {
-   this.getIdFromRoute()
+    this.getIdFromRoute();
   }
 
   private getIdFromRoute() {
@@ -58,7 +60,7 @@ export class RouteUpsertEventComponent {
   public insert() {
     const obj = this.connector.getFormValue();
     if (obj == null) return;
-    this.pageService
+    this.entityEventService
       .createEvent(obj)
       .pipe(
         tap(() => {
@@ -75,7 +77,7 @@ export class RouteUpsertEventComponent {
   public update(idEvent: number) {
     const obj = this.connector.getFormValue();
     if (obj == null) return;
-    this.pageService
+    this.entityEventService
       .updateEvent(idEvent, obj)
       .pipe(
         tap(() => {
@@ -90,11 +92,14 @@ export class RouteUpsertEventComponent {
       .subscribe();
   }
   public getById() {
-    const id = this.idEvent()
+    const id = this.idEvent();
     if (id == null) return;
-    this.entityService.getEventById(id).pipe(
-      map(res => EventDtoToModel(res)),
-      tap(res => this.connector.populateForm(res))
-    ).subscribe()
+    this.entityService
+      .getEventById(id)
+      .pipe(
+        map((res) => EventDtoToModel(res)),
+        tap((res) => this.connector.populateForm(res))
+      )
+      .subscribe();
   }
 }

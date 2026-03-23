@@ -1,16 +1,6 @@
-<div>
-    <b>Meus Projetos:</b>
-</div>
-@for (projeto of projects$(); track $index) {
-    <div matRipple (click)="{}">
-      {{ projeto.title }} - {{ projeto.description }}
-    </div>
-}
-<div>
-    <b>Meus Eventos:</b>
-</div>
-@for (evento of events$(); track $index) {
-    <div matRipple (click)="{}">
-      {{ evento.title }} - {{ evento.description }}
-    </div>
-}
+<app-view-dashboard
+  [projects$]="projects$()"
+  [events$]="events$()"
+  (eventCardInteractionEvent)="eventCardInteraction($event)"
+  (projectCardInteractionEvent)="projectCardInteraction($event)"
+></app-view-dashboard>

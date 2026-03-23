@@ -6,7 +6,10 @@ import {
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { AccountDto, PageListAccountsResourceService } from '@synergia-frontend/api';
+import {
+  EntityAccountResourceService,
+  EntityDeleteByIdResourceService,
+} from '@synergia-frontend/api';
 import { catchError, concatMap, EMPTY, map, Observable, of, tap } from 'rxjs';
 import { ConnectorListAccounts } from './connector/connector-list-accounts';
 import { AccountDtoToModel } from '@synergia-frontend/mappers';
@@ -17,7 +20,7 @@ import { AccountDtoToModel } from '@synergia-frontend/mappers';
   templateUrl: './route-list-accounts.component.html',
   styleUrl: `./route-list-accounts.component.scss`,
   imports: [ViewListAccountsComponent],
-  providers: [ConnectorListAccounts]
+  providers: [ConnectorListAccounts],
 })
 export class RouteListAccountsComponent {
   public readonly data$ = signal<IAccountModel[]>([]);
@@ -27,7 +30,8 @@ export class RouteListAccountsComponent {
     private readonly sessionService: SessionService,
     private readonly snackService: SnackbarService,
     private readonly routingService: RoutingService,
-    private readonly pageService: PageListAccountsResourceService
+    private readonly entityAccountService: EntityAccountResourceService,
+    private readonly entityDeleteByIdService: EntityDeleteByIdResourceService
   ) {
     this.getListAccounts().subscribe();
   }
@@ -38,18 +42,20 @@ export class RouteListAccountsComponent {
       this.data$.set([]);
       return of([]);
     }
-    return this.pageService.listAccounts(idTenant, undefined).pipe(
-      catchError((err) => {
-        this.snackService.catchError(err, 'Erro ao trazer usuários.');
-        return of([]);
-      }),
-      map((res) => res.map(v => AccountDtoToModel(v))),
-      tap((res) => this.data$.set(res))
-    );
+    return this.entityAccountService
+      .listAccountsByTenant(idTenant, undefined)
+      .pipe(
+        catchError((err) => {
+          this.snackService.catchError(err, 'Erro ao trazer usuários.');
+          return of([]);
+        }),
+        map((res) => res.map((v) => AccountDtoToModel(v))),
+        tap((res) => this.data$.set(res))
+      );
   }
 
   public deleteAccount($event: IAccountModel) {
-    this.pageService
+    this.entityDeleteByIdService
       .deleteAccount($event.id)
       .pipe(
         catchError((err) => {

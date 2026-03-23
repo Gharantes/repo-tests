@@ -1,5 +1,5 @@
 import { Component, DestroyRef, inject, signal } from '@angular/core';
-import { EntityDeleteByIdResourceService, PageListTagsResourceService } from '@synergia-frontend/api';
+import { EntityDeleteByIdResourceService, EntityTagResourceService } from '@synergia-frontend/api';
 import { RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, debounceTime, EMPTY, map, tap } from 'rxjs';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -22,7 +22,7 @@ export class RouteListTagsComponent {
   public readonly connector = inject(ConnectorListTags);
 
   constructor(
-    private readonly pageService: PageListTagsResourceService,
+    private readonly entityTagService: EntityTagResourceService,
     private readonly deleteEntityService: EntityDeleteByIdResourceService,
     private readonly sessionService: SessionService,
     private readonly snackbarService: SnackbarService,
@@ -53,8 +53,8 @@ export class RouteListTagsComponent {
     const idTenant = this.sessionService.getTenantId() as number;
     const text = this.connector.textFieldControl.value;
 
-    this.pageService
-      .listTags(idTenant, text)
+    this.entityTagService
+      .listTagsByTenant(idTenant, text)
       .pipe(
         map((res) => res.map(v => TagDtoToModel(v))),
         tap((res) => this.data$.set(res))

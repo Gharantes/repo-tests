@@ -1,5 +1,9 @@
 import { Component, inject, signal } from '@angular/core';
-import { RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
+import {
+  RoutingService,
+  SessionService,
+  SnackbarService,
+} from '@synergia-frontend/services';
 import { CommonModule } from '@angular/common';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -10,11 +14,10 @@ import { MatSelectModule } from '@angular/material/select';
 import { ViewUpsertProjectComponent } from './view/view-upsert-project.component';
 import { ConnectorUpsertProject } from './connector/connector-upsert-project';
 import {
-  EntityGetByIdResourceService,
-  PageUpsertProjectResourceService,
+  EntityGetByIdResourceService, EntityProjectResourceService,
   UpsertProjectDto
 } from '@synergia-frontend/api';
-import { EventDtoToModel, IUpsertProjectToDto, ProjectDtoToModel } from '@synergia-frontend/mappers';
+import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { map, tap } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
 
@@ -44,11 +47,11 @@ export class RouteUpsertProjectComponent {
     private readonly sessionService: SessionService,
     private readonly routingService: RoutingService,
     private readonly snackbarService: SnackbarService,
-    private readonly service: PageUpsertProjectResourceService,
+    private readonly entityProjectService: EntityProjectResourceService,
     private readonly activatedRoute: ActivatedRoute,
-    private readonly entityService: EntityGetByIdResourceService,
+    private readonly entityService: EntityGetByIdResourceService
   ) {
-    this.getIdFromRoute()
+    this.getIdFromRoute();
   }
   private getIdFromRoute() {
     this.routingService
@@ -62,39 +65,48 @@ export class RouteUpsertProjectComponent {
     this.routingService.goToListProjects();
   }
   private getById() {
-    const idProject = this.idProject()
+    const idProject = this.idProject();
     if (idProject == null) return;
-    this.entityService.getProjectById(idProject).pipe(
-      map(res => ProjectDtoToModel(res)),
-      tap(res => this.connector.populateForm(res))
-    ).subscribe()
+    this.entityService
+      .getProjectById(idProject)
+      .pipe(
+        map((res) => ProjectDtoToModel(res)),
+        tap((res) => this.connector.populateForm(res))
+      )
+      .subscribe();
   }
 
   public save() {
-    const id = this.idProject()
-    const params = this.connector.getFormValue()
-    if (params == null) return
+    const id = this.idProject();
+    const params = this.connector.getFormValue();
+    if (params == null) return;
 
     if (id) {
-      this.update(id, params)
+      this.update(id, params);
     } else {
-      this.insert(params)
+      this.insert(params);
     }
   }
   private insert(params: UpsertProjectDto) {
-    this.service.createProject(params).pipe(
-      tap(() => {
-        this.snackbarService.showMessage("Projeto criado com sucesso.");
-        this.goToLastPage()
-      })
-    ).subscribe()
+    this.entityProjectService
+      .createProject(params)
+      .pipe(
+        tap(() => {
+          this.snackbarService.showMessage('Projeto criado com sucesso.');
+          this.goToLastPage();
+        })
+      )
+      .subscribe();
   }
   private update(idProject: number, params: UpsertProjectDto) {
-    this.service.updateProject(idProject, params).pipe(
-      tap(() => {
-        this.snackbarService.showMessage("Projeto atualizado com sucesso.");
-        this.goToLastPage()
-      })
-    ).subscribe()
+    this.entityProjectService
+      .updateProject(idProject, params)
+      .pipe(
+        tap(() => {
+          this.snackbarService.showMessage('Projeto atualizado com sucesso.');
+          this.goToLastPage();
+        })
+      )
+      .subscribe();
   }
 }
