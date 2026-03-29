@@ -12,14 +12,16 @@ object SqlPath {
     enum class PageLogin (override val path: String) : ISqlFile {
         CHECK_LOGIN_INFORMATION("/sql/page-login/check-login-information.sql"),
     }
-    enum class PageListEvents (override val path: String) : ISqlFile {
-        LIST_EVENTS("/sql/page-list-events/list-events.sql"),
-    }
     enum class PageListTags (override val path: String) : ISqlFile {
         LIST_TAGS("/sql/page-list-tags/list-tags.sql")
     }
-    enum class PageListProjects (override val path: String) : ISqlFile {
-        LIST_PROJECTS("/sql/page-list-projects/list-projects.sql"),
+    enum class EntityEvent (override val path: String) : ISqlFile {
+        LIST_EVENTS_BY_TENANT("/sql/entity-event/list-events-by-tenant.sql"),
+        LIST_EVENTS_BY_ACCOUNT("/sql/entity-event/list-events-by-account.sql"),
+    }
+    enum class EntityProject (override val path: String) : ISqlFile {
+        LIST_PROJECTS_BY_TENANT("/sql/entity-project/list-projects-by-tenant.sql"),
+        LIST_PROJECTS_BY_ACCOUNT("/sql/entity-project/list-projects-by-account.sql"),
     }
     enum class PageListPermissions (override val path: String) : ISqlFile {
         LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")

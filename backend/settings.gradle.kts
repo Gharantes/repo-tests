@@ -9,21 +9,18 @@ pluginManagement {
 rootProject.name = "synergia"
 include("libs")
 
+include("libs:pageLogin")
+
 include("libs:actionAttributePermissions")
 include("libs:actionManageRelationships")
-include("libs:pageExtendedEvent")
-include("libs:pageExtendedProject")
-include("libs:pageListEvents")
-include("libs:pageListPermissions")
-include("libs:pageListProjects")
-include("libs:pageListTags")
-include("libs:pageListAccounts")
-include("libs:pageLogin")
-include("libs:pageUpsertEvents")
-include("libs:pageUpsertProjects")
-include("libs:pageUpsertTenant")
-include("libs:pageUpsertAccount")
+
 include("libs:utilsCommons")
 include("libs:utilsSql")
 include("libs:utilsEntities")
-include("libs:pageUpsertTag")
+
+include("libs:entityProject")
+include("libs:entityTenant")
+include("libs:entityEvent")
+include("libs:entityAccount")
+include("libs:entityTag")
+include("libs:entityPermission")

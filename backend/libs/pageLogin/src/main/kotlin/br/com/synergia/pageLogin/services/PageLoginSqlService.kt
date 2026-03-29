@@ -17,12 +17,9 @@ import java.time.LocalDateTime
 @Service
 class PageLoginSqlService (
     private val template: NamedParameterJdbcTemplate,
-    private val tenantRepository: TenantRepository,
     private val accountRepository: AccountRepository
 ) {
-    fun listTenants(): List<TenantDto> {
-        return tenantRepository.findAll().map { it.toDto() }
-    }
+
     fun checkLoginInformation(
         params: LoginInformationInputDto
     ): LoginInformationResponseDto? {

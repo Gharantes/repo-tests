@@ -1,8 +1,12 @@
-package br.com.synergia.entityEvent
+package br.com.synergia.entityEvent.services
 
+import br.com.synergia.entityEvent.models.UpsertEventDto
 import br.com.synergia.utilsCommons.extensions.parseStringToWildCard
+import br.com.synergia.utilsEntities.jpa.event.Event
+import br.com.synergia.utilsEntities.jpa.event.EventRepository
+import br.com.synergia.utilsEntities.jpa.eventAccountRelationship.EventAccountRelationship
+import br.com.synergia.utilsEntities.jpa.eventAccountRelationship.EventAccountRelationshipRepository
 import br.com.synergia.utilsEntities.models.EventDto
-import br.com.synergia.utilsEntities.models.ProjectDto
 import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
@@ -12,7 +16,9 @@ import java.sql.Types
 
 @Service
 class EntityEventSqlService (
-    private val template: NamedParameterJdbcTemplate
+    private val template: NamedParameterJdbcTemplate,
+    private val eventRepository: EventRepository,
+    private val eventAccountRelationshipRepository: EventAccountRelationshipRepository
 ) {
     fun listEventsByTenant(
         idTenant: Long,
@@ -34,5 +40,40 @@ class EntityEventSqlService (
             .addValue("id_account", idAccount, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.eventRowMapper)
+    }
+
+    fun listEventsByProject(
+        idProject: Long,
+        text: String? = null
+    ): List<EventDto> {
+        return emptyList()
+    }
+
+    fun createEvent(params: UpsertEventDto): Long {
+        val event = Event(
+            idTenant = params.idTenant,
+            title = params.title,
+            description = params.description,
+            bannerUrl = params.bannerUrl
+        )
+        return eventRepository.save(event).id!!
+    }
+
+    fun createEventAccountRelationship(idAccount: Long, idEvent: Long) {
+        val eventAccountRelationship = EventAccountRelationship(
+            idAccount = idAccount,
+            idEvent = idEvent,
+            membershipLabel = "Organizador"
+        )
+        eventAccountRelationshipRepository.save(eventAccountRelationship)
+    }
+
+    fun updateEvent(idEvent: Long, params: UpsertEventDto) {
+        eventRepository.findById(idEvent).ifPresent { event ->
+            event.title = params.title
+            event.description = params.description
+            event.bannerUrl = params.bannerUrl
+            eventRepository.save(event)
+        }
     }
 }

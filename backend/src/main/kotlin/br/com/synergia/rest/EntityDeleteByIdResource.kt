@@ -14,6 +14,7 @@ import br.com.synergia.utilsEntities.models.AccountDto
 import br.com.synergia.utilsEntities.models.EventDto
 import br.com.synergia.utilsEntities.models.ProjectDto
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.DeleteMapping
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
@@ -23,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController
 @RequestMapping("/api/entity-delete-by-id")
 class EntityDeleteByIdResource (
     private val tagRepository: TagRepository,
+    private val accountRepository: AccountRepository
 ) {
     @GetMapping("delete-tag-by-id/{id-tag}")
     fun deleteTagById(
@@ -30,6 +32,14 @@ class EntityDeleteByIdResource (
     ): ResponseEntity<Void> {
         return ResponseMessenger.responseWithoutReturn {
             tagRepository.deleteById(idTag)
+        }
+    }
+    @DeleteMapping("/delete-account/{id-account}")
+    fun deleteAccount(
+        @PathVariable("id-account") idAccount: Long
+    ): ResponseEntity<Void> {
+        return ResponseMessenger.responseWithoutReturn {
+            accountRepository.deleteById(idAccount)
         }
     }
 }

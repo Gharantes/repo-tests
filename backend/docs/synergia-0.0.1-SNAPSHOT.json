@@ -11,291 +11,6 @@
     }
   ],
   "paths": {
-    "/api/upsert-event/update/{id-event}": {
-      "post": {
-        "tags": [
-          "page-upsert-event-resource"
-        ],
-        "operationId": "updateEvent",
-        "parameters": [
-          {
-            "name": "id-event",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertEventDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/upsert-event/store": {
-      "post": {
-        "tags": [
-          "page-upsert-event-resource"
-        ],
-        "operationId": "createEvent",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertEventDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-tenant/update/{id-tenant}": {
-      "post": {
-        "tags": [
-          "page-upsert-tenant-resource"
-        ],
-        "operationId": "updateTenant",
-        "parameters": [
-          {
-            "name": "id-tenant",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertTenantDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-tenant/store": {
-      "post": {
-        "tags": [
-          "page-upsert-tenant-resource"
-        ],
-        "operationId": "createTenant",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertTenantDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-tag/update-tag/{id-tag}": {
-      "post": {
-        "tags": [
-          "page-upsert-tag-resource"
-        ],
-        "operationId": "updateTag",
-        "parameters": [
-          {
-            "name": "id-tag",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertTagDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-tag/create-tag": {
-      "post": {
-        "tags": [
-          "page-upsert-tag-resource"
-        ],
-        "operationId": "createTag",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertTagDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-project/update/{id-project}": {
-      "post": {
-        "tags": [
-          "page-upsert-project-resource"
-        ],
-        "operationId": "updateProject",
-        "parameters": [
-          {
-            "name": "id-project",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertProjectDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-project/store": {
-      "post": {
-        "tags": [
-          "page-upsert-project-resource"
-        ],
-        "operationId": "createProject",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertProjectDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-account/update/{id-account}": {
-      "post": {
-        "tags": [
-          "page-upsert-account-resource"
-        ],
-        "operationId": "updateAccount",
-        "parameters": [
-          {
-            "name": "id-account",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertAccountDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-upsert-account/store": {
-      "post": {
-        "tags": [
-          "page-upsert-account-resource"
-        ],
-        "operationId": "createAccount",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/UpsertAccountDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/page-login/check-login-information": {
       "post": {
         "tags": [
@@ -326,12 +41,136 @@
         }
       }
     },
-    "/api/page-list-tags/list-tags": {
+    "/api/entity-tenant/update/{id-tenant}": {
       "post": {
         "tags": [
-          "page-list-tags-resource"
+          "entity-tenant-resource"
         ],
-        "operationId": "listTags",
+        "operationId": "updateTenant",
+        "parameters": [
+          {
+            "name": "id-tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertTenantDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-tenant/store": {
+      "post": {
+        "tags": [
+          "entity-tenant-resource"
+        ],
+        "operationId": "createTenant",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertTenantDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-tenant/list-all-tenants": {
+      "post": {
+        "tags": [
+          "entity-tenant-resource"
+        ],
+        "operationId": "listAllTenants",
+        "parameters": [
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TenantDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-tag/update-tag/{id-tag}": {
+      "post": {
+        "tags": [
+          "entity-tag-resource"
+        ],
+        "operationId": "updateTag",
+        "parameters": [
+          {
+            "name": "id-tag",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertTagDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-tag/list-tags-by-tenant": {
+      "post": {
+        "tags": [
+          "entity-tag-resource"
+        ],
+        "operationId": "listTagsByTenant",
         "parameters": [
           {
             "name": "id-tenant",
@@ -368,12 +207,176 @@
         }
       }
     },
-    "/api/page-list-projects/list-projects": {
+    "/api/entity-tag/list-tags-by-event": {
       "post": {
         "tags": [
-          "page-list-projects-resource"
+          "entity-tag-resource"
         ],
-        "operationId": "listProjects",
+        "operationId": "listTagsByEvent",
+        "parameters": [
+          {
+            "name": "id-event",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/TagDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-tag/create-tag": {
+      "post": {
+        "tags": [
+          "entity-tag-resource"
+        ],
+        "operationId": "createTag",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertTagDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-project/update/{id-project}": {
+      "post": {
+        "tags": [
+          "entity-project-resource"
+        ],
+        "operationId": "updateProject",
+        "parameters": [
+          {
+            "name": "id-project",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertProjectDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-project/store": {
+      "post": {
+        "tags": [
+          "entity-project-resource"
+        ],
+        "operationId": "createProject",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertProjectDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-project/list-projects-of-event": {
+      "post": {
+        "tags": [
+          "entity-project-resource"
+        ],
+        "operationId": "listProjectsByEvent",
+        "parameters": [
+          {
+            "name": "id-event",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-project/list-projects-by-tenant": {
+      "post": {
+        "tags": [
+          "entity-project-resource"
+        ],
+        "operationId": "listProjectsByTenant",
         "parameters": [
           {
             "name": "id-tenant",
@@ -410,10 +413,52 @@
         }
       }
     },
-    "/api/page-list-permissions/list-permissions": {
+    "/api/entity-project/list-projects-by-account": {
       "post": {
         "tags": [
-          "page-list-permissions-resource"
+          "entity-project-resource"
+        ],
+        "operationId": "listProjectsByAccount",
+        "parameters": [
+          {
+            "name": "id-account",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/ProjectDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-permission/list-permissions": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
         ],
         "operationId": "listPermissions",
         "parameters": [
@@ -443,12 +488,69 @@
         }
       }
     },
-    "/api/page-list-events/list-events": {
+    "/api/entity-event/update/{id-event}": {
       "post": {
         "tags": [
-          "page-list-events-resource"
+          "entity-event-resource"
         ],
-        "operationId": "listEvents",
+        "operationId": "updateEvent",
+        "parameters": [
+          {
+            "name": "id-event",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertEventDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-event/store": {
+      "post": {
+        "tags": [
+          "entity-event-resource"
+        ],
+        "operationId": "createEvent",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertEventDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-event/list-events-by-tenant": {
+      "post": {
+        "tags": [
+          "entity-event-resource"
+        ],
+        "operationId": "listEventsByTenant",
         "parameters": [
           {
             "name": "id-tenant",
@@ -485,20 +587,28 @@
         }
       }
     },
-    "/api/page-extended-project/list-events-of-project/{id-project}": {
+    "/api/entity-event/list-events-by-project": {
       "post": {
         "tags": [
-          "page-extended-project-resource"
+          "entity-event-resource"
         ],
-        "operationId": "listEventsOfProject",
+        "operationId": "listEventsByProject",
         "parameters": [
           {
             "name": "id-project",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -519,20 +629,28 @@
         }
       }
     },
-    "/api/page-extended-event/list-tags-of-event/{id-event}": {
+    "/api/entity-event/list-events-by-account": {
       "post": {
         "tags": [
-          "page-extended-event-resource"
+          "entity-event-resource"
         ],
-        "operationId": "listTagsOfEvent",
+        "operationId": "listEventsByAccount",
         "parameters": [
           {
-            "name": "id-event",
-            "in": "path",
+            "name": "id-account",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -544,7 +662,7 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/TagDto"
+                    "$ref": "#/components/schemas/EventDto"
                   }
                 }
               }
@@ -553,20 +671,85 @@
         }
       }
     },
-    "/api/page-extended-event/list-projects-of-event/{id-event}": {
+    "/api/entity-account/update/{id-account}": {
       "post": {
         "tags": [
-          "page-extended-event-resource"
+          "entity-account-resource"
         ],
-        "operationId": "listProjectsOfEvent",
+        "operationId": "updateAccount",
         "parameters": [
           {
-            "name": "id-event",
+            "name": "id-account",
             "in": "path",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertAccountDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-account/store": {
+      "post": {
+        "tags": [
+          "entity-account-resource"
+        ],
+        "operationId": "createAccount",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertAccountDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-account/list-accounts-by-tenant": {
+      "post": {
+        "tags": [
+          "entity-account-resource"
+        ],
+        "operationId": "listAccountsByTenant",
+        "parameters": [
+          {
+            "name": "id-tenant",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -578,7 +761,49 @@
                 "schema": {
                   "type": "array",
                   "items": {
-                    "$ref": "#/components/schemas/ProjectDto"
+                    "$ref": "#/components/schemas/AccountDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-account/list-accounts-by-event": {
+      "post": {
+        "tags": [
+          "entity-account-resource"
+        ],
+        "operationId": "listAccountsByEvent",
+        "parameters": [
+          {
+            "name": "id-event",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AccountDto"
                   }
                 }
               }
@@ -709,151 +934,28 @@
         }
       }
     },
-    "/api/page-upsert-account/account-exists-with-same-login-or-email": {
+    "/api/entity-tag/list-tags-by-project": {
       "get": {
         "tags": [
-          "page-upsert-account-resource"
+          "entity-tag-resource"
         ],
-        "operationId": "accountExistsWithSameLoginOrEmail",
-        "parameters": [
-          {
-            "name": "idTenant",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "login",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "email",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "idAccount",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "boolean"
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/page-login/list-tenants": {
-      "get": {
-        "tags": [
-          "page-login-resource"
-        ],
-        "operationId": "listTenants",
-        "parameters": [
-          {
-            "name": "text",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/TenantDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/page-list-accounts/list-accounts": {
-      "get": {
-        "tags": [
-          "page-list-accounts-resource"
-        ],
-        "operationId": "listAccounts",
-        "parameters": [
-          {
-            "name": "id-tenant",
-            "in": "query",
-            "required": true,
-            "schema": {
-              "type": "integer",
-              "format": "int64"
-            }
-          },
-          {
-            "name": "text",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "$ref": "#/components/schemas/AccountDto"
-                  }
-                }
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/page-extended-project/list-tags-of-project/{id-project}": {
-      "get": {
-        "tags": [
-          "page-extended-project-resource"
-        ],
-        "operationId": "listTagsOfProject",
+        "operationId": "listTagsByProject",
         "parameters": [
           {
             "name": "id-project",
-            "in": "path",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "text",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
@@ -1022,58 +1124,66 @@
         }
       }
     },
-    "/api/page-list-projects/delete/{id-project}": {
-      "delete": {
+    "/api/entity-account/get-account-by-login-or-email": {
+      "get": {
         "tags": [
-          "page-list-projects-resource"
+          "entity-account-resource"
         ],
-        "operationId": "deleteProject",
+        "operationId": "getAccountByLoginOrEmail",
         "parameters": [
           {
-            "name": "id-project",
-            "in": "path",
+            "name": "id-tenant",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "integer",
               "format": "int64"
             }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
-    "/api/page-list-events/delete/{id-event}": {
-      "delete": {
-        "tags": [
-          "page-list-events-resource"
-        ],
-        "operationId": "deleteEvent",
-        "parameters": [
+          },
           {
-            "name": "id-event",
-            "in": "path",
-            "required": true,
+            "name": "id-account",
+            "in": "query",
+            "required": false,
             "schema": {
               "type": "integer",
               "format": "int64"
+            }
+          },
+          {
+            "name": "login",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
             }
           }
         ],
         "responses": {
           "200": {
-            "description": "OK"
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "boolean"
+                }
+              }
+            }
           }
         }
       }
     },
-    "/api/page-list-accounts/delete-account/{id-account}": {
+    "/api/entity-delete-by-id/delete-account/{id-account}": {
       "delete": {
         "tags": [
-          "page-list-accounts-resource"
+          "entity-delete-by-id-resource"
         ],
         "operationId": "deleteAccount",
         "parameters": [
@@ -1097,161 +1207,6 @@
   },
   "components": {
     "schemas": {
-      "UpsertEventDto": {
-        "required": [
-          "description",
-          "idAccount",
-          "idTenant",
-          "tags",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "idAccount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "bannerUrl": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      },
-      "UpsertTenantDto": {
-        "required": [
-          "identifier",
-          "isPrivate",
-          "password",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "title": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "isPrivate": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UpsertTagDto": {
-        "required": [
-          "forAccounts",
-          "forEvents",
-          "forProjects",
-          "idTenant",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "forProjects": {
-            "type": "boolean"
-          },
-          "forEvents": {
-            "type": "boolean"
-          },
-          "forAccounts": {
-            "type": "boolean"
-          }
-        }
-      },
-      "UpsertProjectDto": {
-        "required": [
-          "description",
-          "idAccount",
-          "idTenant",
-          "tags",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "idAccount": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "description": {
-            "type": "string"
-          },
-          "bannerUrl": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
-          }
-        }
-      },
-      "UpsertAccountDto": {
-        "required": [
-          "email",
-          "firstName",
-          "idTenant",
-          "lastName",
-          "login",
-          "password"
-        ],
-        "type": "object",
-        "properties": {
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "email": {
-            "type": "string"
-          },
-          "login": {
-            "type": "string"
-          },
-          "password": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          }
-        }
-      },
       "LoginInformationInputDto": {
         "required": [
           "checkLastSeen",
@@ -1307,6 +1262,77 @@
           }
         }
       },
+      "UpsertTenantDto": {
+        "required": [
+          "identifier",
+          "isPrivate",
+          "password",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "isPrivate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "TenantDto": {
+        "required": [
+          "id",
+          "identifier",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "identifier": {
+            "type": "string"
+          }
+        }
+      },
+      "UpsertTagDto": {
+        "required": [
+          "forAccounts",
+          "forEvents",
+          "forProjects",
+          "idTenant",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "forProjects": {
+            "type": "boolean"
+          },
+          "forEvents": {
+            "type": "boolean"
+          },
+          "forAccounts": {
+            "type": "boolean"
+          }
+        }
+      },
       "TagDto": {
         "required": [
           "createdAt",
@@ -1342,6 +1368,42 @@
           },
           "forAccounts": {
             "type": "boolean"
+          }
+        }
+      },
+      "UpsertProjectDto": {
+        "required": [
+          "description",
+          "idAccount",
+          "idTenant",
+          "tags",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "bannerUrl": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       },
@@ -1433,26 +1495,6 @@
           }
         }
       },
-      "TenantDto": {
-        "required": [
-          "id",
-          "identifier",
-          "title"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "title": {
-            "type": "string"
-          },
-          "identifier": {
-            "type": "string"
-          }
-        }
-      },
       "PermissionDto": {
         "required": [
           "id",
@@ -1469,11 +1511,13 @@
           }
         }
       },
-      "AttributePermissionsDto": {
+      "UpsertEventDto": {
         "required": [
-          "idAccounts",
-          "idPermissions",
-          "idTenant"
+          "description",
+          "idAccount",
+          "idTenant",
+          "tags",
+          "title"
         ],
         "type": "object",
         "properties": {
@@ -1481,19 +1525,57 @@
             "type": "integer",
             "format": "int64"
           },
-          "idAccounts": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
           },
-          "idPermissions": {
+          "title": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "bannerUrl": {
+            "type": "string"
+          },
+          "tags": {
             "type": "array",
             "items": {
               "type": "integer",
               "format": "int64"
             }
+          }
+        }
+      },
+      "UpsertAccountDto": {
+        "required": [
+          "email",
+          "firstName",
+          "idTenant",
+          "lastName",
+          "login",
+          "password"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "email": {
+            "type": "string"
+          },
+          "login": {
+            "type": "string"
+          },
+          "password": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
           }
         }
       },
@@ -1526,6 +1608,34 @@
           },
           "lastName": {
             "type": "string"
+          }
+        }
+      },
+      "AttributePermissionsDto": {
+        "required": [
+          "idAccounts",
+          "idPermissions",
+          "idTenant"
+        ],
+        "type": "object",
+        "properties": {
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idAccounts": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "idPermissions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
           }
         }
       }
