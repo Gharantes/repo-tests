@@ -6,6 +6,8 @@ import br.com.synergia.utilsEntities.jpa.event.Event
 import br.com.synergia.utilsEntities.jpa.event.EventRepository
 import br.com.synergia.utilsEntities.jpa.eventAccountRelationship.EventAccountRelationship
 import br.com.synergia.utilsEntities.jpa.eventAccountRelationship.EventAccountRelationshipRepository
+import br.com.synergia.utilsEntities.jpa.eventTagRelationship.EventTagRelationship
+import br.com.synergia.utilsEntities.jpa.eventTagRelationship.EventTagRelationshipRepository
 import br.com.synergia.utilsEntities.models.EventDto
 import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
@@ -18,7 +20,8 @@ import java.sql.Types
 class EntityEventSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val eventRepository: EventRepository,
-    private val eventAccountRelationshipRepository: EventAccountRelationshipRepository
+    private val eventAccountRelationshipRepository: EventAccountRelationshipRepository,
+    private val eventTagRelationshipRepository: EventTagRelationshipRepository
 ) {
     fun listEventsByTenant(
         idTenant: Long,
@@ -59,13 +62,21 @@ class EntityEventSqlService (
         return eventRepository.save(event).id!!
     }
 
-    fun createEventAccountRelationship(idAccount: Long, idEvent: Long) {
+    fun createEventAccountRelationship(idEvent: Long, idAccount: Long) {
         val eventAccountRelationship = EventAccountRelationship(
             idAccount = idAccount,
             idEvent = idEvent,
             membershipLabel = "Organizador"
         )
         eventAccountRelationshipRepository.save(eventAccountRelationship)
+    }
+
+    fun createEventTagRelationship(idEvent: Long, idTag: List<Long>) {
+        eventTagRelationshipRepository.saveAll(
+            idTag.map {
+                EventTagRelationship(idEvent=idEvent, idTag=it)
+            }
+        )
     }
 
     fun updateEvent(idEvent: Long, params: UpsertEventDto) {

@@ -1,2 +1,2 @@
 #sudo \
-openapi-generator-cli generate -i ./synergia-unspecified.json -g typescript-angular -o ./api
+openapi-generator-cli generate -i ./synergia-0.0.1-SNAPSHOT.json -g typescript-angular -o ./api

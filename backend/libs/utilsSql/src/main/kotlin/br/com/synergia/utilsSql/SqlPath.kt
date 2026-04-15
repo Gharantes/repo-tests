@@ -6,8 +6,6 @@ object SqlPath {
     }
     enum class PageUpsertAccount (override val path: String) : ISqlFile {
         GET_ACCOUNT_BY_LOGIN_OR_EMAIL("/sql/page-upsert-account/get-account-by-login-or-email.sql"),
-        INSERT_ACCOUNT("/sql/page-upsert-account/insert-account.sql"),
-        UPDATE_ACCOUNT("/sql/page-upsert-account/update-account.sql")
     }
     enum class PageLogin (override val path: String) : ISqlFile {
         CHECK_LOGIN_INFORMATION("/sql/page-login/check-login-information.sql"),

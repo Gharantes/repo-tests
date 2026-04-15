@@ -5,5 +5,5 @@ spring:
     import:
       - "classpath:application-server.yaml"
       - "classpath:application-springdoc.yaml"
-#      - "classpath:application-datasource.yaml"
-      - "classpath:application-datasource-windows.yaml"
+      - "classpath:application-datasource.yaml"
+#      - "classpath:application-datasource-windows.yaml"

@@ -28,9 +28,11 @@ class EntityEventService (
     }
     fun createEvent(params: UpsertEventDto) {
         val idEvent = sqlService.createEvent(params)
-        sqlService.createEventAccountRelationship(params.idAccount, idEvent)
+        sqlService.createEventAccountRelationship(idEvent, params.idAccount)
+        sqlService.createEventTagRelationship(idEvent, params.tags)
     }
     fun updateEvent(idEvent: Long, params: UpsertEventDto) {
-        return sqlService.updateEvent(idEvent, params)
+        sqlService.updateEvent(idEvent, params)
+        sqlService.createEventTagRelationship(idEvent, params.tags)
     }
 }

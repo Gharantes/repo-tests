@@ -1,5 +1,6 @@
 package br.com.synergia.rest
 
+import br.com.synergia.entityTag.services.EntityTagService
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.utilsEntities.jpa.account.AccountRepository
 import br.com.synergia.utilsEntities.jpa.account.toDto
@@ -19,6 +20,7 @@ import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
 
 @RestController
@@ -27,7 +29,8 @@ class EntityGetByIdResource (
     private val accountRepository: AccountRepository,
     private val tagRepository: TagRepository,
     private val eventRepository: EventRepository,
-    private val projectRepository: ProjectRepository
+    private val projectRepository: ProjectRepository,
+    private val entityTagService: EntityTagService
 ) {
     @GetMapping("get-account-by-id/{id-account}")
     fun getAccountById(
@@ -39,10 +42,15 @@ class EntityGetByIdResource (
     }
     @GetMapping("get-event-by-id/{id-event}")
     fun getEventById(
-        @PathVariable("id-event") idEvent: Long
+        @PathVariable("id-event") idEvent: Long,
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
     ): ResponseEntity<EventDto?> {
         return ResponseMessenger.buildResponse {
-            eventRepository.findById(idEvent).orElse(null)?.toDto()
+            val el = eventRepository.findById(idEvent).orElse(null)?.toDto()
+            if (lookupTags == true) {
+                el?.tags = entityTagService.listTagsByEvent(idEvent, null)
+            }
+            el
         }
     }
     @GetMapping("get-project-by-id/{id-project}")

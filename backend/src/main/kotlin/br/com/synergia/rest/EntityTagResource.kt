@@ -21,9 +21,20 @@ class EntityTagResource (
     @PostMapping("/list-tags-by-tenant")
     fun listTagsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String?
+        @RequestParam("for-projects") forProjects: Boolean,
+        @RequestParam("for-events") forEvents: Boolean,
+        @RequestParam("for-accounts") forAccounts: Boolean,
+        @RequestParam("text", required = false) text: String?,
     ): ResponseEntity<List<TagDto>> {
-        return ResponseMessenger.buildResponse { service.listTagsByTenant(idTenant, text) }
+        return ResponseMessenger.buildResponse {
+            service.listTagsByTenant(
+                idTenant,
+                forProjects,
+                forEvents,
+                forAccounts,
+                text
+            )
+        }
     }
     @PostMapping("/list-tags-by-event")
     fun listTagsByEvent(

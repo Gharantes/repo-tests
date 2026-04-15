@@ -8,8 +8,20 @@ import org.springframework.stereotype.Service
 class EntityTagService (
     private val sqlService: EntityTagSqlService
 ) {
-    fun listTagsByTenant(idTenant: Long, text: String?): List<TagDto> {
-        return sqlService.listTags(idTenant, text)
+    fun listTagsByTenant(
+        idTenant: Long,
+        forProjects: Boolean,
+        forEvents: Boolean,
+        forAccounts: Boolean,
+        text: String?
+    ): List<TagDto> {
+        return sqlService.listTags(
+            idTenant,
+            forProjects,
+            forEvents,
+            forAccounts,
+            text
+        )
     }
     fun listTagsByEvent(idEvent: Long, text: String?): List<TagDto> {
         return sqlService.listTagsByEvent(idEvent, text)

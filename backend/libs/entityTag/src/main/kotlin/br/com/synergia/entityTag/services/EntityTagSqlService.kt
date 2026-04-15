@@ -17,10 +17,19 @@ class EntityTagSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val tagRepository: TagRepository
 ) {
-    fun listTags(idTenant: Long, text: String?): List<TagDto> {
+    fun listTags(
+        idTenant: Long,
+        forProjects: Boolean,
+        forEvents: Boolean,
+        forAccounts: Boolean,
+        text: String?
+    ): List<TagDto> {
         val sql = SqlPath.PageListTags.LIST_TAGS.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
+            .addValue("for_projects", forProjects, Types.BOOLEAN)
+            .addValue("for_events", forEvents, Types.BOOLEAN)
+            .addValue("for_accounts", forAccounts, Types.BOOLEAN)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
     }

@@ -26,7 +26,7 @@ class EntityAccountService (
         sqlService.createAccount(params)
     }
     fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
-        sqlService.updateAccount(params)
+        sqlService.updateAccount(idAccount, params)
     }
 
     fun listAccountsByEvent(idEvent: Long, text: String?): List<AccountDto> {
