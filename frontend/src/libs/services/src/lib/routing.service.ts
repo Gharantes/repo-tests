@@ -71,7 +71,7 @@ export class RoutingService {
   }
   public goToEventDetails(idEvent: number) {
     this.routeLabel.set('Detalhes do Evento');
-    this.router.navigate(['event-details', idEvent]).then()
+    this.router.navigate(['event', idEvent]).then()
   }
   /** ============ TAGS ============= **/
   public goToListTags() {

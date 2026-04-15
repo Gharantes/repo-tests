@@ -5,7 +5,6 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
-import { IUpsertEventModel } from '@synergia-frontend/interfaces';
 import { ConnectorUpsertEvent } from '../connector/connector-upsert-event';
 import { FormUpsertEventComponent } from '../form/form-upsert-event.component';
 

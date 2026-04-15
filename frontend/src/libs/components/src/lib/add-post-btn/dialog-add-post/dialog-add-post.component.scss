@@ -1,0 +1,38 @@
+* {
+  box-sizing: border-box;
+}
+:host {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+}
+#container {
+  overflow: hidden;
+  width: 100%;
+  height: 100%;
+  padding: 15px;
+  display: flex;
+  flex-direction: column;
+  row-gap: 15px;
+}
+.field {
+  width: 100%;
+}
+#button-container {
+  display: flex;
+  column-gap: 8px;
+  .save-btn, .cancel-btn {
+    display: flex;
+    column-gap: 5px;
+    align-items: center;
+    font-size: 1rem;
+  }
+}
+.textarea-container {
+  flex: 1;
+  display: flex;
+  overflow: auto;
+  .textarea {
+    flex: 1;
+  }
+}

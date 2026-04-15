@@ -2,7 +2,7 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { DialogAddTagComponent } from '../dialog-add-tag/dialog-add-tag.component';
+import { DialogAddTagComponent } from './dialog-add-tag/dialog-add-tag.component';
 import { ITagModel } from '@synergia-frontend/interfaces';
 import { tap } from 'rxjs';
 
