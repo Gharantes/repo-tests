@@ -1,18 +1,37 @@
-<div id="banner">
-  <lib-safe-image
-    [url]="event$()"
-  ></lib-safe-image>
-</div>
+* {
+  box-sizing: border-box;
+}
+:host {
+  width: 100%;
+  height: 100%;
+}
+#banner {
+  width: 100%;
+  height: 200px;
+}
+#section-title {
+  font-size: 1.5rem;
+  font-weight: 500;
+}
 
+#content-container {
+  padding: 2px;
+}
+#section-title, #section-description, #section-tags, #section-feed {
+  margin-top: 10px;
+  #section-header {
+    font-size: 1.2rem;
+    font-weight: 500;
+  }
+}
+#section-tags {
+  #tags-container {
+    display: flex;
+    column-gap: 10px;
+  }
+}
+#section-feed {
+  #feed-container {
 
-<div id="projetos-registrados-container">
-  <div class="label">Projetos registrados:</div>
-<!--  <div id="projetos-registrados-for-container">-->
-<!--    @for (item of projects$(); track $index) {-->
-<!--      <div class="entry">-->
-<!--        {{ item.title }}-->
-<!--      </div>-->
-<!--    }-->
-<!--  </div>-->
-
-</div>
+  }
+}

@@ -53,4 +53,9 @@ export class DialogCardEventComponent {
   private lookupEventMembers() {
 
   }
+
+  public fullPage() {
+    this.routingService.goToEventDetails(this.eventModel$.id);
+    this.dialog.close(null);
+  }
 }

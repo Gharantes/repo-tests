@@ -51,7 +51,7 @@ export const appRoutes: Route[] = [
       { path: 'events', component: RouteListEventsComponent },
       { path: 'create-event', component: RouteUpsertEventComponent },
       { path: 'edit-event/:id', component: RouteUpsertEventComponent },
-      { path: 'event-details/:id', component: RouteEventDetailsComponent },
+      { path: 'event/:id', component: RouteEventDetailsComponent },
       // Projetos
       { path: 'projects', component: RouteListProjectsComponent },
       { path: 'create-project', component: RouteUpsertProjectComponent },

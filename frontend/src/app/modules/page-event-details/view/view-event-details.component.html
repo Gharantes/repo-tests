@@ -1,18 +1,49 @@
 <div id="banner">
   <lib-safe-image
-    [url]="event$()"
+    [url]="event$.bannerColor"
+    [altColor]="event$.bannerColor"
   ></lib-safe-image>
 </div>
 
+<div id="content-container">
 
-<div id="projetos-registrados-container">
-  <div class="label">Projetos registrados:</div>
-<!--  <div id="projetos-registrados-for-container">-->
-<!--    @for (item of projects$(); track $index) {-->
-<!--      <div class="entry">-->
-<!--        {{ item.title }}-->
-<!--      </div>-->
-<!--    }-->
-<!--  </div>-->
+  <div id="section-title">
+    {{ event$.title }}
+  </div>
 
+  <div id="section-tags">
+    <div id="tags-container">
+      <mat-chip-set aria-label="Fish selection">
+        @for (tag of event$.tags; track tag.id) {
+          <mat-chip
+            [removable]="true"
+            (removed)="removeTagEvent.emit(tag)">
+            {{ tag.title }}
+            <button matChipRemove [attr.aria-label]="'remove'">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+
+      <lib-add-tag-btn
+        [forEvents]="true"
+        (saveTagEvent)="saveTagEvent.emit($event)"
+      ></lib-add-tag-btn>
+    </div>
+  </div>
+
+  <div id="section-description">
+    <div id="section-header">Descrição:</div>
+    <div id="section-value">{{ event$.description }}</div>
+  </div>
+
+  <div id="section-feed">
+    <div id="section-header">Feed:</div>
+    <div id="feed-container">
+      <lib-add-post-btn
+        (savePostEvent)="savePostEvent.emit($event)"
+      ></lib-add-post-btn>
+    </div>
+  </div>
 </div>

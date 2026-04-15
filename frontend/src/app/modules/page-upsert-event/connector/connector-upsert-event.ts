@@ -48,5 +48,6 @@ export class ConnectorUpsertEvent {
     this.form.controls.title.setValue(res.title);
     this.form.controls.description.setValue(res.description);
     this.form.controls.bannerUrl.setValue(res.bannerUrl);
+    this.form.controls.tags.setValue(res.tags)
   }
 }

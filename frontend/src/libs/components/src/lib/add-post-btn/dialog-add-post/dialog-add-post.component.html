@@ -1,15 +1,27 @@
 <div id="container">
   <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Tag</mat-label>
-    <input type="text" matInput [formControl]="tagControl" [matAutocomplete]="auto">
-    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTag">
-      <mat-option *ngFor="let option of tags$()" [value]="option">
-        {{ option.title }}
-      </mat-option>
-    </mat-autocomplete>
+    <mat-label>Título</mat-label>
+    <input type="text" matInput [formControl]="postTitleControl">
   </mat-form-field>
 
-  <button id="check-btn" (click)="salvarTag()">
-    <mat-icon>check</mat-icon>
-  </button>
+  <mat-form-field [appearance]="'outline'" class="field textarea-container">
+    <mat-label>Conteúdo</mat-label>
+    <textarea class="textarea"
+      matInput
+      cdkTextareaAutosize
+      [formControl]="postContentControl"
+    ></textarea>
+  </mat-form-field>
+
+  <div id="button-container">
+    <button mat-raised-button class="cancel-btn" (click)="close()">
+      Cancelar
+      <mat-icon>clear</mat-icon>
+    </button>
+
+    <button mat-raised-button class="save-btn" (click)="publishPost()">
+      Enviar
+      <mat-icon>check</mat-icon>
+    </button>
+  </div>
 </div>

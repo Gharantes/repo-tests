@@ -1,54 +1,26 @@
-import { Component, signal } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { EntityGetByIdResourceService } from '@synergia-frontend/api';
-import { RoutingService, SessionService } from '@synergia-frontend/services';
-import { map, tap } from 'rxjs';
-import { EventDtoToModel } from '@synergia-frontend/mappers';
-import { IEventModel } from '@synergia-frontend/interfaces';
-import { SafeImageComponent } from '@synergia-frontend/components';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
+import { AddPostBtnComponent, AddTagBtnComponent, SafeImageComponent } from '@synergia-frontend/components';
+import { MatChip, MatChipSet } from '@angular/material/chips';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
-  selector: 'app-route-event-details',
-  templateUrl: './route-event-details.component.html',
-  styleUrl: `./route-event-details.component.scss`,
-  imports: [SafeImageComponent],
+  selector: 'app-view-event-details',
+  templateUrl: './view-event-details.component.html',
+  styleUrl: `./view-event-details.component.scss`,
+  imports: [
+    SafeImageComponent,
+    AddTagBtnComponent,
+    MatChip,
+    MatChipSet,
+    MatIconModule,
+    AddPostBtnComponent,
+  ],
 })
-export class RouteEventDetailsComponent {
-  private readonly idEvent = signal<number | null>(null);
-  private readonly event$ = signal<IEventModel | null>(null);
-
-  constructor(
-    private readonly routingService: RoutingService,
-    private readonly sessionService: SessionService,
-    private readonly entityService: EntityGetByIdResourceService,
-    private readonly activatedRoute: ActivatedRoute
-  ) {
-    this.getFromRouteParams();
-  }
-
-  private getFromRouteParams() {
-    this.routingService
-      .getParamFromRoute(this.activatedRoute, 'id')
-      .then((id) => {
-        if (id == null) {
-          this.routingService.goToListEvents();
-          return;
-        } else {
-          this.idEvent.set(Number(id));
-          this.lookupEvent();
-        }
-      });
-  }
-
-  public lookupEvent() {
-    const idEvent = this.idEvent();
-    if (idEvent == null) return;
-    this.entityService
-      .getEventById(idEvent, true)
-      .pipe(
-        map((res) => EventDtoToModel(res)),
-        tap((res) => this.event$.set(res))
-      )
-      .subscribe();
-  }
+export class ViewEventDetailsComponent {
+  @Input() public event$!: IEventModel;
+  @Output() addNewPostEvent = new EventEmitter<void>();
+  @Output() removeTagEvent = new EventEmitter<ITagModel>();
+  @Output() saveTagEvent = new EventEmitter<ITagModel>();
+  @Output() savePostEvent = new EventEmitter<ITagModel>();
 }
