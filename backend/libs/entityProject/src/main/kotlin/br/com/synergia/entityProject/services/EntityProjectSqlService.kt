@@ -1,6 +1,11 @@
-package br.com.synergia.entityProject
+package br.com.synergia.entityProject.services
 
+import br.com.synergia.entityProject.models.UpsertProjectDto
 import br.com.synergia.utilsCommons.extensions.parseStringToWildCard
+import br.com.synergia.utilsEntities.jpa.project.Project
+import br.com.synergia.utilsEntities.jpa.project.ProjectRepository
+import br.com.synergia.utilsEntities.jpa.projectAccountRelationship.ProjectAccountRelationship
+import br.com.synergia.utilsEntities.jpa.projectAccountRelationship.ProjectAccountRelationshipRepository
 import br.com.synergia.utilsEntities.models.ProjectDto
 import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
@@ -11,7 +16,9 @@ import java.sql.Types
 
 @Service
 class EntityProjectSqlService (
-    private val template: NamedParameterJdbcTemplate
+    private val template: NamedParameterJdbcTemplate,
+    private val projectRepository: ProjectRepository,
+    private val projectAccountRelationshipRepository: ProjectAccountRelationshipRepository
 ) {
     fun listProjectsByTenant(
         idTenant: Long,
@@ -30,6 +37,41 @@ class EntityProjectSqlService (
             .addValue("id_account", idAccount, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.projectRowMapper)
+    }
+
+    fun listProjectsByEvent(idEvent: Long, text: String?): List<ProjectDto> {
+        val sql = SqlPath.PageExtendedEvent.LIST_PROJECTS_OF_EVENT.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_event", idEvent, Types.BIGINT)
+            .addValue("text", text, Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.projectRowMapper)
+    }
+
+    fun createProject(params: UpsertProjectDto): Long {
+        val project = Project(
+            idTenant = params.idTenant,
+            description = params.description,
+            title = params.title,
+            bannerUrl = params.bannerUrl
+        )
+        return projectRepository.save(project).id!!
+    }
+
+    fun createProjectAccountRelationship(idAccount: Long, idProject: Long) {
+        val projectAccountRelationship = ProjectAccountRelationship(
+            idAccount = idAccount,
+            idProject = idProject,
+            membershipLabel = "Líder"
+        )
+        projectAccountRelationshipRepository.save(projectAccountRelationship)
+    }
+
+    fun updateProject(idProject: Long, params: UpsertProjectDto) {
+        val project = projectRepository.findById(idProject).orElseThrow()
+        project.title = params.title
+        project.description = params.description
+        project.bannerUrl = params.bannerUrl
+        projectRepository.save(project)
     }
 
 }

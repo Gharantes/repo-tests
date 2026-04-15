@@ -95,7 +95,7 @@ export class RouteUpsertEventComponent {
     const id = this.idEvent();
     if (id == null) return;
     this.entityService
-      .getEventById(id)
+      .getEventById(id, true)
       .pipe(
         map((res) => EventDtoToModel(res)),
         tap((res) => this.connector.populateForm(res))

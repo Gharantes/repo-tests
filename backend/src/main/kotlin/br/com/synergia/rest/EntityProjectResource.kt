@@ -1,30 +1,59 @@
 package br.com.synergia.rest
 
-import br.com.synergia.pageListAccounts.services.PageListAccountsService
+import br.com.synergia.entityProject.services.EntityProjectService
+import br.com.synergia.entityProject.models.UpsertProjectDto
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.AccountDto
+import br.com.synergia.utilsEntities.models.ProjectDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @RestController
-@RequestMapping("/api/page-list-accounts")
-class PageListAccountsResource (
-    private val service: PageListAccountsService
+@RequestMapping("/api/entity-project")
+class EntityProjectResource (
+    private val service: EntityProjectService
 ) {
-    @GetMapping("/list-accounts")
-    fun listAccounts(
+    @PostMapping("/list-projects-by-tenant")
+    fun listProjectsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String?
-    ): ResponseEntity<List<AccountDto>> {
-        return ResponseMessenger.buildResponse { service.listAccounts(idTenant, text) }
+        @RequestParam("text", required = false) text: String? = null
+    ): ResponseEntity<List<ProjectDto>> {
+        return ResponseMessenger.buildResponse {
+            service.listProjectsByTenant(idTenant, text)
+        }
     }
-
-    @DeleteMapping("/delete-account/{id-account}")
-    fun deleteAccount(
-        @PathVariable("id-account") idAccount: Long
+    @PostMapping("/list-projects-by-account")
+    fun listProjectsByAccount(
+        @RequestParam("id-account") idAccount: Long,
+        @RequestParam("text", required = false) text: String? = null
+    ): ResponseEntity<List<ProjectDto>> {
+        return ResponseMessenger.buildResponse {
+            service.listProjectsByAccount(idAccount, text)
+        }
+    }
+    @PostMapping("/list-projects-of-event")
+    fun listProjectsByEvent(
+        @RequestParam("id-event") idEvent: Long,
+        @RequestParam("text", required = false) text: String? = null
+    ): ResponseEntity<List<ProjectDto>> {
+        return ResponseMessenger.buildResponse {
+            service.listProjectsByEvent(idEvent, text)
+        }
+    }
+    @PostMapping("store")
+    fun createProject(
+        @RequestBody params: UpsertProjectDto
     ): ResponseEntity<Void> {
         return ResponseMessenger.responseWithoutReturn {
-            service.deleteAccount(idAccount)
+            service.createProject(params)
+        }
+    }
+    @PostMapping("update/{id-project}")
+    fun updateProject(
+        @PathVariable("id-project") idProject: Long,
+        @RequestBody params: UpsertProjectDto
+    ): ResponseEntity<Void> {
+        return ResponseMessenger.responseWithoutReturn {
+            service.updateProject(idProject, params)
         }
     }
 }

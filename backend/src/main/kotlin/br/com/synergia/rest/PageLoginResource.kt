@@ -4,22 +4,17 @@ import br.com.synergia.pageLogin.models.LoginInformationInputDto
 import br.com.synergia.pageLogin.models.LoginInformationResponseDto
 import br.com.synergia.pageLogin.services.PageLoginService
 import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.TenantDto
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.*
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
+import org.springframework.web.bind.annotation.RequestMapping
+import org.springframework.web.bind.annotation.RestController
 
 @RestController
 @RequestMapping("/api/page-login")
 class PageLoginResource (
-    private val service: PageLoginService
+    private val service: PageLoginService,
 ) {
-    @GetMapping("/list-tenants")
-    fun listTenants(
-        @RequestParam("text", required = false) text: String?
-    ): ResponseEntity<List<TenantDto>> {
-        return ResponseMessenger.buildResponse { service.listTenants() }
-    }
-
     @PostMapping("/check-login-information")
     fun checkLoginInformation(
         @RequestBody params: LoginInformationInputDto

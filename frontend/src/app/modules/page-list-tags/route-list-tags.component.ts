@@ -54,7 +54,13 @@ export class RouteListTagsComponent {
     const text = this.connector.textFieldControl.value;
 
     this.entityTagService
-      .listTagsByTenant(idTenant, text)
+      .listTagsByTenant(
+        idTenant,
+        false,
+        false,
+        false,
+        text
+      )
       .pipe(
         map((res) => res.map(v => TagDtoToModel(v))),
         tap((res) => this.data$.set(res))

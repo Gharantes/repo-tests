@@ -1,0 +1,15 @@
+<div id="container">
+  <mat-form-field [appearance]="'outline'" class="field">
+    <mat-label>Tag</mat-label>
+    <input type="text" matInput [formControl]="tagControl" [matAutocomplete]="auto">
+    <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTag">
+      <mat-option *ngFor="let option of tags$()" [value]="option">
+        {{ option.title }}
+      </mat-option>
+    </mat-autocomplete>
+  </mat-form-field>
+
+  <button id="check-btn" (click)="salvarTag()">
+    <mat-icon>check</mat-icon>
+  </button>
+</div>

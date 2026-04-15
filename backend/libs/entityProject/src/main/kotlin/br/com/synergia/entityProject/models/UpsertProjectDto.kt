@@ -1,2 +1,10 @@
-package br.com.synergia.entityProject.models 
+package br.com.synergia.entityProject.models
 
+data class UpsertProjectDto(
+    val idTenant: Long,
+    val idAccount: Long,
+    val title: String,
+    val description: String,
+    val bannerUrl: String?,
+    val tags: List<Long>
+)

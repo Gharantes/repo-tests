@@ -1,7 +1,7 @@
-package br.com.synergia.entityEvent
+package br.com.synergia.entityEvent.services
 
+import br.com.synergia.entityEvent.models.UpsertEventDto
 import br.com.synergia.utilsEntities.models.EventDto
-import br.com.synergia.utilsEntities.models.ProjectDto
 import org.springframework.stereotype.Service
 
 @Service
@@ -19,5 +19,20 @@ class EntityEventService (
         text: String? = null
     ): List<EventDto> {
         return sqlService.listEventsByAccount(idAccount, text)
+    }
+    fun listEventsByProject(
+        idProject: Long,
+        text: String? = null
+    ): List<EventDto> {
+        return sqlService.listEventsByProject(idProject, text)
+    }
+    fun createEvent(params: UpsertEventDto) {
+        val idEvent = sqlService.createEvent(params)
+        sqlService.createEventAccountRelationship(idEvent, params.idAccount)
+        sqlService.createEventTagRelationship(idEvent, params.tags)
+    }
+    fun updateEvent(idEvent: Long, params: UpsertEventDto) {
+        sqlService.updateEvent(idEvent, params)
+        sqlService.createEventTagRelationship(idEvent, params.tags)
     }
 }

@@ -1,6 +1,10 @@
 import { inject, Injectable } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { IEventModel, IUpsertEventModel } from '@synergia-frontend/interfaces';
+import {
+  IEventModel,
+  ITagModel,
+  IUpsertEventModel,
+} from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
 
 @Injectable()
@@ -18,7 +22,7 @@ export class ConnectorUpsertEvent {
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     bannerUrl: this.fb.control<string | undefined>(undefined),
-    tags: this.fb.control<number[]>([]),
+    tags: this.fb.control<ITagModel[]>([]),
   });
 
   public getFormValue(): IUpsertEventModel | null {
@@ -37,7 +41,7 @@ export class ConnectorUpsertEvent {
       description: v.description,
       title: v.title,
       bannerUrl: v.bannerUrl,
-      tags: v.tags ?? [],
+      tags: v.tags?.map(v => v.id) ?? [],
     };
   }
   public populateForm(res: IEventModel) {

@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IEventModel } from '@synergia-frontend/interfaces';
+import { IProjectModel } from '@synergia-frontend/interfaces';
 import { ProjectCardGridEntryComponent } from '../project-card-grid-entry/project-card-grid-entry.component';
 
 @Component({
@@ -11,6 +11,6 @@ import { ProjectCardGridEntryComponent } from '../project-card-grid-entry/projec
   standalone: true,
 })
 export class ProjectCardGridComponent {
-  @Input() public data$: IEventModel[] = [];
-  @Output() cardInteractionEvent = new EventEmitter<IEventModel>();
+  @Input() public data$: IProjectModel[] = [];
+  @Output() cardInteractionEvent = new EventEmitter<IProjectModel>();
 }

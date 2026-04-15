@@ -4,8 +4,8 @@ import br.com.synergia.utilsEntities.models.PermissionDto
 import org.springframework.stereotype.Service
 
 @Service
-class PageListPermissionsService (
-    private val sqlService: PageListPermissionsSqlService
+class EntityPermissionService (
+    private val sqlService: EntityPermissionSqlService
 ) {
     fun listPermissions(text: String?): List<PermissionDto> {
         return sqlService.listPermissions(text)

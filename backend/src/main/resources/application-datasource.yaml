@@ -2,8 +2,8 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/synergia_dev
     username: raindrop
-    password: doorway
-    name: synergia
+    password: Admin
+    name: synergia_dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:

@@ -6,7 +6,7 @@ SELECT
     e.banner_url as event_banner_url,
     e.banner_color as event_banner_color
 FROM event_account_relationship ear
-INNER JOIN event e ON eam.id_event = e.id
+INNER JOIN event e ON ear.id_event = e.id
 wHERE
     ear.id_account = :id_account
     AND (:text IS NULL OR e.title ILIKE :text)

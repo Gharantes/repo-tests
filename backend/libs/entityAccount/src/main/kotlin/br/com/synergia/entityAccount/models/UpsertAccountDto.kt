@@ -1,2 +1,10 @@
-package br.com.synergia.entityAccount.models 
+package br.com.synergia.entityAccount.models
 
+data class UpsertAccountDto(
+    val idTenant: Long,
+    val email: String,
+    val login: String,
+    val password: String,
+    val firstName: String,
+    val lastName: String
+)

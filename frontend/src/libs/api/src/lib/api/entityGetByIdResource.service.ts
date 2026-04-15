@@ -161,15 +161,22 @@ export class EntityGetByIdResourceService {
 
     /**
      * @param idEvent 
+     * @param lookupTags 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getEventById(idEvent: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventDto>;
-    public getEventById(idEvent: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventDto>>;
-    public getEventById(idEvent: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventDto>>;
-    public getEventById(idEvent: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventDto>;
+    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventDto>>;
+    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventDto>>;
+    public getEventById(idEvent: number, lookupTags?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idEvent === null || idEvent === undefined) {
             throw new Error('Required parameter idEvent was null or undefined when calling getEventById.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lookupTags !== undefined && lookupTags !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lookupTags, 'lookup-tags');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -212,6 +219,7 @@ export class EntityGetByIdResourceService {
         return this.httpClient.request<EventDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service
 import java.sql.Types
 
 @Service
-class PageListPermissionsSqlService (private val template: NamedParameterJdbcTemplate) {
+class EntityPermissionSqlService (private val template: NamedParameterJdbcTemplate) {
     fun listPermissions(text: String?): List<PermissionDto> {
         val sql = SqlPath.PageListPermissions.LIST_PERMISSIONS.load()
         val paramMap = MapSqlParameterSource().addValue("text", text, Types.VARCHAR)
