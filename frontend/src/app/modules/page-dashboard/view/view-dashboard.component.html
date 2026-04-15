@@ -1,13 +1,19 @@
-<div><b>Meus Projetos:</b></div>
+<div id="page">
+  <div class="section">
+    <div><b>Meus Projetos:</b></div>
 
-<lib-project-card-grid
-  [data$]="projects$"
-  (cardInteractionEvent)="projectCardInteractionEvent.emit($event)"
-></lib-project-card-grid>
+    <lib-project-card-grid
+      [data$]="projects$"
+      (cardInteractionEvent)="projectCardInteractionEvent.emit($event)"
+    ></lib-project-card-grid>
+  </div>
 
-<div><b>Meus Eventos:</b></div>
+  <div class="section">
+    <div><b>Meus Eventos:</b></div>
 
-<lib-event-card-grid
-  [data$]="events$"
-  (cardInteractionEvent)="eventCardInteractionEvent.emit($event)"
-></lib-event-card-grid>
+    <lib-event-card-grid
+      [data$]="events$"
+      (cardInteractionEvent)="eventCardInteractionEvent.emit($event)"
+    ></lib-event-card-grid>
+  </div>
+</div>

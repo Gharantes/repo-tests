@@ -8,6 +8,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ITagModel } from '@synergia-frontend/interfaces';
 import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
+import { FormUpsertProjectComponent } from '../form/form-upsert-project.component';
 
 @Component({
   selector: 'app-view-upsert-project',
@@ -23,6 +24,7 @@ import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
+    FormUpsertProjectComponent,
   ],
 })
 export class ViewUpsertProjectComponent {

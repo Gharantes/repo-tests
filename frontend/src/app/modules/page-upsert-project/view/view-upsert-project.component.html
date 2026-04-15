@@ -1,19 +1,9 @@
-<form>
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Título</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.title" />
-  </mat-form-field>
-
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Descrição</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.description" />
-  </mat-form-field>
-
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>URL do Banner</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.bannerUrl" />
-  </mat-form-field>
-</form>
+<app-form-upsert-project
+  [connector]="connector"
+  [tags]="tags"
+  (saveEvent)="saveEvent.emit()"
+  (goToParentPageEvent)="goToParentPageEvent.emit()"
+></app-form-upsert-project>
 
 <div class="btn-line">
   <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>

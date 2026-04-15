@@ -316,22 +316,46 @@ export class EntityTagResourceService {
 
     /**
      * @param idTenant 
+     * @param forProjects 
+     * @param forEvents 
+     * @param forAccounts 
      * @param text 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listTagsByTenant(idTenant: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TagDto>>;
-    public listTagsByTenant(idTenant: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TagDto>>>;
-    public listTagsByTenant(idTenant: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TagDto>>>;
-    public listTagsByTenant(idTenant: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listTagsByTenant(idTenant: number, forProjects: boolean, forEvents: boolean, forAccounts: boolean, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<TagDto>>;
+    public listTagsByTenant(idTenant: number, forProjects: boolean, forEvents: boolean, forAccounts: boolean, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<TagDto>>>;
+    public listTagsByTenant(idTenant: number, forProjects: boolean, forEvents: boolean, forAccounts: boolean, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<TagDto>>>;
+    public listTagsByTenant(idTenant: number, forProjects: boolean, forEvents: boolean, forAccounts: boolean, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idTenant === null || idTenant === undefined) {
             throw new Error('Required parameter idTenant was null or undefined when calling listTagsByTenant.');
+        }
+        if (forProjects === null || forProjects === undefined) {
+            throw new Error('Required parameter forProjects was null or undefined when calling listTagsByTenant.');
+        }
+        if (forEvents === null || forEvents === undefined) {
+            throw new Error('Required parameter forEvents was null or undefined when calling listTagsByTenant.');
+        }
+        if (forAccounts === null || forAccounts === undefined) {
+            throw new Error('Required parameter forAccounts was null or undefined when calling listTagsByTenant.');
         }
 
         let localVarQueryParameters = new HttpParams({encoder: this.encoder});
         if (idTenant !== undefined && idTenant !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>idTenant, 'id-tenant');
+        }
+        if (forProjects !== undefined && forProjects !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>forProjects, 'for-projects');
+        }
+        if (forEvents !== undefined && forEvents !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>forEvents, 'for-events');
+        }
+        if (forAccounts !== undefined && forAccounts !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>forAccounts, 'for-accounts');
         }
         if (text !== undefined && text !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

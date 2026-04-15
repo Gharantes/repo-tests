@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { IEventModel } from '@synergia-frontend/interfaces';
+import { IProjectModel } from '@synergia-frontend/interfaces';
 import { SafeImageComponent } from '../../safe-image/safe-image.component';
 
 @Component({
@@ -11,6 +11,6 @@ import { SafeImageComponent } from '../../safe-image/safe-image.component';
   standalone: true,
 })
 export class ProjectCardGridEntryComponent {
-  @Input() public entry!: IEventModel;
-  @Output() public cardInteractionEvent = new EventEmitter<IEventModel>();
+  @Input() public entry!: IProjectModel;
+  @Output() public cardInteractionEvent = new EventEmitter<IProjectModel>();
 }

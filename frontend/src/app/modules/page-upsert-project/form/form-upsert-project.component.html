@@ -1,26 +1,14 @@
-<form>
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Título</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.title" />
-  </mat-form-field>
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>Título</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.title" />
+</mat-form-field>
 
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Descrição</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.description" />
-  </mat-form-field>
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>Descrição</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.description" />
+</mat-form-field>
 
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>URL do Banner</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.bannerUrl" />
-  </mat-form-field>
-</form>
-
-<div class="btn-line">
-  <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>
-  <button
-    mat-raised-button
-    [disabled]="!connector.form.valid"
-    (click)="saveEvent.emit()">
-    Salvar
-  </button>
-</div>
+<mat-form-field [appearance]="'outline'" class="field">
+  <mat-label>URL do Banner</mat-label>
+  <input type="text" matInput [formControl]="connector.form.controls.bannerUrl" />
+</mat-form-field>
