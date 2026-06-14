@@ -3,9 +3,16 @@
 :host {
   display: flex;
   flex-direction: column;
-  flex: 1;
+  width: 100%;
   height: 100%;
   overflow-y: auto;
+}
+
+#banner {
+  width: 100%;
+  height: 220px;
+  flex-shrink: 0;
+  overflow: hidden;
 }
 
 #two-col {
@@ -22,6 +29,33 @@
   gap: 20px;
   overflow-y: auto;
   border-right: 1px solid #e8e4dc;
+}
+
+#project-title {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.section-header {
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.section-body {
+  font-size: 0.9rem;
+  color: #444;
+  line-height: 1.65;
+  margin: 0;
+  text-align: justify;
 }
 
 #info-sidebar {

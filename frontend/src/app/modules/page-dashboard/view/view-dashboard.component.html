@@ -1,19 +1,12 @@
 <div id="page">
-  <div class="section">
-    <div><b>Meus Projetos:</b></div>
-
-    <lib-project-card-grid
-      [data$]="projects$"
-      (cardInteractionEvent)="projectCardInteractionEvent.emit($event)"
-    ></lib-project-card-grid>
-  </div>
-
-  <div class="section">
-    <div><b>Meus Eventos:</b></div>
-
-    <lib-event-card-grid
-      [data$]="events$"
-      (cardInteractionEvent)="eventCardInteractionEvent.emit($event)"
-    ></lib-event-card-grid>
+  <div class="widget-row">
+    <button class="create-widget" (click)="createProjectEvent.emit()">
+      <mat-icon>add</mat-icon>
+      <span>Criar Projeto</span>
+    </button>
+    <button class="create-widget" (click)="createEventEvent.emit()">
+      <mat-icon>add</mat-icon>
+      <span>Criar Evento</span>
+    </button>
   </div>
 </div>

@@ -30,12 +30,32 @@
     <span>Seus Projetos</span>
     <mat-icon class="chevron">{{ yourProjectsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
   </div>
+  @if (yourProjectsOpen) {
+    @for (project of projects$(); track project.id) {
+      <div class="nav-sub-item" matRipple (click)="routingService.goToProjectDetails(project.id)">
+        <span class="dot">•</span><span class="nav-sub-label">{{ project.title }}</span>
+      </div>
+    }
+    @if (projects$().length === 0) {
+      <div class="nav-sub-empty">Nenhum projeto</div>
+    }
+  }
 
   <div class="nav-item nav-group" matRipple (click)="yourEventsOpen = !yourEventsOpen">
     <mat-icon>calendar_month</mat-icon>
     <span>Seus Eventos</span>
     <mat-icon class="chevron">{{ yourEventsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
   </div>
+  @if (yourEventsOpen) {
+    @for (event of events$(); track event.id) {
+      <div class="nav-sub-item" matRipple (click)="routingService.goToEventDetails(event.id)">
+        <span class="dot">•</span><span class="nav-sub-label">{{ event.title }}</span>
+      </div>
+    }
+    @if (events$().length === 0) {
+      <div class="nav-sub-empty">Nenhum evento</div>
+    }
+  }
 
   <div class="nav-item" matRipple>
     <mat-icon>chat</mat-icon>

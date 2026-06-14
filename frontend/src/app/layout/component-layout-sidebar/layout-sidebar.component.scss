@@ -101,6 +101,19 @@
     line-height: 1;
     flex-shrink: 0;
   }
+
+  .nav-sub-label {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.nav-sub-empty {
+  padding: 7px 16px 7px 48px;
+  font-size: 0.82rem;
+  color: #aaa;
+  font-style: italic;
 }
 
 #bottom-nav {
