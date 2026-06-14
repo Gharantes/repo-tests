@@ -8,8 +8,8 @@ import org.springframework.stereotype.Service
 class EntityProjectService (
     private val sqlService: EntityProjectSqlService,
 ) {
-    fun listProjectsByTenant(idTenant: Long, text: String?): List<ProjectDto> {
-        return sqlService.listProjectsByTenant(idTenant, text)
+    fun listProjectsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null): List<ProjectDto> {
+        return sqlService.listProjectsByTenant(idTenant, text, tagIds)
     }
     fun listProjectsByAccount(idAccount: Long, text: String?): List<ProjectDto> {
         return sqlService.listProjectsByAccount(idAccount, text)

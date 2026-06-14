@@ -50,11 +50,12 @@ export class RouteListProjectsComponent {
   public getListProjects(): Observable<unknown> {
     const idTenant = this.sessionService.getTenantId();
     const text = this.connector.form.controls.text.value;
+    const tagIds = this.connector.form.controls.tags.value.map((t) => t.id);
     if (idTenant == null) {
       this.data$.set([]);
       return of([]);
     }
-    return this.entityProjectService.listProjectsByTenant(idTenant, text).pipe(
+    return this.entityProjectService.listProjectsByTenant(idTenant, text, tagIds.length ? tagIds : undefined).pipe(
       catchError((err) => {
         this.snackService.catchError(err);
         return of([]);

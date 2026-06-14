@@ -25,12 +25,25 @@ class EntityProjectSqlService (
 ) {
     fun listProjectsByTenant(
         idTenant: Long,
-        text: String?
+        text: String?,
+        tagIds: List<Long>? = null
     ): List<ProjectDto> {
-        val sql = SqlPath.EntityProject.LIST_PROJECTS_BY_TENANT.load()
+        var sql = SqlPath.EntityProject.LIST_PROJECTS_BY_TENANT.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        if (!tagIds.isNullOrEmpty()) {
+            sql += """
+ AND p.id IN (
+    SELECT ptr.id_project
+    FROM project_tag_relationship ptr
+    WHERE ptr.id_tag IN (:tag_ids)
+    GROUP BY ptr.id_project
+    HAVING COUNT(DISTINCT ptr.id_tag) = :tag_count
+)"""
+            paramMap.addValue("tag_ids", tagIds)
+            paramMap.addValue("tag_count", tagIds.size, Types.INTEGER)
+        }
         return template.query(sql, paramMap, EntityRowMapper.projectRowMapper)
     }
 

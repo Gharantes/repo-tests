@@ -15,10 +15,11 @@ class EntityProjectResource (
     @PostMapping("/list-projects-by-tenant")
     fun listProjectsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String? = null
+        @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("tag-ids", required = false) tagIds: List<Long>? = null
     ): ResponseEntity<List<ProjectDto>> {
         return ResponseMessenger.buildResponse {
-            service.listProjectsByTenant(idTenant, text)
+            service.listProjectsByTenant(idTenant, text, tagIds)
         }
     }
     @PostMapping("/list-projects-by-account")
