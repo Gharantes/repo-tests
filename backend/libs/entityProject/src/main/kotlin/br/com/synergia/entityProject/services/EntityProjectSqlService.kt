@@ -6,6 +6,8 @@ import br.com.synergia.utilsEntities.jpa.project.Project
 import br.com.synergia.utilsEntities.jpa.project.ProjectRepository
 import br.com.synergia.utilsEntities.jpa.projectAccountRelationship.ProjectAccountRelationship
 import br.com.synergia.utilsEntities.jpa.projectAccountRelationship.ProjectAccountRelationshipRepository
+import br.com.synergia.utilsEntities.jpa.projectTagRelationship.ProjectTagRelationship
+import br.com.synergia.utilsEntities.jpa.projectTagRelationship.ProjectTagRelationshipRepository
 import br.com.synergia.utilsEntities.models.ProjectDto
 import br.com.synergia.utilsEntities.rowmappers.EntityRowMapper
 import br.com.synergia.utilsSql.SqlPath
@@ -18,7 +20,8 @@ import java.sql.Types
 class EntityProjectSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val projectRepository: ProjectRepository,
-    private val projectAccountRelationshipRepository: ProjectAccountRelationshipRepository
+    private val projectAccountRelationshipRepository: ProjectAccountRelationshipRepository,
+    private val projectTagRelationshipRepository: ProjectTagRelationshipRepository
 ) {
     fun listProjectsByTenant(
         idTenant: Long,
@@ -72,6 +75,14 @@ class EntityProjectSqlService (
         project.description = params.description
         project.bannerUrl = params.bannerUrl
         projectRepository.save(project)
+    }
+
+    fun createProjectTagRelationship(idProject: Long, tags: List<Long>) {
+        projectTagRelationshipRepository.saveAll(
+            tags.map {
+                ProjectTagRelationship(idProject=idProject, idTag=it)
+            }
+        )
     }
 
 }

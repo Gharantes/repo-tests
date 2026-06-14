@@ -1,8 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
-import { IProjectModel, IUpsertProjectModel } from '@synergia-frontend/interfaces';
-import ts from '@schematics/angular/third_party/github.com/Microsoft/TypeScript/lib/typescript';
-import Session = ts.server.Session;
+import { IProjectModel, ITagModel, IUpsertProjectModel } from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
 import { IUpsertProjectToDto } from '@synergia-frontend/mappers';
 import { UpsertProjectDto } from '@synergia-frontend/api';
@@ -18,6 +16,7 @@ export class ConnectorUpsertProject {
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     bannerUrl: this.fb.control<string|undefined>(undefined),
+    tags: this.fb.control<ITagModel[]>([]),
   });
 
   public getFormValue(): UpsertProjectDto | null {
@@ -31,7 +30,7 @@ export class ConnectorUpsertProject {
       idTenant: v.idTenant,
       title: v.title,
       bannerUrl: v.bannerUrl,
-      tags: []
+      tags: v.tags?.map((t) => t.id) ?? [],
     };
     return IUpsertProjectToDto(obj)
   }
