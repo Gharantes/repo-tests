@@ -25,12 +25,25 @@ class EntityEventSqlService (
 ) {
     fun listEventsByTenant(
         idTenant: Long,
-        text: String? = null
+        text: String? = null,
+        tagIds: List<Long>? = null
     ): List<EventDto> {
-        val sql = SqlPath.EntityEvent.LIST_EVENTS_BY_TENANT.load()
+        var sql = SqlPath.EntityEvent.LIST_EVENTS_BY_TENANT.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
             .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        if (!tagIds.isNullOrEmpty()) {
+            sql += """
+ AND e.id IN (
+    SELECT etr.id_event
+    FROM event_tag_relationship etr
+    WHERE etr.id_tag IN (:tag_ids)
+    GROUP BY etr.id_event
+    HAVING COUNT(DISTINCT etr.id_tag) = :tag_count
+)"""
+            paramMap.addValue("tag_ids", tagIds)
+            paramMap.addValue("tag_count", tagIds.size, Types.INTEGER)
+        }
         return template.query(sql, paramMap, EntityRowMapper.eventRowMapper)
     }
 

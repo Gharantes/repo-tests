@@ -317,13 +317,14 @@ export class EntityEventResourceService {
     /**
      * @param idTenant 
      * @param text 
+     * @param tagIds 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listEventsByTenant(idTenant: number, text?: string, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<EventDto>>;
-    public listEventsByTenant(idTenant: number, text?: string, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<EventDto>>>;
-    public listEventsByTenant(idTenant: number, text?: string, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<EventDto>>>;
-    public listEventsByTenant(idTenant: number, text?: string, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listEventsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<EventDto>>;
+    public listEventsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<EventDto>>>;
+    public listEventsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<EventDto>>>;
+    public listEventsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idTenant === null || idTenant === undefined) {
             throw new Error('Required parameter idTenant was null or undefined when calling listEventsByTenant.');
         }
@@ -336,6 +337,12 @@ export class EntityEventResourceService {
         if (text !== undefined && text !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>text, 'text');
+        }
+        if (tagIds) {
+            tagIds.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'tag-ids');
+            })
         }
 
         let localVarHeaders = this.defaultHeaders;

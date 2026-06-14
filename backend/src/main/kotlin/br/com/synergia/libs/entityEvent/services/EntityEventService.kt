@@ -10,9 +10,10 @@ class EntityEventService (
 ) {
     fun listEventsByTenant(
         idTenant: Long,
-        text: String? = null
+        text: String? = null,
+        tagIds: List<Long>? = null
     ): List<EventDto> {
-        return sqlService.listEventsByTenant(idTenant, text)
+        return sqlService.listEventsByTenant(idTenant, text, tagIds)
     }
     fun listEventsByAccount(
         idAccount: Long,

@@ -604,6 +604,18 @@
             "schema": {
               "type": "string"
             }
+          },
+          {
+            "name": "tag-ids",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "integer",
+                "format": "int64"
+              }
+            }
           }
         ],
         "responses": {

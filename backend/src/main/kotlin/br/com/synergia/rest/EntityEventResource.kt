@@ -15,10 +15,11 @@ class EntityEventResource (
     @PostMapping("/list-events-by-tenant")
     fun listEventsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String? = null
+        @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("tag-ids", required = false) tagIds: List<Long>? = null
     ): ResponseEntity<List<EventDto>> {
         return ResponseMessenger.buildResponse {
-            service.listEventsByTenant(idTenant, text)
+            service.listEventsByTenant(idTenant, text, tagIds)
         }
     }
     @PostMapping("/list-events-by-account")
