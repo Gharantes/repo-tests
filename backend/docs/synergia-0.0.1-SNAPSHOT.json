@@ -1610,7 +1610,6 @@
           "idTenant",
           "lastName",
           "login",
-          "password",
           "tags"
         ],
         "type": "object",

@@ -29,6 +29,9 @@ class EntityAccountService (
         return res.id != idAccount
     }
     fun createAccount(params: UpsertAccountDto) {
+        if (params.password.isNullOrBlank()) {
+            throw Exception("Senha inválida.")
+        }
         val idAccount = sqlService.createAccount(params)
         sqlService.createAccountTagRelationship(idAccount, params.tags)
     }

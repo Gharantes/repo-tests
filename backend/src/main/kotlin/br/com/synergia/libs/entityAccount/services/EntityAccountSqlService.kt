@@ -41,7 +41,7 @@ class EntityAccountSqlService (
         account.email = params.email
         account.firstName = params.firstName
         account.lastName = params.lastName
-        account.password = params.password
+        account.password = params.password!!
         return accountRepository.save(account).id!!
     }
 
@@ -56,13 +56,13 @@ class EntityAccountSqlService (
     }
     fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
         accountRepository.findById(idAccount).ifPresent { account ->
-            account.password = params.password
             account.email = params.email
             account.firstName = params.firstName
             account.lastName = params.lastName
             account.login = params.login
             account.updatedAt = LocalDateTime.now()
-            if (params.password.isNotBlank()) {
+
+            if (!params.password.isNullOrBlank()) {
                 account.password = params.password
             }
             accountRepository.save(account)

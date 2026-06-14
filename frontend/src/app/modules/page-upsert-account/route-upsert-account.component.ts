@@ -44,10 +44,13 @@ export class RouteUpsertAccountComponent {
   constructor() {
     this.routingService
       .getParamFromRoute(this.activatedRoute, 'id')
-      .then((res) => {
-        res ? this.idAccount.set(Number(res)) : undefined;
-
-        this.fillForm();
+      .then((id) => {
+        if (id) {
+          this.idAccount.set(Number(id));
+          this.fillForm();
+        } else {
+          this.connector.makePasswordRequired()
+        }
       });
   }
   public fillForm() {

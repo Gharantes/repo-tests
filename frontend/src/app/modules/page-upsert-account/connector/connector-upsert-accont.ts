@@ -11,11 +11,15 @@ export class ConnectorUpsertAccont {
     idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number, [Validators.required]),
     email: this.fb.control<string|undefined>('', [Validators.email]),
     login: this.fb.control<string>('', [Validators.required]),
-    password: this.fb.control<string>('', [Validators.required]),
+    password: this.fb.control<string>(''),
     firstName: this.fb.control<string>('', [Validators.required]),
     lastName: this.fb.control<string>('', [Validators.required]),
     tags: this.fb.control<ITagModel[]>([]),
   });
+
+  public makePasswordRequired() {
+    this.form.controls.password.addValidators(Validators.required);
+  }
 
   public getFormValue(): IUpsertAccountModel | null {
     const v = this.form.value;

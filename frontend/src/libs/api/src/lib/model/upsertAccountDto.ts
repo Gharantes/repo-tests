@@ -13,7 +13,7 @@ export interface UpsertAccountDto {
     idTenant: number;
     email: string;
     login: string;
-    password: string;
+    password?: string;
     firstName: string;
     lastName: string;
     tags: Array<number>;
