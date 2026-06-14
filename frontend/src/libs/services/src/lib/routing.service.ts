@@ -73,6 +73,10 @@ export class RoutingService {
     this.routeLabel.set('Detalhes do Evento');
     this.router.navigate(['event', idEvent]).then()
   }
+  public goToProjectDetails(idProject: number) {
+    this.routeLabel.set('Detalhes do Projeto');
+    this.router.navigate(['project', idProject]).then();
+  }
   /** ============ TAGS ============= **/
   public goToListTags() {
     this.routeLabel.set("Visualizar Tags")

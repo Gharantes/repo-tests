@@ -38,6 +38,11 @@ export class DialogCardProjectComponent {
       .subscribe();
   }
 
+  public fullPage() {
+    this.routingService.goToProjectDetails(this.projectModel$.id);
+    this.dialog.close(null);
+  }
+
   public editProject() {
     this.routingService.goToEditProject(this.projectModel$.id);
     this.dialog.close(null);

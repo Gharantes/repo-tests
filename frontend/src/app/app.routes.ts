@@ -9,13 +9,13 @@ import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-ups
 import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
 import { RouteUpsertTenantComponent } from './modules/page-upsert-tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
-import { RouteEventDetailsComponent } from './modules/page-event-details/route-event-details.component';
+import { RouteEventDetailsComponent } from './modules/page-details-event/route-event-details.component';
 import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
 import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
 import { RouteListPermissionsComponent } from './modules/page-list-permissions/route-list-permissions.component';
 import { LayoutBeforeLoginComponent } from './layout/component-layout-before-login/layout-before-login.component';
 import { RouteNotFoundComponent } from './modules/page-not-found/route-not-found.component';
-import { RouteProjectDetailsComponent } from './modules/page-project-details/route-project-details.component';
+import { RouteProjectDetailsComponent } from './modules/page-details-project/route-project-details.component';
 import { RouteUpsertTagComponent } from './modules/page-upsert-tag/route-upsert-tag.component';
 
 
@@ -56,7 +56,7 @@ export const appRoutes: Route[] = [
       { path: 'projects', component: RouteListProjectsComponent },
       { path: 'create-project', component: RouteUpsertProjectComponent },
       { path: 'edit-project/:id', component: RouteUpsertProjectComponent },
-      { path: 'project-details/:id', component: RouteProjectDetailsComponent },
+      { path: 'project/:id', component: RouteProjectDetailsComponent },
       // Tags
       { path: 'tags', component: RouteListTagsComponent },
       { path: 'create-tag', component: RouteUpsertTagComponent },
