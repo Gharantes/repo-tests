@@ -1,8 +1,8 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityPermission.services.EntityPermissionService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.PermissionDto
+import br.com.synergia.libs.entityPermission.services.EntityPermissionService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.PermissionDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

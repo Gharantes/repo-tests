@@ -56,16 +56,10 @@ export class RouteUpsertAccountComponent {
       return;
     }
     this.entityGetByIdService
-      .getAccountById(id)
+      .getAccountById(id, true)
       .pipe(
         map((res) => AccountDtoToModel(res)),
-        tap((res) => {
-          const controls = this.connector.form.controls;
-          controls.login.setValue(res.login);
-          controls.firstName.setValue(res.firstName);
-          controls.lastName.setValue(res.lastName);
-          controls.email.setValue(res.email);
-        })
+        tap((res) => this.connector.populateForm(res))
       )
       .subscribe();
   }

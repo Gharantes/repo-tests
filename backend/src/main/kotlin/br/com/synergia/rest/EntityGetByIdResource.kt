@@ -1,27 +1,21 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityTag.services.EntityTagService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.jpa.account.AccountRepository
-import br.com.synergia.utilsEntities.jpa.account.toDto
-import br.com.synergia.utilsEntities.jpa.event.EventRepository
-import br.com.synergia.utilsEntities.jpa.event.toDto
-import br.com.synergia.utilsEntities.jpa.project.ProjectRepository
-import br.com.synergia.utilsEntities.jpa.project.toDto
-import br.com.synergia.utilsEntities.jpa.tag.TagRepository
-import br.com.synergia.utilsEntities.jpa.tag.toDto
-import br.com.synergia.utilsEntities.jpa.tenant.TenantRepository
-import br.com.synergia.utilsEntities.jpa.tenant.toDto
-import br.com.synergia.utilsEntities.models.AccountDto
-import br.com.synergia.utilsEntities.models.EventDto
-import br.com.synergia.utilsEntities.models.ProjectDto
-import br.com.synergia.utilsEntities.models.TagDto
+import br.com.synergia.libs.entityTag.services.EntityTagService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
+import br.com.synergia.libs.utilsEntities.jpa.account.toDto
+import br.com.synergia.libs.utilsEntities.jpa.event.EventRepository
+import br.com.synergia.libs.utilsEntities.jpa.event.toDto
+import br.com.synergia.libs.utilsEntities.jpa.project.ProjectRepository
+import br.com.synergia.libs.utilsEntities.jpa.project.toDto
+import br.com.synergia.libs.utilsEntities.jpa.tag.TagRepository
+import br.com.synergia.libs.utilsEntities.jpa.tag.toDto
+import br.com.synergia.libs.utilsEntities.models.AccountDto
+import br.com.synergia.libs.utilsEntities.models.EventDto
+import br.com.synergia.libs.utilsEntities.models.ProjectDto
+import br.com.synergia.libs.utilsEntities.models.TagDto
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 @RestController
 @RequestMapping("/api/entity-get-by-id")
@@ -34,10 +28,15 @@ class EntityGetByIdResource (
 ) {
     @GetMapping("get-account-by-id/{id-account}")
     fun getAccountById(
-        @PathVariable("id-account") idAccount: Long
+        @PathVariable("id-account") idAccount: Long,
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
     ): ResponseEntity<AccountDto?> {
         return ResponseMessenger.buildResponse {
-            accountRepository.findById(idAccount).orElse(null)?.toDto()
+            val el = accountRepository.findById(idAccount).orElse(null)?.toDto()
+            if (lookupTags == true) {
+                el?.tags = entityTagService.listTagsByAccount(idAccount, null)
+            }
+            el
         }
     }
     @GetMapping("get-event-by-id/{id-event}")

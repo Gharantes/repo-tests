@@ -8,6 +8,7 @@ export function IUpsertAccountToDto(input: IUpsertAccountModel) : UpsertAccountD
     login: input.login,
     password: input.password,
     idTenant: input.idTenant,
-    email: input.email
+    email: input.email,
+    tags: input.tags,
   }
 }

@@ -43,7 +43,7 @@ export class RouteListAccountsComponent {
       return of([]);
     }
     return this.entityAccountService
-      .listAccountsByTenant(idTenant, undefined)
+      .listAccountsByTenant(idTenant, undefined, true)
       .pipe(
         catchError((err) => {
           this.snackService.catchError(err, 'Erro ao trazer usuários.');

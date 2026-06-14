@@ -1,9 +1,9 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityTag.models.UpsertTagDto
-import br.com.synergia.entityTag.services.EntityTagService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.TagDto
+import br.com.synergia.libs.entityTag.models.UpsertTagDto
+import br.com.synergia.libs.entityTag.services.EntityTagService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.TagDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable

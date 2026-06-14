@@ -47,6 +47,12 @@ export class ViewListAccountsComponent {
       value: (element: IAccountModel) =>
         (element.firstName ?? '') + ' ' + (element.lastName ?? ''),
     },
+    {
+      def: 'tags',
+      header: 'Tags',
+      value: (element: IAccountModel) =>
+        element.tags?.map((t) => t.title).join(', ') ?? '',
+    },
   ];
 
   public readonly tableActions: IDoExtendableTableActions<IAccountModel>[] = [

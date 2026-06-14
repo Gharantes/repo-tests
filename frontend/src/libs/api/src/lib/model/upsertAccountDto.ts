@@ -16,5 +16,6 @@ export interface UpsertAccountDto {
     password: string;
     firstName: string;
     lastName: string;
+    tags: Array<number>;
 }
 

@@ -1,17 +1,11 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityAccount.models.UpsertAccountDto
-import br.com.synergia.entityAccount.services.EntityAccountService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.AccountDto
+import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.entityAccount.services.EntityAccountService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.AccountDto
 import org.springframework.http.ResponseEntity
-import org.springframework.web.bind.annotation.GetMapping
-import org.springframework.web.bind.annotation.PathVariable
-import org.springframework.web.bind.annotation.PostMapping
-import org.springframework.web.bind.annotation.RequestBody
-import org.springframework.web.bind.annotation.RequestMapping
-import org.springframework.web.bind.annotation.RequestParam
-import org.springframework.web.bind.annotation.RestController
+import org.springframework.web.bind.annotation.*
 
 
 @RestController
@@ -22,10 +16,11 @@ class EntityAccountResource (
     @PostMapping("/list-accounts-by-tenant")
     fun listAccountsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String? = null
+        @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = null
     ): ResponseEntity<List<AccountDto>> {
         return ResponseMessenger.buildResponse {
-            entityAccountService.listAccountsByTenant(idTenant, text)
+            entityAccountService.listAccountsByTenant(idTenant, text, lookupTags)
         }
     }
     @PostMapping("/list-accounts-by-event")
