@@ -87,4 +87,8 @@ class EntityEventSqlService (
             eventRepository.save(event)
         }
     }
+
+    fun deleteEventTagRelationshipByIdEvent(idEvent: Long) {
+        eventTagRelationshipRepository.deleteByIdEvent(idEvent)
+    }
 }

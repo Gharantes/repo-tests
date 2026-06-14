@@ -85,4 +85,8 @@ class EntityProjectSqlService (
         )
     }
 
+    fun deleteProjectTagRelationshipByIdProject(idProject: Long) {
+        projectTagRelationshipRepository.deleteByIdProject(idProject)
+    }
+
 }

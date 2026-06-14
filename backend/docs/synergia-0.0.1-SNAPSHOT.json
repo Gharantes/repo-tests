@@ -1046,6 +1046,14 @@
               "type": "integer",
               "format": "int64"
             }
+          },
+          {
+            "name": "lookup-tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {

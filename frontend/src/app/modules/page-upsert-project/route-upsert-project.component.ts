@@ -68,7 +68,7 @@ export class RouteUpsertProjectComponent {
     const idProject = this.idProject();
     if (idProject == null) return;
     this.entityService
-      .getProjectById(idProject)
+      .getProjectById(idProject, true)
       .pipe(
         map((res) => ProjectDtoToModel(res)),
         tap((res) => this.connector.populateForm(res))

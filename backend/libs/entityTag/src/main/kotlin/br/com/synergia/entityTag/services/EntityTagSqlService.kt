@@ -39,7 +39,9 @@ class EntityTagSqlService (
         return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
     }
     fun listTagsByProject(idProject: Long, text: String?): List<TagDto> {
-        return emptyList()
+        val sql = SqlPath.PageExtendedProject.LIST_TAGS_OF_PROJECT.load()
+        val paramMap = MapSqlParameterSource().addValue("id_project", idProject, Types.BIGINT)
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
     }
     fun createTag(params: UpsertTagDto) {
         val tag = Tag(

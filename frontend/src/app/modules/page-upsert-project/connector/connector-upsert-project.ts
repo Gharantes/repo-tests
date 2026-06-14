@@ -39,5 +39,6 @@ export class ConnectorUpsertProject {
     this.form.controls.title.setValue(value.title);
     this.form.controls.description.setValue(value.description);
     this.form.controls.bannerUrl.setValue(value.bannerUrl);
+    this.form.controls.tags.setValue(value.tags);
   }
 }

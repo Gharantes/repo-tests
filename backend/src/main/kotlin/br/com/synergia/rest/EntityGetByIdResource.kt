@@ -55,10 +55,15 @@ class EntityGetByIdResource (
     }
     @GetMapping("get-project-by-id/{id-project}")
     fun getProjectById(
-        @PathVariable("id-project") idProject: Long
+        @PathVariable("id-project") idProject: Long,
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
     ): ResponseEntity<ProjectDto?> {
         return ResponseMessenger.buildResponse {
-            projectRepository.findById(idProject).orElse(null)?.toDto()
+            val el = projectRepository.findById(idProject).orElse(null)?.toDto()
+            if (lookupTags == true) {
+                el?.tags = entityTagService.listTagsByProject(idProject, null)
+            }
+            el
         }
     }
     @GetMapping("get-tag-by-id/{id-tag}")

@@ -33,6 +33,7 @@ class EntityEventService (
     }
     fun updateEvent(idEvent: Long, params: UpsertEventDto) {
         sqlService.updateEvent(idEvent, params)
+        sqlService.deleteEventTagRelationshipByIdEvent(idEvent)
         sqlService.createEventTagRelationship(idEvent, params.tags)
     }
 }

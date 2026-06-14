@@ -24,6 +24,7 @@ class EntityProjectService (
     }
     fun updateProject(idProject: Long, params: UpsertProjectDto) {
         sqlService.updateProject(idProject, params)
+        sqlService.deleteProjectTagRelationshipByIdProject(idProject)
         sqlService.createProjectTagRelationship(idProject, params.tags)
     }
 }
