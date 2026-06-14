@@ -10,7 +10,7 @@ import {
   EntityAccountResourceService,
   EntityDeleteByIdResourceService,
 } from '@synergia-frontend/api';
-import { catchError, concatMap, EMPTY, map, Observable, of, tap } from 'rxjs';
+import { catchError, concatMap, debounceTime, EMPTY, map, Observable, of, tap } from 'rxjs';
 import { ConnectorListAccounts } from './connector/connector-list-accounts';
 import { AccountDtoToModel } from '@synergia-frontend/mappers';
 
@@ -33,7 +33,17 @@ export class RouteListAccountsComponent {
     private readonly entityAccountService: EntityAccountResourceService,
     private readonly entityDeleteByIdService: EntityDeleteByIdResourceService
   ) {
+    this.watchForm();
     this.getListAccounts().subscribe();
+  }
+
+  public watchForm() {
+    this.connector.form.valueChanges
+      .pipe(
+        debounceTime(700),
+        concatMap(() => this.getListAccounts())
+      )
+      .subscribe();
   }
 
   public getListAccounts(): Observable<unknown> {
@@ -42,8 +52,10 @@ export class RouteListAccountsComponent {
       this.data$.set([]);
       return of([]);
     }
+    const text = this.connector.form.controls.text.value;
+    const tagIds = this.connector.form.controls.tags.value.map((t) => t.id);
     return this.entityAccountService
-      .listAccountsByTenant(idTenant, undefined, true)
+      .listAccountsByTenant(idTenant, text, tagIds.length ? tagIds : undefined, true)
       .pipe(
         catchError((err) => {
           this.snackService.catchError(err, 'Erro ao trazer usuários.');

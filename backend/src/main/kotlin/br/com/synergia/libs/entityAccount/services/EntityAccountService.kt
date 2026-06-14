@@ -10,8 +10,8 @@ class EntityAccountService (
     private val sqlService: EntityAccountSqlService,
     private val entityTagService: EntityTagService
 ) {
-    fun listAccountsByTenant(idTenant: Long, text: String?, lookupTags: Boolean? = null): List<AccountDto> {
-        val accounts = sqlService.listAccountsByTenant(idTenant, text)
+    fun listAccountsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null, lookupTags: Boolean? = null): List<AccountDto> {
+        val accounts = sqlService.listAccountsByTenant(idTenant, text, tagIds)
         if (lookupTags == true) {
             accounts.forEach { it.tags = entityTagService.listTagsByAccount(it.id, null) }
         }

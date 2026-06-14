@@ -17,10 +17,11 @@ class EntityAccountResource (
     fun listAccountsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
         @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("tag-ids", required = false) tagIds: List<Long>? = null,
         @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = null
     ): ResponseEntity<List<AccountDto>> {
         return ResponseMessenger.buildResponse {
-            entityAccountService.listAccountsByTenant(idTenant, text, lookupTags)
+            entityAccountService.listAccountsByTenant(idTenant, text, tagIds, lookupTags)
         }
     }
     @PostMapping("/list-accounts-by-event")

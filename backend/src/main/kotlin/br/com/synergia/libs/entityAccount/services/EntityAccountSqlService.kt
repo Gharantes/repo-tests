@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityAccount.services
 
 import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.account.Account
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
 import br.com.synergia.libs.utilsEntities.jpa.accountTagRelationship.AccountTagRelationship
@@ -20,11 +21,23 @@ class EntityAccountSqlService (
     private val accountRepository: AccountRepository,
     private val accountTagRelationshipRepository: AccountTagRelationshipRepository
 ) {
-    fun listAccountsByTenant(idTenant: Long, text: String?): List<AccountDto> {
-        val sql = SqlPath.PageListAccounts.LIST_ACCOUNTS.load()
+    fun listAccountsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null): List<AccountDto> {
+        var sql = SqlPath.PageListAccounts.LIST_ACCOUNTS.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_tenant", idTenant, Types.BIGINT)
-            .addValue("text", text, Types.VARCHAR)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        if (!tagIds.isNullOrEmpty()) {
+            sql += """
+ AND a.id IN (
+    SELECT atr.id_account
+    FROM account_tag_relationship atr
+    WHERE atr.id_tag IN (:tag_ids)
+    GROUP BY atr.id_account
+    HAVING COUNT(DISTINCT atr.id_tag) = :tag_count
+)"""
+            paramMap.addValue("tag_ids", tagIds)
+            paramMap.addValue("tag_count", tagIds.size, Types.INTEGER)
+        }
         return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
     }
     fun getAccountByLoginOrEmail(idTenant: Long, login: String?, email: String?): AccountDto? {

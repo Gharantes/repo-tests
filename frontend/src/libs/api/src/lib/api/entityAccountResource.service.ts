@@ -327,14 +327,15 @@ export class EntityAccountResourceService {
     /**
      * @param idTenant 
      * @param text 
+     * @param tagIds 
      * @param lookupTags 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public listAccountsByTenant(idTenant: number, text?: string, lookupTags?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccountDto>>;
-    public listAccountsByTenant(idTenant: number, text?: string, lookupTags?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccountDto>>>;
-    public listAccountsByTenant(idTenant: number, text?: string, lookupTags?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccountDto>>>;
-    public listAccountsByTenant(idTenant: number, text?: string, lookupTags?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public listAccountsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, lookupTags?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<Array<AccountDto>>;
+    public listAccountsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, lookupTags?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<Array<AccountDto>>>;
+    public listAccountsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, lookupTags?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<Array<AccountDto>>>;
+    public listAccountsByTenant(idTenant: number, text?: string, tagIds?: Array<number>, lookupTags?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idTenant === null || idTenant === undefined) {
             throw new Error('Required parameter idTenant was null or undefined when calling listAccountsByTenant.');
         }
@@ -347,6 +348,12 @@ export class EntityAccountResourceService {
         if (text !== undefined && text !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>text, 'text');
+        }
+        if (tagIds) {
+            tagIds.forEach((element) => {
+                localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+                  <any>element, 'tag-ids');
+            })
         }
         if (lookupTags !== undefined && lookupTags !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,

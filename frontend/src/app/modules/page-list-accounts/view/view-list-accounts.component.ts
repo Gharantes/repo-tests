@@ -8,6 +8,8 @@ import {
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { SigExtendableTableComponent } from '@synergia-frontend/components';
+import { ConnectorListAccounts } from '../connector/connector-list-accounts';
+import { FormListAccountsComponent } from '../form/form-list-accounts.component';
 
 @Component({
   selector: 'app-view-list-accounts',
@@ -19,10 +21,12 @@ import { SigExtendableTableComponent } from '@synergia-frontend/components';
     MatIconModule,
     MatButtonModule,
     SigExtendableTableComponent,
+    FormListAccountsComponent,
   ],
 })
 export class ViewListAccountsComponent {
   @Input() data$!: IAccountModel[];
+  @Input() connector!: ConnectorListAccounts;
 
   @Output() public readonly createAccountEvent = new EventEmitter<void>();
   @Output() public readonly editAccountEvent =
