@@ -1,5 +1,6 @@
 package br.com.synergia.rest
 
+import br.com.synergia.libs.entityAccount.services.EntityAccountService
 import br.com.synergia.libs.entityTag.services.EntityTagService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
@@ -24,12 +25,13 @@ class EntityGetByIdResource (
     private val tagRepository: TagRepository,
     private val eventRepository: EventRepository,
     private val projectRepository: ProjectRepository,
-    private val entityTagService: EntityTagService
+    private val entityTagService: EntityTagService,
+    private val entityAccountService: EntityAccountService
 ) {
     @GetMapping("get-account-by-id/{id-account}")
     fun getAccountById(
         @PathVariable("id-account") idAccount: Long,
-        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false
     ): ResponseEntity<AccountDto?> {
         return ResponseMessenger.buildResponse {
             val el = accountRepository.findById(idAccount).orElse(null)?.toDto()
@@ -42,12 +44,16 @@ class EntityGetByIdResource (
     @GetMapping("get-event-by-id/{id-event}")
     fun getEventById(
         @PathVariable("id-event") idEvent: Long,
-        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false,
+        @RequestParam("lookup-members", required = false) lookupMembers: Boolean? = false
     ): ResponseEntity<EventDto?> {
         return ResponseMessenger.buildResponse {
             val el = eventRepository.findById(idEvent).orElse(null)?.toDto()
             if (lookupTags == true) {
                 el?.tags = entityTagService.listTagsByEvent(idEvent, null)
+            }
+            if (lookupMembers == true) {
+                el?.members = entityAccountService.listAccountsByEvent(idEvent, text = null)
             }
             el
         }
@@ -55,12 +61,16 @@ class EntityGetByIdResource (
     @GetMapping("get-project-by-id/{id-project}")
     fun getProjectById(
         @PathVariable("id-project") idProject: Long,
-        @RequestParam("lookup-tags", required = false) lookupTags: Boolean?
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false,
+        @RequestParam("lookup-members", required = false) lookupMembers: Boolean? = false,
     ): ResponseEntity<ProjectDto?> {
         return ResponseMessenger.buildResponse {
             val el = projectRepository.findById(idProject).orElse(null)?.toDto()
             if (lookupTags == true) {
                 el?.tags = entityTagService.listTagsByProject(idProject, null)
+            }
+            if (lookupMembers == true) {
+                el?.members = entityAccountService.listAccountsByProject(idProject, null)
             }
             el
         }

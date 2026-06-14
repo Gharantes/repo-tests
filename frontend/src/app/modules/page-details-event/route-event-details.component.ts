@@ -43,8 +43,12 @@ export class RouteEventDetailsComponent {
   public lookupEvent() {
     const idEvent = this.idEvent();
     if (idEvent == null) return;
+
+    const lookupTags = true;
+    const lookupMembers = true;
+
     this.entityService
-      .getEventById(idEvent, true)
+      .getEventById(idEvent, lookupTags, lookupMembers)
       .pipe(
         map((res) => EventDtoToModel(res)),
         tap((res) => this.event$.set(res))

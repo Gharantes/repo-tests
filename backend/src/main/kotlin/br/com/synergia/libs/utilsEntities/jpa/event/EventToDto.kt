@@ -11,6 +11,7 @@ fun Event.toDto(): EventDto {
         bannerUrl=bannerUrl,
         bannerColor=bannerColor,
         tags=emptyList(),
-        projects=emptyList()
+        projects=emptyList(),
+        members=emptyList()
     )
 }

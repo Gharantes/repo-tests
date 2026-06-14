@@ -1098,6 +1098,14 @@
             "schema": {
               "type": "boolean"
             }
+          },
+          {
+            "name": "lookup-members",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
           }
         ],
         "responses": {
@@ -1132,6 +1140,14 @@
           },
           {
             "name": "lookup-tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "lookup-members",
             "in": "query",
             "required": false,
             "schema": {
@@ -1499,12 +1515,52 @@
           }
         }
       },
+      "AccountDto": {
+        "required": [
+          "firstName",
+          "id",
+          "idTenant",
+          "lastName",
+          "login",
+          "tags"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "login": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "firstName": {
+            "type": "string"
+          },
+          "lastName": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TagDto"
+            }
+          }
+        }
+      },
       "EventDto": {
         "required": [
           "bannerColor",
           "description",
           "id",
           "idTenant",
+          "members",
           "tags",
           "title"
         ],
@@ -1535,6 +1591,12 @@
             "items": {
               "$ref": "#/components/schemas/TagDto"
             }
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountDto"
+            }
           }
         }
       },
@@ -1545,6 +1607,7 @@
           "events",
           "id",
           "idTenant",
+          "members",
           "tags",
           "title"
         ],
@@ -1583,6 +1646,12 @@
             "type": "array",
             "items": {
               "$ref": "#/components/schemas/EventDto"
+            }
+          },
+          "members": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/AccountDto"
             }
           }
         }
@@ -1674,45 +1743,6 @@
             "items": {
               "type": "integer",
               "format": "int64"
-            }
-          }
-        }
-      },
-      "AccountDto": {
-        "required": [
-          "firstName",
-          "id",
-          "idTenant",
-          "lastName",
-          "login",
-          "tags"
-        ],
-        "type": "object",
-        "properties": {
-          "id": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "idTenant": {
-            "type": "integer",
-            "format": "int64"
-          },
-          "login": {
-            "type": "string"
-          },
-          "email": {
-            "type": "string"
-          },
-          "firstName": {
-            "type": "string"
-          },
-          "lastName": {
-            "type": "string"
-          },
-          "tags": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/TagDto"
             }
           }
         }

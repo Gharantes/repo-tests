@@ -9,5 +9,6 @@ data class ProjectDto (
     val bannerUrl: String?,
     val bannerColor: String,
     var tags: List<TagDto>,
-    var events: List<EventDto>
+    var events: List<EventDto>,
+    var members: List<AccountDto>
 )

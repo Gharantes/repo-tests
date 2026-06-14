@@ -42,6 +42,10 @@ class EntityAccountService (
     }
 
     fun listAccountsByEvent(idEvent: Long, text: String?): List<AccountDto> {
-        return emptyList()
+        return sqlService.listAccountsByEvent(idEvent, text)
+    }
+
+    fun listAccountsByProject(idProject: Long, text: String?): List<AccountDto> {
+        return sqlService.listAccountsByProject(idProject, text)
     }
 }

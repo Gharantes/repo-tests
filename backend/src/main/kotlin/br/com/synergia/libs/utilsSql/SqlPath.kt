@@ -24,6 +24,10 @@ object SqlPath {
     enum class PageListPermissions (override val path: String) : ISqlFile {
         LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")
     }
+    enum class EntityAccount (override val path: String) : ISqlFile {
+        LIST_ACCOUNTS_BY_EVENT("/sql/entity-account/list-accounts-by-event.sql"),
+        LIST_ACCOUNTS_BY_PROJECT("/sql/entity-account/list-accounts-by-project.sql"),
+    }
     enum class PageListAccounts (override val path: String) : ISqlFile {
         LIST_ACCOUNTS("/sql/page-list-accounts/list-accounts.sql")
     }

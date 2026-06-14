@@ -9,7 +9,12 @@
     <div class="section">
       <div class="section-label">Membros:</div>
       <div class="section-body members-row">
-        <!-- member avatars would go here -->
+        @for (member of project$().members; track member.id) {
+          <div class="member-item">
+            <div class="member-avatar">{{ member.firstName.charAt(0).toUpperCase() + member.lastName.charAt(0).toUpperCase() }}</div>
+            <span class="member-name">{{ member.firstName }} {{ member.lastName }}</span>
+          </div>
+        }
       </div>
     </div>
 

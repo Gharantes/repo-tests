@@ -15,7 +15,8 @@ class ProjectRowMapper : RowMapper<ProjectDto> {
             bannerColor = rs.getString("project_banner_color"),
             tenant = null,
             tags = emptyList(),
-            events = emptyList()
+            events = emptyList(),
+            members = emptyList()
         )
     }
 }

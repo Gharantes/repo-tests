@@ -5,7 +5,6 @@ import { RoutingService } from '@synergia-frontend/services';
 import { map, tap } from 'rxjs';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProjectDtoToModel } from '@synergia-frontend/mappers';
-import { SafeImageComponent } from '../safe-image/safe-image.component';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -14,7 +13,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   templateUrl: './dialog-card-project.component.html',
   styleUrl: 'dialog-card-project.component.scss',
-  imports: [SafeImageComponent, MatButtonModule, MatIconModule],
+  imports: [MatButtonModule, MatIconModule],
 })
 export class DialogCardProjectComponent {
   public readonly projectModel$: IProjectModel = inject(MAT_DIALOG_DATA);
@@ -29,8 +28,10 @@ export class DialogCardProjectComponent {
   }
   private getById() {
     const idProject = this.projectModel$.id;
+    const lookupTags = true;
+    const lookupMembers = true;
     this.entityService
-      .getProjectById(idProject)
+      .getProjectById(idProject, lookupTags, lookupMembers)
       .pipe(
         map((res) => ProjectDtoToModel(res)),
         tap((res) => this.project$.set(res))
@@ -47,7 +48,5 @@ export class DialogCardProjectComponent {
     this.routingService.goToEditProject(this.projectModel$.id);
     this.dialog.close(null);
   }
-  public registerInEvent() {
-
-  }
+  public registerInEvent() {}
 }

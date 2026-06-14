@@ -13,7 +13,14 @@
 
     <div class="section">
       <div class="section-title">Membros:</div>
-      <div class="section-content"></div>
+      <div class="section-content member-list">
+        @for (member of event$().members; track member.id) {
+          <div class="member-item">
+            <div class="member-avatar">{{ member.firstName.charAt(0).toUpperCase() + member.lastName.charAt(0).toUpperCase() }}</div>
+            <span class="member-name">{{ member.firstName }} {{ member.lastName }}</span>
+          </div>
+        }
+      </div>
     </div>
 
     <div class="section">

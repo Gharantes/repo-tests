@@ -40,6 +40,22 @@ class EntityAccountSqlService (
         }
         return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
     }
+    fun listAccountsByEvent(idEvent: Long, text: String?): List<AccountDto> {
+        val sql = SqlPath.EntityAccount.LIST_ACCOUNTS_BY_EVENT.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_event", idEvent, Types.BIGINT)
+            .addValue("text", text, Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
+    }
+
+    fun listAccountsByProject(idProject: Long, text: String?): List<AccountDto> {
+        val sql = SqlPath.EntityAccount.LIST_ACCOUNTS_BY_PROJECT.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_project", idProject, Types.BIGINT)
+            .addValue("text", text, Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
+    }
+
     fun getAccountByLoginOrEmail(idTenant: Long, login: String?, email: String?): AccountDto? {
         val sql = SqlPath.PageUpsertAccount.GET_ACCOUNT_BY_LOGIN_OR_EMAIL.load()
         val paramMap = MapSqlParameterSource()

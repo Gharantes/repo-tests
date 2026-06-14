@@ -14,7 +14,8 @@ class EventRowMapper : RowMapper<EventDto> {
             bannerUrl = rs.getString("event_banner_url"),
             bannerColor = rs.getString("event_banner_color"),
             tags = emptyList(),
-            projects = emptyList()
+            projects = emptyList(),
+            members = emptyList()
         )
     }
 }

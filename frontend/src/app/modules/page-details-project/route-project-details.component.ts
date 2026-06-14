@@ -42,8 +42,11 @@ export class RouteProjectDetailsComponent {
   public lookupProject() {
     const idProject = this.idProject();
     if (idProject == null) return;
+    const lookupTags = true;
+    const lookupMembers = true
+
     this.entityService
-      .getProjectById(idProject, true)
+      .getProjectById(idProject, lookupTags, lookupMembers)
       .pipe(
         map((res) => ProjectDtoToModel(res)),
         tap((res) => this.project$.set(res))
