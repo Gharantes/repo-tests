@@ -8,6 +8,10 @@
 
   <div class="card-information">
     <div class="card-primary">{{ entry.title }}</div>
-    <div class="card-secondary"></div>
+    <div class="card-tags">
+      @for (tag of entry.tags; track tag.id) {
+        <span class="tag">{{ tag.title }}</span>
+      }
+    </div>
   </div>
 </div>

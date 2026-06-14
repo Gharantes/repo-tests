@@ -1,34 +1,33 @@
-@mixin col {
-    display: flex; flex-direction: column;
-}
-@mixin row {
-    display: flex; flex-direction: row;
-}
-* {
-    box-sizing: border-box;
-}
+* { box-sizing: border-box; }
+
 :host {
-    display: flex;
-    flex: 1;
-    height: 100%;
-    overflow: auto;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  height: 100%;
+  overflow-y: auto;
 }
 
-#projetos-registrados-container {
-    @include col();
-    padding: 10px;
-    row-gap: 10px;
-    .label {
-        font-size: 1.1rem;
-        font-weight: 500;
-    }
-    #projetos-registrados-for-container {
-        @include row();
-        column-gap: 10px;
-        flex-wrap: wrap;
-        .entry {
-            padding: 10px;
-            box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px, rgba(27, 31, 35, 0.30) 0px 0px 0px 1px;
-        }
-    }
+#two-col {
+  display: grid;
+  grid-template-columns: 1fr 260px;
+  flex: 1;
+  min-height: 0;
+}
+
+#main-col {
+  padding: 24px 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  overflow-y: auto;
+  border-right: 1px solid #e8e4dc;
+}
+
+#info-sidebar {
+  padding: 24px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: #fafaf7;
 }

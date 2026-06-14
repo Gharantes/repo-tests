@@ -7,13 +7,14 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { SafeImageComponent } from '../safe-image/safe-image.component';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'lib-dialog-card-project',
   standalone: true,
   templateUrl: './dialog-card-project.component.html',
   styleUrl: 'dialog-card-project.component.scss',
-  imports: [SafeImageComponent, MatButtonModule],
+  imports: [SafeImageComponent, MatButtonModule, MatIconModule],
 })
 export class DialogCardProjectComponent {
   public readonly projectModel$: IProjectModel = inject(MAT_DIALOG_DATA);

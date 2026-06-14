@@ -1,7 +1,51 @@
-<div class="routes-container">
-  @for (item of sidebarElements; track $index) {
-    <div matRipple (click)="item.goTo()" class="link">
-      {{ item.label }}
+<div id="profile-section">
+  <div id="profile-bg">
+    <div id="avatar">{{ getInitials() }}</div>
+    <div id="profile-name">{{ sessionService.getUserLabel() }}</div>
+  </div>
+</div>
+
+<nav id="nav-container">
+  <div class="nav-item" matRipple (click)="routingService.goToDashboard()">
+    <mat-icon>home</mat-icon>
+    <span>Início</span>
+  </div>
+
+  <div class="nav-item nav-group" matRipple (click)="exploreOpen = !exploreOpen">
+    <mat-icon>search</mat-icon>
+    <span>Explorar</span>
+    <mat-icon class="chevron">{{ exploreOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </div>
+  @if (exploreOpen) {
+    <div class="nav-sub-item" matRipple (click)="routingService.goToListProjects()">
+      <span class="dot">•</span><span>Projetos</span>
+    </div>
+    <div class="nav-sub-item" matRipple (click)="routingService.goToListEvents()">
+      <span class="dot">•</span><span>Eventos</span>
     </div>
   }
+
+  <div class="nav-item nav-group" matRipple (click)="yourProjectsOpen = !yourProjectsOpen">
+    <mat-icon>folder</mat-icon>
+    <span>Seus Projetos</span>
+    <mat-icon class="chevron">{{ yourProjectsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </div>
+
+  <div class="nav-item nav-group" matRipple (click)="yourEventsOpen = !yourEventsOpen">
+    <mat-icon>calendar_month</mat-icon>
+    <span>Seus Eventos</span>
+    <mat-icon class="chevron">{{ yourEventsOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </div>
+
+  <div class="nav-item" matRipple>
+    <mat-icon>chat</mat-icon>
+    <span>Mensagens</span>
+  </div>
+</nav>
+
+<div id="bottom-nav">
+  <div class="nav-item" matRipple (click)="routingService.goToListAccounts()">
+    <mat-icon>settings</mat-icon>
+    <span>Configurações</span>
+  </div>
 </div>

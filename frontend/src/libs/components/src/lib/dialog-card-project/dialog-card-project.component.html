@@ -1,36 +1,42 @@
-<div id="banner">
-  <lib-safe-image
-    [url]="project$().bannerUrl"
-    [altColor]="project$().bannerColor"
-  ></lib-safe-image>
-</div>
-
-<div id="grid">
-  <div id="side-1">
-    <div id="event-title">
-      {{ project$().title }}
+<div id="dialog-layout">
+  <div id="main-content">
+    <div id="header">
+      <div id="title-block">
+        <h2 id="project-title">{{ project$().title }}</h2>
+      </div>
     </div>
 
     <div class="section">
-      <div class="section-title">Membros:</div>
-      <div class="section-content"></div>
+      <div class="section-label">Membros:</div>
+      <div class="section-body members-row">
+        <!-- member avatars would go here -->
+      </div>
     </div>
 
     <div class="section">
-      <div class="section-title">Descrição:</div>
-      <div class="section-content">{{ project$().description }}</div>
+      <div class="section-label">Descrição do Projeto</div>
+      <div class="section-body description-text">{{ project$().description }}</div>
     </div>
   </div>
 
-  <div id="side-2">
-    <button
-      mat-stroked-button
-      (click)="editProject()">
+  <div id="side-info">
+    <button mat-raised-button class="action-btn primary-action" (click)="editProject()">
+      <mat-icon>edit</mat-icon>
       Editar Projeto
     </button>
 
-    <button mat-stroked-button (click)="registerInEvent()">
+    <button mat-raised-button class="action-btn secondary-action" (click)="registerInEvent()">
+      <mat-icon>event</mat-icon>
       Registrar em Evento
     </button>
+
+    <div class="info-block">
+      <div class="info-label">Tags:</div>
+      <div class="tags-row">
+        @for (tag of project$().tags; track tag.id) {
+          <span class="tag-pill">{{ tag.title }}</span>
+        }
+      </div>
+    </div>
   </div>
 </div>

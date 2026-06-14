@@ -1,5 +1,6 @@
 import { Component } from "@angular/core";
 import { MatRippleModule } from "@angular/material/core";
+import { MatIconModule } from "@angular/material/icon";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 
 @Component({
@@ -7,19 +8,23 @@ import { RoutingService, SessionService } from "@synergia-frontend/services";
   standalone: true,
   templateUrl: './layout-sidebar.component.html',
   styleUrl: `./layout-sidebar.component.scss`,
-  imports: [MatRippleModule]
+  imports: [MatRippleModule, MatIconModule]
 })
 export class LayoutSidebarComponent {
+  public exploreOpen = true;
+  public yourProjectsOpen = false;
+  public yourEventsOpen = false;
+
   constructor(
     public readonly routingService: RoutingService,
     public readonly sessionService: SessionService
   ) {}
 
-  public sidebarElements: { label: string, goTo: () => void }[] = [
-    { label: 'Dashboard', goTo: () => this.routingService.goToDashboard() },
-    { label: 'Explorar Projetos', goTo: () => this.routingService.goToListProjects() },
-    { label: 'Explorar Eventos', goTo: () => this.routingService.goToListEvents() },
-    { label: 'Visualizar Tags', goTo: () => this.routingService.goToListTags() },
-    { label: 'Usuários', goTo: () => this.routingService.goToListAccounts() },
-  ]
+  public getInitials(): string {
+    const label = this.sessionService.getUserLabel() ?? '';
+    const parts = label.trim().split(/\s+/).filter(p => p.length > 0);
+    if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
+    if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
+    return 'GA';
+  }
 }

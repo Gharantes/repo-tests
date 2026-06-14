@@ -4,7 +4,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInput, MatLabel } from '@angular/material/input';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { MatFormField } from '@angular/material/form-field';
+import { MatFormField, MatPrefix } from '@angular/material/form-field';
 import { ConnectorListAccounts } from '../connector/connector-list-accounts';
 import { AddTagBtnComponent } from '@synergia-frontend/components';
 import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
@@ -20,6 +20,7 @@ import { ITagModel } from '@synergia-frontend/interfaces';
     MatIconModule,
     MatButtonModule,
     MatFormField,
+    MatPrefix,
     MatInput,
     FormsModule,
     MatLabel,

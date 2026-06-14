@@ -1,49 +1,45 @@
 <div id="banner">
   <lib-safe-image
-    [url]="event$.bannerColor"
+    [url]="event$.bannerUrl"
     [altColor]="event$.bannerColor"
   ></lib-safe-image>
 </div>
 
-<div id="content-container">
+<div id="two-col">
+  <div id="main-col">
+    <h2 id="event-title">{{ event$.title }}</h2>
 
-  <div id="section-title">
-    {{ event$.title }}
-  </div>
+    <div class="section">
+      <div class="section-header">Tags</div>
+      <div id="tags-container">
+        <mat-chip-set>
+          @for (tag of event$.tags; track tag.id) {
+            <mat-chip [removable]="true" (removed)="removeTagEvent.emit(tag)">
+              {{ tag.title }}
+              <button matChipRemove [attr.aria-label]="'remove'">
+                <mat-icon>cancel</mat-icon>
+              </button>
+            </mat-chip>
+          }
+        </mat-chip-set>
+        <lib-add-tag-btn [forEvents]="true" (saveTagEvent)="saveTagEvent.emit($event)"></lib-add-tag-btn>
+      </div>
+    </div>
 
-  <div id="section-tags">
-    <div id="tags-container">
-      <mat-chip-set aria-label="Fish selection">
-        @for (tag of event$.tags; track tag.id) {
-          <mat-chip
-            [removable]="true"
-            (removed)="removeTagEvent.emit(tag)">
-            {{ tag.title }}
-            <button matChipRemove [attr.aria-label]="'remove'">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-        }
-      </mat-chip-set>
+    <div class="section">
+      <div class="section-header">Descrição</div>
+      <p class="section-body">{{ event$.description }}</p>
+    </div>
 
-      <lib-add-tag-btn
-        [forEvents]="true"
-        (saveTagEvent)="saveTagEvent.emit($event)"
-      ></lib-add-tag-btn>
+    <div class="section">
+      <div class="section-header">Feed</div>
+      <div id="feed-container">
+        <lib-add-post-btn (savePostEvent)="savePostEvent.emit($event)"></lib-add-post-btn>
+      </div>
     </div>
   </div>
 
-  <div id="section-description">
-    <div id="section-header">Descrição:</div>
-    <div id="section-value">{{ event$.description }}</div>
-  </div>
-
-  <div id="section-feed">
-    <div id="section-header">Feed:</div>
-    <div id="feed-container">
-      <lib-add-post-btn
-        (savePostEvent)="savePostEvent.emit($event)"
-      ></lib-add-post-btn>
-    </div>
+  <div id="info-sidebar">
+    <!-- right sidebar content will go here -->
   </div>
 </div>

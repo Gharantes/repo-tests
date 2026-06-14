@@ -1,20 +1,24 @@
 <div id="form">
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Título</mat-label>
+  <mat-form-field [appearance]="'outline'" class="search-field">
+    <mat-icon matPrefix>search</mat-icon>
+    <mat-label>Procure por Eventos</mat-label>
     <input type="text" matInput [formControl]="connector.form.controls.text"/>
   </mat-form-field>
 
-  <div id="tags-container">
-    <mat-chip-set>
-      @for (tag of connector.form.controls.tags.value; track tag.id) {
-        <mat-chip [removable]="true" (removed)="removeTag(tag)">
-          {{ tag.title }}
-          <button matChipRemove [attr.aria-label]="'remove'">
-            <mat-icon>cancel</mat-icon>
-          </button>
-        </mat-chip>
-      }
-    </mat-chip-set>
-    <lib-add-tag-btn [forEvents]="true" (saveTagEvent)="saveTag($event)"></lib-add-tag-btn>
-  </div>
+  @if (connector.form.controls.tags.value.length > 0) {
+    <div id="tags-container">
+      <mat-chip-set>
+        @for (tag of connector.form.controls.tags.value; track tag.id) {
+          <mat-chip [removable]="true" (removed)="removeTag(tag)">
+            {{ tag.title }}
+            <button matChipRemove [attr.aria-label]="'remove'">
+              <mat-icon>cancel</mat-icon>
+            </button>
+          </mat-chip>
+        }
+      </mat-chip-set>
+    </div>
+  }
+
+  <lib-add-tag-btn [forEvents]="true" (saveTagEvent)="saveTag($event)"></lib-add-tag-btn>
 </div>

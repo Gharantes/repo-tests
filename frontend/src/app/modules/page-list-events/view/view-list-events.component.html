@@ -1,7 +1,9 @@
 <div id="topline">
-  <app-form-list-events
-    [connector]="connector"
-  ></app-form-list-events>
+  <app-form-list-events [connector]="connector"></app-form-list-events>
+  <button mat-raised-button (click)="insertEvent.emit()" class="primary-button create-btn">
+    <mat-icon>add</mat-icon>
+    <span>Criar novo evento</span>
+  </button>
 </div>
 
 <div id="page">
@@ -9,11 +11,4 @@
     [data$]="data$"
     (cardInteractionEvent)="openCardEvent.emit($event)"
   ></lib-event-card-grid>
-</div>
-
-<div id="btn-line">
-  <button mat-raised-button (click)="insertEvent.emit()">
-    <span>Criar novo evento</span>
-    <mat-icon class="material-symbols-outlined">add</mat-icon>
-  </button>
 </div>
