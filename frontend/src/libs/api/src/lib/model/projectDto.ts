@@ -10,6 +10,7 @@
 import { TenantDto } from './tenantDto';
 import { EventDto } from './eventDto';
 import { TagDto } from './tagDto';
+import { AccountDto } from './accountDto';
 
 
 export interface ProjectDto { 
@@ -22,5 +23,6 @@ export interface ProjectDto {
     bannerColor: string;
     tags: Array<TagDto>;
     events: Array<EventDto>;
+    members: Array<AccountDto>;
 }
 

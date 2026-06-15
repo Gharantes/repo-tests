@@ -53,7 +53,8 @@ export class RouteListEventsComponent {
   public lookupData$() {
     const idTenant = this.sessionService.getTenantId() as number;
     const text = this.connector.form.controls.text.value;
-    return this.eventEntityService.listEventsByTenant(idTenant, text).pipe(
+    const tagIds = this.connector.form.controls.tags.value.map((t) => t.id);
+    return this.eventEntityService.listEventsByTenant(idTenant, text, tagIds.length ? tagIds : undefined).pipe(
       map((res) => res.map((v) => EventDtoToModel(v))),
       tap((res) => this.data$.set(res))
     );

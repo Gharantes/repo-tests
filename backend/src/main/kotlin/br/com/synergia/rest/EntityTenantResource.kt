@@ -1,9 +1,9 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityTenant.models.UpsertTenantDto
-import br.com.synergia.entityTenant.services.EntityTenantService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.TenantDto
+import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
+import br.com.synergia.libs.entityTenant.services.EntityTenantService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.TenantDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 

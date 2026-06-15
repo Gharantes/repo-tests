@@ -8,6 +8,7 @@
  * Do not edit the class manually.
  */
 import { TagDto } from './tagDto';
+import { AccountDto } from './accountDto';
 
 
 export interface EventDto { 
@@ -18,5 +19,6 @@ export interface EventDto {
     bannerUrl?: string;
     bannerColor: string;
     tags: Array<TagDto>;
+    members: Array<AccountDto>;
 }
 

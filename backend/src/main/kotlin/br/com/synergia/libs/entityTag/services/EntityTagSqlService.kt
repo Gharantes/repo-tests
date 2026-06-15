@@ -1,0 +1,70 @@
+package br.com.synergia.libs.entityTag.services
+
+import br.com.synergia.libs.entityTag.models.UpsertTagDto
+import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
+import br.com.synergia.libs.utilsEntities.jpa.tag.Tag
+import br.com.synergia.libs.utilsEntities.jpa.tag.TagRepository
+import br.com.synergia.libs.utilsEntities.models.TagDto
+import br.com.synergia.libs.utilsEntities.rowmappers.EntityRowMapper
+import br.com.synergia.libs.utilsSql.SqlPath
+import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
+import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
+import org.springframework.stereotype.Service
+import java.sql.Types
+
+@Service
+class EntityTagSqlService (
+    private val template: NamedParameterJdbcTemplate,
+    private val tagRepository: TagRepository
+) {
+    fun listTags(
+        idTenant: Long,
+        forProjects: Boolean,
+        forEvents: Boolean,
+        forAccounts: Boolean,
+        text: String?
+    ): List<TagDto> {
+        val sql = SqlPath.PageListTags.LIST_TAGS.load()
+        val paramMap = MapSqlParameterSource()
+            .addValue("id_tenant", idTenant, Types.BIGINT)
+            .addValue("for_projects", forProjects, Types.BOOLEAN)
+            .addValue("for_events", forEvents, Types.BOOLEAN)
+            .addValue("for_accounts", forAccounts, Types.BOOLEAN)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
+    }
+    fun listTagsByEvent(idEvent: Long, text: String?): List<TagDto> {
+        val sql = SqlPath.PageExtendedEvent.LIST_TAGS_OF_EVENT.load()
+        val paramMap = MapSqlParameterSource().addValue("id_event", idEvent, Types.BIGINT)
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
+    }
+    fun listTagsByProject(idProject: Long, text: String?): List<TagDto> {
+        val sql = SqlPath.PageExtendedProject.LIST_TAGS_OF_PROJECT.load()
+        val paramMap = MapSqlParameterSource().addValue("id_project", idProject, Types.BIGINT)
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
+    }
+    fun listTagsByAccount(idAccount: Long, text: String?): List<TagDto> {
+        val sql = SqlPath.PageExtendedAccount.LIST_TAGS_OF_ACCOUNT.load()
+        val paramMap = MapSqlParameterSource().addValue("id_account", idAccount, Types.BIGINT)
+        return template.query(sql, paramMap, EntityRowMapper.tagRowMapper)
+    }
+    fun createTag(params: UpsertTagDto) {
+        val tag = Tag(
+            idTenant = params.idTenant,
+            title = params.title,
+            forEvents = params.forEvents,
+            forAccounts = params.forAccounts,
+            forProjects = params.forProjects
+        )
+        tagRepository.save(tag)
+    }
+    fun updateTag(idTag: Long, params: UpsertTagDto) {
+        tagRepository.findById(idTag).ifPresent { tag ->
+            tag.title = params.title
+            tag.forAccounts = params.forAccounts
+            tag.forEvents = params.forEvents
+            tag.forProjects = params.forProjects
+            tagRepository.save(tag)
+        }
+    }
+}

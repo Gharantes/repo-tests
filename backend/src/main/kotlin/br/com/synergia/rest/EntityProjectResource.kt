@@ -1,9 +1,9 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityProject.services.EntityProjectService
-import br.com.synergia.entityProject.models.UpsertProjectDto
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.ProjectDto
+import br.com.synergia.libs.entityProject.models.UpsertProjectDto
+import br.com.synergia.libs.entityProject.services.EntityProjectService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.ProjectDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -15,10 +15,11 @@ class EntityProjectResource (
     @PostMapping("/list-projects-by-tenant")
     fun listProjectsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String? = null
+        @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("tag-ids", required = false) tagIds: List<Long>? = null
     ): ResponseEntity<List<ProjectDto>> {
         return ResponseMessenger.buildResponse {
-            service.listProjectsByTenant(idTenant, text)
+            service.listProjectsByTenant(idTenant, text, tagIds)
         }
     }
     @PostMapping("/list-projects-by-account")

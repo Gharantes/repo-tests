@@ -1,9 +1,9 @@
 package br.com.synergia.rest
 
-import br.com.synergia.entityEvent.models.UpsertEventDto
-import br.com.synergia.entityEvent.services.EntityEventService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
-import br.com.synergia.utilsEntities.models.EventDto
+import br.com.synergia.libs.entityEvent.models.UpsertEventDto
+import br.com.synergia.libs.entityEvent.services.EntityEventService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.EventDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
@@ -15,10 +15,11 @@ class EntityEventResource (
     @PostMapping("/list-events-by-tenant")
     fun listEventsByTenant(
         @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("text", required = false) text: String? = null
+        @RequestParam("text", required = false) text: String? = null,
+        @RequestParam("tag-ids", required = false) tagIds: List<Long>? = null
     ): ResponseEntity<List<EventDto>> {
         return ResponseMessenger.buildResponse {
-            service.listEventsByTenant(idTenant, text)
+            service.listEventsByTenant(idTenant, text, tagIds)
         }
     }
     @PostMapping("/list-events-by-account")

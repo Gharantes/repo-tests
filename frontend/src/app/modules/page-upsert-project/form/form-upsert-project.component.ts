@@ -8,6 +8,8 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
 import { ITagModel } from '@synergia-frontend/interfaces';
 import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
+import { AddTagBtnComponent } from '@synergia-frontend/components';
+import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
 
 @Component({
   selector: 'app-form-upsert-project',
@@ -23,11 +25,33 @@ import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
+    AddTagBtnComponent,
+    MatChipSet,
+    MatChip,
+    MatChipsModule,
   ],
 })
 export class FormUpsertProjectComponent {
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly saveEvent = new EventEmitter<void>();
   @Input() public connector!: ConnectorUpsertProject;
-  @Input() public tags!: ITagModel[];
+
+  protected saveTag($event: ITagModel) {
+    const tagsControl = this.connector.form.controls.tags;
+    const current = tagsControl.value;
+    if (current.filter((v) => v.id === $event.id).length > 0) {
+      return;
+    }
+    current.push($event);
+  }
+
+  protected removeTag(tag: ITagModel) {
+    const tagsControl = this.connector.form.controls.tags;
+    const current = tagsControl.value;
+    const index = current.findIndex((v) => v.id === tag.id);
+    if (index === -1) {
+      return;
+    }
+    current.splice(index, 1);
+  }
 }

@@ -7,6 +7,7 @@
  * https://openapi-generator.tech
  * Do not edit the class manually.
  */
+import { TagDto } from './tagDto';
 
 
 export interface AccountDto { 
@@ -16,5 +17,6 @@ export interface AccountDto {
     email?: string;
     firstName: string;
     lastName: string;
+    tags: Array<TagDto>;
 }
 

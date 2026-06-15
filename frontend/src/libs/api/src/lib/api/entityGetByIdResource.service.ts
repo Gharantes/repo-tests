@@ -98,15 +98,22 @@ export class EntityGetByIdResourceService {
 
     /**
      * @param idAccount 
+     * @param lookupTags 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getAccountById(idAccount: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AccountDto>;
-    public getAccountById(idAccount: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccountDto>>;
-    public getAccountById(idAccount: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccountDto>>;
-    public getAccountById(idAccount: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getAccountById(idAccount: number, lookupTags?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<AccountDto>;
+    public getAccountById(idAccount: number, lookupTags?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<AccountDto>>;
+    public getAccountById(idAccount: number, lookupTags?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<AccountDto>>;
+    public getAccountById(idAccount: number, lookupTags?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idAccount === null || idAccount === undefined) {
             throw new Error('Required parameter idAccount was null or undefined when calling getAccountById.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lookupTags !== undefined && lookupTags !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lookupTags, 'lookup-tags');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -149,6 +156,7 @@ export class EntityGetByIdResourceService {
         return this.httpClient.request<AccountDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,
@@ -162,13 +170,14 @@ export class EntityGetByIdResourceService {
     /**
      * @param idEvent 
      * @param lookupTags 
+     * @param lookupMembers 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventDto>;
-    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventDto>>;
-    public getEventById(idEvent: number, lookupTags?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventDto>>;
-    public getEventById(idEvent: number, lookupTags?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getEventById(idEvent: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<EventDto>;
+    public getEventById(idEvent: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<EventDto>>;
+    public getEventById(idEvent: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<EventDto>>;
+    public getEventById(idEvent: number, lookupTags?: boolean, lookupMembers?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idEvent === null || idEvent === undefined) {
             throw new Error('Required parameter idEvent was null or undefined when calling getEventById.');
         }
@@ -177,6 +186,10 @@ export class EntityGetByIdResourceService {
         if (lookupTags !== undefined && lookupTags !== null) {
           localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
             <any>lookupTags, 'lookup-tags');
+        }
+        if (lookupMembers !== undefined && lookupMembers !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lookupMembers, 'lookup-members');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -232,15 +245,27 @@ export class EntityGetByIdResourceService {
 
     /**
      * @param idProject 
+     * @param lookupTags 
+     * @param lookupMembers 
      * @param observe set whether or not to return the data Observable as the body, response or events. defaults to returning the body.
      * @param reportProgress flag to report request and response progress.
      */
-    public getProjectById(idProject: number, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectDto>;
-    public getProjectById(idProject: number, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectDto>>;
-    public getProjectById(idProject: number, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectDto>>;
-    public getProjectById(idProject: number, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
+    public getProjectById(idProject: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'body', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<ProjectDto>;
+    public getProjectById(idProject: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'response', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpResponse<ProjectDto>>;
+    public getProjectById(idProject: number, lookupTags?: boolean, lookupMembers?: boolean, observe?: 'events', reportProgress?: boolean, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<HttpEvent<ProjectDto>>;
+    public getProjectById(idProject: number, lookupTags?: boolean, lookupMembers?: boolean, observe: any = 'body', reportProgress: boolean = false, options?: {httpHeaderAccept?: 'application/json', context?: HttpContext, transferCache?: boolean}): Observable<any> {
         if (idProject === null || idProject === undefined) {
             throw new Error('Required parameter idProject was null or undefined when calling getProjectById.');
+        }
+
+        let localVarQueryParameters = new HttpParams({encoder: this.encoder});
+        if (lookupTags !== undefined && lookupTags !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lookupTags, 'lookup-tags');
+        }
+        if (lookupMembers !== undefined && lookupMembers !== null) {
+          localVarQueryParameters = this.addToHttpParams(localVarQueryParameters,
+            <any>lookupMembers, 'lookup-members');
         }
 
         let localVarHeaders = this.defaultHeaders;
@@ -283,6 +308,7 @@ export class EntityGetByIdResourceService {
         return this.httpClient.request<ProjectDto>('get', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
+                params: localVarQueryParameters,
                 responseType: <any>responseType_,
                 withCredentials: this.configuration.withCredentials,
                 headers: localVarHeaders,

@@ -1,0 +1,51 @@
+package br.com.synergia.libs.entityAccount.services
+
+import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.entityTag.services.EntityTagService
+import br.com.synergia.libs.utilsEntities.models.AccountDto
+import org.springframework.stereotype.Service
+
+@Service
+class EntityAccountService (
+    private val sqlService: EntityAccountSqlService,
+    private val entityTagService: EntityTagService
+) {
+    fun listAccountsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null, lookupTags: Boolean? = null): List<AccountDto> {
+        val accounts = sqlService.listAccountsByTenant(idTenant, text, tagIds)
+        if (lookupTags == true) {
+            accounts.forEach { it.tags = entityTagService.listTagsByAccount(it.id, null) }
+        }
+        return accounts
+    }
+    fun getAccountByLoginOrEmail(
+        idTenant: Long,
+        idAccount: Long?,
+        login: String?,
+        email: String?
+    ): Boolean {
+        val res = sqlService.getAccountByLoginOrEmail(idTenant, login, email)
+        if (res == null) return false
+        if (idAccount == null) return true
+        return res.id != idAccount
+    }
+    fun createAccount(params: UpsertAccountDto) {
+        if (params.password.isNullOrBlank()) {
+            throw Exception("Senha inválida.")
+        }
+        val idAccount = sqlService.createAccount(params)
+        sqlService.createAccountTagRelationship(idAccount, params.tags)
+    }
+    fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
+        sqlService.updateAccount(idAccount, params)
+        sqlService.deleteAccountTagRelationships(idAccount)
+        sqlService.createAccountTagRelationship(idAccount, params.tags)
+    }
+
+    fun listAccountsByEvent(idEvent: Long, text: String?): List<AccountDto> {
+        return sqlService.listAccountsByEvent(idEvent, text)
+    }
+
+    fun listAccountsByProject(idProject: Long, text: String?): List<AccountDto> {
+        return sqlService.listAccountsByProject(idProject, text)
+    }
+}

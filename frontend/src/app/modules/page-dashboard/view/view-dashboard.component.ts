@@ -1,18 +1,14 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { IEventModel, IProjectModel } from '@synergia-frontend/interfaces';
-import { EventCardGridComponent, ProjectCardGridComponent } from '@synergia-frontend/components';
+import { Component, EventEmitter, Output } from '@angular/core';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-view-dashboard',
   standalone: true,
   templateUrl: 'view-dashboard.component.html',
   styleUrl: `view-dashboard.component.scss`,
-  imports: [ProjectCardGridComponent, EventCardGridComponent],
+  imports: [MatIconModule],
 })
 export class ViewDashboardComponent {
-  @Input() public projects$!: IProjectModel[];
-  @Input() public events$!: IEventModel[];
-
-  @Output() projectCardInteractionEvent = new EventEmitter<IProjectModel>();
-  @Output() eventCardInteractionEvent = new EventEmitter<IEventModel>();
+  @Output() createProjectEvent = new EventEmitter<void>();
+  @Output() createEventEvent = new EventEmitter<void>();
 }

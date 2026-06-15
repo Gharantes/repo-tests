@@ -1,7 +1,7 @@
 package br.com.synergia.rest
 
-import br.com.synergia.actionManageRelationships.services.ActionManageRelationshipsService
-import br.com.synergia.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.actionManageRelationships.services.ActionManageRelationshipsService
+import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping

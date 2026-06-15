@@ -12,3 +12,23 @@
   <mat-label>URL do Banner</mat-label>
   <input type="text" matInput [formControl]="connector.form.controls.bannerUrl" />
 </mat-form-field>
+
+<div id="tags-container">
+  <mat-chip-set>
+    @for (tag of connector.form.controls.tags.value; track tag.id) {
+      <mat-chip
+        [removable]="true"
+        (removed)="removeTag(tag)">
+        {{ tag.title }}
+        <button matChipRemove [attr.aria-label]="'remove'">
+          <mat-icon>cancel</mat-icon>
+        </button>
+      </mat-chip>
+    }
+  </mat-chip-set>
+
+  <lib-add-tag-btn
+    [forEvents]="false"
+    (saveTagEvent)="saveTag($event)"
+  ></lib-add-tag-btn>
+</div>

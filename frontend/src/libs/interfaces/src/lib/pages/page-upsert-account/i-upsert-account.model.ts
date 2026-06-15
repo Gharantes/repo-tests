@@ -4,5 +4,6 @@ export interface IUpsertAccountModel {
   login: string,
   password: string,
   firstName: string,
-  lastName: string
+  lastName: string,
+  tags: number[],
 }

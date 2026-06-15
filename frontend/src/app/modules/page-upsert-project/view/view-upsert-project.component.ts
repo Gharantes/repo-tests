@@ -6,7 +6,6 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatSelectModule } from '@angular/material/select';
-import { ITagModel } from '@synergia-frontend/interfaces';
 import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
 import { FormUpsertProjectComponent } from '../form/form-upsert-project.component';
 
@@ -31,5 +30,4 @@ export class ViewUpsertProjectComponent {
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly saveEvent = new EventEmitter<void>();
   @Input() public connector!: ConnectorUpsertProject;
-  @Input() public tags!: ITagModel[];
 }

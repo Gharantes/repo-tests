@@ -32,8 +32,12 @@ export class DialogCardEventComponent {
 
   private lookupEvent() {
     const idEvent = this.eventModel$.id;
+
+    const lookupTags = true;
+    const lookupMembers = true;
+
     this.entityService
-      .getEventById(idEvent)
+      .getEventById(idEvent, lookupTags, lookupMembers)
       .pipe(
         map((res) => EventDtoToModel(res)),
         tap((res) => this.event$.set(res))

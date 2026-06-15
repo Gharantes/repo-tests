@@ -44,10 +44,13 @@ export class RouteUpsertAccountComponent {
   constructor() {
     this.routingService
       .getParamFromRoute(this.activatedRoute, 'id')
-      .then((res) => {
-        res ? this.idAccount.set(Number(res)) : undefined;
-
-        this.fillForm();
+      .then((id) => {
+        if (id) {
+          this.idAccount.set(Number(id));
+          this.fillForm();
+        } else {
+          this.connector.makePasswordRequired()
+        }
       });
   }
   public fillForm() {
@@ -56,16 +59,10 @@ export class RouteUpsertAccountComponent {
       return;
     }
     this.entityGetByIdService
-      .getAccountById(id)
+      .getAccountById(id, true)
       .pipe(
         map((res) => AccountDtoToModel(res)),
-        tap((res) => {
-          const controls = this.connector.form.controls;
-          controls.login.setValue(res.login);
-          controls.firstName.setValue(res.firstName);
-          controls.lastName.setValue(res.lastName);
-          controls.email.setValue(res.email);
-        })
+        tap((res) => this.connector.populateForm(res))
       )
       .subscribe();
   }

@@ -8,7 +8,7 @@ plugins {
 	kotlin("plugin.spring") version "1.9.25"
 	kotlin("plugin.jpa") version "1.9.25"
 
-	id("org.springframework.boot") version "3.5.0" apply false
+	id("org.springframework.boot") version "3.5.0"
 	id("io.spring.dependency-management") version "1.1.7"
 
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
@@ -37,22 +37,6 @@ repositories {
 tasks.getByName("generateOpenApiDocs") { project.ext.set("profile", "openapi") }
 
 dependencies {
-	implementation(project(":libs:actionAttributePermissions"))
-	implementation(project(":libs:actionManageRelationships"))
-
-	implementation(project(":libs:entityProject"))
-	implementation(project(":libs:entityTenant"))
-	implementation(project(":libs:entityEvent"))
-	implementation(project(":libs:entityAccount"))
-	implementation(project(":libs:entityPermission"))
-	implementation(project(":libs:entityTag"))
-
-	implementation(project(":libs:pageLogin"))
-	implementation(project(":libs:utilsCommons"))
-	implementation(project(":libs:utilsSql"))
-	implementation(project(":libs:utilsEntities"))
-
-
 	implementation("org.springframework.boot:spring-boot-starter-data-jdbc")
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
@@ -92,14 +76,3 @@ tasks.withType<Test> {
 	useJUnitPlatform()
 }
 
-subprojects {
-	apply(plugin = "io.spring.dependency-management")
-	repositories {
-		mavenCentral()
-	}
-	dependencyManagement {
-		imports {
-			mavenBom("org.springframework.boot:spring-boot-dependencies:3.5.0")
-		}
-	}
-}

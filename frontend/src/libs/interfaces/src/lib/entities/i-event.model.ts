@@ -1,4 +1,5 @@
 import { ITagModel } from './i-tag.model';
+import { IAccountModel } from './i-account.model';
 
 export interface IEventModel {
   id: number;
@@ -6,5 +7,6 @@ export interface IEventModel {
   description: string;
   bannerUrl?: string;
   bannerColor: string;
-  tags: ITagModel[]
+  tags: ITagModel[];
+  members: IAccountModel[];
 }

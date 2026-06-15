@@ -1,4 +1,4 @@
-import { IUpsertAccountModel } from '@synergia-frontend/interfaces';
+import { IAccountModel, ITagModel, IUpsertAccountModel } from '@synergia-frontend/interfaces';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { inject } from '@angular/core';
 import { SessionService } from '@synergia-frontend/services';
@@ -11,10 +11,15 @@ export class ConnectorUpsertAccont {
     idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number, [Validators.required]),
     email: this.fb.control<string|undefined>('', [Validators.email]),
     login: this.fb.control<string>('', [Validators.required]),
-    password: this.fb.control<string>('', [Validators.required]),
+    password: this.fb.control<string>(''),
     firstName: this.fb.control<string>('', [Validators.required]),
     lastName: this.fb.control<string>('', [Validators.required]),
+    tags: this.fb.control<ITagModel[]>([]),
   });
+
+  public makePasswordRequired() {
+    this.form.controls.password.addValidators(Validators.required);
+  }
 
   public getFormValue(): IUpsertAccountModel | null {
     const v = this.form.value;
@@ -27,14 +32,15 @@ export class ConnectorUpsertAccont {
       firstName: v.firstName,
       lastName: v.lastName,
       login: v.login,
-      password: v.password
+      password: v.password,
+      tags: v.tags?.map((t) => t.id) ?? [],
     }
   }
 
-  public populateForm(input: IUpsertAccountModel) {
-    this.form.controls.firstName.setValue(input.firstName)
-    this.form.controls.login.setValue(input.login)
-    this.form.controls.password.setValue(input.password)
-    this.form.controls.lastName.setValue(input.lastName)
+  public populateForm(res: IAccountModel) {
+    this.form.controls.firstName.setValue(res.firstName);
+    this.form.controls.login.setValue(res.login);
+    this.form.controls.lastName.setValue(res.lastName);
+    this.form.controls.tags.setValue(res.tags);
   }
 }

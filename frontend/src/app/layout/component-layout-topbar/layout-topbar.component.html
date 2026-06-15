@@ -1,20 +1,32 @@
 <div id="left">
-  <div id="system-title">Synergia</div>
-
-  <div id="route-label-title">{{ routingService.routeLabel() }}</div>
+  <div id="brand">
+    <div id="logo">
+      <span class="circle circle-orange"></span>
+      <span class="circle circle-blue"></span>
+    </div>
+    <span id="brand-name">Synergia</span>
+  </div>
 </div>
 
 <div id="right">
-  <button
-    class="usr-btn"
-    [matMenuTriggerFor]="userMenu">
-    <lib-gm-icon [type]="'rounded'" [image]="'account_circle'"></lib-gm-icon>
+  <button class="icon-btn" mat-icon-button>
+    <mat-icon>settings</mat-icon>
   </button>
+  <button class="icon-btn" mat-icon-button>
+    <mat-icon>notifications</mat-icon>
+  </button>
+
+  <div id="user-info" [matMenuTriggerFor]="userMenu">
+    <div id="user-name">{{ sessionService.getUserLabel() }}</div>
+    <div id="user-role">{{ sessionService.getTenantLabel() }}</div>
+  </div>
+
+  <div id="avatar-wrap" [matMenuTriggerFor]="userMenu">
+    <div id="avatar">{{ getInitials() }}</div>
+    <mat-icon>keyboard_arrow_down</mat-icon>
+  </div>
+
   <mat-menu #userMenu="matMenu">
-    <div mat-menu-item>
-      {{ sessionService.getTenantId() }} - {{ sessionService.getTenantLabel() }}
-    </div>
     <button mat-menu-item (click)="logout()">Logout</button>
   </mat-menu>
 </div>
-

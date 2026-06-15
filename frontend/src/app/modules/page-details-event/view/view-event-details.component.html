@@ -1,0 +1,41 @@
+<div id="banner">
+  <lib-safe-image
+    [url]="event$.bannerUrl"
+    [altColor]="event$.bannerColor"
+  ></lib-safe-image>
+</div>
+
+<div id="two-col">
+  <div id="main-col">
+    <h2 id="event-title">{{ event$.title }}</h2>
+
+    <div class="section">
+      <div class="section-header">Tags</div>
+      <div id="tags-container">
+        <mat-chip-set>
+          @for (tag of event$.tags; track tag.id) {
+            <mat-chip>
+              {{ tag.title }}
+            </mat-chip>
+          }
+        </mat-chip-set>
+      </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">Descrição</div>
+      <p class="section-body">{{ event$.description }}</p>
+    </div>
+
+    <div class="section">
+      <div class="section-header">Feed</div>
+      <div id="feed-container">
+        <lib-add-post-btn (savePostEvent)="savePostEvent.emit($event)"></lib-add-post-btn>
+      </div>
+    </div>
+  </div>
+
+  <div id="info-sidebar">
+    <!-- right sidebar content will go here -->
+  </div>
+</div>

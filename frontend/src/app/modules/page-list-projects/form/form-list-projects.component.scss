@@ -1,14 +1,26 @@
-@use '../../../../styles/mixins' as m;
+* { box-sizing: border-box; }
 
-* {
-  @include m.base();
-}
 :host {
-  width: 100%;
+  flex: 1;
+  display: flex;
+  align-items: center;
 }
+
 #form {
-  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  flex-wrap: wrap;
 }
-.field {
-  width: 100%;
+
+.search-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+#tags-container {
+  display: flex;
+  align-items: center;
 }

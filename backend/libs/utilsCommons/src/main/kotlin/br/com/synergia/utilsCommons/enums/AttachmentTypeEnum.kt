@@ -1,7 +1,0 @@
-package br.com.synergia.utilsCommons.enums
-
-enum class AttachmentTypeEnum (
-    val value: Int
-) {
-    IMAGE(0)
-}
