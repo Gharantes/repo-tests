@@ -42,9 +42,11 @@
     <div class="info-block">
       <div class="info-label">Tags:</div>
       <div class="tags-row">
-        @for (tag of project$().tags; track tag.id) {
-          <span class="tag-pill">{{ tag.title }}</span>
-        }
+        <mat-chip-set>
+          @for (tag of project$().tags; track tag.id) {
+            <mat-chip>{{ tag.title }}</mat-chip>
+          }
+        </mat-chip-set>
       </div>
     </div>
   </div>

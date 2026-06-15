@@ -10,6 +10,31 @@
     <h2 id="project-title">{{ project$.title }}</h2>
 
     <div class="section">
+      <div class="section-header">Tags</div>
+      <div id="tags-container">
+        <mat-chip-set>
+          @for (tag of project$.tags; track tag.id) {
+            <mat-chip>
+              {{ tag.title }}
+            </mat-chip>
+          }
+        </mat-chip-set>
+        </div>
+    </div>
+
+    <div class="section">
+      <div class="section-header">Membros</div>
+      <div class="member-list">
+        @for (member of project$.members; track member.id) {
+          <div class="member-item">
+            <div class="member-avatar">{{ member.firstName.charAt(0).toUpperCase() + member.lastName.charAt(0).toUpperCase() }}</div>
+            <span class="member-name">{{ member.firstName }} {{ member.lastName }}</span>
+          </div>
+        }
+      </div>
+    </div>
+
+    <div class="section">
       <div class="section-header">Descrição</div>
       <p class="section-body">{{ project$.description }}</p>
     </div>

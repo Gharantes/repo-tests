@@ -1,6 +1,9 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
-import { AddPostBtnComponent, AddTagBtnComponent, SafeImageComponent } from '@synergia-frontend/components';
+import {
+  AddPostBtnComponent,
+  SafeImageComponent,
+} from '@synergia-frontend/components';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
 
@@ -10,7 +13,6 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: `./view-event-details.component.scss`,
   imports: [
     SafeImageComponent,
-    AddTagBtnComponent,
     MatChip,
     MatChipSet,
     MatIconModule,

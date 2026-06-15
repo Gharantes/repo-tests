@@ -129,14 +129,11 @@
 }
 .tags-row {
   display: flex;
+  flex-direction: row;
   flex-wrap: wrap;
   gap: 6px;
-}
-.tag-pill {
-  background: #E8EDFF;
-  color: #3B52CC;
-  border-radius: 20px;
-  padding: 3px 10px;
-  font-size: 0.78rem;
-  font-weight: 500;
+
+  mat-chip-set {
+    display: contents;
+  }
 }

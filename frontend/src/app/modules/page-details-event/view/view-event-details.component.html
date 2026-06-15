@@ -14,15 +14,11 @@
       <div id="tags-container">
         <mat-chip-set>
           @for (tag of event$.tags; track tag.id) {
-            <mat-chip [removable]="true" (removed)="removeTagEvent.emit(tag)">
+            <mat-chip>
               {{ tag.title }}
-              <button matChipRemove [attr.aria-label]="'remove'">
-                <mat-icon>cancel</mat-icon>
-              </button>
             </mat-chip>
           }
         </mat-chip-set>
-        <lib-add-tag-btn [forEvents]="true" (saveTagEvent)="saveTagEvent.emit($event)"></lib-add-tag-btn>
       </div>
     </div>
 
