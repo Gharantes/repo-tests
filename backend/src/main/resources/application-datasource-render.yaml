@@ -8,3 +8,5 @@ spring:
     hibernate:
       ddl-auto: update
       generate-ddl: true
+frontend:
+  url: ${FRONTEND_URL}
