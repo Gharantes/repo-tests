@@ -20,7 +20,16 @@
   min-width: 180px;
 }
 
-#tags-container {
-  display: flex;
-  align-items: center;
+.tags-field {
+  flex: 1;
+  min-width: 220px;
+}
+
+.selected-check {
+  font-size: 18px;
+  width: 18px;
+  height: 18px;
+  vertical-align: middle;
+  margin-right: 4px;
+  color: #4687ff;
 }
