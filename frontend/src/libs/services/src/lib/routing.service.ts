@@ -90,4 +90,9 @@ export class RoutingService {
     this.routeLabel.set("Editar Tag")
     this.router.navigate(["edit-tag", idTag]).then()
   }
+  /** ============ PERMISSIONS ============= **/
+  public goToListPermissions() {
+    this.routeLabel.set('Permissões');
+    this.router.navigate(['permissions']).then();
+  }
 }

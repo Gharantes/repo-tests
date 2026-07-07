@@ -18,6 +18,7 @@ export class LayoutSidebarComponent {
   public exploreOpen = true;
   public yourProjectsOpen = false;
   public yourEventsOpen = false;
+  public administrationOpen = false;
 
   public readonly projects$ = signal<IProjectModel[]>([]);
   public readonly events$ = signal<IEventModel[]>([]);
