@@ -57,6 +57,23 @@
     }
   }
 
+  <div class="nav-item nav-group" matRipple (click)="administrationOpen = !administrationOpen">
+    <mat-icon>admin_panel_settings</mat-icon>
+    <span>Administração</span>
+    <mat-icon class="chevron">{{ administrationOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
+  </div>
+  @if (administrationOpen) {
+    <div class="nav-sub-item" matRipple (click)="routingService.goToListAccounts()">
+      <span class="dot">•</span><span>Usuários</span>
+    </div>
+    <div class="nav-sub-item" matRipple (click)="routingService.goToListTags()">
+      <span class="dot">•</span><span>Tags</span>
+    </div>
+    <div class="nav-sub-item" matRipple (click)="routingService.goToListPermissions()">
+      <span class="dot">•</span><span>Permissões</span>
+    </div>
+  }
+
   <div class="nav-item" matRipple>
     <mat-icon>chat</mat-icon>
     <span>Mensagens</span>

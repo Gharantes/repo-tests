@@ -5,20 +5,25 @@
     <input type="text" matInput [formControl]="connector.form.controls.text"/>
   </mat-form-field>
 
-  @if (connector.form.controls.tags.value.length > 0) {
-    <div id="tags-container">
-      <mat-chip-set>
-        @for (tag of connector.form.controls.tags.value; track tag.id) {
-          <mat-chip [removable]="true" (removed)="removeTag(tag)">
-            {{ tag.title }}
-            <button matChipRemove [attr.aria-label]="'remove'">
-              <mat-icon>cancel</mat-icon>
-            </button>
-          </mat-chip>
-        }
-      </mat-chip-set>
-    </div>
-  }
-
-  <lib-add-tag-btn [forProjects]="true" (saveTagEvent)="saveTag($event)"></lib-add-tag-btn>
+  <mat-form-field [appearance]="'outline'" class="tags-field">
+    <mat-label>Filtrar por Tags</mat-label>
+    <input
+      type="text"
+      matInput
+      [formControl]="tagSearchControl"
+      [matAutocomplete]="tagAuto"
+      [placeholder]="tagsPlaceholder()"
+      #tagTrigger="matAutocompleteTrigger"
+    />
+    <mat-autocomplete #tagAuto="matAutocomplete" [hideSingleSelectionIndicator]="true" (optionSelected)="selectTag($event, tagTrigger)">
+      @for (tag of filteredTags$(); track tag.id) {
+        <mat-option [value]="tag">
+          @if (isSelected(tag)) {
+            <mat-icon class="selected-check">check</mat-icon>
+          }
+          {{ tag.title }}
+        </mat-option>
+      }
+    </mat-autocomplete>
+  </mat-form-field>
 </div>

@@ -3,6 +3,10 @@
     <mat-label>Nome</mat-label>
     <input type="text" matInput [formControl]="connector.textFieldControl" />
   </mat-form-field>
+  <button mat-raised-button (click)="createTagEvent.emit()" class="primary-button create-btn">
+    <mat-icon>add</mat-icon>
+    <span>Criar nova Tag</span>
+  </button>
 </div>
 
 <div id="page">
@@ -11,11 +15,4 @@
     [columns]="columns"
     [data$]="data$"
   ></lib-sig-extendable-table>
-</div>
-
-<div id="btn-line">
-  <button mat-raised-button (click)="createTagEvent.emit()" class="primary-button">
-    <span>Criar nova Tag</span>
-    <mat-icon class="material-symbols-outlined">add</mat-icon>
-  </button>
 </div>

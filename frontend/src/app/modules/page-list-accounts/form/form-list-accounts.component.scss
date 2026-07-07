@@ -1,0 +1,26 @@
+* { box-sizing: border-box; }
+
+:host {
+  flex: 1;
+  display: flex;
+  align-items: center;
+}
+
+#form {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  flex-wrap: wrap;
+}
+
+.search-field {
+  flex: 1;
+  min-width: 180px;
+}
+
+#tags-container {
+  display: flex;
+  align-items: center;
+}
