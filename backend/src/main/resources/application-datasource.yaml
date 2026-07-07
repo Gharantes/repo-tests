@@ -2,7 +2,7 @@ spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/synergia_dev
     username: raindrop
-    password: Admin
+    password: MaybeLater
     name: synergia_dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect

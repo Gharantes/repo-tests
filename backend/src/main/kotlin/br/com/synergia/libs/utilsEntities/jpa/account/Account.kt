@@ -6,10 +6,14 @@ import jakarta.persistence.GeneratedValue
 import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
+import jakarta.persistence.UniqueConstraint
 import java.time.LocalDateTime
 
 @Entity
-@Table(name = "account")
+@Table(
+    name = "account",
+    uniqueConstraints = [UniqueConstraint(columnNames = ["login", "id_tenant"])]
+)
 class Account(
 
     @Id
@@ -20,7 +24,7 @@ class Account(
     @Column(name = "id_tenant", nullable = false)
     val idTenant: Long = 0L,
 
-    @Column(name = "login", nullable = false, unique = true, length = 255)
+    @Column(name = "login", nullable = false, length = 255)
     var login: String = "",
 
     @Column(name = "password", nullable = false, length = 255)
