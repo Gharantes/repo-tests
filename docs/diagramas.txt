@@ -1,0 +1,13 @@
+Diagrama de Classes:
+- https://app.diagrams.net/#G1MWVYCSwUARAjZ-tiYRE-Ap-FF2pSwni4#%7B%22pageId%22%3A%22C5RBs43oDa-KdzZeNtuy%22%7D
+- https://drive.google.com/file/d/1MWVYCSwUARAjZ-tiYRE-Ap-FF2pSwni4/view?usp=sharing
+
+
+Diagrama de Atividade: 
+- https://app.diagrams.net/#G1-a5FOl2rBf2qUBioZ7DYmls4KK7I22pW#%7B%22pageId%22%3A%227VGJXB36Rg-9iR_rQSV1%22%7D
+- https://drive.google.com/file/d/1-a5FOl2rBf2qUBioZ7DYmls4KK7I22pW/view?usp=sharing
+
+
+Diagrama de Casos de Uso: 
+- https://app.diagrams.net/#G1HPb583rZZ2tM6psklTXeLez5EIlf_3ul#%7B%22pageId%22%3A%22cf1wf1mDO6NvZw88TX8W%22%7D
+- https://drive.google.com/file/d/1HPb583rZZ2tM6psklTXeLez5EIlf_3ul/view?usp=sharing
