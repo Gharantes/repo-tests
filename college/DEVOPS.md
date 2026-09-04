@@ -12,3 +12,6 @@
 
 - Já refazer o documento daqui mas sobre o TCC:
     - https://docs.google.com/document/d/1875RfdmpwU8-j3-Pn2Zsg4CVc7eLDjXtrHgGhziFgKI/edit?tab=t.0#heading=h.dvey8zl389ms
+
+
+- Mostrar um usuário real usando.
