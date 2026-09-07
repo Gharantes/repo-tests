@@ -101,9 +101,14 @@ class EntityToDtoTest : FunSpec({
             Project(id = 1L, bannerUrl = null).toDto().bannerUrl shouldBe null
         }
 
-        test("projeto novo recebe uma cor válida da paleta") {
-            val dto = Project(id = 1L).toDto()
-            Regex("^#[0-9A-F]{6}$").matches(dto.bannerColor) shouldBe true
+        test("a entidade crua não escolhe cor: quem sorteia é o SqlService") {
+            // A cor do banner é atribuída em EntityProjectSqlService.createProject,
+            // não no construtor da entidade. Este teste fixa essa divisão: se
+            // alguém devolver o sorteio para a entidade, o projeto passaria a ter
+            // duas fontes de cor. A checagem de que um projeto criado de verdade
+            // recebe uma cor válida está no teste de integração, que é onde o
+            // createProject roda.
+            Project(id = 1L).toDto().bannerColor shouldBe ""
         }
     }
 

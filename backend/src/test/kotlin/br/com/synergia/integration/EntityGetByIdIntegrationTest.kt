@@ -150,7 +150,7 @@ class EntityGetByIdIntegrationTest : IntegrationTestBase() {
     fun `detalhes do evento com membros trazem quem participa`() {
         val idTenant = criarTenant()
         val idEvento = criarEvento(idTenant, "Startup Garage")
-        vincularContaAoEvento(criarConta(idTenant, login = "ana"), idEvento, papel = "Organizadora")
+        vincularContaAoEvento(criarConta(idTenant, login = "ana"), idEvento)
         vincularContaAoEvento(criarConta(idTenant, login = "bruno"), idEvento)
 
         val evento = rest.getForEntity(

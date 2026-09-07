@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityProject.services
 
 import br.com.synergia.libs.entityProject.models.UpsertProjectDto
+import br.com.synergia.libs.utilsCommons.enums.ColorsEnum
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.project.Project
 import br.com.synergia.libs.utilsEntities.jpa.project.ProjectRepository
@@ -68,16 +69,21 @@ class EntityProjectSqlService (
             idTenant = params.idTenant,
             description = params.description,
             title = params.title,
-            bannerUrl = params.bannerUrl
+            bannerUrl = params.bannerUrl,
+            bannerColor = ColorsEnum.randomHex()
         )
         return projectRepository.save(project).id!!
     }
 
-    fun createProjectAccountRelationship(idAccount: Long, idProject: Long) {
+    fun createProjectAccountRelationship(
+        idAccount: Long,
+        idProject: Long,
+        membershipLabel: String
+    ) {
         val projectAccountRelationship = ProjectAccountRelationship(
             idAccount = idAccount,
             idProject = idProject,
-            membershipLabel = "Líder"
+            membershipLabel = membershipLabel
         )
         projectAccountRelationshipRepository.save(projectAccountRelationship)
     }

@@ -8,10 +8,19 @@ import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.http.ResponseEntity
+import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.entityAccount.services.EntityAccountSqlService
+import br.com.synergia.libs.entityEvent.models.UpsertEventDto
+import br.com.synergia.libs.entityEvent.services.EntityEventSqlService
+import br.com.synergia.libs.entityProject.models.UpsertProjectDto
+import br.com.synergia.libs.entityProject.services.EntityProjectSqlService
+import br.com.synergia.libs.entityTag.models.UpsertTagDto
+import br.com.synergia.libs.entityTag.services.EntityTagSqlService
+import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
+import br.com.synergia.libs.entityTenant.services.EntityTenantSqlService
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.jdbc.core.JdbcTemplate
-import java.time.LocalDateTime
 
 /**
  * Base de todos os testes de integração.
@@ -56,18 +65,44 @@ abstract class IntegrationTestBase {
     }
 
     // ---------------------------------------------------------------------
-    // Massa de dados: linhas de verdade, inseridas no Postgres de verdade.
-    // Nada aqui é dublê; é o mesmo INSERT que a aplicação faria.
+    // Massa de dados.
+    //
+    // A preparação usa os SqlServices da própria aplicação, não INSERT escrito
+    // à mão: é o mesmo código que grava em produção, então o esquema fica
+    // declarado num lugar só. Os SqlServices são a camada certa para isso
+    // porque, ao contrário dos Services, eles não têm efeito colateral - criar
+    // um tenant cria só o tenant, sem a conta ADMIN junto; criar um projeto
+    // cria só o projeto, sem o vínculo de autoria. Isso deixa o teste montar
+    // exatamente o estado que ele quer verificar.
     // ---------------------------------------------------------------------
+
+    @Autowired
+    protected lateinit var tenantSqlService: EntityTenantSqlService
+
+    @Autowired
+    protected lateinit var accountSqlService: EntityAccountSqlService
+
+    @Autowired
+    protected lateinit var projectSqlService: EntityProjectSqlService
+
+    @Autowired
+    protected lateinit var eventSqlService: EntityEventSqlService
+
+    @Autowired
+    protected lateinit var tagSqlService: EntityTagSqlService
 
     protected fun criarTenant(
         identifier: String = "fag",
         title: String = "FAG",
         isPrivate: Boolean = false,
-    ): Long = jdbc.queryForObject(
-        "INSERT INTO tenant (identifier, title, is_private) VALUES (?, ?, ?) RETURNING id",
-        Long::class.java, identifier, title, isPrivate,
-    )!!
+    ): Long {
+        // createTenant não devolve o id, então relemos pelo identifier, que é
+        // único por constraint.
+        tenantSqlService.createTenant(
+            UpsertTenantDto(title = title, identifier = identifier, password = "irrelevante", isPrivate = isPrivate)
+        )
+        return tenantSqlService.getTenantByIdentifier(identifier)!!.id
+    }
 
     protected fun criarConta(
         idTenant: Long,
@@ -75,46 +110,58 @@ abstract class IntegrationTestBase {
         senha: String = "senha123",
         primeiroNome: String = "Aluno",
         sobrenome: String = "Teste",
-        email: String? = null,
-    ): Long = jdbc.queryForObject(
-        """
-        INSERT INTO account (id_tenant, login, password, first_name, last_name, email,
-                             created_at, updated_at, last_seen)
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?) RETURNING id
-        """.trimIndent(),
-        Long::class.java, idTenant, login, senha, primeiroNome, sobrenome, email,
-        // As colunas de data são NOT NULL sem default no esquema gerado pelo
-        // Hibernate; quem preenche é a própria entidade Account, com
-        // LocalDateTime.now(). A massa de teste faz o mesmo.
-        LocalDateTime.now(), LocalDateTime.now(), LocalDateTime.now(),
-    )!!
+        email: String = "$login@fag.edu.br",
+        tags: List<Long> = emptyList(),
+    ): Long {
+        val idConta = accountSqlService.createAccount(
+            UpsertAccountDto(
+                idTenant = idTenant,
+                email = email,
+                login = login,
+                password = senha,
+                firstName = primeiroNome,
+                lastName = sobrenome,
+            )
+        )
+        if (tags.isNotEmpty()) {
+            accountSqlService.createAccountTagRelationship(idConta, tags)
+        }
+        return idConta
+    }
 
     protected fun criarProjeto(
         idTenant: Long,
         titulo: String,
         descricao: String = "Descrição do projeto de teste.",
         bannerUrl: String? = null,
-        bannerColor: String = "#B3D9FF",
-    ): Long = jdbc.queryForObject(
-        """
-        INSERT INTO project (id_tenant, title, description, banner_url, banner_color)
-        VALUES (?, ?, ?, ?, ?) RETURNING id
-        """.trimIndent(),
-        Long::class.java, idTenant, titulo, descricao, bannerUrl, bannerColor,
-    )!!
+    ): Long = projectSqlService.createProject(
+        // idAccount e tags entram no DTO mas createProject não os usa: quem
+        // grava o vínculo do autor e as tags é o Service, uma camada acima.
+        UpsertProjectDto(
+            idTenant = idTenant,
+            idAccount = 0L,
+            title = titulo,
+            description = descricao,
+            bannerUrl = bannerUrl,
+            tags = emptyList(),
+        )
+    )
 
     protected fun criarEvento(
         idTenant: Long,
         titulo: String,
         descricao: String = "Descrição do evento de teste.",
-        bannerColor: String = "#FFB3BA",
-    ): Long = jdbc.queryForObject(
-        """
-        INSERT INTO event (id_tenant, title, description, banner_url, banner_color)
-        VALUES (?, ?, ?, NULL, ?) RETURNING id
-        """.trimIndent(),
-        Long::class.java, idTenant, titulo, descricao, bannerColor,
-    )!!
+        bannerUrl: String? = null,
+    ): Long = eventSqlService.createEvent(
+        UpsertEventDto(
+            idTenant = idTenant,
+            idAccount = 0L,
+            title = titulo,
+            description = descricao,
+            bannerUrl = bannerUrl,
+            tags = emptyList(),
+        )
+    )
 
     protected fun criarTag(
         idTenant: Long,
@@ -122,40 +169,41 @@ abstract class IntegrationTestBase {
         paraProjetos: Boolean = true,
         paraEventos: Boolean = false,
         paraContas: Boolean = false,
-    ): Long = jdbc.queryForObject(
-        """
-        INSERT INTO tags (id_tenant, title, for_projects, for_events, for_accounts, created_at)
-        VALUES (?, ?, ?, ?, ?, ?) RETURNING id
-        """.trimIndent(),
-        Long::class.java, idTenant, titulo, paraProjetos, paraEventos, paraContas, LocalDateTime.now(),
-    )!!
+    ): Long {
+        // createTag também não devolve o id; relemos pela listagem do tenant.
+        tagSqlService.createTag(
+            UpsertTagDto(
+                idTenant = idTenant,
+                title = titulo,
+                forProjects = paraProjetos,
+                forEvents = paraEventos,
+                forAccounts = paraContas,
+            )
+        )
+        return tagSqlService
+            .listTags(idTenant, forProjects = false, forEvents = false, forAccounts = false, text = titulo)
+            .first { it.title == titulo }
+            .id
+    }
 
     protected fun vincularContaAoProjeto(idConta: Long, idProjeto: Long, papel: String = "Integrante") {
-        jdbc.update(
-            "INSERT INTO project_account_relationship (id_account, id_project, membership_label) VALUES (?, ?, ?)",
-            idConta, idProjeto, papel,
-        )
+        projectSqlService.createProjectAccountRelationship(idConta, idProjeto, membershipLabel = papel)
     }
 
-    protected fun vincularContaAoEvento(idConta: Long, idEvento: Long, papel: String = "Integrante") {
-        jdbc.update(
-            "INSERT INTO event_account_relationship (id_account, id_event, membership_label) VALUES (?, ?, ?)",
-            idConta, idEvento, papel,
-        )
+    protected fun vincularContaAoEvento(idConta: Long, idEvento: Long, papel: String = "Organizador") {
+        eventSqlService.createEventAccountRelationship(idEvento, idConta, membershipLabel = papel)
     }
 
-    protected fun vincularTagAoProjeto(idTag: Long, idProjeto: Long) {
-        jdbc.update(
-            "INSERT INTO project_tag_relationship (id_tag, id_project) VALUES (?, ?)",
-            idTag, idProjeto,
-        )
+    protected fun vincularTagAoProjeto(idTag: Long, idProject: Long) {
+        projectSqlService.createProjectTagRelationship(idProject, tags=listOf(idTag))
+    }
+
+    protected fun vincularTagAoEvento(idTag: Long, idEvento: Long) {
+        eventSqlService.createEventTagRelationship(idEvento, listOf(idTag))
     }
 
     protected fun vincularTagAConta(idTag: Long, idConta: Long) {
-        jdbc.update(
-            "INSERT INTO account_tag_relationship (id_tag, id_account) VALUES (?, ?)",
-            idTag, idConta,
-        )
+        accountSqlService.createAccountTagRelationship(idConta, listOf(idTag))
     }
 
     // ---------------------------------------------------------------------

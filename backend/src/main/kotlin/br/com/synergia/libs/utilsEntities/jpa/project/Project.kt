@@ -1,6 +1,5 @@
 package br.com.synergia.libs.utilsEntities.jpa.project
 
-import br.com.synergia.libs.utilsCommons.enums.ColorsEnum
 import jakarta.persistence.*
 
 @Entity
@@ -25,5 +24,5 @@ class Project(
     var bannerUrl: String? = null,
 
     @Column(name = "banner_color", nullable = false, length = 7)
-    var bannerColor: String = ColorsEnum.randomHex()
+    var bannerColor: String = ""
 )

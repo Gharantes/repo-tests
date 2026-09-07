@@ -184,19 +184,21 @@ Roda unidade e integração juntas (100 testes).
 Estes exigem a pilha inteira no ar. São três terminais, ou três comandos em
 background.
 
-**Terminal 1 — backend apontando para o banco de e2e:**
+**Terminal 1 — backend no perfil de e2e:**
 
 ```bash
 cd backend
-./gradlew bootJar -x test
-java -jar build/libs/synergia-0.0.1-SNAPSHOT.jar \
-  --spring.datasource.url=jdbc:postgresql://localhost:5432/synergia_e2e \
-  --spring.datasource.username=raindrop \
-  --spring.datasource.password=MaybeLater \
-  --server.port=8080
+./gradlew bootRun --args='--spring.profiles.active=e2e'
 ```
 
-Espere a linha `Started SynergiaApplicationKt`. Para conferir:
+O perfil está em `src/main/resources/application-e2e.yaml` e só troca o banco:
+aponta para `synergia_e2e` em vez de `synergia_dev`. Como é um arquivo
+`application-{perfil}.yaml`, ele tem precedência sobre o
+`application-datasource.yaml` importado pelo `application.yaml`, então não é
+preciso comentar nem editar nada para alternar.
+
+Espere a linha `Started SynergiaApplicationKt`. O log de inicialização diz qual
+banco foi usado (`HikariPool ... synergia_e2e`). Para conferir:
 
 ```bash
 curl -X POST http://localhost:8080/api/entity-tenant/list-all-tenants

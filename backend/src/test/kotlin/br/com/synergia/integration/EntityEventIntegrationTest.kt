@@ -105,11 +105,11 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
         val idOficina = criarTag(idTenant, "Oficina", paraProjetos = false, paraEventos = true)
 
         val comAsDuas = criarEvento(idTenant, "Evento Completo")
-        jdbc.update("INSERT INTO event_tag_relationship (id_tag, id_event) VALUES (?, ?)", idPalestra, comAsDuas)
-        jdbc.update("INSERT INTO event_tag_relationship (id_tag, id_event) VALUES (?, ?)", idOficina, comAsDuas)
+        vincularTagAoEvento(idPalestra, comAsDuas)
+        vincularTagAoEvento(idOficina, comAsDuas)
 
         val soPalestra = criarEvento(idTenant, "Evento Só Palestra")
-        jdbc.update("INSERT INTO event_tag_relationship (id_tag, id_event) VALUES (?, ?)", idPalestra, soPalestra)
+        vincularTagAoEvento(idPalestra, soPalestra)
 
         val lista = rest.postForList<EventDto>("$porTenant?id-tenant=$idTenant&tag-ids=$idPalestra,$idOficina")
 
@@ -125,7 +125,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
         val idBruno = criarConta(idTenant, login = "bruno")
 
         val daAna = criarEvento(idTenant, "Evento da Ana")
-        vincularContaAoEvento(idAna, daAna, papel = "Organizadora")
+        vincularContaAoEvento(idAna, daAna)
         val doBruno = criarEvento(idTenant, "Evento do Bruno")
         vincularContaAoEvento(idBruno, doBruno)
 
@@ -141,7 +141,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
         val idNova = criarTag(idTenant, "Oficina", paraProjetos = false, paraEventos = true)
 
         val idEvento = criarEvento(idTenant, "Título Antigo", "Descrição antiga.")
-        jdbc.update("INSERT INTO event_tag_relationship (id_tag, id_event) VALUES (?, ?)", idAntiga, idEvento)
+        vincularTagAoEvento(idAntiga, idEvento)
 
         val resposta = rest.postJson<Void>(
             "/api/entity-event/update/$idEvento",

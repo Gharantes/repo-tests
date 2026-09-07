@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityEvent.services
 
 import br.com.synergia.libs.entityEvent.models.UpsertEventDto
+import br.com.synergia.libs.utilsCommons.enums.ColorsEnum
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.event.Event
 import br.com.synergia.libs.utilsEntities.jpa.event.EventRepository
@@ -15,6 +16,7 @@ import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
 import org.springframework.stereotype.Service
 import java.sql.Types
+import kotlin.String
 
 @Service
 class EntityEventSqlService (
@@ -70,23 +72,28 @@ class EntityEventSqlService (
             idTenant = params.idTenant,
             title = params.title,
             description = params.description,
-            bannerUrl = params.bannerUrl
+            bannerUrl = params.bannerUrl,
+            bannerColor = ColorsEnum.randomHex()
         )
         return eventRepository.save(event).id!!
     }
 
-    fun createEventAccountRelationship(idEvent: Long, idAccount: Long) {
+    fun createEventAccountRelationship(
+        idEvent: Long,
+        idAccount: Long,
+        membershipLabel: String
+    ) {
         val eventAccountRelationship = EventAccountRelationship(
             idAccount = idAccount,
             idEvent = idEvent,
-            membershipLabel = "Organizador"
+            membershipLabel = membershipLabel
         )
         eventAccountRelationshipRepository.save(eventAccountRelationship)
     }
 
-    fun createEventTagRelationship(idEvent: Long, idTag: List<Long>) {
+    fun createEventTagRelationship(idEvent: Long, tags: List<Long>) {
         eventTagRelationshipRepository.saveAll(
-            idTag.map {
+            tags.map {
                 EventTagRelationship(idEvent=idEvent, idTag=it)
             }
         )

@@ -1,0 +1,17 @@
+# Perfil usado pelos testes de sistema (Cypress).
+#
+# Aponta a aplicação para o banco `synergia_e2e`, separado do `synergia_dev`,
+# para que rodar a suíte ponta a ponta nunca mexa nos dados de desenvolvimento.
+#
+# Uso:  ./gradlew bootRun --args='--spring.profiles.active=e2e'
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/synergia_e2e
+    username: raindrop
+    password: MaybeLater
+    name: synergia_e2e
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true

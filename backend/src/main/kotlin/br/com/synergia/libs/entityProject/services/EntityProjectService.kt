@@ -19,7 +19,7 @@ class EntityProjectService (
     }
     fun createProject(params: UpsertProjectDto) {
         val idProject = sqlService.createProject(params)
-        sqlService.createProjectAccountRelationship(params.idAccount, idProject)
+        sqlService.createProjectAccountRelationship(params.idAccount, idProject, membershipLabel = "Líder")
         sqlService.createProjectTagRelationship(idProject, params.tags)
     }
     fun updateProject(idProject: Long, params: UpsertProjectDto) {

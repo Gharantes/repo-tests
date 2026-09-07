@@ -267,7 +267,7 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val idAna = criarConta(idTenant, login = "ana", primeiroNome = "Ana")
         val idBruno = criarConta(idTenant, login = "bruno", primeiroNome = "Bruno")
         criarConta(idTenant, login = "carla") // não participa do evento
-        vincularContaAoEvento(idAna, idEvento, papel = "Organizadora")
+        vincularContaAoEvento(idAna, idEvento)
         vincularContaAoEvento(idBruno, idEvento)
 
         val lista = rest.postForList<AccountDto>(
