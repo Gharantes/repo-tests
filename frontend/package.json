@@ -5,7 +5,9 @@
   "scripts": {
     "start": "nx serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "e2e": "cypress run --e2e --browser electron",
+    "e2e:open": "cypress open --e2e"
   },
   "private": true,
   "dependencies": {

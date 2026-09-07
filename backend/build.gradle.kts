@@ -74,5 +74,49 @@ tasks.withType<KotlinCompile> {
 
 tasks.withType<Test> {
 	useJUnitPlatform()
+
+	// Sem isso o Gradle só diz "BUILD SUCCESSFUL" e some com o resultado de cada
+	// teste, o que atrapalha tanto no terminal quanto na aba de log do CI.
+	testLogging {
+		events("passed", "skipped", "failed")
+		exceptionFormat = org.gradle.api.tasks.testing.logging.TestExceptionFormat.FULL
+		showStandardStreams = false
+	}
+
+	// Aponta o banco de testes. Os valores padrão servem para a máquina de
+	// desenvolvimento; no CI as mesmas variáveis vêm do serviço de Postgres.
+	environment("TEST_DB_URL", System.getenv("TEST_DB_URL") ?: "jdbc:postgresql://localhost:5432/synergia_test")
+	environment("TEST_DB_USERNAME", System.getenv("TEST_DB_USERNAME") ?: "raindrop")
+	environment("TEST_DB_PASSWORD", System.getenv("TEST_DB_PASSWORD") ?: "MaybeLater")
+
+	afterSuite(KotlinClosure2<TestDescriptor, TestResult, Unit>({ desc, result ->
+		if (desc.parent == null) {
+			println(
+				"\nResultado: ${result.resultType} " +
+					"(${result.testCount} testes, ${result.successfulTestCount} passaram, " +
+					"${result.failedTestCount} falharam, ${result.skippedTestCount} pulados)"
+			)
+		}
+	}))
+}
+
+/** Só os testes de unidade: rápidos, sem banco, sem contexto do Spring. */
+tasks.register<Test>("unitTest") {
+	description = "Roda apenas os testes de unidade (não precisam de banco)."
+	group = "verification"
+	useJUnitPlatform()
+	testClassesDirs = sourceSets["test"].output.classesDirs
+	classpath = sourceSets["test"].runtimeClasspath
+	filter { includeTestsMatching("br.com.synergia.unit.*") }
+}
+
+/** Só os testes de integração: sobem a aplicação real contra o Postgres real. */
+tasks.register<Test>("integrationTest") {
+	description = "Roda apenas os testes de integração (exigem PostgreSQL no ar)."
+	group = "verification"
+	useJUnitPlatform()
+	testClassesDirs = sourceSets["test"].output.classesDirs
+	classpath = sourceSets["test"].runtimeClasspath
+	filter { includeTestsMatching("br.com.synergia.integration.*") }
 }
 
