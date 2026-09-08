@@ -1,2 +1,2 @@
-- Mostrar um usuário real usando.
-Apresentar um vídeo de um stakeholder ou um áudio do feedback.
+- Implementar um pipeline de integraço contínua que rode os testes a cada push e PR
+
