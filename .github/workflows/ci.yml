@@ -1,0 +1,291 @@
+# Pipeline de integração contínua do Synergia.
+#
+# Roda as três camadas de teste da parte 2 a cada push e a cada pull request:
+#
+#   unidade (JDK)  ->  integração (+ PostgreSQL)  ->  sistema (+ backend e frontend no ar)
+#
+# As camadas caras dependem da barata: se um teste de unidade quebra, nem faz
+# sentido levantar Postgres, backend, Angular e navegador para descobrir que
+# tudo quebrou junto. O job final `resultado` existe para dar à proteção da
+# branch main um único check obrigatório (parte 4).
+name: CI
+
+on:
+  push:
+    branches: ['**']
+  pull_request:
+    branches: [main]
+
+# Um push novo na mesma branch cancela a execução anterior: o que interessa é o
+# último commit, não a fila inteira.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  JAVA_VERSION: '21'
+  NODE_VERSION: '20'
+  # Credenciais do PostgreSQL efêmero dos jobs. Não são segredo: o banco nasce
+  # e morre dentro da execução, e não existe fora dela.
+  PGUSER_CI: synergia
+  PGPASSWORD_CI: synergia
+
+jobs:
+  # ---------------------------------------------------------------------------
+  # 1. Unidade - segundos, sem infraestrutura.
+  # ---------------------------------------------------------------------------
+  testes-unitarios:
+    name: Testes de unidade
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Rodar os testes de unidade
+        working-directory: backend
+        run: ./gradlew unitTest --no-daemon
+
+      - name: Guardar o relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-unidade
+          path: backend/build/reports/tests/unitTest
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # 2. Integração - sobe a aplicação real contra um PostgreSQL real.
+  # ---------------------------------------------------------------------------
+  testes-integracao:
+    name: Testes de integração
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    needs: testes-unitarios
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: synergia
+          POSTGRES_PASSWORD: synergia
+          POSTGRES_DB: synergia_test
+        ports:
+          - 5432:5432
+        # Sem isso o job começa antes de o banco aceitar conexão.
+        options: >-
+          --health-cmd "pg_isready -U synergia -d synergia_test"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      # As mesmas variáveis que o README manda usar na máquina de
+      # desenvolvimento. O esquema é criado pelo Hibernate (`ddl-auto: update`),
+      # então não há passo de migração aqui.
+      - name: Rodar os testes de integração
+        working-directory: backend
+        env:
+          TEST_DB_URL: jdbc:postgresql://localhost:5432/synergia_test
+          TEST_DB_USERNAME: synergia
+          TEST_DB_PASSWORD: synergia
+        run: ./gradlew integrationTest --no-daemon
+
+      - name: Guardar o relatório
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-integracao
+          path: backend/build/reports/tests/integrationTest
+          if-no-files-found: ignore
+          retention-days: 7
+
+  # ---------------------------------------------------------------------------
+  # 3. Sistema - Postgres + backend + Angular + navegador, a pilha inteira.
+  # ---------------------------------------------------------------------------
+  testes-sistema:
+    name: Testes de sistema (Cypress)
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    needs: testes-unitarios
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: synergia
+          POSTGRES_PASSWORD: synergia
+          POSTGRES_DB: synergia_e2e
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U synergia -d synergia_e2e"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    env:
+      E2E_DB_URL: jdbc:postgresql://localhost:5432/synergia_e2e
+      E2E_DB_USERNAME: synergia
+      E2E_DB_PASSWORD: synergia
+      CYPRESS_BASE_URL: http://localhost:4201
+      CYPRESS_API_URL: http://localhost:8080
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Instalar JDK ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: ${{ env.JAVA_VERSION }}
+          cache: gradle
+
+      - name: Instalar Node ${{ env.NODE_VERSION }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      # O binário do Cypress (~250 MB) mora fora de node_modules e não é
+      # coberto pelo cache do npm.
+      - name: Cache do binário do Cypress
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/Cypress
+          key: cypress-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
+          restore-keys: cypress-${{ runner.os }}-
+
+      - name: Instalar dependências do frontend
+        working-directory: frontend
+        run: npm ci
+
+      # Falha aqui é problema de ambiente (biblioteca do Electron faltando na
+      # imagem do runner), não de teste. Melhor descobrir agora, em 5 segundos,
+      # do que depois de subir Postgres, backend e Angular.
+      - name: Verificar a instalação do Cypress
+        working-directory: frontend
+        run: npx cypress verify
+
+      # Empacotar e rodar o .jar em vez de `bootRun`: o processo fica sob
+      # controle do script (PID conhecido, log num arquivo) em vez de ficar
+      # pendurado num daemon do Gradle.
+      - name: Empacotar o backend
+        working-directory: backend
+        run: ./gradlew bootJar --no-daemon -x test
+
+      - name: Subir o backend (perfil e2e)
+        working-directory: backend
+        run: |
+          jar=$(ls build/libs/*.jar | grep -v -- '-plain.jar' | head -n 1)
+          echo "Subindo $jar"
+          java -jar "$jar" --spring.profiles.active=e2e > "$RUNNER_TEMP/backend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/backend.pid"
+
+      - name: Subir o frontend
+        working-directory: frontend
+        run: |
+          npx nx serve synergia-frontend --port 4201 > "$RUNNER_TEMP/frontend.log" 2>&1 &
+          echo $! > "$RUNNER_TEMP/frontend.pid"
+
+      # Esperar pelos dois em paralelo: o Angular compila enquanto o Spring sobe.
+      - name: Esperar o backend responder
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS -X POST http://localhost:8080/api/entity-tenant/list-all-tenants > /dev/null; then
+              echo "Backend no ar depois de ${i}0s."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::O backend não respondeu em 10 minutos."
+          tail -n 100 "$RUNNER_TEMP/backend.log"
+          exit 1
+
+      - name: Esperar o frontend compilar
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://localhost:4201 > /dev/null; then
+              echo "Frontend no ar depois de ${i}0s."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::O frontend não respondeu em 10 minutos."
+          tail -n 100 "$RUNNER_TEMP/frontend.log"
+          exit 1
+
+      - name: Rodar os testes de sistema
+        working-directory: frontend
+        run: npm run e2e
+
+      # Quando um teste falha, o que explica a falha está ou na captura de tela
+      # do Cypress ou no log de quem estava do outro lado.
+      - name: Guardar as capturas de tela
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: capturas-cypress
+          path: frontend/cypress/screenshots
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Guardar os logs do backend e do frontend
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: logs-sistema
+          path: |
+            ${{ runner.temp }}/backend.log
+            ${{ runner.temp }}/frontend.log
+          if-no-files-found: ignore
+          retention-days: 7
+
+      - name: Derrubar backend e frontend
+        if: always()
+        run: |
+          for p in backend frontend; do
+            [ -f "$RUNNER_TEMP/$p.pid" ] && kill "$(cat "$RUNNER_TEMP/$p.pid")" 2>/dev/null || true
+          done
+
+  # ---------------------------------------------------------------------------
+  # 4. Resultado - o único check obrigatório na proteção da main.
+  # ---------------------------------------------------------------------------
+  resultado:
+    name: Resultado dos testes
+    runs-on: ubuntu-latest
+    if: always()
+    needs: [testes-unitarios, testes-integracao, testes-sistema]
+    steps:
+      - name: Conferir as três camadas
+        run: |
+          echo "unidade....: ${{ needs.testes-unitarios.result }}"
+          echo "integração.: ${{ needs.testes-integracao.result }}"
+          echo "sistema....: ${{ needs.testes-sistema.result }}"
+          if [ "${{ needs.testes-unitarios.result }}" != "success" ] \
+            || [ "${{ needs.testes-integracao.result }}" != "success" ] \
+            || [ "${{ needs.testes-sistema.result }}" != "success" ]; then
+            echo "::error::Alguma camada de teste não passou."
+            exit 1
+          fi
+          echo "As três camadas passaram."

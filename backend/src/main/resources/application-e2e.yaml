@@ -3,12 +3,16 @@
 # Aponta a aplicação para o banco `synergia_e2e`, separado do `synergia_dev`,
 # para que rodar a suíte ponta a ponta nunca mexa nos dados de desenvolvimento.
 #
+# Os valores padrão são os da máquina de desenvolvimento; no pipeline de CI as
+# variáveis E2E_DB_* apontam para o PostgreSQL efêmero do job, do mesmo jeito
+# que TEST_DB_* faz nos testes de integração.
+#
 # Uso:  ./gradlew bootRun --args='--spring.profiles.active=e2e'
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/synergia_e2e
-    username: raindrop
-    password: MaybeLater
+    url: ${E2E_DB_URL:jdbc:postgresql://localhost:5432/synergia_e2e}
+    username: ${E2E_DB_USERNAME:raindrop}
+    password: ${E2E_DB_PASSWORD:MaybeLater}
     name: synergia_e2e
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
