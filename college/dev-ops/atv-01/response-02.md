@@ -15,10 +15,10 @@ Três camadas de teste sobre o código que já existe no repositório.
 | --- | --- | --- | --- |
 | Unidade | `backend/src/test/kotlin/br/com/synergia/unit/` | 30 | nada além do JDK |
 | Integração | `backend/src/test/kotlin/br/com/synergia/integration/` | 70 | PostgreSQL no ar |
-| Sistema (ponta a ponta) | `frontend/cypress/e2e/` | 14 | PostgreSQL + backend + frontend |
-| **Total** | | **114** | |
+| Sistema (ponta a ponta) | `frontend/cypress/e2e/` | 50 | PostgreSQL + backend + frontend |
+| **Total** | | **150** | |
 
-Todas as 114 passam. A saída da última execução completa está na seção 4.
+Todas as 150 passam. A saída da última execução completa está na seção 4.
 
 ### A regra que orientou a escrita
 
@@ -80,18 +80,38 @@ outro lado.
   tenants, login certo levando ao dashboard, senha errada com mensagem de erro,
   botão desabilitado enquanto o formulário está incompleto, rota interna
   redirecionando para o login sem sessão, e a sessão sobrevivendo ao recarregar.
-- `projetos.cy.ts` (8) — criar projeto pela tela e conferir por dois caminhos
+- `projetos.cy.ts` (11) — criar projeto pela tela e conferir por dois caminhos
   independentes que ele existe (a tela mostra, e a API confirma a linha no
   banco); o projeto sobrevivendo ao recarregar a aplicação inteira; busca por
   texto filtrando; busca indiferente a maiúsculas; busca vazia sem quebrar a
   tela; projeto de outra instituição não aparecendo; validação do botão Salvar;
-  e o projeto aparecendo em "Seus Projetos", que prova que o vínculo de autoria
-  foi gravado.
+  o projeto aparecendo em "Seus Projetos", que prova que o vínculo de autoria
+  foi gravado; o filtro por tag da listagem; o filtro com duas tags, que exige
+  que o projeto tenha as duas; e a edição pelo diálogo do card.
+- `eventos.cy.ts` (9) — o espelho do de projetos, para a outra entidade que o
+  Synergia publica. A repetição é proposital: o formulário de evento é um
+  componente diferente, com conector, rota e endpoint próprios, e nada garante
+  que ele funcione só porque o de projetos funciona.
+- `tags.cy.ts` (8) — a única tela em tabela, com menu de ações: criar, buscar,
+  editar título, editar as bandeiras de uso, excluir, validação do Salvar e
+  isolamento entre instituições. As três bandeiras são conferidas duas vezes,
+  nas caixas da tabela e coluna a coluna pela API.
+- `usuarios.cy.ts` (9) — o teste mais forte da suíte está aqui: uma conta é
+  criada preenchendo o formulário e, em seguida, essa mesma conta entra pela
+  tela de login. Também: senha errada barrada, busca por login e por nome,
+  edição, edição sem senha nova preservando a senha antiga (verificado
+  entrando com ela de novo), exclusão e isolamento por instituição.
+- `detalhes.cy.ts` (7) — o diálogo do card e as páginas de detalhes de projeto
+  e de evento, que dependem dos `get-*-by-id` com `lookup-tags` e
+  `lookup-members` ligados: título, descrição, tags e o autor entre os membros,
+  chegando tanto pelo card quanto pelo menu lateral.
 
 A navegação nos testes de sistema é feita pelo menu lateral, clicando, e não
 digitando URL. Isso não foi capricho: a sessão vive em memória, então abrir
 `/projects` direto pela URL cai no guard `HasActiveTenant` e volta para o login.
-Clicar no menu é o caminho que o usuário real percorre.
+Clicar no menu é o caminho que o usuário real percorre. Pela mesma razão, as
+telas de edição são alcançadas como o usuário as alcança - pelo botão "Editar"
+dentro do diálogo do card, ou pelo menu de três pontos da linha da tabela.
 
 ---
 
@@ -224,8 +244,22 @@ Saída esperada:
 
 ```
 ✔  autenticacao.cy.ts    6 tests, 6 passing
-✔  projetos.cy.ts        8 tests, 8 passing
-✔  All specs passed!     14  14
+✔  detalhes.cy.ts        7 tests, 7 passing
+✔  eventos.cy.ts         9 tests, 9 passing
+✔  projetos.cy.ts       11 tests, 11 passing
+✔  tags.cy.ts            8 tests, 8 passing
+✔  usuarios.cy.ts        9 tests, 9 passing
+✔  All specs passed!    50  50
+```
+
+Se o Cypress morrer logo na largada com `bad option: --no-sandbox` ou
+`cachedDataRejected`, o problema não é a instalação: é a variável
+`ELECTRON_RUN_AS_NODE=1`, que o terminal integrado do VS Code exporta e que faz
+o Electron do Cypress rodar como se fosse Node puro. Rode fora do VS Code, ou
+tire a variável só para esse comando:
+
+```bash
+env -u ELECTRON_RUN_AS_NODE npm run e2e
 ```
 
 Para acompanhar os testes rodando no navegador, o que ajuda quando algum falha:
@@ -277,9 +311,13 @@ Resultado: SUCCESS (70 testes, 70 passaram, 0 falharam, 0 pulados)
 BUILD SUCCESSFUL in 1m 2s
 
 $ cd frontend && npm run e2e
-  ✔  autenticacao.cy.ts    00:12    6    6    -    -    -
-  ✔  projetos.cy.ts        00:30    8    8    -    -    -
-  ✔  All specs passed!     00:43   14   14    -    -    -
+  ✔  autenticacao.cy.ts    00:25    6    6    -    -    -
+  ✔  detalhes.cy.ts        00:34    7    7    -    -    -
+  ✔  eventos.cy.ts         01:05    9    9    -    -    -
+  ✔  projetos.cy.ts        01:11   11   11    -    -    -
+  ✔  tags.cy.ts            00:49    8    8    -    -    -
+  ✔  usuarios.cy.ts        01:20    9    9    -    -    -
+  ✔  All specs passed!     05:26   50   50    -    -    -
 ```
 
 ---
@@ -330,7 +368,25 @@ a expectativa.
   sem token responde 401" que o RNF03 previa na Parte 1. É a lacuna mais séria
   desta lista, e vale tratar antes da Parte 3.
 
-### 5.3 Duas observações que não são bug, mas merecem atenção
+### 5.3 O que a ampliação dos testes de sistema encontrou
+
+Cobrir eventos, tags, usuários e as telas de detalhes obrigou a percorrer partes
+da interface que ninguém tinha percorrido de ponta a ponta. Duas coisas
+apareceram:
+
+- **`get-account-by-login-or-email` não é chamado por tela nenhuma.** O endpoint
+  existe, o cliente gerado em `libs/api` tem o método, e ele agora está correto
+  e coberto por testes de integração (seção 5.1) - mas nenhum componente do
+  frontend o invoca. Ou seja, o formulário de cadastro de usuário **não avisa**
+  que um login já está em uso: só descobre quando o INSERT falha. A checagem
+  precisa ser ligada na tela de upsert de conta.
+- **O clique no `mat-checkbox` inteiro não marca a caixa.** O centro do elemento
+  cai numa faixa morta entre a caixa e o texto. Não chega a ser bug de produto,
+  porque uma pessoa clica na caixa ou no texto, e os dois funcionam - mas é uma
+  armadilha para quem escreve teste, e por isso o comando `alternarCaixa` clica
+  no `<label>`, com o motivo anotado no código.
+
+### 5.4 Duas observações que não são bug, mas merecem atenção
 
 - **Senha em texto puro.** A tabela `account` guarda a senha como veio, e o
   `check-login-information.sql` compara com `a.password = :password`. O RNF02 da
@@ -393,6 +449,11 @@ frontend/cypress/support/e2e.ts
 frontend/cypress/support/commands.ts
 frontend/cypress/e2e/autenticacao.cy.ts
 frontend/cypress/e2e/projetos.cy.ts
+frontend/cypress/e2e/eventos.cy.ts
+frontend/cypress/e2e/tags.cy.ts
+frontend/cypress/e2e/usuarios.cy.ts
+frontend/cypress/e2e/detalhes.cy.ts
+backend/src/main/resources/application-e2e.yaml
 ```
 
 **Alterados:**
