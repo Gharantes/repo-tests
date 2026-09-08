@@ -194,50 +194,64 @@ jobs:
         working-directory: backend
         run: ./gradlew bootJar --no-daemon -x test
 
-      - name: Subir o backend (perfil e2e)
-        working-directory: backend
+      # Subir a pilha e rodar o Cypress no MESMO passo, de propósito.
+      #
+      # Cada `run:` do Actions é um shell próprio, que morre quando o passo
+      # acaba. Um servidor deixado em segundo plano vira processo órfão na
+      # virada do passo - foi assim que o `nx serve` morreu entre o "Frontend no
+      # ar" e a primeira visita do Cypress, e a suíte inteira falhou com
+      # ECONNREFUSED na 4201. Com tudo num passo só, o shell pai continua vivo
+      # do primeiro processo até o último teste.
+      - name: Subir a pilha e rodar os testes de sistema
+        env:
+          # Sem o daemon do Nx há um processo a menos para morrer no meio do
+          # caminho, e o job é curto demais para o cache dele compensar.
+          NX_DAEMON: 'false'
         run: |
-          jar=$(ls build/libs/*.jar | grep -v -- '-plain.jar' | head -n 1)
+          set -e
+
+          derrubar() {
+            for pid in "$BACKEND_PID" "$FRONTEND_PID"; do
+              [ -n "$pid" ] && kill "$pid" 2>/dev/null || true
+            done
+          }
+          trap derrubar EXIT
+
+          echo "::group::Subindo o backend (perfil e2e)"
+          jar=$(ls backend/build/libs/*.jar | grep -v -- '-plain.jar' | head -n 1)
           echo "Subindo $jar"
           java -jar "$jar" --spring.profiles.active=e2e > "$RUNNER_TEMP/backend.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/backend.pid"
+          BACKEND_PID=$!
+          echo "::endgroup::"
 
-      - name: Subir o frontend
-        working-directory: frontend
-        run: |
-          npx nx serve synergia-frontend --port 4201 > "$RUNNER_TEMP/frontend.log" 2>&1 &
-          echo $! > "$RUNNER_TEMP/frontend.pid"
+          echo "::group::Subindo o frontend"
+          (cd frontend && npx nx serve synergia-frontend --port 4201) > "$RUNNER_TEMP/frontend.log" 2>&1 &
+          FRONTEND_PID=$!
+          echo "::endgroup::"
 
-      # Esperar pelos dois em paralelo: o Angular compila enquanto o Spring sobe.
-      - name: Esperar o backend responder
-        run: |
-          for i in $(seq 1 60); do
-            if curl -fsS -X POST http://localhost:8080/api/entity-tenant/list-all-tenants > /dev/null; then
-              echo "Backend no ar depois de ${i}0s."
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "::error::O backend não respondeu em 10 minutos."
-          tail -n 100 "$RUNNER_TEMP/backend.log"
-          exit 1
+          # Espera pelos dois em paralelo: o Angular compila enquanto o Spring
+          # sobe. A verificação do backend é uma chamada de verdade à API, que
+          # só responde depois que ele conectou no banco.
+          esperar() {
+            local nome="$1" url="$2" metodo="$3" log="$4"
+            for i in $(seq 1 60); do
+              if curl -fsS -X "$metodo" "$url" > /dev/null; then
+                echo "$nome no ar depois de ${i}0s."
+                return 0
+              fi
+              sleep 10
+            done
+            echo "::error::$nome não respondeu em 10 minutos."
+            tail -n 100 "$log"
+            return 1
+          }
 
-      - name: Esperar o frontend compilar
-        run: |
-          for i in $(seq 1 60); do
-            if curl -fsS http://localhost:4201 > /dev/null; then
-              echo "Frontend no ar depois de ${i}0s."
-              exit 0
-            fi
-            sleep 10
-          done
-          echo "::error::O frontend não respondeu em 10 minutos."
-          tail -n 100 "$RUNNER_TEMP/frontend.log"
-          exit 1
+          esperar "Backend" "http://localhost:8080/api/entity-tenant/list-all-tenants" POST "$RUNNER_TEMP/backend.log"
+          esperar "Frontend" "http://localhost:4201" GET "$RUNNER_TEMP/frontend.log"
 
-      - name: Rodar os testes de sistema
-        working-directory: frontend
-        run: npm run e2e
+          echo "::group::Cypress"
+          cd frontend && npm run e2e
+          echo "::endgroup::"
 
       # Quando um teste falha, o que explica a falha está ou na captura de tela
       # do Cypress ou no log de quem estava do outro lado.
@@ -260,13 +274,6 @@ jobs:
             ${{ runner.temp }}/frontend.log
           if-no-files-found: ignore
           retention-days: 7
-
-      - name: Derrubar backend e frontend
-        if: always()
-        run: |
-          for p in backend frontend; do
-            [ -f "$RUNNER_TEMP/$p.pid" ] && kill "$(cat "$RUNNER_TEMP/$p.pid")" 2>/dev/null || true
-          done
 
   # ---------------------------------------------------------------------------
   # 4. Resultado - o único check obrigatório na proteção da main.

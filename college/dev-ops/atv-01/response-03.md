@@ -2,7 +2,7 @@
 
 **Disciplina:** DevOps, Aula 05, Projeto Integrador (Parte 3)
 **Autor:** Guilherme Harmatiuk Arantes
-**Versão:** 1.0
+**Versão:** 1.1
 **Data:** 07/09/2026
 
 ---
@@ -169,35 +169,48 @@ Este é o job comprido, porque ele reproduz sozinho os três terminais que a se�
 4. **`npx cypress verify`**, que falha em segundos se faltar biblioteca do
    Electron na imagem do runner. É um erro de ambiente, não de teste, e é melhor
    descobrir antes de gastar dez minutos levantando o resto.
-5. **`./gradlew bootJar -x test`** e `java -jar` em segundo plano, com o log
-   redirecionado para arquivo e o PID guardado. Aqui o CI se afasta do
-   procedimento manual de propósito: `bootRun` deixa o processo pendurado num
-   daemon do Gradle, e o que o job precisa é de um processo cujo PID ele conheça,
-   para poder derrubar no fim.
-6. **`npx nx serve synergia-frontend --port 4201`**, também em segundo plano. É o
-   dev-server mesmo, não o build de produção, porque é ele que aplica o
-   `proxy.conf.json` que encaminha `/api` para o backend - o mesmo caminho que os
-   testes percorrem na máquina de desenvolvimento.
-7. **Espera ativa pelos dois**, com limite de 10 minutos cada:
+5. **`./gradlew bootJar -x test`**, que empacota o backend num `.jar`. Aqui o CI
+   se afasta do procedimento manual de propósito: `bootRun` deixa o processo
+   pendurado num daemon do Gradle, e o que o job precisa é de um processo cujo
+   PID ele conheça.
+6. **Um único passo que sobe a pilha, espera e roda o Cypress.** Backend
+   (`java -jar` no perfil `e2e`) e frontend (`npx nx serve --port 4201`) sobem em
+   segundo plano, o script espera os dois responderem e só então chama
+   `npm run e2e`. Um `trap ... EXIT` derruba os dois no fim, aconteça o que
+   acontecer.
 
-   ```bash
-   for i in $(seq 1 60); do
-     if curl -fsS -X POST http://localhost:8080/api/entity-tenant/list-all-tenants > /dev/null; then
-       exit 0
-     fi
-     sleep 10
-   done
-   ```
+O ponto 6 é o que mais parece estranho lendo o arquivo, e tem motivo: veja a
+seção 6.2. Cada `run:` do Actions é um shell diferente, e servidor iniciado num
+passo não sobrevive de forma confiável até o passo seguinte.
 
-   A verificação do backend é uma chamada de verdade à API, que só responde
-   depois que o Spring subiu *e* conectou no banco. Se estourar o tempo, o passo
-   imprime as últimas 100 linhas do log antes de falhar, para que o motivo
-   apareça na própria aba do job.
-8. **`npm run e2e`** - os mesmos 50 testes, no mesmo navegador Electron.
-9. **Artefatos**: capturas de tela do Cypress quando algum teste falha, e os logs
-   do backend e do frontend sempre. Um teste de sistema que quebra no CI e não
-   quebra na máquina local é impossível de investigar sem esses três arquivos.
-10. **Derrubar os processos** com `if: always()`.
+A espera não é `sleep 60`, é chamada de verdade, repetida:
+
+```bash
+esperar() {
+  local nome="$1" url="$2" metodo="$3" log="$4"
+  for i in $(seq 1 60); do
+    if curl -fsS -X "$metodo" "$url" > /dev/null; then
+      echo "$nome no ar depois de ${i}0s."
+      return 0
+    fi
+    sleep 10
+  done
+  echo "::error::$nome não respondeu em 10 minutos."
+  tail -n 100 "$log"
+  return 1
+}
+```
+
+O backend é considerado no ar quando `POST /api/entity-tenant/list-all-tenants`
+responde - ou seja, depois de o Spring subir *e* conectar no banco. Se estourar o
+tempo, o passo imprime as últimas 100 linhas do log antes de falhar, para que o
+motivo apareça na própria aba do job.
+
+No fim, com `if: always()`, sobem os artefatos: capturas de tela do Cypress
+quando algum teste falha, e os logs do backend e do frontend sempre. Um teste de
+sistema que quebra no CI e não quebra na máquina local é impossível de
+investigar sem esses arquivos - e foi exatamente com eles que a falha da seção
+6.2 foi diagnosticada.
 
 ### 3.4 Resultado
 
@@ -243,6 +256,15 @@ define nada continua caindo no `synergia_e2e` local com o usuário local. A
 alternativa seria criar no runner um usuário `raindrop` com a senha da minha
 máquina, o que funcionaria e seria constrangedor.
 
+**E mudou outro:** `backend/.gitignore`. Ele tinha `*.jar`, que é razoável para
+não versionar artefato de build, mas engolia junto o `gradle-wrapper.jar` - o
+detalhe que derrubou a primeira execução (seção 6.1). Agora tem uma exceção:
+
+```gitignore
+*.jar
+!gradle/wrapper/gradle-wrapper.jar
+```
+
 ---
 
 ## 5. Como acompanhar
@@ -269,29 +291,78 @@ Repositório público, então os minutos do GitHub Actions não são cobrados.
 
 ---
 
-## 6. O que foi verificado e o que depende do primeiro push
+## 6. O que o primeiro push revelou
 
-Sendo honesto sobre o que está confirmado neste momento:
+O pipeline não nasceu verde, e as duas falhas são interessantes o bastante para
+ficarem registradas: nenhuma delas era erro de teste, as duas eram erro de
+ambiente que só existe fora da máquina de desenvolvimento.
 
-**Verificado localmente, com os mesmos comandos que o pipeline usa:**
+### 6.1 O jar do wrapper do Gradle nunca tinha sido versionado
 
-- `./gradlew unitTest --no-daemon` passa (30 testes).
-- `./gradlew bootJar --no-daemon -x test` gera
-  `backend/build/libs/synergia-0.0.1-SNAPSHOT.jar`.
-- Esse `.jar`, rodado com `--spring.profiles.active=e2e` e as variáveis
-  `E2E_DB_*` apontando para outro banco, sobe conectado ao banco indicado pela
-  variável (`HikariPool ... synergia_e2e`) - ou seja, a mudança do arquivo de
-  perfil funciona.
-- O endereço usado como sinal de "backend no ar"
-  (`POST /api/entity-tenant/list-all-tenants`) responde `200` com a lista.
-- O YAML do workflow é válido.
+Primeira execução, e o primeiro job morreu em 16 segundos:
 
-**Só o primeiro push confirma:** o comportamento dos service containers, os
-tempos reais de cada job e a presença das bibliotecas do Electron na imagem do
-runner. Nada disso dá para simular fielmente na máquina local, e é justamente
-por isso que o passo `npx cypress verify` está lá.
+```
+Error: Could not find or load main class org.gradle.wrapper.GradleWrapperMain
+```
 
----
+Os outros dois jobs foram pulados junto, porque dependem dele.
+
+O `backend/.gitignore` tinha `*.jar` para não versionar artefato de build, e essa
+regra pegava também o `backend/gradle/wrapper/gradle-wrapper.jar`. Na minha
+máquina o arquivo existe desde que o projeto foi criado, então nunca fez falta;
+no runner chega só o script `gradlew`, que manda a JVM executar uma classe que
+está dentro do jar que não foi junto.
+
+Esse jar tem 43 KB e é o único `.jar` que deve estar no repositório: é o que
+garante que CI e desenvolvedores rodem a mesma versão do Gradle sem instalar
+nada. Correção: a exceção no `.gitignore` da seção 4.
+
+### 6.2 O servidor do Angular morria na virada do passo
+
+Com o backend resolvido, unidade e integração passaram, e os 50 testes de
+sistema falharam todos com a mesma mensagem:
+
+```
+CypressError: `cy.visit()` failed trying to load: http://localhost:4201/login
+> Error: connect ECONNREFUSED 127.0.0.1:4201
+```
+
+O que confunde é que o passo anterior tinha declarado sucesso. Pelos horários do
+log:
+
+| Horário | O que aconteceu |
+| --- | --- |
+| 01:12:37 | passo de espera imprime "Frontend no ar depois de 20s." |
+| 01:12:37 | passo do Cypress começa |
+| 01:12:59 | primeira visita: `ECONNREFUSED` na 4201 |
+
+E o `frontend.log`, guardado como artefato, termina em
+`➜ Local: http://localhost:4201/` sem nenhuma linha de erro - servidor que morre
+por sinal, não por bug.
+
+A causa é do próprio Actions: **cada `run:` é um shell diferente**, e um processo
+deixado em segundo plano vira órfão quando aquele shell termina. O `java -jar`
+aguentou; o `nx serve` não, porque o Nx derruba a tarefa quando o processo pai
+some. Como subir e usar estavam em passos separados, o servidor viveu o
+suficiente para responder à verificação e morreu antes do primeiro teste.
+
+Correção: subir, esperar e testar passaram a acontecer num passo só, com um
+`trap ... EXIT` derrubando os processos no fim. É o mesmo motivo pelo qual
+bibliotecas como `start-server-and-test` existem.
+
+### 6.3 Estado atual
+
+| Camada | No GitHub Actions |
+| --- | --- |
+| Unidade | passou |
+| Integração | passou |
+| Sistema | falhou por ambiente (6.2); correção aplicada, aguardando a próxima execução |
+
+Verificado na máquina, com os mesmos comandos do pipeline: `./gradlew unitTest
+--no-daemon`, `./gradlew bootJar --no-daemon -x test`, o `.jar` subindo com
+`E2E_DB_*` apontando para outro banco, o endereço usado como sinal de "backend no
+ar" respondendo `200`, o YAML válido e o script do passo novo simulado com dois
+servidores de mentira - inclusive o `trap`, que derrubou os dois no fim.
 
 ## 7. Limitações conhecidas
 
