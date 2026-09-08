@@ -254,7 +254,15 @@ jobs:
           echo "::group::Subindo o backend (perfil e2e)"
           jar=$(ls backend/build/libs/*.jar | grep -v -- '-plain.jar' | head -n 1)
           echo "Subindo $jar"
-          java -Xmx768m -jar "$jar" --spring.profiles.active=e2e > "$RUNNER_TEMP/backend.log" 2>&1 &
+          # --frontend.url: o CorsConfig do backend libera UMA origem só, e o
+          # padrão dela é http://localhost:4201. Como aqui o Cypress navega em
+          # http://127.0.0.1:4201, o navegador manda esse Origin e o Spring
+          # responde 403 - foi o que derrubou a suíte inteira depois que o
+          # ECONNREFUSED foi resolvido. O curl não sofria com isso porque não
+          # manda cabeçalho Origin nenhum.
+          java -Xmx768m -jar "$jar" \
+            --spring.profiles.active=e2e \
+            --frontend.url=http://127.0.0.1:4201 > "$RUNNER_TEMP/backend.log" 2>&1 &
           BACKEND_PID=$!
           echo "::endgroup::"
 
