@@ -234,6 +234,16 @@ jobs:
             kill -0 "$FRONTEND_PID" 2>/dev/null && echo "frontend: vivo (pid $FRONTEND_PID)" || echo "frontend: MORTO"
             echo "-- portas --"
             ss -tlnp 2>/dev/null | grep -E ':(4201|8080)' || echo "nada escutando em 4201 nem 8080"
+            # As duas rotas até a API. A primeira é a que o cy.request usa para
+            # preparar a massa; a segunda é a que o navegador usa, passando pelo
+            # proxy /api do dev-server do Angular. Se a lista de instituições
+            # aparece numa e não na outra, o problema é o proxy, não os dados.
+            echo "-- API direta em 127.0.0.1:8080 --"
+            curl -4 -s -m 15 -X POST http://127.0.0.1:8080/api/entity-tenant/list-all-tenants \
+              -w "\nHTTP %{http_code}\n" | head -c 400 || echo "falhou"
+            echo "-- API pelo proxy do dev-server, 127.0.0.1:4201 --"
+            curl -4 -s -m 15 -X POST http://127.0.0.1:4201/api/entity-tenant/list-all-tenants \
+              -w "\nHTTP %{http_code}\n" | head -c 400 || echo "falhou"
             echo "-- memória (MB) --"
             free -m
             echo "-- kernel matou algo por falta de memória? --"
@@ -308,7 +318,7 @@ jobs:
       # Quando um teste falha, o que explica a falha está ou na captura de tela
       # do Cypress ou no log de quem estava do outro lado.
       - name: Guardar as capturas de tela
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: capturas-cypress
