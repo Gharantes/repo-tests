@@ -2,7 +2,7 @@
 
 **Disciplina:** DevOps, Aula 05, Projeto Integrador (Parte 3)
 **Autor:** Guilherme Harmatiuk Arantes
-**Versão:** 1.1
+**Versão:** 2.0
 **Data:** 07/09/2026
 
 ---
@@ -174,37 +174,51 @@ Este é o job comprido, porque ele reproduz sozinho os três terminais que a se�
    pendurado num daemon do Gradle, e o que o job precisa é de um processo cujo
    PID ele conheça.
 6. **Um único passo que sobe a pilha, espera e roda o Cypress.** Backend
-   (`java -jar` no perfil `e2e`) e frontend (`npx nx serve --port 4201`) sobem em
-   segundo plano, o script espera os dois responderem e só então chama
-   `npm run e2e`. Um `trap ... EXIT` derruba os dois no fim, aconteça o que
-   acontecer.
+   (`java -jar` no perfil `e2e`, com `--frontend.url` apontando para a origem
+   que o navegador vai usar) e frontend (`npx nx serve --port 4201 --host
+   0.0.0.0`) sobem em segundo plano, o script espera os dois responderem e só
+   então roda os testes. Um `trap ... EXIT` derruba os dois no fim, aconteça o
+   que acontecer.
+7. **Spec de fumaça antes da suíte.** O `autenticacao.cy.ts` roda sozinho e sem
+   retentativa; se ele falhar inteiro, o job aborta ali. Quando a pilha não está
+   de pé, isso troca 9 minutos de log vermelho repetindo o mesmo erro por uma
+   falha em ~30 segundos, com o diagnóstico junto. O preço é rodar esse spec
+   duas vezes quando está tudo verde (~7 segundos).
 
-O ponto 6 é o que mais parece estranho lendo o arquivo, e tem motivo: veja a
-seção 6.2. Cada `run:` do Actions é um shell diferente, e servidor iniciado num
-passo não sobrevive de forma confiável até o passo seguinte.
+Os pontos 6 e 7 parecem estranhos lendo o arquivo, e cada um tem uma cicatriz
+por trás: a seção 6 conta quais.
 
-A espera não é `sleep 60`, é chamada de verdade, repetida:
+A espera não é `sleep 60`, é chamada de verdade, repetida, e no mesmo endereço
+que o Cypress usa:
 
 ```bash
 esperar() {
   local nome="$1" url="$2" metodo="$3" log="$4"
   for i in $(seq 1 60); do
-    if curl -fsS -X "$metodo" "$url" > /dev/null; then
+    if curl -4 -fsS -X "$metodo" "$url" > /dev/null; then
       echo "$nome no ar depois de ${i}0s."
       return 0
     fi
     sleep 10
   done
   echo "::error::$nome não respondeu em 10 minutos."
+  diagnostico "espera esgotada"
   tail -n 100 "$log"
   return 1
 }
 ```
 
-O backend é considerado no ar quando `POST /api/entity-tenant/list-all-tenants`
-responde - ou seja, depois de o Spring subir *e* conectar no banco. Se estourar o
-tempo, o passo imprime as últimas 100 linhas do log antes de falhar, para que o
-motivo apareça na própria aba do job.
+O `-4` e os endereços em `127.0.0.1` não são preciosismo: a suíte já falhou
+inteira porque a verificação subia por IPv6 e dizia "no ar" enquanto o Cypress,
+que conecta por IPv4, não alcançava nada (seção 6.2). O backend é considerado no
+ar quando `POST /api/entity-tenant/list-all-tenants` responde - ou seja, depois
+de o Spring subir *e* conectar no banco.
+
+Há também uma função `diagnostico`, chamada antes dos testes e de novo se eles
+falharem. Ela imprime se cada processo continua vivo, em que endereço cada um
+escuta (`ss -tlnp`), a memória livre e se o kernel matou alguém por falta dela.
+São dez linhas de log que transformam "falhou no CI e funciona aqui" em algo
+que se lê, em vez de algo que se adivinha.
 
 No fim, com `if: always()`, sobem os artefatos: capturas de tela do Cypress
 quando algum teste falha, e os logs do backend e do frontend sempre. Um teste de
@@ -280,22 +294,28 @@ detalhe que derrubou a primeira execução (seção 6.1). Agora tem uma exceçã
 
 ### Tempo esperado por execução
 
-| Job | Estimativa |
+Medido na primeira execução verde (08/09/2026, run 34179005650):
+
+| Job | Tempo |
 | --- | --- |
-| Unidade | ~1-2 min |
-| Integração | ~3-5 min |
-| Sistema | ~12-18 min (a suíte leva 5m26s local; o resto é instalar, empacotar e compilar o Angular) |
-| **Total até o check final** | **~15-20 min** |
+| Unidade | 50s |
+| Integração | 1min18 |
+| Sistema | 4min56 (dos quais 1min41 são os 50 testes; o resto é instalar, empacotar e compilar o Angular) |
+| **Total até o check final** | **5min52** |
+
+Integração e sistema rodam em paralelo, por isso o total é menor que a soma.
 
 Repositório público, então os minutos do GitHub Actions não são cobrados.
 
 ---
 
-## 6. O que o primeiro push revelou
+## 6. O que o pipeline revelou até ficar verde
 
-O pipeline não nasceu verde, e as duas falhas são interessantes o bastante para
-ficarem registradas: nenhuma delas era erro de teste, as duas eram erro de
-ambiente que só existe fora da máquina de desenvolvimento.
+O pipeline não nasceu verde. Foram três falhas até a primeira execução completa,
+e vale registrar todas: **nenhuma era erro de teste**. As três eram diferenças
+entre a máquina de desenvolvimento e o runner - exatamente o tipo de coisa que
+um CI existe para achar, e que nenhuma quantidade de "na minha máquina funciona"
+teria encontrado.
 
 ### 6.1 O jar do wrapper do Gradle nunca tinha sido versionado
 
@@ -317,7 +337,7 @@ Esse jar tem 43 KB e é o único `.jar` que deve estar no repositório: é o que
 garante que CI e desenvolvedores rodem a mesma versão do Gradle sem instalar
 nada. Correção: a exceção no `.gitignore` da seção 4.
 
-### 6.2 O servidor do Angular morria na virada do passo
+### 6.2 A suíte de sistema toda com ECONNREFUSED na 4201
 
 Com o backend resolvido, unidade e integração passaram, e os 50 testes de
 sistema falharam todos com a mesma mensagem:
@@ -336,33 +356,154 @@ log:
 | 01:12:37 | passo do Cypress começa |
 | 01:12:59 | primeira visita: `ECONNREFUSED` na 4201 |
 
-E o `frontend.log`, guardado como artefato, termina em
-`➜ Local: http://localhost:4201/` sem nenhuma linha de erro - servidor que morre
-por sinal, não por bug.
+**Primeira hipótese, errada.** Subir o servidor num passo e usá-lo em outro:
+cada `run:` do Actions é um shell diferente, e processo em segundo plano vira
+órfão quando aquele shell termina. Juntei subir, esperar e testar num passo só.
 
-A causa é do próprio Actions: **cada `run:` é um shell diferente**, e um processo
-deixado em segundo plano vira órfão quando aquele shell termina. O `java -jar`
-aguentou; o `nx serve` não, porque o Nx derruba a tarefa quando o processo pai
-some. Como subir e usar estavam em passos separados, o servidor viveu o
-suficiente para responder à verificação e morreu antes do primeiro teste.
+**O que derrubou a hipótese:** a execução seguinte falhou igual, com tudo no
+mesmo passo. Se fosse orfandade, teria passado.
 
-Correção: subir, esperar e testar passaram a acontecer num passo só, com um
-`trap ... EXIT` derrubando os processos no fim. É o mesmo motivo pelo qual
-bibliotecas como `start-server-and-test` existem.
+**A causa real.** Duas evidências apontaram para outro lado:
 
-### 6.3 Estado atual
+1. O `frontend.log` das duas execuções tinha **exatamente 2318 bytes**, byte a
+   byte igual, terminando em `➜ Local: http://localhost:4201/`. Processo morto
+   num instante qualquer não produz dois logs de tamanho idêntico. O servidor
+   não estava morrendo: estava vivo e inalcançável.
+2. A verificação usava `curl http://localhost:4201` e o Cypress usava
+   `127.0.0.1:4201`. Parecem a mesma coisa, e não são.
 
-| Camada | No GitHub Actions |
-| --- | --- |
-| Unidade | passou |
-| Integração | passou |
-| Sistema | falhou por ambiente (6.2); correção aplicada, aguardando a próxima execução |
+O dev-server do Angular escuta, por padrão, no endereço em que `localhost`
+resolver na máquina. Aqui isso é IPv4, porque o `/etc/hosts` desta máquina não
+dá o nome `localhost` ao `::1`:
 
-Verificado na máquina, com os mesmos comandos do pipeline: `./gradlew unitTest
---no-daemon`, `./gradlew bootJar --no-daemon -x test`, o `.jar` subindo com
-`E2E_DB_*` apontando para outro banco, o endereço usado como sinal de "backend no
-ar" respondendo `200`, o YAML válido e o script do passo novo simulado com dois
-servidores de mentira - inclusive o `trap`, que derrubou os dois no fim.
+```
+127.0.0.1 localhost
+::1     ip6-localhost ip6-loopback
+```
+
+E, de fato, subindo o dev-server aqui numa porta de teste:
+
+```
+LISTEN  127.0.0.1:4299   users:(("node",...))
+```
+
+Nas imagens do runner o `localhost` também aponta para `::1`, e o servidor pode
+acabar escutando só em `[::1]:4201`. Aí o `curl` sem `-4` tenta IPv6 primeiro,
+conecta, e o passo anuncia "Frontend no ar" com toda a razão - enquanto o
+Cypress, que conecta em `127.0.0.1`, encontra porta fechada. A verificação não
+estava mentindo: estava medindo outra coisa.
+
+Correções:
+
+- `npx nx serve ... --host 0.0.0.0`, que força a escuta em todos os endereços
+  IPv4. Verificado aqui: passa de `127.0.0.1:4299` para `0.0.0.0:4299`, e
+  `curl -4 http://127.0.0.1:4299` responde.
+- as esperas passaram a usar `curl -4` contra `127.0.0.1`, o mesmo endereço e a
+  mesma pilha do Cypress;
+- `CYPRESS_BASE_URL` e `CYPRESS_API_URL` passaram a apontar para `127.0.0.1`, o
+  que tira a resolução de nome da jogada;
+- e entrou a função `diagnostico` da seção 3.3, para que a próxima falha desse
+  tipo apareça no log em vez de precisar ser deduzida.
+
+A lição que fica é sobre o teste do CI, não sobre o código: **uma verificação de
+prontidão só vale se falar exatamente o mesmo protocolo, endereço e porta que o
+consumidor vai falar.** A que estava lá aprovava um servidor que o Cypress nunca
+alcançaria.
+
+A execução seguinte confirmou o diagnóstico - `ss` mostrando
+`LISTEN 0.0.0.0:4201`, o Cypress alcançando a aplicação e um teste passando pela
+primeira vez. Mas a última correção da lista, a de trocar `localhost` por
+`127.0.0.1`, criou a falha da próxima seção.
+
+### 6.3 A tela de login sem instituições, e um 403 escondido
+
+Resolvido o ECONNREFUSED, o Cypress passou a alcançar a aplicação - um teste até
+passou, o que era impossível antes. Mas 49 falharam, todos no mesmo ponto:
+
+```
+AssertionError: Timed out retrying after 12000ms:
+Expected to find element: `mat-option`, but never found it.
+```
+
+A tela de login carregava e a lista de instituições vinha vazia.
+
+O bloco de diagnóstico, dessa vez, tirou o chute da jogada. Ele chama a API por
+duas rotas: direta em `127.0.0.1:8080` e pelo proxy `/api` do dev-server em
+`127.0.0.1:4201`. Depois da falha, **as duas responderam 200 com a lista cheia**:
+
+```
+-- API direta em 127.0.0.1:8080 --
+[{"id":1,"title":"Instituição E2E 1788833013575555",...}]
+HTTP 200
+-- API pelo proxy do dev-server, 127.0.0.1:4201 --
+[{"id":1,"title":"Instituição E2E 1788833013575555",...}]
+HTTP 200
+```
+
+Dados no banco, proxy funcionando, servidor de pé - e a tela vazia mesmo assim.
+Quem fechou o caso foi a captura de tela do Cypress, no painel de comandos:
+
+```
+(xhr)  POST 403  /api/entity-tenant/list-all-tenants
+```
+
+O navegador levava **403** na mesma chamada que o `curl` fazia com sucesso. A
+diferença entre os dois é um cabeçalho: o navegador manda `Origin`, o `curl`
+não. E o backend libera uma origem só:
+
+```kotlin
+@Value("\${frontend.url:http://localhost:4201}")
+private lateinit var frontendUrl: String
+...
+registry.addMapping("/**").allowedOrigins(frontendUrl)
+```
+
+A causa, então, foi a correção anterior. Ao apontar o Cypress para
+`http://127.0.0.1:4201` (seção 6.2), o navegador passou a mandar esse `Origin`,
+que não é `http://localhost:4201`, e o Spring recusou. Uma correção criou a
+falha seguinte, e o diagnóstico que eu tinha escrito não a via porque media a
+rota sem o cabeçalho que importava.
+
+Correção: o backend passa a subir com a origem certa, usando a chave que a
+própria aplicação já expõe.
+
+```bash
+java -jar "$jar" --spring.profiles.active=e2e --frontend.url=http://127.0.0.1:4201
+```
+
+Fica a lição, que vale mais que a correção: **`curl` não é navegador.** Uma
+verificação de prontidão feita com `curl` aprova rotas que o navegador vai
+recusar, porque ela não manda `Origin`, não guarda cookie e não passa por CORS.
+Ela serve para dizer "o servidor respondeu", nunca "a aplicação funciona" - e
+foi por isso que o spec de fumaça (seção 3.3, ponto 7) entrou no lugar dela como
+primeiro sinal de vida real.
+
+### 6.4 Estado atual: verde
+
+Execução [34179005650](https://github.com/Gharantes/repo-tests/actions/runs/34179005650),
+08/09/2026:
+
+| Job | Resultado | Tempo |
+| --- | --- | --- |
+| Testes de unidade | 30/30 | 50s |
+| Testes de integração | 70/70 | 1min18 |
+| Testes de sistema | 50/50 | 4min56 |
+| Resultado dos testes | passou | 2s |
+
+```
+✔  autenticacao.cy.ts    00:07     6     6
+✔  detalhes.cy.ts        00:11     7     7
+✔  eventos.cy.ts         00:20     9     9
+✔  projetos.cy.ts        00:23    11    11
+✔  tags.cy.ts            00:15     8     8
+✔  usuarios.cy.ts        00:23     9     9
+✔  All specs passed!     01:41    50    50
+```
+
+As 150 provas da parte 2 rodam agora a cada push e a cada pull request, numa
+máquina que não é a minha, contra um PostgreSQL que nasce e morre dentro da
+execução. O check **Resultado dos testes** está pronto para virar obrigatório na
+proteção da `main`.
 
 ## 7. Limitações conhecidas
 

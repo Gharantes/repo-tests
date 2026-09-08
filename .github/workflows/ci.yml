@@ -147,8 +147,10 @@ jobs:
       E2E_DB_URL: jdbc:postgresql://localhost:5432/synergia_e2e
       E2E_DB_USERNAME: synergia
       E2E_DB_PASSWORD: synergia
-      CYPRESS_BASE_URL: http://localhost:4201
-      CYPRESS_API_URL: http://localhost:8080
+      # 127.0.0.1 e não localhost: tira a resolução de nome da jogada,
+      # que é justamente onde a suíte tropeçou.
+      CYPRESS_BASE_URL: http://127.0.0.1:4201
+      CYPRESS_API_URL: http://127.0.0.1:8080
 
     steps:
       - uses: actions/checkout@v4
@@ -194,18 +196,23 @@ jobs:
         working-directory: backend
         run: ./gradlew bootJar --no-daemon -x test
 
-      # Subir a pilha e rodar o Cypress no MESMO passo, de propósito.
+      # Subir a pilha e rodar o Cypress no MESMO passo, de propósito: cada
+      # `run:` do Actions é um shell próprio, e servidor deixado em segundo
+      # plano não sobrevive de forma confiável à virada do passo.
       #
-      # Cada `run:` do Actions é um shell próprio, que morre quando o passo
-      # acaba. Um servidor deixado em segundo plano vira processo órfão na
-      # virada do passo - foi assim que o `nx serve` morreu entre o "Frontend no
-      # ar" e a primeira visita do Cypress, e a suíte inteira falhou com
-      # ECONNREFUSED na 4201. Com tudo num passo só, o shell pai continua vivo
-      # do primeiro processo até o último teste.
+      # Duas escolhas aqui vêm de falha real, não de precaução (seção 6.2 do
+      # response-03):
+      #
+      #   --host 0.0.0.0  - sem isso o dev-server escuta no endereço em que
+      #                     "localhost" resolver. No runner o localhost também
+      #                     aponta para ::1, e o servidor pode acabar escutando
+      #                     só em [::1]:4201 - enquanto o Cypress conecta em
+      #                     127.0.0.1:4201 e leva ECONNREFUSED.
+      #   curl -4         - a verificação passa a usar a mesma pilha e o mesmo
+      #                     endereço do Cypress. Antes ela subia por IPv6 e
+      #                     dizia "no ar" enquanto o Cypress não alcançava nada.
       - name: Subir a pilha e rodar os testes de sistema
         env:
-          # Sem o daemon do Nx há um processo a menos para morrer no meio do
-          # caminho, e o job é curto demais para o cache dele compensar.
           NX_DAEMON: 'false'
         run: |
           set -e
@@ -217,15 +224,50 @@ jobs:
           }
           trap derrubar EXIT
 
+          # Fotografia do estado da pilha. Serve para que qualquer falha futura
+          # seja diagnosticada pelo log do próprio job, sem chute: diz se os
+          # processos continuam vivos, em que endereço cada um escuta, quanta
+          # memória sobrou e se o kernel matou alguém por falta dela.
+          diagnostico() {
+            echo "::group::Diagnóstico da pilha ($1)"
+            kill -0 "$BACKEND_PID" 2>/dev/null && echo "backend: vivo (pid $BACKEND_PID)" || echo "backend: MORTO"
+            kill -0 "$FRONTEND_PID" 2>/dev/null && echo "frontend: vivo (pid $FRONTEND_PID)" || echo "frontend: MORTO"
+            echo "-- portas --"
+            ss -tlnp 2>/dev/null | grep -E ':(4201|8080)' || echo "nada escutando em 4201 nem 8080"
+            # As duas rotas até a API. A primeira é a que o cy.request usa para
+            # preparar a massa; a segunda é a que o navegador usa, passando pelo
+            # proxy /api do dev-server do Angular. Se a lista de instituições
+            # aparece numa e não na outra, o problema é o proxy, não os dados.
+            echo "-- API direta em 127.0.0.1:8080 --"
+            curl -4 -s -m 15 -X POST http://127.0.0.1:8080/api/entity-tenant/list-all-tenants \
+              -w "\nHTTP %{http_code}\n" | head -c 400 || echo "falhou"
+            echo "-- API pelo proxy do dev-server, 127.0.0.1:4201 --"
+            curl -4 -s -m 15 -X POST http://127.0.0.1:4201/api/entity-tenant/list-all-tenants \
+              -w "\nHTTP %{http_code}\n" | head -c 400 || echo "falhou"
+            echo "-- memória (MB) --"
+            free -m
+            echo "-- kernel matou algo por falta de memória? --"
+            sudo -n dmesg 2>/dev/null | grep -iE "killed process|out of memory" | tail -5 || echo "nenhum registro de OOM"
+            echo "::endgroup::"
+          }
+
           echo "::group::Subindo o backend (perfil e2e)"
           jar=$(ls backend/build/libs/*.jar | grep -v -- '-plain.jar' | head -n 1)
           echo "Subindo $jar"
-          java -jar "$jar" --spring.profiles.active=e2e > "$RUNNER_TEMP/backend.log" 2>&1 &
+          # --frontend.url: o CorsConfig do backend libera UMA origem só, e o
+          # padrão dela é http://localhost:4201. Como aqui o Cypress navega em
+          # http://127.0.0.1:4201, o navegador manda esse Origin e o Spring
+          # responde 403 - foi o que derrubou a suíte inteira depois que o
+          # ECONNREFUSED foi resolvido. O curl não sofria com isso porque não
+          # manda cabeçalho Origin nenhum.
+          java -Xmx768m -jar "$jar" \
+            --spring.profiles.active=e2e \
+            --frontend.url=http://127.0.0.1:4201 > "$RUNNER_TEMP/backend.log" 2>&1 &
           BACKEND_PID=$!
           echo "::endgroup::"
 
           echo "::group::Subindo o frontend"
-          (cd frontend && npx nx serve synergia-frontend --port 4201) > "$RUNNER_TEMP/frontend.log" 2>&1 &
+          (cd frontend && npx nx serve synergia-frontend --port 4201 --host 0.0.0.0) > "$RUNNER_TEMP/frontend.log" 2>&1 &
           FRONTEND_PID=$!
           echo "::endgroup::"
 
@@ -235,28 +277,56 @@ jobs:
           esperar() {
             local nome="$1" url="$2" metodo="$3" log="$4"
             for i in $(seq 1 60); do
-              if curl -fsS -X "$metodo" "$url" > /dev/null; then
+              if curl -4 -fsS -X "$metodo" "$url" > /dev/null; then
                 echo "$nome no ar depois de ${i}0s."
                 return 0
               fi
               sleep 10
             done
             echo "::error::$nome não respondeu em 10 minutos."
+            diagnostico "espera esgotada"
             tail -n 100 "$log"
             return 1
           }
 
-          esperar "Backend" "http://localhost:8080/api/entity-tenant/list-all-tenants" POST "$RUNNER_TEMP/backend.log"
-          esperar "Frontend" "http://localhost:4201" GET "$RUNNER_TEMP/frontend.log"
+          esperar "Backend" "http://127.0.0.1:8080/api/entity-tenant/list-all-tenants" POST "$RUNNER_TEMP/backend.log"
+          esperar "Frontend" "http://127.0.0.1:4201" GET "$RUNNER_TEMP/frontend.log"
 
-          echo "::group::Cypress"
-          cd frontend && npm run e2e
+          diagnostico "antes dos testes"
+
+          # Spec de fumaça antes da suíte inteira.
+          #
+          # Quando a pilha não está de pé, os 50 testes falham um a um, cada um
+          # com uma nova tentativa em cima - foram 9 minutos de log vermelho
+          # para dizer o que o primeiro teste já tinha dito. Rodando
+          # `autenticacao.cy.ts` sozinho e sem retentativa, esse caso morre em
+          # ~30 segundos, com o diagnóstico junto.
+          #
+          # O preço é rodar esse spec duas vezes quando está tudo verde (~25s).
+          echo "::group::Cypress - spec de fumaça"
+          if ! (cd frontend && npx cypress run --e2e --browser electron \
+                  --spec cypress/e2e/autenticacao.cy.ts --config retries=0); then
+            echo "::endgroup::"
+            echo "::error::O primeiro spec falhou inteiro. Abortando antes dos outros 44 testes."
+            diagnostico "depois da falha do spec de fumaça"
+            tail -n 40 "$RUNNER_TEMP/frontend.log"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Cypress - suíte completa"
+          if ! (cd frontend && npm run e2e); then
+            echo "::endgroup::"
+            diagnostico "depois da falha"
+            tail -n 40 "$RUNNER_TEMP/frontend.log"
+            exit 1
+          fi
           echo "::endgroup::"
 
       # Quando um teste falha, o que explica a falha está ou na captura de tela
       # do Cypress ou no log de quem estava do outro lado.
       - name: Guardar as capturas de tela
-        if: failure()
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: capturas-cypress
