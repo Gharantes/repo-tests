@@ -51,6 +51,28 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: gradle
 
+      # Interruptor para testar a proteção da branch (parte 4).
+      #
+      # Escrever [falhar-ci] na mensagem do commit ou no título do PR faz o
+      # pipeline falhar de propósito, aqui, em segundos. Serve para conferir que
+      # a main está mesmo bloqueada sem precisar quebrar código de verdade e
+      # depois desfazer.
+      #
+      # O título do PR entra por `env` e não por interpolação direta no script:
+      # texto que vem de fora nunca deve ser colado dentro do shell.
+      - name: Interruptor de falha proposital
+        env:
+          TITULO_DO_PR: ${{ github.event.pull_request.title }}
+        run: |
+          MENSAGEM_DO_COMMIT=$(git log -1 --pretty=%B)
+          if printf '%s\n%s' "$MENSAGEM_DO_COMMIT" "$TITULO_DO_PR" | grep -qF '[falhar-ci]'; then
+            echo "::error::Falha proposital: o marcador [falhar-ci] está presente."
+            echo "Isto não é um teste quebrado - é o interruptor da parte 4."
+            echo "Tire o marcador do commit ou do título do PR para o pipeline voltar ao normal."
+            exit 1
+          fi
+          echo "Sem marcador [falhar-ci]. Seguindo para os testes."
+
       - name: Rodar os testes de unidade
         working-directory: backend
         run: ./gradlew unitTest --no-daemon
