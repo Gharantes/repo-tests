@@ -2,7 +2,7 @@
 
 **Disciplina:** DevOps, Aula 05, Projeto Integrador (Parte 3)
 **Autor:** Guilherme Harmatiuk Arantes
-**Versão:** 1.1
+**Versão:** 1.2
 **Data:** 07/09/2026
 
 ---
@@ -183,28 +183,37 @@ O ponto 6 é o que mais parece estranho lendo o arquivo, e tem motivo: veja a
 seção 6.2. Cada `run:` do Actions é um shell diferente, e servidor iniciado num
 passo não sobrevive de forma confiável até o passo seguinte.
 
-A espera não é `sleep 60`, é chamada de verdade, repetida:
+A espera não é `sleep 60`, é chamada de verdade, repetida, e no mesmo endereço
+que o Cypress usa:
 
 ```bash
 esperar() {
   local nome="$1" url="$2" metodo="$3" log="$4"
   for i in $(seq 1 60); do
-    if curl -fsS -X "$metodo" "$url" > /dev/null; then
+    if curl -4 -fsS -X "$metodo" "$url" > /dev/null; then
       echo "$nome no ar depois de ${i}0s."
       return 0
     fi
     sleep 10
   done
   echo "::error::$nome não respondeu em 10 minutos."
+  diagnostico "espera esgotada"
   tail -n 100 "$log"
   return 1
 }
 ```
 
-O backend é considerado no ar quando `POST /api/entity-tenant/list-all-tenants`
-responde - ou seja, depois de o Spring subir *e* conectar no banco. Se estourar o
-tempo, o passo imprime as últimas 100 linhas do log antes de falhar, para que o
-motivo apareça na própria aba do job.
+O `-4` e os endereços em `127.0.0.1` não são preciosismo: a suíte já falhou
+inteira porque a verificação subia por IPv6 e dizia "no ar" enquanto o Cypress,
+que conecta por IPv4, não alcançava nada (seção 6.2). O backend é considerado no
+ar quando `POST /api/entity-tenant/list-all-tenants` responde - ou seja, depois
+de o Spring subir *e* conectar no banco.
+
+Há também uma função `diagnostico`, chamada antes dos testes e de novo se eles
+falharem. Ela imprime se cada processo continua vivo, em que endereço cada um
+escuta (`ss -tlnp`), a memória livre e se o kernel matou alguém por falta dela.
+São dez linhas de log que transformam "falhou no CI e funciona aqui" em algo
+que se lê, em vez de algo que se adivinha.
 
 No fim, com `if: always()`, sobem os artefatos: capturas de tela do Cypress
 quando algum teste falha, e os logs do backend e do frontend sempre. Um teste de
@@ -317,7 +326,7 @@ Esse jar tem 43 KB e é o único `.jar` que deve estar no repositório: é o que
 garante que CI e desenvolvedores rodem a mesma versão do Gradle sem instalar
 nada. Correção: a exceção no `.gitignore` da seção 4.
 
-### 6.2 O servidor do Angular morria na virada do passo
+### 6.2 A suíte de sistema toda com ECONNREFUSED na 4201
 
 Com o backend resolvido, unidade e integração passaram, e os 50 testes de
 sistema falharam todos com a mesma mensagem:
@@ -336,19 +345,59 @@ log:
 | 01:12:37 | passo do Cypress começa |
 | 01:12:59 | primeira visita: `ECONNREFUSED` na 4201 |
 
-E o `frontend.log`, guardado como artefato, termina em
-`➜ Local: http://localhost:4201/` sem nenhuma linha de erro - servidor que morre
-por sinal, não por bug.
+**Primeira hipótese, errada.** Subir o servidor num passo e usá-lo em outro:
+cada `run:` do Actions é um shell diferente, e processo em segundo plano vira
+órfão quando aquele shell termina. Juntei subir, esperar e testar num passo só.
 
-A causa é do próprio Actions: **cada `run:` é um shell diferente**, e um processo
-deixado em segundo plano vira órfão quando aquele shell termina. O `java -jar`
-aguentou; o `nx serve` não, porque o Nx derruba a tarefa quando o processo pai
-some. Como subir e usar estavam em passos separados, o servidor viveu o
-suficiente para responder à verificação e morreu antes do primeiro teste.
+**O que derrubou a hipótese:** a execução seguinte falhou igual, com tudo no
+mesmo passo. Se fosse orfandade, teria passado.
 
-Correção: subir, esperar e testar passaram a acontecer num passo só, com um
-`trap ... EXIT` derrubando os processos no fim. É o mesmo motivo pelo qual
-bibliotecas como `start-server-and-test` existem.
+**A causa real.** Duas evidências apontaram para outro lado:
+
+1. O `frontend.log` das duas execuções tinha **exatamente 2318 bytes**, byte a
+   byte igual, terminando em `➜ Local: http://localhost:4201/`. Processo morto
+   num instante qualquer não produz dois logs de tamanho idêntico. O servidor
+   não estava morrendo: estava vivo e inalcançável.
+2. A verificação usava `curl http://localhost:4201` e o Cypress usava
+   `127.0.0.1:4201`. Parecem a mesma coisa, e não são.
+
+O dev-server do Angular escuta, por padrão, no endereço em que `localhost`
+resolver na máquina. Aqui isso é IPv4, porque o `/etc/hosts` desta máquina não
+dá o nome `localhost` ao `::1`:
+
+```
+127.0.0.1 localhost
+::1     ip6-localhost ip6-loopback
+```
+
+E, de fato, subindo o dev-server aqui numa porta de teste:
+
+```
+LISTEN  127.0.0.1:4299   users:(("node",...))
+```
+
+Nas imagens do runner o `localhost` também aponta para `::1`, e o servidor pode
+acabar escutando só em `[::1]:4201`. Aí o `curl` sem `-4` tenta IPv6 primeiro,
+conecta, e o passo anuncia "Frontend no ar" com toda a razão - enquanto o
+Cypress, que conecta em `127.0.0.1`, encontra porta fechada. A verificação não
+estava mentindo: estava medindo outra coisa.
+
+Correções:
+
+- `npx nx serve ... --host 0.0.0.0`, que força a escuta em todos os endereços
+  IPv4. Verificado aqui: passa de `127.0.0.1:4299` para `0.0.0.0:4299`, e
+  `curl -4 http://127.0.0.1:4299` responde.
+- as esperas passaram a usar `curl -4` contra `127.0.0.1`, o mesmo endereço e a
+  mesma pilha do Cypress;
+- `CYPRESS_BASE_URL` e `CYPRESS_API_URL` passaram a apontar para `127.0.0.1`, o
+  que tira a resolução de nome da jogada;
+- e entrou a função `diagnostico` da seção 3.3, para que a próxima falha desse
+  tipo apareça no log em vez de precisar ser deduzida.
+
+A lição que fica é sobre o teste do CI, não sobre o código: **uma verificação de
+prontidão só vale se falar exatamente o mesmo protocolo, endereço e porta que o
+consumidor vai falar.** A que estava lá aprovava um servidor que o Cypress nunca
+alcançaria.
 
 ### 6.3 Estado atual
 
@@ -358,11 +407,16 @@ bibliotecas como `start-server-and-test` existem.
 | Integração | passou |
 | Sistema | falhou por ambiente (6.2); correção aplicada, aguardando a próxima execução |
 
-Verificado na máquina, com os mesmos comandos do pipeline: `./gradlew unitTest
---no-daemon`, `./gradlew bootJar --no-daemon -x test`, o `.jar` subindo com
-`E2E_DB_*` apontando para outro banco, o endereço usado como sinal de "backend no
-ar" respondendo `200`, o YAML válido e o script do passo novo simulado com dois
-servidores de mentira - inclusive o `trap`, que derrubou os dois no fim.
+Verificado nesta máquina, com os mesmos comandos do pipeline: `./gradlew
+unitTest --no-daemon`, `./gradlew bootJar --no-daemon -x test`, o `.jar` subindo
+com `E2E_DB_*` apontando para outro banco, o endereço usado como sinal de
+"backend no ar" respondendo `200`, o `--host 0.0.0.0` mudando o endereço de
+escuta de `127.0.0.1` para `0.0.0.0`, o YAML válido e o script do passo com
+sintaxe conferida.
+
+O que só o runner confirma continua sendo o runner: se a suíte inteira passa lá,
+saberemos na próxima execução - e, se não passar, o bloco de diagnóstico dirá se
+o servidor está vivo e em que endereço ele escuta.
 
 ## 7. Limitações conhecidas
 
