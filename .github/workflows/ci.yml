@@ -276,7 +276,27 @@ jobs:
 
           diagnostico "antes dos testes"
 
-          echo "::group::Cypress"
+          # Spec de fumaça antes da suíte inteira.
+          #
+          # Quando a pilha não está de pé, os 50 testes falham um a um, cada um
+          # com uma nova tentativa em cima - foram 9 minutos de log vermelho
+          # para dizer o que o primeiro teste já tinha dito. Rodando
+          # `autenticacao.cy.ts` sozinho e sem retentativa, esse caso morre em
+          # ~30 segundos, com o diagnóstico junto.
+          #
+          # O preço é rodar esse spec duas vezes quando está tudo verde (~25s).
+          echo "::group::Cypress - spec de fumaça"
+          if ! (cd frontend && npx cypress run --e2e --browser electron \
+                  --spec cypress/e2e/autenticacao.cy.ts --config retries=0); then
+            echo "::endgroup::"
+            echo "::error::O primeiro spec falhou inteiro. Abortando antes dos outros 44 testes."
+            diagnostico "depois da falha do spec de fumaça"
+            tail -n 40 "$RUNNER_TEMP/frontend.log"
+            exit 1
+          fi
+          echo "::endgroup::"
+
+          echo "::group::Cypress - suíte completa"
           if ! (cd frontend && npm run e2e); then
             echo "::endgroup::"
             diagnostico "depois da falha"
