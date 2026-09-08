@@ -18,6 +18,10 @@ build/
 
 # Package Files #
 *.jar
+# ...menos o jar do wrapper do Gradle, que PRECISA estar versionado: é ele que
+# o ./gradlew executa, e sem ele o pipeline de CI falha com
+# "Could not find or load main class org.gradle.wrapper.GradleWrapperMain".
+!gradle/wrapper/gradle-wrapper.jar
 *.war
 *.nar
 *.ear
