@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { DialogAddPostComponent } from './dialog-add-post/dialog-add-post.compon
   standalone: true,
   templateUrl: './add-post-btn.component.html',
   styleUrl: './add-post-btn.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, MatIconModule],
 })
 export class AddPostBtnComponent {

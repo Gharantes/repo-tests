@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, Output } from "@angular/core";
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from "@angular/core";
 import { GmIconImage } from "../google-material-icon/gm-icon-image";
 import { GmIconType } from "../google-material-icon/gm-icon-type";
 import { GmIconComponent } from "../google-material-icon/gm-icon.component";
@@ -16,6 +16,7 @@ import { GmIconComponent } from "../google-material-icon/gm-icon.component";
     </button>
   `,
   styles: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [GmIconComponent]
 })
 export class GmIconButtonComponent {

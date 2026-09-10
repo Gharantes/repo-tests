@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ViewListAccountsComponent } from './view/view-list-accounts.component';
 import { IAccountModel } from '@synergia-frontend/interfaces';
 import {
@@ -20,6 +20,7 @@ import { AccountDtoToModel } from '@synergia-frontend/mappers';
   templateUrl: './route-list-accounts.component.html',
   styleUrl: `./route-list-accounts.component.scss`,
   imports: [ViewListAccountsComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorListAccounts],
 })
 export class RouteListAccountsComponent {

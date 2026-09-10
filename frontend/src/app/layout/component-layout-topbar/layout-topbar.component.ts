@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RoutingService, SessionService } from '@synergia-frontend/services';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -9,6 +9,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   templateUrl: './layout-topbar.component.html',
   styleUrl: `./layout-topbar.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatMenuModule, MatIconModule, MatButtonModule]
 })
 export class LayoutTopbarComponent {

@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, tap } from 'rxjs';
 import { EntityTenantResourceService } from '@synergia-frontend/api';
@@ -11,6 +11,7 @@ import { ConnectorCreateTenant } from './connector/connector-create-tenant';
   templateUrl: './route-upsert-tenant.component.html',
   styleUrl: `./route-upsert-tenant.component.scss`,
   imports: [ViewUpsertTenantComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorCreateTenant],
 })
 export class RouteUpsertTenantComponent {

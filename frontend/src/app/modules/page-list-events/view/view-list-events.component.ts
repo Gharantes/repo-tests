@@ -1,5 +1,5 @@
 
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { IEventModel } from '@synergia-frontend/interfaces';
@@ -12,6 +12,7 @@ import { EventCardGridComponent } from '@synergia-frontend/components';
   standalone: true,
   templateUrl: './view-list-events.component.html',
   styleUrl: 'view-list-events.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatIconModule,
     MatButtonModule,

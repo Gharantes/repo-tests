@@ -1,4 +1,4 @@
-import { Component, Input } from "@angular/core";
+import { Component, Input, ChangeDetectionStrategy } from "@angular/core";
 import { MatIcon } from "@angular/material/icon";
 import { GmIconType } from "./gm-icon-type";
 import { GmIconImage } from "./gm-icon-image";
@@ -19,6 +19,7 @@ import { CommonModule } from "@angular/common";
       width: min-content;
     }   
   `],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIcon, CommonModule]
 })
 export class GmIconComponent {

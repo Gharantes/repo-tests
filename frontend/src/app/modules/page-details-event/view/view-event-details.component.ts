@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
 import {
   AddPostBtnComponent,
@@ -11,6 +11,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-view-event-details',
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SafeImageComponent,
     MatChip,

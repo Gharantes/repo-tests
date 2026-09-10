@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { SafeImageComponent } from '../../safe-image/safe-image.component';
@@ -8,6 +8,7 @@ import { SafeImageComponent } from '../../safe-image/safe-image.component';
   templateUrl: `project-card-grid-entry.component.html`,
   styleUrl: 'project-card-grid-entry.component.scss',
   imports: [SafeImageComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class ProjectCardGridEntryComponent {

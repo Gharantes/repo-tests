@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   EntityGetByIdResourceService,
 } from '@synergia-frontend/api';
@@ -15,6 +15,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   templateUrl: './dialog-card-event.component.html',
   styleUrl: 'dialog-card-event.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [SafeImageComponent, MatButtonModule],
 })
 export class DialogCardEventComponent {

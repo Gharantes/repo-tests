@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   RoutingService,
   SessionService,
@@ -23,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './route-upsert-account.component.html',
   styleUrl: `./route-upsert-account.component.scss`,
   imports: [ViewUpsertAccountComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorUpsertAccont],
 })
 export class RouteUpsertAccountComponent {

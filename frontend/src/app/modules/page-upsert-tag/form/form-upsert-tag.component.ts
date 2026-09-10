@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -24,6 +24,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
     MatSelectModule,
     MatCheckbox
 ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [],
 })
 export class FormUpsertTagComponent {
