@@ -1,4 +1,4 @@
-import { CommonModule } from "@angular/common";
+
 import { Component, EventEmitter, Input, Output } from "@angular/core";
 import { GmIconImage } from "../google-material-icon/gm-icon-image";
 import { GmIconType } from "../google-material-icon/gm-icon-type";
@@ -16,7 +16,7 @@ import { GmIconComponent } from "../google-material-icon/gm-icon.component";
     </button>
   `,
   styles: [],
-  imports: [CommonModule, GmIconComponent]
+  imports: [GmIconComponent]
 })
 export class GmIconButtonComponent {
     @Input() type?: GmIconType;

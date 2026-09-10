@@ -1,4 +1,4 @@
-  {
+{
   "name": "synergia-frontend",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "includedScripts": [],
@@ -31,9 +31,7 @@
           "./src/styles/_mixins.scss"
         ],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "./src/styles"
-          ]
+          "includePaths": ["./src/styles"]
         },
         "scripts": []
       },
@@ -81,7 +79,8 @@
           "proxyConfig": "src/app/proxy.conf.json"
         }
       },
-      "defaultConfiguration": "development"
+      "defaultConfiguration": "development",
+      "continuous": true
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -99,7 +98,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "jest.config.app.ts"
+        "jestConfig": "jest.config.app.ts",
+        "tsConfig": "tsconfig.spec.json"
       }
     },
     "serve-static": {

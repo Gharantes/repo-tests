@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -14,14 +14,13 @@ import { FormUpsertEventComponent } from '../form/form-upsert-event.component';
   styleUrl: './view-upsert-event.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     ReactiveFormsModule,
-    FormUpsertEventComponent,
-  ],
+    FormUpsertEventComponent
+],
 })
 export class ViewUpsertEventComponent {
   @Output() goToParentPageEvent = new EventEmitter<void>();

@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { NgForOf } from '@angular/common';
+
 import { ITenantModel } from '@synergia-frontend/interfaces';
 
 @Component({
@@ -23,9 +23,8 @@ import { ITenantModel } from '@synergia-frontend/interfaces';
     MatButtonModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
-    MatOption,
-    NgForOf,
-  ],
+    MatOption
+],
 })
 export class FormLoginComponent {
   @Input() public connector!: ConnectorLogin;

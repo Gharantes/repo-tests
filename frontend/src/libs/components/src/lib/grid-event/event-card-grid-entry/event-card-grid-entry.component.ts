@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IEventModel } from '@synergia-frontend/interfaces';
 import { SafeImageComponent } from '../../safe-image/safe-image.component';
 
@@ -7,7 +7,7 @@ import { SafeImageComponent } from '../../safe-image/safe-image.component';
   selector: 'lib-event-card-grid-entry',
   templateUrl: `event-card-grid-entry.component.html`,
   styleUrl: 'event-card-grid-entry.component.scss',
-  imports: [CommonModule, SafeImageComponent],
+  imports: [SafeImageComponent],
   standalone: true,
 })
 export class EventCardGridEntryComponent {

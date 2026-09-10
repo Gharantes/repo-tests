@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, DestroyRef, inject, Input, OnInit, signal } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -25,7 +25,6 @@ import { debounceTime, map, tap } from 'rxjs';
   styleUrl: './form-list-projects.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormField,
@@ -36,8 +35,8 @@ import { debounceTime, map, tap } from 'rxjs';
     ReactiveFormsModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
-    MatOption,
-  ],
+    MatOption
+],
 })
 export class FormListProjectsComponent implements OnInit {
   @Input() connector!: ConnectorListProjects;

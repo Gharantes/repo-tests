@@ -3,7 +3,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
 import { MatAutocomplete, MatAutocompleteTrigger, MatOption } from '@angular/material/autocomplete';
-import { NgForOf } from '@angular/common';
+
 import { FormBuilder, ReactiveFormsModule } from '@angular/forms';
 import { IProjectModel, ITagModel } from '@synergia-frontend/interfaces';
 import { EntityTagResourceService } from '@synergia-frontend/api';
@@ -27,9 +27,8 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
     MatInput,
     MatLabel,
     MatOption,
-    NgForOf,
-    ReactiveFormsModule,
-  ],
+    ReactiveFormsModule
+],
 })
 export class DialogAddTagComponent {
   public readonly tags$ = signal<ITagModel[]>([]);

@@ -1,5 +1,5 @@
 import { Component, inject, signal } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -19,7 +19,6 @@ import { catchError, EMPTY, tap } from 'rxjs';
   templateUrl: './route-upsert-tag.component.html',
   styleUrl: `./route-upsert-tag.component.scss`,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -27,8 +26,8 @@ import { catchError, EMPTY, tap } from 'rxjs';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
-    ViewUpsertTagComponent,
-  ],
+    ViewUpsertTagComponent
+],
   providers: [ConnectorUpsertTag],
 })
 export class RouteUpsertTagComponent {
