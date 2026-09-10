@@ -17,6 +17,6 @@ class Post(
     @Column(name = "title", nullable = false)
     var title: String = "",
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content", nullable = false, columnDefinition = "TEXT")
     var content: String = ""
 )
