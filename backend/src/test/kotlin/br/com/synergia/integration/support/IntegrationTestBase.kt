@@ -3,7 +3,7 @@ package br.com.synergia.integration.support
 import org.junit.jupiter.api.BeforeEach
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
-import org.springframework.boot.test.web.client.TestRestTemplate
+import org.springframework.boot.test.web.server.LocalServerPort
 import org.springframework.http.HttpEntity
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -21,13 +21,17 @@ import br.com.synergia.libs.entityTenant.services.EntityTenantSqlService
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.jdbc.core.JdbcTemplate
+import org.springframework.http.client.ClientHttpResponse
+import org.springframework.web.client.ResponseErrorHandler
+import org.springframework.web.client.RestTemplate
+import org.springframework.web.util.DefaultUriBuilderFactory
 
 /**
  * Base de todos os testes de integração.
  *
  * Não há mock em lugar nenhum. Sobe o contexto real do Spring Boot com o Tomcat
  * real numa porta aleatória, e as requisições saem pela rede via
- * [TestRestTemplate] batendo nos mesmos controllers que a aplicação publica. Do
+ * [RestTemplate] batendo nos mesmos controllers que a aplicação publica. Do
  * outro lado há um PostgreSQL real: as consultas executadas são os mesmos
  * arquivos `.sql` de produção, com `ILIKE`, `interval` e tudo que é específico do
  * Postgres.
@@ -48,8 +52,22 @@ import org.springframework.jdbc.core.JdbcTemplate
 )
 abstract class IntegrationTestBase {
 
-    @Autowired
-    protected lateinit var rest: TestRestTemplate
+    @LocalServerPort
+    protected var porta: Int = 0
+
+    /**
+     * O Spring Boot 4 removeu o RestTemplate. Isto refaz as duas coisas
+     * que ele dava e que a suíte usa: a porta aleatória já embutida, para que
+     * os testes sigam pedindo "/api/...", e um tratador de erro que não lança
+     * em 4xx/5xx - sem ele, todo teste que afirma sobre status de erro viraria
+     * exceção no lugar de asserção.
+     */
+    protected val rest: RestTemplate by lazy {
+        RestTemplate().apply {
+            uriTemplateHandler = DefaultUriBuilderFactory("http://localhost:$porta")
+            errorHandler = ResponseErrorHandler { _: ClientHttpResponse -> false }
+        }
+    }
 
     @Autowired
     protected lateinit var jdbc: JdbcTemplate
@@ -237,17 +255,17 @@ abstract class IntegrationTestBase {
 // -------------------------------------------------------------------------
 
 /** POST com corpo JSON, do jeito que o frontend Angular manda. */
-inline fun <reified R> TestRestTemplate.postJson(url: String, corpo: Any?): ResponseEntity<R> {
+inline fun <reified R : Any> RestTemplate.postJson(url: String, corpo: Any?): ResponseEntity<R> {
     val headers = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
     return this.postForEntity(url, HttpEntity(corpo, headers), R::class.java)
 }
 
 /** POST sem corpo, usado pelos endpoints que recebem tudo por query string. */
-inline fun <reified R> TestRestTemplate.postSemCorpo(url: String): ResponseEntity<R> =
+inline fun <reified R : Any> RestTemplate.postSemCorpo(url: String): ResponseEntity<R> =
     this.postForEntity(url, HttpEntity<Void>(HttpHeaders()), R::class.java)
 
 /** POST que devolve uma lista JSON, preservando o tipo dos elementos. */
-inline fun <reified R> TestRestTemplate.postForList(url: String, corpo: Any? = null): ResponseEntity<List<R>> {
+inline fun <reified R : Any> RestTemplate.postForList(url: String, corpo: Any? = null): ResponseEntity<List<R>> {
     val headers = HttpHeaders().apply { contentType = MediaType.APPLICATION_JSON }
     return this.exchange(
         url,
@@ -258,7 +276,7 @@ inline fun <reified R> TestRestTemplate.postForList(url: String, corpo: Any? = n
 }
 
 /** GET que devolve uma lista JSON, preservando o tipo dos elementos. */
-inline fun <reified R> TestRestTemplate.getForList(url: String): ResponseEntity<List<R>> =
+inline fun <reified R : Any> RestTemplate.getForList(url: String): ResponseEntity<List<R>> =
     this.exchange(
         url,
         HttpMethod.GET,

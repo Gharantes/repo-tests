@@ -14,7 +14,7 @@ object ResponseMessenger {
             errorTemplate(truncateForHeader((e.message ?: "Erro desconhecido.")))
         }
     }
-    fun <T> buildResponse(function: () -> T?): ResponseEntity<T> {
+    fun <T : Any> buildResponse(function: () -> T?): ResponseEntity<T> {
         return try {
             ResponseEntity.ok(function())
         } catch (e: Exception) {
@@ -23,7 +23,7 @@ object ResponseMessenger {
         }
     }
 
-    private fun <T> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
+    private fun <T : Any> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
         val sanitizedMessage = msg.replace("\r", "").replace("\n", "")
 
         val headers = HttpHeaders()
