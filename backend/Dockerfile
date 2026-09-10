@@ -1,18 +1,18 @@
-FROM eclipse-temurin:21-jdk-alpine AS build
+FROM eclipse-temurin:25-jdk-alpine AS build
 WORKDIR /app
 
-RUN apk add --no-cache wget unzip && \
-    wget https://services.gradle.org/distributions/gradle-8.10-bin.zip -q && \
-    unzip gradle-8.10-bin.zip -d /opt && \
-    ln -s /opt/gradle-8.10/bin/gradle /usr/local/bin/gradle
-
+# Usa o wrapper do próprio repositório em vez de baixar o Gradle à mão: a versão
+# passa a viver num lugar só (gradle/wrapper/gradle-wrapper.properties), e não em
+# dois que precisam ser lembrados juntos.
+COPY gradlew .
+COPY gradle gradle
 COPY build.gradle.kts .
 COPY settings.gradle.kts .
 COPY src src
 
-RUN gradle bootJar -x test
+RUN ./gradlew bootJar -x test
 
-FROM eclipse-temurin:21-jre-alpine
+FROM eclipse-temurin:25-jre-alpine
 VOLUME /tmp
 COPY --from=build /app/build/libs/*.jar app.jar
 EXPOSE 8080
