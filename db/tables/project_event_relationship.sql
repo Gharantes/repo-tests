@@ -1,18 +1,8 @@
-@Entity
-@Table(
-    name = "project_event_relationship",
-    uniqueConstraints = [
-        UniqueConstraint(
-            name = "uk_project_event_relationship_id_project_id_event",
-            columnNames = ["id_project", "id_event"]
-        )
-    ])
-class ProjectEventRelationshipEntity {
-    @Id @GeneratedValue(strategy = GenerationType.IDENTITY) var id: Long? = null
+CREATE TABLE project_event_relationship (
+    id serial4 primary key unique not null,
+    id_project bigint references project not null,
+    id_event bigint references event not null
+);
 
-    @Column(name = "id_project", nullable = false)
-    var idProject: Long? = null
-
-    @Column(name = "id_event", nullable = false)
-    var idEvent: Long? = null
-}
+ALTER TABLE project_event_relationship
+ADD CONSTRAINT uk_project_event_relationship_id_project_id_event UNIQUE (id_project, id_event);
