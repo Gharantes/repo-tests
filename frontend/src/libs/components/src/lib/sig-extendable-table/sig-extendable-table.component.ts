@@ -1,9 +1,10 @@
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
   Component,
   Input,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
@@ -20,14 +21,14 @@ import { MatCheckbox } from '@angular/material/checkbox';
   templateUrl: 'sig-extendable-table.component.html',
   styleUrl: './sig-extendable-table.component.scss',
   standalone: true,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatTableModule,
     MatMenuModule,
     MatIconModule,
     GmIconComponent,
-    MatCheckbox,
-  ],
+    MatCheckbox
+],
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input() columns!: IDoExtendableTableColumnInfo<T>[];

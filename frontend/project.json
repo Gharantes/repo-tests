@@ -1,4 +1,4 @@
-  {
+{
   "name": "synergia-frontend",
   "$schema": "node_modules/nx/schemas/project-schema.json",
   "includedScripts": [],
@@ -10,6 +10,7 @@
     "build": {
       "executor": "@angular-devkit/build-angular:application",
       "outputs": ["{options.outputPath}"],
+      "defaultConfiguration": "production",
       "options": {
         "outputPath": "dist/synergia-frontend",
         "index": "./src/index.html",
@@ -31,9 +32,7 @@
           "./src/styles/_mixins.scss"
         ],
         "stylePreprocessorOptions": {
-          "includePaths": [
-            "./src/styles"
-          ]
+          "includePaths": ["./src/styles"]
         },
         "scripts": []
       },
@@ -64,11 +63,12 @@
           "extractLicenses": false,
           "sourceMap": true
         }
-      },
-      "defaultConfiguration": "production"
+      }
     },
     "serve": {
       "executor": "@angular-devkit/build-angular:dev-server",
+      "defaultConfiguration": "development",
+      "continuous": true,
       "options": {
         "port": 4201
       },
@@ -80,8 +80,7 @@
           "buildTarget": "synergia-frontend:build:development",
           "proxyConfig": "src/app/proxy.conf.json"
         }
-      },
-      "defaultConfiguration": "development"
+      }
     },
     "extract-i18n": {
       "executor": "@angular-devkit/build-angular:extract-i18n",
@@ -99,7 +98,8 @@
       "executor": "@nx/jest:jest",
       "outputs": ["{workspaceRoot}/coverage/{projectName}"],
       "options": {
-        "jestConfig": "jest.config.app.ts"
+        "jestConfig": "jest.config.app.ts",
+        "tsConfig": "tsconfig.spec.json"
       }
     },
     "serve-static": {

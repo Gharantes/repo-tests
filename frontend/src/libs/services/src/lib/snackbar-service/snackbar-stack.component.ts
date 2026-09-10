@@ -1,4 +1,4 @@
-import { Component, ViewEncapsulation } from '@angular/core';
+import { Component, ViewEncapsulation, ChangeDetectionStrategy } from '@angular/core';
 import { NgClass } from '@angular/common';
 import { MatProgressSpinner } from '@angular/material/progress-spinner';
 import { SnackbarService } from '../snackbar.service';
@@ -25,6 +25,7 @@ import { SnackbarService } from '../snackbar.service';
   `,
   styleUrl: './style.scss',
   imports: [MatProgressSpinner, NgClass],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [],
 })
 export class SnackbarStackComponent {

@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
@@ -11,6 +11,7 @@ import { tap } from 'rxjs';
   standalone: true,
   templateUrl: './add-tag-btn.component.html',
   styleUrl: './add-tag-btn.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, MatIconModule],
 })
 export class AddTagBtnComponent {

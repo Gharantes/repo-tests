@@ -18,7 +18,7 @@ class PageLoginResource (
     @PostMapping("/check-login-information")
     fun checkLoginInformation(
         @RequestBody params: LoginInformationInputDto
-    ): ResponseEntity<LoginInformationResponseDto?> {
+    ): ResponseEntity<LoginInformationResponseDto> {
         return ResponseMessenger.buildResponse { service.checkLoginInformation(params) }
     }
 }

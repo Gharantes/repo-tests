@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   RoutingService,
   SessionService,
@@ -20,6 +20,7 @@ import { DialogCardProjectComponent } from '@synergia-frontend/components';
   templateUrl: './route-list-projects.component.html',
   styleUrl: `./route-list-projects.component.scss`,
   imports: [ViewListProjectsComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorListProjects],
 })
 export class RouteListProjectsComponent {

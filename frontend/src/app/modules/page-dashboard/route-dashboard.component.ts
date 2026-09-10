@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RoutingService } from '@synergia-frontend/services';
 import { ViewDashboardComponent } from './view/view-dashboard.component';
 
@@ -7,6 +7,7 @@ import { ViewDashboardComponent } from './view/view-dashboard.component';
   standalone: true,
   templateUrl: 'route-dashboard.component.html',
   styleUrl: `route-dashboard.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ViewDashboardComponent],
 })
 export class RouteDashboardComponent {

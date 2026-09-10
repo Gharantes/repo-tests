@@ -4,6 +4,7 @@ import {
   EventEmitter,
   Input,
   Output,
+  ChangeDetectionStrategy
 } from '@angular/core';
 import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import {
@@ -22,6 +23,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   standalone: true,
   templateUrl: './view-list-permissions.component.html',
   styleUrl: `./view-list-permissions.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [SigExtendableTableComponent, ReactiveFormsModule],
 })
 export class ViewListPermissionsComponent {

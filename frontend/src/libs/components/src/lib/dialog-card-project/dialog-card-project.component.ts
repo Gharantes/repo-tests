@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { RoutingService } from '@synergia-frontend/services';
@@ -14,6 +14,7 @@ import { MatChip, MatChipSet } from '@angular/material/chips';
   standalone: true,
   templateUrl: './dialog-card-project.component.html',
   styleUrl: 'dialog-card-project.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, MatIconModule, MatChip, MatChipSet],
 })
 export class DialogCardProjectComponent {

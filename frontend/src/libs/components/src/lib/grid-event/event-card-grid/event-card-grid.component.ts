@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+
 import { IEventModel } from '@synergia-frontend/interfaces';
 import { EventCardGridEntryComponent } from '../event-card-grid-entry/event-card-grid-entry.component';
 
@@ -7,7 +7,8 @@ import { EventCardGridEntryComponent } from '../event-card-grid-entry/event-card
   selector: 'lib-event-card-grid',
   templateUrl: `event-card-grid.component.html`,
   styleUrl: 'event-card-grid.component.scss',
-  imports: [CommonModule, EventCardGridEntryComponent],
+  imports: [EventCardGridEntryComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class EventCardGridComponent {

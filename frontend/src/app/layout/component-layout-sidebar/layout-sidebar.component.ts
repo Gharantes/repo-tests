@@ -1,4 +1,4 @@
-import { Component, signal } from "@angular/core";
+import { Component, signal, ChangeDetectionStrategy } from "@angular/core";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
@@ -12,6 +12,7 @@ import { map, tap } from "rxjs";
   standalone: true,
   templateUrl: './layout-sidebar.component.html',
   styleUrl: `./layout-sidebar.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRippleModule, MatIconModule]
 })
 export class LayoutSidebarComponent {

@@ -1,5 +1,5 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,8 +14,8 @@ import { FormUpsertProjectComponent } from '../form/form-upsert-project.componen
   standalone: true,
   templateUrl: './view-upsert-project.component.html',
   styleUrl: `./view-upsert-project.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -23,8 +23,8 @@ import { FormUpsertProjectComponent } from '../form/form-upsert-project.componen
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
-    FormUpsertProjectComponent,
-  ],
+    FormUpsertProjectComponent
+],
 })
 export class ViewUpsertProjectComponent {
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();

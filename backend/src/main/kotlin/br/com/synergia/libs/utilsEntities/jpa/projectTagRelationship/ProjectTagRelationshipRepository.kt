@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectTagRelationshipRepository : JpaRepository<ProjectTagRelationship, Long> {
     @Transactional
-    fun deleteByIdProject(idProject: Long) {}
+    fun deleteByIdProject(idProject: Long)
 }

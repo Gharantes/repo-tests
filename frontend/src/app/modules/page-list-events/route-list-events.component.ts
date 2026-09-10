@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IEventModel } from '@synergia-frontend/interfaces';
 import {
   RoutingService,
@@ -19,6 +19,7 @@ import { EntityEventResourceService } from '@synergia-frontend/api';
   templateUrl: './route-list-events.component.html',
   styleUrl: `./route-list-events.component.scss`,
   imports: [ViewListEventsComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorListEvents],
 })
 export class RouteListEventsComponent {
