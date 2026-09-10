@@ -7,5 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface EventTagRelationshipRepository : JpaRepository<EventTagRelationship, Long> {
     @Transactional
-    fun deleteByIdEvent(idEvent: Long) {}
+    fun deleteByIdEvent(idEvent: Long)
 }
