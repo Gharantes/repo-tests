@@ -26,7 +26,7 @@ permissions:
   contents: read
 
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '25'
   NODE_VERSION: '20'
   # Credenciais do PostgreSQL efêmero dos jobs. Não são segredo: o banco nasce
   # e morre dentro da execução, e não existe fora dela.
