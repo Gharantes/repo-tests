@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatFormField, MatInput, MatLabel } from '@angular/material/input';
@@ -12,6 +12,7 @@ import { CdkTextareaAutosize } from '@angular/cdk/text-field';
   standalone: true,
   templateUrl: './dialog-add-post.component.html',
   styleUrl: './dialog-add-post.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     MatButtonModule,
     MatIconModule,

@@ -1,4 +1,4 @@
-import { Component, DestroyRef, inject, signal } from '@angular/core';
+import { Component, DestroyRef, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { EntityDeleteByIdResourceService, EntityTagResourceService } from '@synergia-frontend/api';
 import { RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, debounceTime, EMPTY, map, tap } from 'rxjs';
@@ -15,6 +15,7 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
   templateUrl: './route-list-tags.component.html',
   styleUrl: `./route-list-tags.component.scss`,
   imports: [ReactiveFormsModule, ViewListTagsComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorListTags]
 })
 export class RouteListTagsComponent {

@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 
 
 @Component({
@@ -6,6 +6,7 @@ import { Component, Input } from '@angular/core';
   templateUrl: `safe-image.component.html`,
   styleUrl: 'safe-image.component.scss',
   imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class SafeImageComponent {

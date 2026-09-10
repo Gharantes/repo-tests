@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { MatCardModule } from '@angular/material/card';
 import { LayoutTopbarBeforeLoginComponent } from '../component-layout-topbar-before-login/layout-topbar-before-login.component';
@@ -8,6 +8,7 @@ import { LayoutTopbarBeforeLoginComponent } from '../component-layout-topbar-bef
   standalone: true,
   templateUrl: './layout-before-login.component.html',
   styleUrl: `./layout-before-login.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterOutlet, MatCardModule, LayoutTopbarBeforeLoginComponent],
 })
 export class LayoutBeforeLoginComponent {}

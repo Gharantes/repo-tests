@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 @Component({
@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   templateUrl: 'view-dashboard.component.html',
   styleUrl: `view-dashboard.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatIconModule],
 })
 export class ViewDashboardComponent {

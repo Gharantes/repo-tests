@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { SigExtendableTableComponent } from '@synergia-frontend/components';
 import {
   IDoExtendableTableActions,
@@ -17,6 +17,7 @@ import { MatButtonModule } from '@angular/material/button';
   standalone: true,
   templateUrl: './view-list-tags.component.html',
   styleUrl: `./view-list-tags.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     SigExtendableTableComponent,
     MatInput,

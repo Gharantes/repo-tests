@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   RoutingService,
   SessionService,
@@ -36,6 +36,7 @@ import { ActivatedRoute } from '@angular/router';
     MatSelectModule,
     ViewUpsertProjectComponent
 ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorUpsertProject],
 })
 export class RouteUpsertProjectComponent {

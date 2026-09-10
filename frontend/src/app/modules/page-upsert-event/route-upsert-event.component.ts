@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   EntityEventResourceService,
   EntityGetByIdResourceService,
@@ -20,6 +20,7 @@ import { EventDtoToModel } from '@synergia-frontend/mappers';
   templateUrl: './route-upsert-event.component.html',
   styleUrl: `./route-upsert-event.component.scss`,
   imports: [ViewUpsertEventComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorUpsertEvent],
 })
 export class RouteUpsertEventComponent {

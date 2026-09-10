@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { ProjectCardGridEntryComponent } from '../project-card-grid-entry/project-card-grid-entry.component';
@@ -8,6 +8,7 @@ import { ProjectCardGridEntryComponent } from '../project-card-grid-entry/projec
   templateUrl: `project-card-grid.component.html`,
   styleUrl: 'project-card-grid.component.scss',
   imports: [ProjectCardGridEntryComponent],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class ProjectCardGridComponent {

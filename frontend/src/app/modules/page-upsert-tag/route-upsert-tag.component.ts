@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
@@ -28,6 +28,7 @@ import { catchError, EMPTY, tap } from 'rxjs';
     MatSelectModule,
     ViewUpsertTagComponent
 ],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorUpsertTag],
 })
 export class RouteUpsertTagComponent {

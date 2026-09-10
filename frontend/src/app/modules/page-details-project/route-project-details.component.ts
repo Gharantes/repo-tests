@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { RoutingService } from '@synergia-frontend/services';
@@ -11,6 +11,7 @@ import { ViewProjectDetailsComponent } from './view/view-project-details.compone
   selector: 'app-route-project-details',
   templateUrl: './route-project-details.component.html',
   styleUrl: `./route-project-details.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ViewProjectDetailsComponent],
 })
 export class RouteProjectDetailsComponent {

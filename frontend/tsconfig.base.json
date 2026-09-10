@@ -24,7 +24,12 @@
       "@synergia-frontend/services": ["src/libs/services/src/index.ts"],
       "@synergia-frontend/utils": ["src/libs/utils/src/index.ts"],
       "@synergia-frontend/views": ["src/libs/views/src/index.ts"]
-    }
+    },
+    "strict": false,
+    "noUncheckedSideEffectImports": false,
+    "types": ["*"],
+    "esModuleInterop": false,
+    "ignoreDeprecations": "6.0"
   },
   "exclude": ["node_modules", "tmp"]
 }
