@@ -32,7 +32,7 @@ class EntityGetByIdResource (
     fun getAccountById(
         @PathVariable("id-account") idAccount: Long,
         @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false
-    ): ResponseEntity<AccountDto?> {
+    ): ResponseEntity<AccountDto> {
         return ResponseMessenger.buildResponse {
             val el = accountRepository.findById(idAccount).orElse(null)?.toDto()
             if (lookupTags == true) {
@@ -46,7 +46,7 @@ class EntityGetByIdResource (
         @PathVariable("id-event") idEvent: Long,
         @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false,
         @RequestParam("lookup-members", required = false) lookupMembers: Boolean? = false
-    ): ResponseEntity<EventDto?> {
+    ): ResponseEntity<EventDto> {
         return ResponseMessenger.buildResponse {
             val el = eventRepository.findById(idEvent).orElse(null)?.toDto()
             if (lookupTags == true) {
@@ -63,7 +63,7 @@ class EntityGetByIdResource (
         @PathVariable("id-project") idProject: Long,
         @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false,
         @RequestParam("lookup-members", required = false) lookupMembers: Boolean? = false,
-    ): ResponseEntity<ProjectDto?> {
+    ): ResponseEntity<ProjectDto> {
         return ResponseMessenger.buildResponse {
             val el = projectRepository.findById(idProject).orElse(null)?.toDto()
             if (lookupTags == true) {
@@ -78,7 +78,7 @@ class EntityGetByIdResource (
     @GetMapping("get-tag-by-id/{id-tag}")
     fun getTagById(
         @PathVariable("id-tag") idTag: Long
-    ): ResponseEntity<TagDto?> {
+    ): ResponseEntity<TagDto> {
         return ResponseMessenger.buildResponse {
             tagRepository.findById(idTag).orElse(null)?.toDto()
         }

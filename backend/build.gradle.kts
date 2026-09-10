@@ -9,7 +9,7 @@ plugins {
 	kotlin("plugin.spring") version "2.4.20"
 	kotlin("plugin.jpa") version "2.4.20"
 
-	id("org.springframework.boot") version "3.5.16"
+	id("org.springframework.boot") version "4.1.1"
 	id("io.spring.dependency-management") version "1.1.7"
 
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
@@ -42,12 +42,12 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-jpa")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.jetbrains.kotlin:kotlin-reflect")
-	implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+	implementation("tools.jackson.module:jackson-module-kotlin")
 	/** Bancos de Dados **/
 	implementation("org.postgresql:postgresql")
 	/** OPEN API **/
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.9.1")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.9.1")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:3.1.1")
 	/**XLSX**/
 	implementation("org.apache.poi:poi:5.5.1")
 	implementation("org.apache.poi:poi-ooxml:5.5.1")
@@ -120,4 +120,5 @@ tasks.register<Test>("integrationTest") {
 	classpath = sourceSets["test"].runtimeClasspath
 	filter { includeTestsMatching("br.com.synergia.integration.*") }
 }
+
 
