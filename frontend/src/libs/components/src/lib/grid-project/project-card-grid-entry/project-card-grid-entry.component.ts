@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import { SafeImageComponent } from '../../safe-image/safe-image.component';
 
@@ -7,7 +7,7 @@ import { SafeImageComponent } from '../../safe-image/safe-image.component';
   selector: 'lib-project-card-grid-entry',
   templateUrl: `project-card-grid-entry.component.html`,
   styleUrl: 'project-card-grid-entry.component.scss',
-  imports: [CommonModule, SafeImageComponent],
+  imports: [SafeImageComponent],
   standalone: true,
 })
 export class ProjectCardGridEntryComponent {

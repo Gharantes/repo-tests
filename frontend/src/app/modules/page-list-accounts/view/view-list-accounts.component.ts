@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import {
   IAccountModel,
@@ -17,12 +17,11 @@ import { FormListAccountsComponent } from '../form/form-list-accounts.component'
   templateUrl: './view-list-accounts.component.html',
   styleUrl: 'view-list-accounts.component.scss',
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     SigExtendableTableComponent,
-    FormListAccountsComponent,
-  ],
+    FormListAccountsComponent
+],
 })
 export class ViewListAccountsComponent {
   @Input() data$!: IAccountModel[];

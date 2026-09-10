@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,7 +15,6 @@ import { MatCheckbox } from '@angular/material/checkbox';
   templateUrl: './form-upsert-tag.component.html',
   styleUrl: `./form-upsert-tag.component.scss`,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -23,8 +22,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
-    MatCheckbox,
-  ],
+    MatCheckbox
+],
   providers: [],
 })
 export class FormUpsertTagComponent {

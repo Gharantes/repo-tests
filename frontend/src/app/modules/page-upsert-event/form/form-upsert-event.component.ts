@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -16,7 +16,6 @@ import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
   styleUrl: './form-upsert-event.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -25,8 +24,8 @@ import { MatChip, MatChipSet, MatChipsModule } from '@angular/material/chips';
     AddTagBtnComponent,
     MatChipSet,
     MatChip,
-    MatChipsModule,
-  ],
+    MatChipsModule
+],
 })
 export class FormUpsertEventComponent {
   @Input() public connector!: ConnectorUpsertEvent;

@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, Input } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -16,7 +16,6 @@ import { ITagModel } from '@synergia-frontend/interfaces';
   templateUrl: './form-upsert-account.component.html',
   styleUrl: './form-upsert-account.component.scss',
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -26,8 +25,8 @@ import { ITagModel } from '@synergia-frontend/interfaces';
     AddTagBtnComponent,
     MatChipSet,
     MatChip,
-    MatChipsModule,
-  ],
+    MatChipsModule
+],
 })
 export class FormUpsertAccountComponent {
   @Input() connector!: ConnectorUpsertAccont;

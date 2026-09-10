@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import {
   AfterViewInit,
   ChangeDetectorRef,
@@ -21,13 +21,12 @@ import { MatCheckbox } from '@angular/material/checkbox';
   styleUrl: './sig-extendable-table.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatTableModule,
     MatMenuModule,
     MatIconModule,
     GmIconComponent,
-    MatCheckbox,
-  ],
+    MatCheckbox
+],
 })
 export class SigExtendableTableComponent<T> implements AfterViewInit {
   @Input() columns!: IDoExtendableTableColumnInfo<T>[];

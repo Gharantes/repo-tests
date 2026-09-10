@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,12 +13,11 @@ import { EventCardGridComponent } from '@synergia-frontend/components';
   templateUrl: './view-list-events.component.html',
   styleUrl: 'view-list-events.component.scss',
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     FormListEventsComponent,
-    EventCardGridComponent,
-  ],
+    EventCardGridComponent
+],
 })
 export class ViewListEventsComponent {
   @Input() data$!: IEventModel[];

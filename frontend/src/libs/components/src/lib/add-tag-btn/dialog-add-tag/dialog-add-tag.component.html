@@ -3,9 +3,11 @@
     <mat-label>Tag</mat-label>
     <input type="text" matInput [formControl]="tagControl" [matAutocomplete]="auto">
     <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTag">
-      <mat-option *ngFor="let option of tags$()" [value]="option">
-        {{ option.title }}
-      </mat-option>
+      @for (option of tags$(); track option) {
+        <mat-option [value]="option">
+          {{ option.title }}
+        </mat-option>
+      }
     </mat-autocomplete>
   </mat-form-field>
 

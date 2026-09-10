@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -13,13 +13,12 @@ import { ProjectCardGridComponent } from '@synergia-frontend/components';
   templateUrl: './view-list-projects.component.html',
   styleUrl: 'view-list-projects.component.scss',
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     ProjectCardGridComponent,
     FormListProjectsComponent,
-    ProjectCardGridComponent,
-  ],
+    ProjectCardGridComponent
+],
 })
 export class ViewListProjectsComponent {
   @Input() data$!: IProjectModel[];

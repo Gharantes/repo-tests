@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -16,7 +16,6 @@ import { ITagModel } from '@synergia-frontend/interfaces';
   styleUrl: './form-list-events.component.scss',
   standalone: true,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormField,
@@ -28,8 +27,8 @@ import { ITagModel } from '@synergia-frontend/interfaces';
     AddTagBtnComponent,
     MatChipSet,
     MatChip,
-    MatChipsModule,
-  ],
+    MatChipsModule
+],
 })
 export class FormListEventsComponent {
   @Input() connector!: ConnectorListEvents;

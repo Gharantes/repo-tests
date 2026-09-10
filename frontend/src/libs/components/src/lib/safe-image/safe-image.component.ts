@@ -1,11 +1,11 @@
 import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 
 @Component({
   selector: 'lib-safe-image',
   templateUrl: `safe-image.component.html`,
   styleUrl: 'safe-image.component.scss',
-  imports: [CommonModule],
+  imports: [],
   standalone: true,
 })
 export class SafeImageComponent {

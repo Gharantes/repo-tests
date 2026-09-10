@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,15 +14,14 @@ import { FormUpsertAccountComponent } from '../form/form-upsert-account.componen
   templateUrl: './view-upsert-account.component.html',
   styleUrl: './view-upsert-account.component.scss',
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    FormUpsertAccountComponent,
-  ],
+    FormUpsertAccountComponent
+],
 })
 export class ViewUpsertAccountComponent {
   @Output() goToParentRouteEvent = new EventEmitter<void>();

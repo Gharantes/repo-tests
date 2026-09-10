@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,7 +15,6 @@ import { ConnectorUpsertTag } from '../connector/connector-upsert-tag';
   templateUrl: './view-upsert-tag.component.html',
   styleUrl: `./view-upsert-tag.component.scss`,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -23,8 +22,8 @@ import { ConnectorUpsertTag } from '../connector/connector-upsert-tag';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
-    FormUpsertTagComponent,
-  ],
+    FormUpsertTagComponent
+],
   providers: [],
 })
 export class ViewUpsertTagComponent {
