@@ -9,7 +9,7 @@ plugins {
 	kotlin("plugin.spring") version "2.4.20"
 	kotlin("plugin.jpa") version "2.4.20"
 
-	id("org.springframework.boot") version "3.5.0"
+	id("org.springframework.boot") version "3.5.16"
 	id("io.spring.dependency-management") version "1.1.7"
 
 	id("org.springdoc.openapi-gradle-plugin") version "1.9.0"
@@ -46,11 +46,11 @@ dependencies {
 	/** Bancos de Dados **/
 	implementation("org.postgresql:postgresql")
 	/** OPEN API **/
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.5.0")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.9.1")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:2.9.1")
 	/**XLSX**/
-	implementation("org.apache.poi:poi:5.2.4")
-	implementation("org.apache.poi:poi-ooxml:5.2.4")
+	implementation("org.apache.poi:poi:5.5.1")
+	implementation("org.apache.poi:poi-ooxml:5.5.1")
 
 
 	if (project.ext.has("profile") && project.ext.get("profile") == "openapi") {
