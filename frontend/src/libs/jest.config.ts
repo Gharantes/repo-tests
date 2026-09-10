@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   displayName: 'mappers',
   preset: '../../jest.preset.js',
   setupFilesAfterEnv: ['<rootDir>/src/test-setup.ts'],
