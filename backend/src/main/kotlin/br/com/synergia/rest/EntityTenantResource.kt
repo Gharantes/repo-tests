@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
+import br.com.synergia.libs.entityTenant.models.DeleteTenantDto
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.entityTenant.services.EntityTenantService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
@@ -18,6 +20,22 @@ class EntityTenantResource (
     ): ResponseEntity<List<TenantDto>> {
         return ResponseMessenger.buildResponse {
             service.listAllTenants(text)
+        }
+    }
+    @PostMapping("check-list-tenants-password")
+    fun checkListTenantsPassword(
+        @RequestBody params: CheckListTenantsPasswordDto
+    ): ResponseEntity<Boolean> {
+        return ResponseMessenger.buildResponse {
+            service.checkListTenantsPassword(params.password)
+        }
+    }
+    @PostMapping("delete")
+    fun deleteTenant(
+        @RequestBody params: DeleteTenantDto
+    ): ResponseEntity<Void> {
+        return ResponseMessenger.responseWithoutReturn {
+            service.deleteTenant(params.idTenant, params.password)
         }
     }
     @PostMapping("store")

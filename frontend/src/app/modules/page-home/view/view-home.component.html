@@ -1,0 +1,21 @@
+<div class="auth-card">
+  <h1 class="auth-title">Acessar Tenant</h1>
+
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>Identifier do Tenant</mat-label>
+    <input
+      matInput
+      type="text"
+      autocapitalize="off"
+      [formControl]="connector.form.controls.identifier"
+      (keydown.enter)="submit()">
+  </mat-form-field>
+
+  <button class="auth-primary-button" matRipple [disabled]="!connector.form.valid" (click)="submit()">
+    Entrar
+  </button>
+
+  <button mat-stroked-button class="auth-secondary-button" id="create-new-tenant-option" (click)="createTenantEvent.emit()">
+    Criar Novo Tenant
+  </button>
+</div>

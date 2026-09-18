@@ -6,6 +6,8 @@ spring:
       - "classpath:application-server.yaml"
       - "classpath:application-springdoc.yaml"
       - "classpath:application-datasource.yaml"
-      - "classpath:application-evoge.yaml"
+      # Variáveis locais (ex.: LIST_TENANT_PAGE_PASSWORD). Ver .env.example.
+      - "optional:file:.env[.properties]"
+      # - "classpath:application-evoge.yaml"
       # - "classpath:application-datasource-windows.yaml"
       # - "classpath:application-datasource-render.yaml"

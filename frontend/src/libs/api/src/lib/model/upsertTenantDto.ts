@@ -12,7 +12,7 @@
 export interface UpsertTenantDto { 
     title: string;
     identifier: string;
+    login: string;
     password: string;
-    isPrivate: boolean;
 }
 

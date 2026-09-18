@@ -1,0 +1,39 @@
+<div class="auth-card">
+  <h1 class="auth-title">Tenants</h1>
+
+  @if (tenants.length > 0) {
+    <ul class="tenant-list">
+      @for (tenant of tenants; track tenant.id) {
+        <li>
+          @if (confirmingId() === tenant.id) {
+            <div class="tenant-confirm">
+              <span>Deletar "{{ tenant.title }}" e todos os usuários, eventos, projetos e tags dele?</span>
+              <div class="tenant-confirm-actions">
+                <button mat-stroked-button (click)="confirmingId.set(null)">Cancelar</button>
+                <button mat-flat-button class="tenant-delete-confirm" (click)="confirmDelete(tenant)">Deletar</button>
+              </div>
+            </div>
+          } @else {
+            <div class="tenant-row">
+              <button class="tenant-item" matRipple (click)="goToTenantEvent.emit(tenant.identifier)">
+                <span class="tenant-title">{{ tenant.title }}</span>
+                <span class="tenant-identifier">{{ tenant.identifier }}</span>
+              </button>
+              <button
+                mat-icon-button
+                aria-label="Deletar tenant"
+                [disabled]="deletingId != null"
+                (click)="confirmingId.set(tenant.id)">
+                <mat-icon>delete</mat-icon>
+              </button>
+            </div>
+          }
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="auth-subtitle">Nenhum tenant cadastrado.</p>
+  }
+
+  <button mat-stroked-button class="auth-secondary-button" (click)="goBackEvent.emit()">Voltar</button>
+</div>

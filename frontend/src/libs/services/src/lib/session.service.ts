@@ -4,13 +4,13 @@ import { Injectable, signal } from "@angular/core";
     providedIn: 'root',
 })
 export class SessionService {
-    private readonly tenant = signal<{ id: number, label: string } | null>(null);
+    private readonly tenant = signal<{ id: number, label: string, identifier: string } | null>(null);
     private readonly user = signal<{ id: number, label: string } | null>(null);
 
     public setUser(res: { id: number, label: string }) {
         this.user.set(res);
     }
-    public setTenant(res: { id: number, label: string }) {
+    public setTenant(res: { id: number, label: string, identifier: string }) {
         this.tenant.set(res);
     }
     public logout() {
@@ -32,6 +32,9 @@ export class SessionService {
     public getTenantLabel(): string | undefined {
         return this.tenant()?.label
     }
+    public getTenantIdentifier(): string | undefined {
+        return this.tenant()?.identifier
+    }
 
     public saveSessionOnLocalStorage() {
       const loginData = JSON.stringify({
@@ -46,7 +49,7 @@ export class SessionService {
         return null
       }
       const loginData: {
-        tenant: { id: number, label: string } | null,
+        tenant: { id: number, label: string, identifier?: string } | null,
         user: { id: number, label: string } | null
       } = JSON.parse(storage)
       return loginData

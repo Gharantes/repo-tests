@@ -48,6 +48,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory
         "spring.datasource.username=\${TEST_DB_USERNAME:raindrop}",
         "spring.datasource.password=\${TEST_DB_PASSWORD:MaybeLater}",
         "spring.jpa.hibernate.ddl-auto=update",
+        "LIST_TENANT_PAGE_PASSWORD=SenhaListagem",
     ]
 )
 abstract class IntegrationTestBase {
@@ -112,12 +113,11 @@ abstract class IntegrationTestBase {
     protected fun criarTenant(
         identifier: String = "fag",
         title: String = "FAG",
-        isPrivate: Boolean = false,
     ): Long {
         // createTenant não devolve o id, então relemos pelo identifier, que é
         // único por constraint.
         tenantSqlService.createTenant(
-            UpsertTenantDto(title = title, identifier = identifier, password = "irrelevante", isPrivate = isPrivate)
+            UpsertTenantDto(title = title, identifier = identifier, login = "ADMIN", password = "irrelevante")
         )
         return tenantSqlService.getTenantByIdentifier(identifier)!!.id
     }

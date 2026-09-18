@@ -1,5 +1,7 @@
 export * from './accountDto';
 export * from './attributePermissionsDto';
+export * from './checkListTenantsPasswordDto';
+export * from './deleteTenantDto';
 export * from './eventDto';
 export * from './loginInformationInputDto';
 export * from './loginInformationResponseDto';

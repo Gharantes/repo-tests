@@ -3,6 +3,8 @@ package br.com.synergia.integration
 import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
 import br.com.synergia.integration.support.postJson
+import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
+import br.com.synergia.libs.entityTenant.models.DeleteTenantDto
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
 import io.kotest.matchers.collections.shouldHaveSize
@@ -26,12 +28,72 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     private val store = "/api/entity-tenant/store"
     private val listar = "/api/entity-tenant/list-all-tenants"
+    private val checarSenhaListagem = "/api/entity-tenant/check-list-tenants-password"
+    private val deletar = "/api/entity-tenant/delete"
+
+    /** Monta um tenant com uma linha em cada tabela que pertence a ele. */
+    private fun criarTenantCompleto(identifier: String): Long {
+        val idTenant = criarTenant(identifier = identifier, title = identifier)
+        val idTag = criarTag(idTenant, "Tag $identifier", paraProjetos = true, paraEventos = true, paraContas = true)
+        val idConta = criarConta(idTenant, "aluno-$identifier", tags = listOf(idTag))
+        val idProjeto = criarProjeto(idTenant, "Projeto $identifier")
+        val idEvento = criarEvento(idTenant, "Evento $identifier")
+        vincularContaAoProjeto(idConta, idProjeto)
+        vincularContaAoEvento(idConta, idEvento)
+        vincularTagAoProjeto(idTag, idProjeto)
+        vincularTagAoEvento(idTag, idEvento)
+        val idPost = jdbc.queryForObject(
+            "INSERT INTO post (id_account, title, content) VALUES (?, 'Post', 'Conteúdo') RETURNING id",
+            Long::class.java, idConta,
+        )!!
+        jdbc.update("INSERT INTO event_post_relationship (id_event, id_post) VALUES (?, ?)", idEvento, idPost)
+        return idTenant
+    }
+
+    private fun contarTudo(): Map<String, Int> =
+        TABELAS_NA_ORDEM_DE_EXCLUSAO.associateWith { contarLinhas(it) }
+
+    @Test
+    fun `deletar tenant apaga tudo que pertence a ele e mantém os outros`() {
+        val idApagado = criarTenantCompleto("apagado")
+        criarTenantCompleto("mantido")
+        val antes = contarTudo()
+
+        val resposta = rest.postJson<Void>(deletar, DeleteTenantDto(idApagado, "SenhaListagem"))
+
+        resposta.statusCode shouldBe HttpStatus.OK
+        // Cada tabela tinha uma linha de cada tenant; sobra só a do mantido.
+        contarTudo() shouldBe antes.mapValues { (_, n) -> n / 2 }
+        contarLinhas("tenant", "identifier = ?", "mantido") shouldBe 1
+    }
+
+    @Test
+    fun `deletar tenant com senha errada não apaga nada`() {
+        val idTenant = criarTenantCompleto("fag")
+        val antes = contarTudo()
+
+        val resposta = rest.postJson<String>(deletar, DeleteTenantDto(idTenant, "errada"))
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.headers.getFirst("x-error") shouldBe "Senha incorreta."
+        contarTudo() shouldBe antes
+    }
+
+    @Test
+    fun `senha da listagem de tenants confere com LIST_TENANT_PAGE_PASSWORD`() {
+        val certa = rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("SenhaListagem"))
+        certa.statusCode shouldBe HttpStatus.OK
+        certa.body shouldBe true
+
+        rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("errada")).body shouldBe false
+        rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("")).body shouldBe false
+    }
 
     @Test
     fun `criar tenant grava a instituição e a conta ADMIN junto`() {
         val resposta = rest.postJson<Void>(
             store,
-            UpsertTenantDto(title = "FAG", identifier = "fag", password = "AdminSenha123", isPrivate = false),
+            UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "AdminSenha123"),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -52,7 +114,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
         // endpoint de login que a tela usa.
         rest.postJson<Void>(
             store,
-            UpsertTenantDto("FAG", "fag", "AdminSenha123", isPrivate = false),
+            UpsertTenantDto("FAG", "fag", "ADMIN", "AdminSenha123"),
         )
         val idTenant = jdbc.queryForObject(
             "SELECT id FROM tenant WHERE identifier = ?", Long::class.java, "fag",
@@ -70,11 +132,11 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `identifier repetido é recusado e não cria tenant nem admin duplicado`() {
-        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "Senha1", isPrivate = false))
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "ADMIN", "Senha1"))
 
         val segunda = rest.postJson<String>(
             store,
-            UpsertTenantDto("Outra Faculdade", "fag", "Senha2", isPrivate = false),
+            UpsertTenantDto("Outra Faculdade", "fag", "ADMIN", "Senha2"),
         )
 
         segunda.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -83,6 +145,52 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
         contarLinhas("tenant", "identifier = ?", "fag") shouldBe 1
         contarLinhas("account", "login = 'ADMIN'") shouldBe 1
+    }
+
+    @Test
+    fun `identifier fora do formato de URL é recusado`() {
+        listOf("FAG", "fag cascavel", "fág", "a/b", "-fag", "fag-").forEach { identifier ->
+            val resposta = rest.postJson<String>(
+                store,
+                UpsertTenantDto("FAG", identifier, "ADMIN", "Senha1"),
+            )
+
+            resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+            resposta.headers.getFirst("x-error") shouldBe
+                "Identifier inválido: use apenas letras minúsculas, números e hífen."
+        }
+
+        contarLinhas("tenant") shouldBe 0
+    }
+
+    @Test
+    fun `a primeira conta usa o login informado`() {
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "  coordenacao  ", "Senha1"))
+
+        jdbc.queryForList("SELECT login FROM account", String::class.java) shouldBe listOf("coordenacao")
+    }
+
+    @Test
+    fun `login do administrador em branco é recusado`() {
+        val resposta = rest.postJson<String>(store, UpsertTenantDto("FAG", "fag", "   ", "Senha1"))
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.headers.getFirst("x-error") shouldBe "Informe o login do administrador."
+        contarLinhas("tenant") shouldBe 0
+        contarLinhas("account") shouldBe 0
+    }
+
+    @Test
+    fun `atualizar tenant com identifier inválido não altera a linha`() {
+        val idTenant = criarTenant(identifier = "fag", title = "FAG")
+
+        val resposta = rest.postJson<String>(
+            "/api/entity-tenant/update/$idTenant",
+            UpsertTenantDto("FAG", "FAG Cascavel", "ADMIN", "ignorada"),
+        )
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        jdbc.queryForObject("SELECT identifier FROM tenant WHERE id = ?", String::class.java, idTenant) shouldBe "fag"
     }
 
     @Test
@@ -104,7 +212,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             "/api/entity-tenant/update/$idTenant",
-            UpsertTenantDto("FAG Cascavel", "fag-cascavel", "ignorada", isPrivate = true),
+            UpsertTenantDto("FAG Cascavel", "fag-cascavel", "ADMIN", "ignorada"),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -117,7 +225,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     fun `atualizar tenant inexistente não cria linha nova`() {
         val resposta = rest.postJson<Void>(
             "/api/entity-tenant/update/999999",
-            UpsertTenantDto("Fantasma", "fantasma", "x", isPrivate = false),
+            UpsertTenantDto("Fantasma", "fantasma", "ADMIN", "x"),
         )
 
         // O serviço usa ifPresent: some silenciosamente, sem estourar.

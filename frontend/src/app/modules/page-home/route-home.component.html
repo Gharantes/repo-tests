@@ -1,0 +1,22 @@
+@switch (section()) {
+  @case ('create-tenant') {
+    <app-registrar-tenant-route (goBackEvent)="section.set('access')"></app-registrar-tenant-route>
+  }
+  @case ('list-tenants') {
+    <app-route-list-tenants (goBackEvent)="section.set('access')"></app-route-list-tenants>
+  }
+  @default {
+    <app-view-home
+      [connector]="connector"
+      (goToTenantEvent)="goToTenant()"
+      (createTenantEvent)="section.set('create-tenant')"
+    ></app-view-home>
+    <button
+      mat-icon-button
+      class="list-tenants-button"
+      aria-label="Listar tenants"
+      (click)="section.set('list-tenants')">
+      <mat-icon>list</mat-icon>
+    </button>
+  }
+}

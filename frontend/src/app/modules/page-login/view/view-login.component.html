@@ -1,21 +1,26 @@
-<div id="container">
-  <div id="card">
-    <app-form-login
-      [connector]="connector"
-    ></app-form-login>
-
-    <div id="buttons-container">
-      <button
-        class="login-button"
-        matRipple
-        [disabled]="!connector.form.valid"
-        (click)="attemptLoginEvent.emit()">
-        Login
-      </button>
+<div class="auth-card">
+  @if (connector.tenantNotFound$(); as identifier) {
+    <h1 class="auth-title">Tenant não encontrado</h1>
+    <p class="auth-subtitle">Nenhum tenant com o identifier "{{ identifier }}".</p>
+    <button mat-stroked-button class="auth-secondary-button" (click)="goToHomeEvent.emit()">Voltar</button>
+  } @else {
+    <div>
+      <h1 class="auth-title">Login</h1>
+      <p class="auth-subtitle">{{ connector.tenant$()?.title }}</p>
     </div>
-  </div>
 
-  <button mat-raised-button id="create-new-tenant-option" (click)="createTenantEvent.emit()">
-    Criar Novo Tenant
-  </button>
+    <app-form-login [connector]="connector" (submitEvent)="submit()"></app-form-login>
+
+    <button
+      class="auth-primary-button"
+      matRipple
+      [disabled]="!canSubmit()"
+      (click)="submit()">
+      Login
+    </button>
+
+    <button mat-stroked-button class="auth-secondary-button" (click)="goToHomeEvent.emit()">
+      Trocar Tenant
+    </button>
+  }
 </div>

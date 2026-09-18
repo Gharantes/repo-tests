@@ -1,6 +1,6 @@
-import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, Output, EventEmitter } from '@angular/core';
 import { RoutingService, SnackbarService } from '@synergia-frontend/services';
-import { catchError, EMPTY, tap } from 'rxjs';
+import { catchError, EMPTY, finalize, tap } from 'rxjs';
 import { EntityTenantResourceService } from '@synergia-frontend/api';
 import { ViewUpsertTenantComponent } from './view/view-upsert-tenant.component';
 import { ConnectorCreateTenant } from './connector/connector-create-tenant';
@@ -16,6 +16,9 @@ import { ConnectorCreateTenant } from './connector/connector-create-tenant';
 })
 export class RouteUpsertTenantComponent {
   public readonly connector = inject(ConnectorCreateTenant);
+  public readonly isSubmitting = signal(false);
+
+  @Output() public goBackEvent = new EventEmitter<void>();
 
   constructor(
     public readonly routingService: RoutingService,
@@ -24,14 +27,18 @@ export class RouteUpsertTenantComponent {
   ) {}
 
   public createTenant() {
+    if (this.isSubmitting()) {
+      return;
+    }
+    this.isSubmitting.set(true);
     const data$ = this.connector.form.value;
 
     this.entityTenantService
       .createTenant({
         identifier: data$.identifier as string,
         title: data$.title as string,
+        login: (data$.login as string).trim(),
         password: data$.password as string,
-        isPrivate: data$.isPrivate as boolean,
       })
       .pipe(
         catchError((err) => {
@@ -40,8 +47,9 @@ export class RouteUpsertTenantComponent {
         }),
         tap(() => {
           this.snackService.showMessage('Tenant criado com sucesso.');
-          this.routingService.goToLogin();
-        })
+          this.routingService.goToLogin(data$.identifier as string);
+        }),
+        finalize(() => this.isSubmitting.set(false))
       )
       .subscribe();
   }
