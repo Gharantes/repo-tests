@@ -2,7 +2,9 @@ package br.com.synergia.libs.entityTenant.services
 
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
+import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
+import org.springframework.transaction.annotation.Transactional
 
 @Service
 class EntityTenantService (
@@ -14,6 +16,7 @@ class EntityTenantService (
     fun getTenantByIdentifier(identifier: String): TenantDto? {
         return sqlService.getTenantByIdentifier(identifier)
     }
+    @Transactional(rollbackFor = [Exception::class])
     fun createTenant(params: UpsertTenantDto) {
         validateIdentifier(params.identifier)
         val login = params.login.trim()
@@ -21,9 +24,14 @@ class EntityTenantService (
             throw Exception("Informe o login do administrador.")
         }
         if (getTenantByIdentifier(params.identifier) != null) {
-            throw Exception("Já existe um tenant com esse mesmo identifier: ${params.identifier}")
+            throw duplicateIdentifier(params.identifier)
         }
-        sqlService.createTenant(params)
+        // A consulta acima não cobre duas requisições simultâneas; a unique constraint é quem garante.
+        try {
+            sqlService.createTenant(params)
+        } catch (e: DataIntegrityViolationException) {
+            throw duplicateIdentifier(params.identifier)
+        }
 
         val idTenant = getTenantByIdentifier(params.identifier)?.id ?: throw Exception("Erro ao criar Tenant.")
         sqlService.createAdminAccountForTenant(idTenant, login, params.password)
@@ -32,6 +40,9 @@ class EntityTenantService (
         validateIdentifier(params.identifier)
         sqlService.updateTenant(idTenant, params)
     }
+
+    private fun duplicateIdentifier(identifier: String) =
+        Exception("Já existe um tenant com esse mesmo identifier: $identifier")
 
     /** O identifier vira o primeiro segmento da URL do tenant no frontend (/<identifier>/login). */
     private fun validateIdentifier(identifier: String) {

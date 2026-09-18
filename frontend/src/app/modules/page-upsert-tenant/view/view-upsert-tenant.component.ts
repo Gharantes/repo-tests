@@ -27,6 +27,7 @@ import { MatRippleModule } from '@angular/material/core';
 })
 export class ViewUpsertTenantComponent {
   @Input() connector!: ConnectorCreateTenant;
+  @Input() isSubmitting = false;
   public readonly hidePassword = signal(true);
 
   @Output() goToParentPageEvent = new EventEmitter<void>();

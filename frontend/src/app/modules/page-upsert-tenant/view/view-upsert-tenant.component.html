@@ -38,6 +38,6 @@
     </button>
   </mat-form-field>
 
-  <button class="auth-primary-button" matRipple [disabled]="!isFormValid()" (click)="registrarTenant()">Registrar</button>
+  <button class="auth-primary-button" matRipple [disabled]="!isFormValid() || isSubmitting" (click)="registrarTenant()">Registrar</button>
   <button mat-stroked-button class="auth-secondary-button" (click)="goToParentPageEvent.emit()">Voltar</button>
 </div>
