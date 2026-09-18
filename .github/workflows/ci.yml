@@ -42,7 +42,7 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Instalar JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v6
@@ -112,7 +112,7 @@ jobs:
           --health-retries 20
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Instalar JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v6
@@ -175,7 +175,7 @@ jobs:
       CYPRESS_API_URL: http://127.0.0.1:8080
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Instalar JDK ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v6
