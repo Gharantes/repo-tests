@@ -1,6 +1,5 @@
 <mat-form-field [appearance]="'outline'" class="field">
   <mat-label>Tenant</mat-label>
-  <mat-icon matPrefix class="prefix-icon">apartment</mat-icon>
   <input type="text" matInput [formControl]="connector.form.controls.tenant" [matAutocomplete]="auto">
   <mat-autocomplete #auto="matAutocomplete" [displayWith]="displayTenant">
     @for (option of connector.tenantsFiltered$(); track option) {
@@ -13,13 +12,11 @@
 
 <mat-form-field [appearance]="'outline'" class="field">
   <mat-label>Usuário</mat-label>
-  <mat-icon matPrefix class="prefix-icon">person</mat-icon>
   <input matInput type="text" autocomplete="username" [formControl]="connector.form.controls.user">
 </mat-form-field>
 
 <mat-form-field [appearance]="'outline'" class="field">
   <mat-label>Senha</mat-label>
-  <mat-icon matPrefix class="prefix-icon">lock</mat-icon>
   <input
     matInput
     autocomplete="current-password"

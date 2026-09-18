@@ -1,4 +1,6 @@
-<div id="form">
+<div class="auth-card">
+  <h1 class="auth-title">Registrar Tenant</h1>
+
   <mat-form-field [appearance]="'outline'">
     <mat-label>Título</mat-label>
     <input type="text" matInput [formControl]="connector.form.controls.title"/>
@@ -11,13 +13,23 @@
 
   <mat-form-field [appearance]="'outline'">
     <mat-label>Senha do Administrador</mat-label>
-    <input type="password" matInput [formControl]="connector.form.controls.password" />
+    <input
+      matInput
+      autocomplete="new-password"
+      [type]="hidePassword() ? 'password' : 'text'"
+      [formControl]="connector.form.controls.password" />
+    <button
+      mat-icon-button
+      matSuffix
+      type="button"
+      [attr.aria-label]="hidePassword() ? 'Mostrar senha' : 'Ocultar senha'"
+      (click)="hidePassword.set(!hidePassword())">
+      <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
+    </button>
   </mat-form-field>
 
   <mat-checkbox [formControl]="connector.form.controls.isPrivate">Tenant Privado</mat-checkbox>
 
-  <div class="btn-line">
-    <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>
-    <button mat-raised-button [disabled]="!isFormValid()" (click)="registrarTenant()">Registrar</button>
-  </div>
+  <button class="auth-primary-button" matRipple [disabled]="!isFormValid()" (click)="registrarTenant()">Registrar</button>
+  <button mat-stroked-button class="auth-secondary-button" (click)="goToParentPageEvent.emit()">Voltar</button>
 </div>
