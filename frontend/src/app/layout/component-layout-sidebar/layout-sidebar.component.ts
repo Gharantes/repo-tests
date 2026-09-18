@@ -1,11 +1,13 @@
-import { Component, signal, ChangeDetectionStrategy } from "@angular/core";
+import { Component, DestroyRef, signal, ChangeDetectionStrategy } from "@angular/core";
+import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
+import { NavigationEnd, Router } from "@angular/router";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
 import { RoutingService, SessionService } from "@synergia-frontend/services";
 import { EntityEventResourceService, EntityProjectResourceService } from "@synergia-frontend/api";
 import { IEventModel, IProjectModel } from "@synergia-frontend/interfaces";
 import { EventDtoToModel, ProjectDtoToModel } from "@synergia-frontend/mappers";
-import { map, tap } from "rxjs";
+import { filter, map, tap } from "rxjs";
 
 @Component({
   selector: 'app-layout-sidebar',
@@ -29,9 +31,25 @@ export class LayoutSidebarComponent {
     public readonly sessionService: SessionService,
     private readonly entityProjectService: EntityProjectResourceService,
     private readonly entityEventService: EntityEventResourceService,
+    private readonly router: Router,
+    private readonly destroyRef: DestroyRef,
   ) {
     this.lookupProjects();
     this.lookupEvents();
+    this.refreshOnNavigation();
+  }
+
+  /** O layout não é recriado entre rotas; sem isso, criar/excluir projeto ou evento não aparece aqui. */
+  private refreshOnNavigation() {
+    this.router.events
+      .pipe(
+        filter((e) => e instanceof NavigationEnd),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe(() => {
+        this.lookupProjects();
+        this.lookupEvents();
+      });
   }
 
   private lookupProjects() {

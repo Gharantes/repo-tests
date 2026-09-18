@@ -9,4 +9,28 @@
       <span>Criar Evento</span>
     </button>
   </div>
+
+  <div class="section">
+    <div class="section-title">Seus Projetos</div>
+    @if (projects$.length === 0) {
+      <div class="section-empty">Nenhum projeto</div>
+    } @else {
+      <lib-project-card-grid
+        [data$]="projects$"
+        (cardInteractionEvent)="openProjectEvent.emit($event)"
+      ></lib-project-card-grid>
+    }
+  </div>
+
+  <div class="section">
+    <div class="section-title">Seus Eventos</div>
+    @if (events$.length === 0) {
+      <div class="section-empty">Nenhum evento</div>
+    } @else {
+      <lib-event-card-grid
+        [data$]="events$"
+        (cardInteractionEvent)="openEventEvent.emit($event)"
+      ></lib-event-card-grid>
+    }
+  </div>
 </div>
