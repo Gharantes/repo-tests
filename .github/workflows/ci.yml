@@ -194,7 +194,7 @@ jobs:
       # O binário do Cypress (~250 MB) mora fora de node_modules e não é
       # coberto pelo cache do npm.
       - name: Cache do binário do Cypress
-        uses: actions/cache@v4
+        uses: actions/cache@v6
         with:
           path: ~/.cache/Cypress
           key: cypress-${{ runner.os }}-${{ hashFiles('frontend/package-lock.json') }}
