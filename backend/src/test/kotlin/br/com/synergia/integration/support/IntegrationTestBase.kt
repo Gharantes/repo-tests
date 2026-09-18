@@ -48,6 +48,7 @@ import org.springframework.web.util.DefaultUriBuilderFactory
         "spring.datasource.username=\${TEST_DB_USERNAME:raindrop}",
         "spring.datasource.password=\${TEST_DB_PASSWORD:MaybeLater}",
         "spring.jpa.hibernate.ddl-auto=update",
+        "LIST_TENANT_PAGE_PASSWORD=SenhaListagem",
     ]
 )
 abstract class IntegrationTestBase {

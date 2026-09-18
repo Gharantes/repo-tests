@@ -1,9 +1,22 @@
-@if (isCreatingTenant()) {
-  <app-registrar-tenant-route (goBackEvent)="isCreatingTenant.set(false)"></app-registrar-tenant-route>
-} @else {
-  <app-view-home
-    [connector]="connector"
-    (goToTenantEvent)="goToTenant()"
-    (createTenantEvent)="isCreatingTenant.set(true)"
-  ></app-view-home>
+@switch (section()) {
+  @case ('create-tenant') {
+    <app-registrar-tenant-route (goBackEvent)="section.set('access')"></app-registrar-tenant-route>
+  }
+  @case ('list-tenants') {
+    <app-route-list-tenants (goBackEvent)="section.set('access')"></app-route-list-tenants>
+  }
+  @default {
+    <app-view-home
+      [connector]="connector"
+      (goToTenantEvent)="goToTenant()"
+      (createTenantEvent)="section.set('create-tenant')"
+    ></app-view-home>
+    <button
+      mat-icon-button
+      class="list-tenants-button"
+      aria-label="Listar tenants"
+      (click)="section.set('list-tenants')">
+      <mat-icon>list</mat-icon>
+    </button>
+  }
 }

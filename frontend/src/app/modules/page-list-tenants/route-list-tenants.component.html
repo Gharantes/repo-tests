@@ -1,0 +1,14 @@
+@if (isUnlocked()) {
+  <app-view-list-tenants
+    [tenants]="tenants()"
+    (goToTenantEvent)="routingService.goToLogin($event)"
+    (goBackEvent)="goBackEvent.emit()"
+  ></app-view-list-tenants>
+} @else {
+  <app-view-list-tenants-password
+    [connector]="connector"
+    [isSubmitting]="isSubmitting()"
+    (submitEvent)="checkPassword()"
+    (goBackEvent)="goBackEvent.emit()"
+  ></app-view-list-tenants-password>
+}

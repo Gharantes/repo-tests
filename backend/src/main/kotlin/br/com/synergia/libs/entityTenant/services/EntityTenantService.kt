@@ -2,16 +2,22 @@ package br.com.synergia.libs.entityTenant.services
 
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.dao.DataIntegrityViolationException
 import org.springframework.stereotype.Service
 import org.springframework.transaction.annotation.Transactional
 
 @Service
 class EntityTenantService (
-    private val sqlService: EntityTenantSqlService
+    private val sqlService: EntityTenantSqlService,
+    @Value("\${LIST_TENANT_PAGE_PASSWORD:}") private val listTenantPagePassword: String,
 ) {
     fun listAllTenants(text: String?): List<TenantDto> {
         return sqlService.listAllTenants(text)
+    }
+    /** Sem LIST_TENANT_PAGE_PASSWORD configurada, nenhuma senha é aceita. */
+    fun checkListTenantsPassword(password: String): Boolean {
+        return listTenantPagePassword.isNotEmpty() && password == listTenantPagePassword
     }
     fun getTenantByIdentifier(identifier: String): TenantDto? {
         return sqlService.getTenantByIdentifier(identifier)

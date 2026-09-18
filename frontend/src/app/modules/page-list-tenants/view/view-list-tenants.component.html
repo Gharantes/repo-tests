@@ -1,0 +1,20 @@
+<div class="auth-card">
+  <h1 class="auth-title">Tenants</h1>
+
+  @if (tenants.length > 0) {
+    <ul class="tenant-list">
+      @for (tenant of tenants; track tenant.id) {
+        <li>
+          <button class="tenant-item" matRipple (click)="goToTenantEvent.emit(tenant.identifier)">
+            <span class="tenant-title">{{ tenant.title }}</span>
+            <span class="tenant-identifier">{{ tenant.identifier }}</span>
+          </button>
+        </li>
+      }
+    </ul>
+  } @else {
+    <p class="auth-subtitle">Nenhum tenant cadastrado.</p>
+  }
+
+  <button mat-stroked-button class="auth-secondary-button" (click)="goBackEvent.emit()">Voltar</button>
+</div>

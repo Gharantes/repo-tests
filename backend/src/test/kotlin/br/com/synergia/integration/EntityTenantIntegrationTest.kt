@@ -3,6 +3,7 @@ package br.com.synergia.integration
 import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
 import br.com.synergia.integration.support.postJson
+import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
 import io.kotest.matchers.collections.shouldHaveSize
@@ -26,6 +27,17 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     private val store = "/api/entity-tenant/store"
     private val listar = "/api/entity-tenant/list-all-tenants"
+    private val checarSenhaListagem = "/api/entity-tenant/check-list-tenants-password"
+
+    @Test
+    fun `senha da listagem de tenants confere com LIST_TENANT_PAGE_PASSWORD`() {
+        val certa = rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("SenhaListagem"))
+        certa.statusCode shouldBe HttpStatus.OK
+        certa.body shouldBe true
+
+        rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("errada")).body shouldBe false
+        rest.postJson<Boolean>(checarSenhaListagem, CheckListTenantsPasswordDto("")).body shouldBe false
+    }
 
     @Test
     fun `criar tenant grava a instituição e a conta ADMIN junto`() {
