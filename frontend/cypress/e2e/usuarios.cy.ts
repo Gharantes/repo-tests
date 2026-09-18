@@ -75,9 +75,7 @@ describe('Sistema: usuários', () => {
     cy.criarInstituicao().then((instituicao) => {
       cy.criarConta(instituicao.idTenant, login, 'Carla', 'Prado', 'SenhaCerta123');
 
-      cy.visit('/login');
-      cy.preencherCampo('Tenant', instituicao.identifier);
-      cy.get('mat-option').contains(instituicao.identifier).click();
+      cy.visit(`/${instituicao.identifier}/login`);
       cy.preencherCampo('Usuário', login);
       cy.preencherCampo('Senha', 'SenhaErrada123');
       cy.contains('button', 'Login').click();

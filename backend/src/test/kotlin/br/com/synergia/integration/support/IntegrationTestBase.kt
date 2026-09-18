@@ -112,12 +112,11 @@ abstract class IntegrationTestBase {
     protected fun criarTenant(
         identifier: String = "fag",
         title: String = "FAG",
-        isPrivate: Boolean = false,
     ): Long {
         // createTenant não devolve o id, então relemos pelo identifier, que é
         // único por constraint.
         tenantSqlService.createTenant(
-            UpsertTenantDto(title = title, identifier = identifier, password = "irrelevante", isPrivate = isPrivate)
+            UpsertTenantDto(title = title, identifier = identifier, login = "ADMIN", password = "irrelevante")
         )
         return tenantSqlService.getTenantByIdentifier(identifier)!!.id
     }

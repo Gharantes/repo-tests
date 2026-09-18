@@ -148,7 +148,7 @@ Cypress.Commands.add('criarInstituicao', (senhaAdmin = 'AdminE2E123') => {
     .request({
       method: 'POST',
       url: `${api()}/api/entity-tenant/store`,
-      body: { title, identifier, password: senhaAdmin, isPrivate: false },
+      body: { title, identifier, login: 'ADMIN', password: senhaAdmin },
     })
     .then((resposta) => {
       expect(resposta.status, 'criação da instituição').to.eq(200);
@@ -350,12 +350,9 @@ Cypress.Commands.add('listarTagsPelaApi', (idTenant: number, texto?: string) => 
 Cypress.Commands.add(
   'entrarPelaInterface',
   (instituicao: InstituicaoDeTeste, login = 'ADMIN', senha?: string) => {
-    cy.visit('/login');
-
-    // O campo de instituição é um autocomplete: digitar não basta, é preciso
-    // escolher a opção, porque o formulário guarda o objeto e não o texto.
-    cy.preencherCampo('Tenant', instituicao.identifier);
-    cy.get('mat-option').contains(instituicao.identifier).click();
+    // A instituição vem da URL: /<identifier>/login.
+    cy.visit(`/${instituicao.identifier}/login`);
+    cy.contains('.auth-subtitle', instituicao.title).should('be.visible');
 
     cy.preencherCampo('Usuário', login);
     cy.preencherCampo('Senha', senha ?? instituicao.senhaAdmin);

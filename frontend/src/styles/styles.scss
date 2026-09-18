@@ -38,6 +38,16 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         font-weight: 600;
         color: #2a2a2a;
     }
+    .auth-subtitle {
+        margin: 0;
+        font-size: 0.93rem;
+        color: #666;
+    }
+    .auth-error {
+        margin: -8px 0 0 4px;
+        font-size: 0.8rem;
+        color: #c62828;
+    }
     .mat-mdc-form-field {
         width: 100%;
     }

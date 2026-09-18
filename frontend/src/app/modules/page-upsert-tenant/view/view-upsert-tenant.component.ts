@@ -7,7 +7,6 @@ import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { IUpsertTenantModel } from '@synergia-frontend/interfaces';
 import { ConnectorCreateTenant } from '../connector/connector-create-tenant';
-import { MatCheckbox } from '@angular/material/checkbox';
 import { MatRippleModule } from '@angular/material/core';
 
 @Component({
@@ -23,7 +22,6 @@ import { MatRippleModule } from '@angular/material/core';
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatCheckbox,
     MatRippleModule,
 ],
 })

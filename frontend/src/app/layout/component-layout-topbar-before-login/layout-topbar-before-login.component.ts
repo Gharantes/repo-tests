@@ -17,7 +17,8 @@ export class LayoutTopbarBeforeLoginComponent {
   ) {}
 
   public logout() {
+    const identifier = this.sessionService.getTenantIdentifier();
     this.sessionService.logout();
-    this.routingService.goToLogin();
+    this.routingService.goToLogin(identifier);
   }
 }

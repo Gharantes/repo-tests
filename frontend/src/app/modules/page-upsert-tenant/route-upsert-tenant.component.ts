@@ -30,8 +30,8 @@ export class RouteUpsertTenantComponent {
       .createTenant({
         identifier: data$.identifier as string,
         title: data$.title as string,
+        login: (data$.login as string).trim(),
         password: data$.password as string,
-        isPrivate: data$.isPrivate as boolean,
       })
       .pipe(
         catchError((err) => {
@@ -40,7 +40,7 @@ export class RouteUpsertTenantComponent {
         }),
         tap(() => {
           this.snackService.showMessage('Tenant criado com sucesso.');
-          this.routingService.goToLogin();
+          this.routingService.goToLogin(data$.identifier as string);
         })
       )
       .subscribe();

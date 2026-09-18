@@ -26,7 +26,7 @@ export class RouteNotFoundComponent {
   constructor() {
     const id = this.sessionService.getUserId()
     if (id == undefined) {
-      this.routingService.goToLogin()
+      this.routingService.goToHome()
     } else {
       this.routingService.goToDashboard()
     }

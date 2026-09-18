@@ -1,8 +1,6 @@
-import { AfterViewInit, Component, inject, ChangeDetectionStrategy } from '@angular/core';
-import { ReactiveFormsModule } from '@angular/forms';
-import { MatRippleModule } from '@angular/material/core';
-import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatInputModule } from '@angular/material/input';
+import { Component, inject, ChangeDetectionStrategy, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { ActivatedRoute } from '@angular/router';
 import {
   EntityTenantResourceService,
   LoginInformationResponseDto,
@@ -13,9 +11,10 @@ import {
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { catchError, EMPTY, filter, map, Observable, of, tap } from 'rxjs';
+import { catchError, EMPTY, filter, map, Observable, of, switchMap, tap } from 'rxjs';
 import { ConnectorLogin } from './connector/connector-login';
 import { TenantDtoToModel } from '@synergia-frontend/mappers';
+import { ITenantModel } from '@synergia-frontend/interfaces';
 import { ViewLoginComponent } from './view/view-login.component';
 
 @Component({
@@ -25,16 +24,12 @@ import { ViewLoginComponent } from './view/view-login.component';
   styleUrl: './route-login.component.scss',
   providers: [ConnectorLogin],
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [
-    MatFormFieldModule,
-    MatInputModule,
-    ReactiveFormsModule,
-    MatRippleModule,
-    ViewLoginComponent,
-  ],
+  imports: [ViewLoginComponent],
 })
-export class RouteLoginComponent implements AfterViewInit {
+export class RouteLoginComponent {
   public readonly connector = inject(ConnectorLogin);
+  private readonly route = inject(ActivatedRoute);
+  private readonly destroyRef = inject(DestroyRef);
 
   constructor(
     public readonly routingService: RoutingService,
@@ -43,16 +38,44 @@ export class RouteLoginComponent implements AfterViewInit {
     private readonly snackService: SnackbarService,
     private readonly sessionService: SessionService
   ) {
-    this.login(this.useStorage(), false);
+    this.route.paramMap
+      .pipe(
+        map((params) => params.get('tenant') ?? ''),
+        switchMap((identifier) => this.resolveTenant(identifier)),
+        takeUntilDestroyed(this.destroyRef)
+      )
+      .subscribe((tenant) => {
+        if (tenant != null) {
+          this.login(this.useStorage(tenant), false);
+        }
+      });
   }
 
-  private useStorage(): Observable<LoginInformationResponseDto | null> {
+  private resolveTenant(identifier: string): Observable<ITenantModel | null> {
+    this.connector.tenant$.set(null);
+    this.connector.tenantNotFound$.set(null);
+
+    return this.tenantService.listAllTenants().pipe(
+      map((res) => res.map((v) => TenantDtoToModel(v)).find((t) => t.identifier === identifier) ?? null),
+      catchError((err) => {
+        this.snackService.catchError(err, 'Erro ao carregar o tenant.');
+        return EMPTY;
+      }),
+      tap((tenant) => {
+        this.connector.tenant$.set(tenant);
+        this.connector.tenantNotFound$.set(tenant == null ? identifier : null);
+      })
+    );
+  }
+
+  /** Reaproveita a sessão guardada só se ela for do tenant da URL. */
+  private useStorage(tenant: ITenantModel): Observable<LoginInformationResponseDto | null> {
     const login = this.sessionService.retrieveSessionFromLocalStorage();
-    if (login == null) {
+    if (login == null || login.tenant?.identifier !== tenant.identifier) {
       return of(null);
     }
     return this.pageService.checkLoginInformation({
-      idTenant: login.tenant?.id as number,
+      idTenant: tenant.id,
       login: login.user?.label ?? '',
       password: '',
       checkLastSeen: true,
@@ -91,6 +114,7 @@ export class RouteLoginComponent implements AfterViewInit {
           this.sessionService.setTenant({
             id: res.idTenant,
             label: res.tenantTitle,
+            identifier: this.connector.tenant$()?.identifier ?? '',
           });
           this.sessionService.setUser({
             id: res.idAccount,
@@ -99,17 +123,6 @@ export class RouteLoginComponent implements AfterViewInit {
           this.sessionService.saveSessionOnLocalStorage();
           this.routingService.goToDashboard();
         })
-      )
-      .subscribe();
-  }
-
-  ngAfterViewInit(): void {
-    this.tenantService
-      .listAllTenants()
-      .pipe(
-        map((res) => res.map((v) => TenantDtoToModel(v))),
-        tap((res) => this.connector.tenants$.set(res)),
-        tap((res) => this.connector.tenantsFiltered$.set(res))
       )
       .subscribe();
   }

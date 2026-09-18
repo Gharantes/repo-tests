@@ -31,7 +31,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     fun `criar tenant grava a instituição e a conta ADMIN junto`() {
         val resposta = rest.postJson<Void>(
             store,
-            UpsertTenantDto(title = "FAG", identifier = "fag", password = "AdminSenha123", isPrivate = false),
+            UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "AdminSenha123"),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -52,7 +52,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
         // endpoint de login que a tela usa.
         rest.postJson<Void>(
             store,
-            UpsertTenantDto("FAG", "fag", "AdminSenha123", isPrivate = false),
+            UpsertTenantDto("FAG", "fag", "ADMIN", "AdminSenha123"),
         )
         val idTenant = jdbc.queryForObject(
             "SELECT id FROM tenant WHERE identifier = ?", Long::class.java, "fag",
@@ -70,11 +70,11 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `identifier repetido é recusado e não cria tenant nem admin duplicado`() {
-        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "Senha1", isPrivate = false))
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "ADMIN", "Senha1"))
 
         val segunda = rest.postJson<String>(
             store,
-            UpsertTenantDto("Outra Faculdade", "fag", "Senha2", isPrivate = false),
+            UpsertTenantDto("Outra Faculdade", "fag", "ADMIN", "Senha2"),
         )
 
         segunda.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -83,6 +83,65 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
         contarLinhas("tenant", "identifier = ?", "fag") shouldBe 1
         contarLinhas("account", "login = 'ADMIN'") shouldBe 1
+    }
+
+    @Test
+    fun `identifier fora do formato de URL é recusado`() {
+        listOf("FAG", "fag cascavel", "fág", "a/b", "-fag", "fag-").forEach { identifier ->
+            val resposta = rest.postJson<String>(
+                store,
+                UpsertTenantDto("FAG", identifier, "ADMIN", "Senha1"),
+            )
+
+            resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+            resposta.headers.getFirst("x-error") shouldBe
+                "Identifier inválido: use apenas letras minúsculas, números e hífen."
+        }
+
+        contarLinhas("tenant") shouldBe 0
+    }
+
+    @Test
+    fun `identifier reservado por rota do sistema é recusado`() {
+        val resposta = rest.postJson<String>(
+            store,
+            UpsertTenantDto("Qualquer", "create-tenant", "ADMIN", "Senha1"),
+        )
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.headers.getFirst("x-error") shouldBe
+            "O identifier \"create-tenant\" é reservado pelo sistema."
+        contarLinhas("tenant") shouldBe 0
+    }
+
+    @Test
+    fun `a primeira conta usa o login informado`() {
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "  coordenacao  ", "Senha1"))
+
+        jdbc.queryForList("SELECT login FROM account", String::class.java) shouldBe listOf("coordenacao")
+    }
+
+    @Test
+    fun `login do administrador em branco é recusado`() {
+        val resposta = rest.postJson<String>(store, UpsertTenantDto("FAG", "fag", "   ", "Senha1"))
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.headers.getFirst("x-error") shouldBe "Informe o login do administrador."
+        contarLinhas("tenant") shouldBe 0
+        contarLinhas("account") shouldBe 0
+    }
+
+    @Test
+    fun `atualizar tenant com identifier inválido não altera a linha`() {
+        val idTenant = criarTenant(identifier = "fag", title = "FAG")
+
+        val resposta = rest.postJson<String>(
+            "/api/entity-tenant/update/$idTenant",
+            UpsertTenantDto("FAG", "FAG Cascavel", "ADMIN", "ignorada"),
+        )
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        jdbc.queryForObject("SELECT identifier FROM tenant WHERE id = ?", String::class.java, idTenant) shouldBe "fag"
     }
 
     @Test
@@ -104,7 +163,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             "/api/entity-tenant/update/$idTenant",
-            UpsertTenantDto("FAG Cascavel", "fag-cascavel", "ignorada", isPrivate = true),
+            UpsertTenantDto("FAG Cascavel", "fag-cascavel", "ADMIN", "ignorada"),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -117,7 +176,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     fun `atualizar tenant inexistente não cria linha nova`() {
         val resposta = rest.postJson<Void>(
             "/api/entity-tenant/update/999999",
-            UpsertTenantDto("Fantasma", "fantasma", "x", isPrivate = false),
+            UpsertTenantDto("Fantasma", "fantasma", "ADMIN", "x"),
         )
 
         // O serviço usa ifPresent: some silenciosamente, sem estourar.

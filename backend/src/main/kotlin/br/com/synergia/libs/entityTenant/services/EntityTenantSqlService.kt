@@ -26,14 +26,13 @@ class EntityTenantSqlService (
         val tenant = Tenant(
             identifier = params.identifier,
             title = params.title,
-            isPrivate = params.isPrivate
         )
         tenantRepository.save(tenant)
     }
-    fun createAdminAccountForTenant(idTenant: Long, password: String) {
+    fun createAdminAccountForTenant(idTenant: Long, login: String, password: String) {
         val account = Account(
             idTenant = idTenant,
-            login = "ADMIN",
+            login = login,
             password = password,
             firstName = "System",
             lastName = "Admin",

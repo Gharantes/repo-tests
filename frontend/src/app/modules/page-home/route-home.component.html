@@ -1,0 +1,5 @@
+<app-view-home
+  [connector]="connector"
+  (goToTenantEvent)="goToTenant()"
+  (createTenantEvent)="routingService.goToCreateTenant()"
+></app-view-home>

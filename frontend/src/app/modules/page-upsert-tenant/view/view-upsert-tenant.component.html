@@ -8,7 +8,17 @@
 
   <mat-form-field [appearance]="'outline'">
     <mat-label>Identifier</mat-label>
-    <input type="text" matInput [formControl]="connector.form.controls.identifier" />
+    <input type="text" matInput autocapitalize="off" [formControl]="connector.form.controls.identifier" />
+  </mat-form-field>
+  @if (connector.form.controls.identifier.hasError('identifierFormat')) {
+    <p class="auth-error">Use apenas letras minúsculas, números e hífen.</p>
+  } @else if (connector.form.controls.identifier.hasError('identifierReserved')) {
+    <p class="auth-error">Esse identifier é reservado pelo sistema.</p>
+  }
+
+  <mat-form-field [appearance]="'outline'">
+    <mat-label>Login do Administrador</mat-label>
+    <input type="text" matInput autocapitalize="off" autocomplete="off" [formControl]="connector.form.controls.login" />
   </mat-form-field>
 
   <mat-form-field [appearance]="'outline'">
@@ -27,8 +37,6 @@
       <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
     </button>
   </mat-form-field>
-
-  <mat-checkbox [formControl]="connector.form.controls.isPrivate">Tenant Privado</mat-checkbox>
 
   <button class="auth-primary-button" matRipple [disabled]="!isFormValid()" (click)="registrarTenant()">Registrar</button>
   <button mat-stroked-button class="auth-secondary-button" (click)="goToParentPageEvent.emit()">Voltar</button>

@@ -1373,7 +1373,7 @@
       "UpsertTenantDto": {
         "required": [
           "identifier",
-          "isPrivate",
+          "login",
           "password",
           "title"
         ],
@@ -1385,11 +1385,11 @@
           "identifier": {
             "type": "string"
           },
-          "password": {
+          "login": {
             "type": "string"
           },
-          "isPrivate": {
-            "type": "boolean"
+          "password": {
+            "type": "string"
           }
         }
       },
