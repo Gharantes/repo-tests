@@ -1,4 +1,4 @@
-import { Component, inject, ChangeDetectionStrategy, signal } from '@angular/core';
+import { Component, inject, ChangeDetectionStrategy, signal, Output, EventEmitter } from '@angular/core';
 import { RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, finalize, tap } from 'rxjs';
 import { EntityTenantResourceService } from '@synergia-frontend/api';
@@ -17,6 +17,8 @@ import { ConnectorCreateTenant } from './connector/connector-create-tenant';
 export class RouteUpsertTenantComponent {
   public readonly connector = inject(ConnectorCreateTenant);
   public readonly isSubmitting = signal(false);
+
+  @Output() public goBackEvent = new EventEmitter<void>();
 
   constructor(
     public readonly routingService: RoutingService,

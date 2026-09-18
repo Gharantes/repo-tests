@@ -1,5 +1,5 @@
 <app-view-upsert-tenant
-  (goToParentPageEvent)="routingService.goToHome()"
+  (goToParentPageEvent)="goBackEvent.emit()"
   (registerEntityEvent)="createTenant()"
   [connector]="connector"
   [isSubmitting]="isSubmitting()"

@@ -12,8 +12,6 @@
   </mat-form-field>
   @if (connector.form.controls.identifier.hasError('identifierFormat')) {
     <p class="auth-error">Use apenas letras minúsculas, números e hífen.</p>
-  } @else if (connector.form.controls.identifier.hasError('identifierReserved')) {
-    <p class="auth-error">Esse identifier é reservado pelo sistema.</p>
   }
 
   <mat-form-field [appearance]="'outline'">

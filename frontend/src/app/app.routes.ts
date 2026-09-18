@@ -7,7 +7,6 @@ import { RouteListProjectsComponent } from './modules/page-list-projects/route-l
 import { RouteDashboardComponent } from './modules/page-dashboard/route-dashboard.component';
 import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-upsert-event.component';
 import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
-import { RouteUpsertTenantComponent } from './modules/page-upsert-tenant/route-upsert-tenant.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
 import { RouteEventDetailsComponent } from './modules/page-details-event/route-event-details.component';
 import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
@@ -20,10 +19,8 @@ import { RouteUpsertTagComponent } from './modules/page-upsert-tag/route-upsert-
 import { RouteHomeComponent } from './modules/page-home/route-home.component';
 
 /**
- * Na raiz ficam as páginas sem tenant (escolher tenant, registrar tenant).
+ * A raiz é a única página sem tenant (escolher ou registrar tenant).
  * Todo o resto fica sob /:tenant, onde :tenant é o identifier do tenant.
- * Os caminhos fixos da raiz são identifiers reservados no backend
- * (EntityTenantService.RESERVED_IDENTIFIERS).
  */
 export const appRoutes: Route[] = [
   {
@@ -31,7 +28,6 @@ export const appRoutes: Route[] = [
     component: LayoutBeforeLoginComponent,
     children: [
       { path: '', pathMatch: 'full', component: RouteHomeComponent },
-      { path: 'create-tenant', component: RouteUpsertTenantComponent },
     ]
   },
   {

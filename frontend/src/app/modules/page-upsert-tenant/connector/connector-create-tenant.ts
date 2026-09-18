@@ -3,21 +3,13 @@ import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators }
 
 /** Mesmo formato validado no backend (EntityTenantService): vira o primeiro segmento da URL. */
 const IDENTIFIER_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
-/** Caminhos da raiz do frontend (app.routes.ts). */
-const RESERVED_IDENTIFIERS = ['create-tenant'];
 
 function identifierValidator(control: AbstractControl<string>): ValidationErrors | null {
   const value = control.value;
   if (!value) {
     return null;
   }
-  if (!IDENTIFIER_PATTERN.test(value)) {
-    return { identifierFormat: true };
-  }
-  if (RESERVED_IDENTIFIERS.includes(value)) {
-    return { identifierReserved: true };
-  }
-  return null;
+  return IDENTIFIER_PATTERN.test(value) ? null : { identifierFormat: true };
 }
 
 @Injectable()

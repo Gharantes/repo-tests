@@ -78,11 +78,6 @@ export class RoutingService {
     this.routeLabel.set('Editar Projeto');
     this.navigateInTenant(['edit-project', idProject]);
   }
-  /** ============ TENANT ============= **/
-  public goToCreateTenant() {
-    this.routeLabel.set('Registrar Tenant');
-    this.router.navigate(['create-tenant']).then();
-  }
   /** ============ EVENTS ============= **/
   public goToListEvents() {
     this.routeLabel.set('Explorar Eventos')

@@ -49,15 +49,9 @@ class EntityTenantService (
         if (!IDENTIFIER_PATTERN.matches(identifier)) {
             throw Exception("Identifier inválido: use apenas letras minúsculas, números e hífen.")
         }
-        if (identifier in RESERVED_IDENTIFIERS) {
-            throw Exception("O identifier \"$identifier\" é reservado pelo sistema.")
-        }
     }
 
     companion object {
         private val IDENTIFIER_PATTERN = Regex("^[a-z0-9]+(-[a-z0-9]+)*$")
-
-        /** Rotas da raiz do frontend que um tenant não pode ocupar. */
-        private val RESERVED_IDENTIFIERS = setOf("create-tenant")
     }
 }

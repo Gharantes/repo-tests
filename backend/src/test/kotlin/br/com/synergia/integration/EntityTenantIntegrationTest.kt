@@ -102,19 +102,6 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `identifier reservado por rota do sistema é recusado`() {
-        val resposta = rest.postJson<String>(
-            store,
-            UpsertTenantDto("Qualquer", "create-tenant", "ADMIN", "Senha1"),
-        )
-
-        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
-        resposta.headers.getFirst("x-error") shouldBe
-            "O identifier \"create-tenant\" é reservado pelo sistema."
-        contarLinhas("tenant") shouldBe 0
-    }
-
-    @Test
     fun `a primeira conta usa o login informado`() {
         rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "  coordenacao  ", "Senha1"))
 
