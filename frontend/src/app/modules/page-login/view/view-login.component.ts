@@ -6,6 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { ITenantModel } from '@synergia-frontend/interfaces';
 import { MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { FormLoginComponent } from '../form/form-login.component';
 
 @Component({
@@ -21,6 +22,7 @@ import { FormLoginComponent } from '../form/form-login.component';
     MatInputModule,
     MatRippleModule,
     MatButtonModule,
+    MatIconModule,
     FormLoginComponent,
   ],
 })

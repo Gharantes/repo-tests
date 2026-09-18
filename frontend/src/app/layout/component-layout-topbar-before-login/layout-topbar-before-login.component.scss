@@ -7,16 +7,47 @@
     align-items: center;
     height: 60px;
     width: 100%;
-    column-gap: 60px;
-    padding: 10px;
+    column-gap: 24px;
+    padding: 0 20px;
     color: white;
-    background: #555;
+    background: #3B52CC;
+    flex-shrink: 0;
 }
 
-#system-title {
-    font-size: 1.6rem;
-    font-weight: 500;
+#brand {
+    display: flex;
+    align-items: center;
+    column-gap: 10px;
+}
+#logo {
+    position: relative;
+    width: 36px;
+    height: 26px;
+    flex-shrink: 0;
+}
+.circle {
+    position: absolute;
+    top: 1px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+}
+.circle-orange {
+    left: 0;
+    background: #FF7043;
+}
+.circle-blue {
+    left: 14px;
+    background: #1A2F9E;
+}
+#brand-name {
+    font-size: 1.35rem;
+    font-weight: 600;
+    letter-spacing: 0.02em;
 }
 #route-label-title {
-    font-size: 1.3rem;
+    font-size: 1rem;
+    padding-left: 24px;
+    border-left: 1px solid rgba(255, 255, 255, 0.35);
+    opacity: 0.9;
 }

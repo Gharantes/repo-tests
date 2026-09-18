@@ -1,10 +1,11 @@
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy, signal } from '@angular/core';
 import { ConnectorLogin } from '../connector/connector-login';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
 
 import { ITenantModel } from '@synergia-frontend/interfaces';
@@ -22,6 +23,7 @@ import { ITenantModel } from '@synergia-frontend/interfaces';
     MatInputModule,
     MatRippleModule,
     MatButtonModule,
+    MatIconModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
     MatOption
@@ -29,6 +31,7 @@ import { ITenantModel } from '@synergia-frontend/interfaces';
 })
 export class FormLoginComponent {
   @Input() public connector!: ConnectorLogin;
+  public readonly hidePassword = signal(true);
   displayTenant: ((value: ITenantModel|string|null) => string) = (res) => {
     if (res == null) {
       return '';

@@ -1,21 +1,36 @@
-<div id="container">
-  <div id="card">
-    <app-form-login
-      [connector]="connector"
-    ></app-form-login>
+<div id="card">
+  <aside id="hero">
+    <span class="bubble bubble-orange"></span>
+    <span class="bubble bubble-blue"></span>
 
-    <div id="buttons-container">
-      <button
-        class="login-button"
-        matRipple
-        [disabled]="!connector.form.valid"
-        (click)="attemptLoginEvent.emit()">
-        Login
-      </button>
-    </div>
-  </div>
+    <h2 id="hero-title">Synergia</h2>
+    <p id="hero-text">
+      Conecte alunos de diferentes cursos e forme equipes multidisciplinares
+      para os seus projetos.
+    </p>
+  </aside>
 
-  <button mat-raised-button id="create-new-tenant-option" (click)="createTenantEvent.emit()">
-    Criar Novo Tenant
-  </button>
+  <section id="content">
+    <header id="header">
+      <h1 id="title">Bem-vindo(a) de volta</h1>
+      <p id="subtitle">Entre com a sua instituição, usuário e senha.</p>
+    </header>
+
+    <app-form-login [connector]="connector"></app-form-login>
+
+    <button
+      class="login-button"
+      matRipple
+      [disabled]="!connector.form.valid"
+      (click)="attemptLoginEvent.emit()">
+      Login
+    </button>
+
+    <div id="divider"><span>Sua instituição ainda não usa o Synergia?</span></div>
+
+    <button mat-stroked-button id="create-new-tenant-option" (click)="createTenantEvent.emit()">
+      <mat-icon>add_business</mat-icon>
+      Criar Novo Tenant
+    </button>
+  </section>
 </div>
