@@ -93,6 +93,8 @@ MAPA_SEV_LABEL = {"critical": "critica", "high": "alta", "medium": "media", "low
 
 # ----------------------------------------------------------------------------- Fontes
 FONT_DIR = "/usr/share/fonts/truetype/dejavu"
+if not os.path.isfile(os.path.join(FONT_DIR, "DejaVuSans.ttf")):
+    FONT_DIR = os.path.join(matplotlib.get_data_path(), "fonts", "ttf")
 pdfmetrics.registerFont(TTFont("DV", os.path.join(FONT_DIR, "DejaVuSans.ttf")))
 pdfmetrics.registerFont(TTFont("DV-B", os.path.join(FONT_DIR, "DejaVuSans-Bold.ttf")))
 pdfmetrics.registerFont(TTFont("DV-M", os.path.join(FONT_DIR, "DejaVuSansMono.ttf")))
@@ -300,7 +302,7 @@ class CanvasNumerado(rl_canvas.Canvas):
             self.setFont("DV", 7.5)
             self.setFillColor(MUTED)
             self.drawString(MARGEM, PAGE_H - 1.25 * cm, TITULO_RELATORIO)
-            self.drawRightString(PAGE_W - MARGEM, PAGE_H - 1.25 * cm, f"Commit {A.COMMIT.split()[0]} · {A.DATA}")
+            self.drawRightString(PAGE_W - MARGEM, PAGE_H - 1.25 * cm, A.DATA)
             self.setStrokeColor(LINHA)
             self.setLineWidth(0.6)
             self.line(MARGEM, PAGE_H - 1.42 * cm, PAGE_W - MARGEM, PAGE_H - 1.42 * cm)
@@ -338,7 +340,6 @@ def capa(story, cont):
     meta = [
         [P("<b>Data</b>", "cell"), P(A.DATA, "cell")],
         [P("<b>Repositório</b>", "cell"), P(A.REPO, "cell")],
-        [P("<b>Versão auditada</b>", "cell"), P(A.COMMIT, "cell")],
         [P("<b>Resultado</b>", "cell"),
          P(f"{sum(cont.values())} achados: " + ", ".join(f"{cont[k]} {SEV[k][0].lower()}" for k in ORDEM_SEV if cont.get(k))
            + f"; {len(A.PONTOS_FORTES)} pontos fortes", "cell")],
@@ -550,7 +551,7 @@ def gerar_markdown(cont):
                  + ", ".join(f"{cont[k]} {SEV[k][0].lower()}" for k in ORDEM_SEV if cont.get(k))
                  + f"; {len(A.PONTOS_FORTES)} pontos fortes")
     add(md_tabela(["", ""], [[md(f"<b>{a}</b>"), md(b)] for a, b in [
-        ("Data", A.DATA), ("Repositório", A.REPO), ("Versão auditada", A.COMMIT), ("Resultado", resultado)]]) + "\n")
+        ("Data", A.DATA), ("Repositório", A.REPO), ("Resultado", resultado)]]) + "\n")
     add("## Escopo auditado\n")
     add("\n".join(f"- {md(e)}" for e in A.ESCOPO) + "\n")
     add("## Stack detectada\n")

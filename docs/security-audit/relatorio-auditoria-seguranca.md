@@ -6,7 +6,6 @@
 |---|---|
 | **Data** | 18/09/2026 |
 | **Repositório** | github.com/Gharantes/repo-tests (público) |
-| **Versão auditada** | 1e166f9 (branch teste/protecao) |
 | **Resultado** | 24 achados: 3 crítica, 9 alta, 4 média, 5 baixa, 3 informativa; 11 pontos fortes |
 
 ## Escopo auditado

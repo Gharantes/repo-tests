@@ -1,6 +1,6 @@
 # Como corrigir as vulnerabilidades do Synergia
 
-**Integrantes do grupo:** _(preencher)_
+**Integrantes do grupo:** Guilherme Harmatiuk Arantes
 **Data:** 18/09/2026
 **Base:** Relatório de Auditoria de Segurança (relatorio-auditoria-seguranca.pdf)
 
