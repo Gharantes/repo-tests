@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { SnackbarService } from '@synergia-frontend/services';
 
@@ -7,6 +7,7 @@ import { SnackbarService } from '@synergia-frontend/services';
   standalone: true,
   template: ` <router-outlet></router-outlet> `,
   styleUrl: `./app.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [RouterModule],
 })
 export class AppComponent {

@@ -1,11 +1,12 @@
-import { Component, Input } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+
 
 @Component({
   selector: 'lib-safe-image',
   templateUrl: `safe-image.component.html`,
   styleUrl: 'safe-image.component.scss',
-  imports: [CommonModule],
+  imports: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   standalone: true,
 })
 export class SafeImageComponent {

@@ -1,10 +1,10 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import {
   RoutingService,
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { CommonModule } from '@angular/common';
+
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -27,7 +27,6 @@ import { ActivatedRoute } from '@angular/router';
   templateUrl: './route-upsert-project.component.html',
   styleUrl: `./route-upsert-project.component.scss`,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -35,8 +34,9 @@ import { ActivatedRoute } from '@angular/router';
     MatButtonModule,
     ReactiveFormsModule,
     MatSelectModule,
-    ViewUpsertProjectComponent,
-  ],
+    ViewUpsertProjectComponent
+],
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [ConnectorUpsertProject],
 })
 export class RouteUpsertProjectComponent {

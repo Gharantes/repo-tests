@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { RoutingService, SessionService } from '@synergia-frontend/services';
@@ -11,6 +11,7 @@ import { ViewEventDetailsComponent } from './view/view-event-details.component';
   selector: 'app-route-event-details',
   templateUrl: './route-event-details.component.html',
   styleUrl: `./route-event-details.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ViewEventDetailsComponent],
 })
 export class RouteEventDetailsComponent {

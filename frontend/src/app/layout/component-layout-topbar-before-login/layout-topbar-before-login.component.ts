@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, ChangeDetectionStrategy } from '@angular/core';
 import { RoutingService, SessionService } from '@synergia-frontend/services';
 import { MatMenuModule } from '@angular/material/menu';
 
@@ -7,6 +7,7 @@ import { MatMenuModule } from '@angular/material/menu';
   standalone: true,
   templateUrl: './layout-topbar-before-login.component.html',
   styleUrl: `./layout-topbar-before-login.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatMenuModule],
 })
 export class LayoutTopbarBeforeLoginComponent {

@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
+
+import { Component, EventEmitter, inject, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -14,16 +14,16 @@ import { MatCheckbox } from '@angular/material/checkbox';
   standalone: true,
   templateUrl: './view-upsert-tenant.component.html',
   styleUrl: './view-upsert-tenant.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
     MatInputModule,
     MatButtonModule,
     ReactiveFormsModule,
-    MatCheckbox,
-  ],
+    MatCheckbox
+],
 })
 export class ViewUpsertTenantComponent {
   @Input() connector!: ConnectorCreateTenant;

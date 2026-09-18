@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { ConnectorLogin } from '../connector/connector-login';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -6,7 +6,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatOption, MatRippleModule } from '@angular/material/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatAutocomplete, MatAutocompleteTrigger } from '@angular/material/autocomplete';
-import { NgForOf } from '@angular/common';
+
 import { ITenantModel } from '@synergia-frontend/interfaces';
 
 @Component({
@@ -15,6 +15,7 @@ import { ITenantModel } from '@synergia-frontend/interfaces';
   templateUrl: './form-login.component.html',
   styleUrl: './form-login.component.scss',
   providers: [],
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
     ReactiveFormsModule,
     MatFormFieldModule,
@@ -23,9 +24,8 @@ import { ITenantModel } from '@synergia-frontend/interfaces';
     MatButtonModule,
     MatAutocomplete,
     MatAutocompleteTrigger,
-    MatOption,
-    NgForOf,
-  ],
+    MatOption
+],
 })
 export class FormLoginComponent {
   @Input() public connector!: ConnectorLogin;

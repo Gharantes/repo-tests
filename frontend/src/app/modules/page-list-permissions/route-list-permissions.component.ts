@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy } from '@angular/core';
 import { IPermissionModel } from '@synergia-frontend/interfaces';
 import { SessionService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
@@ -13,6 +13,7 @@ import { PermissionDtoToModel } from '@synergia-frontend/mappers';
   standalone: true,
   templateUrl: './route-list-permissions.component.html',
   styleUrl: `./route-list-permissions.component.scss`,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [ReactiveFormsModule, ViewListPermissionsComponent],
 })
 export class RouteListPermissionsComponent {

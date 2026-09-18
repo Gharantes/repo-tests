@@ -1,5 +1,5 @@
-import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import {
   IAccountModel,
   IDoExtendableTableActions,
@@ -16,13 +16,13 @@ import { FormListAccountsComponent } from '../form/form-list-accounts.component'
   standalone: true,
   templateUrl: './view-list-accounts.component.html',
   styleUrl: 'view-list-accounts.component.scss',
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [
-    CommonModule,
     MatIconModule,
     MatButtonModule,
     SigExtendableTableComponent,
-    FormListAccountsComponent,
-  ],
+    FormListAccountsComponent
+],
 })
 export class ViewListAccountsComponent {
   @Input() data$!: IAccountModel[];

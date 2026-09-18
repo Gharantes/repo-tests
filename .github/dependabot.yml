@@ -1,0 +1,77 @@
+# Configuração do Dependabot.
+#
+# Os alertas de segurança do Dependabot vêm ligados de fábrica e é de onde
+# saem os e-mails. O que eles NÃO fazem é abrir pull request: sem este
+# arquivo o robô só avisa, e foi assim que o projeto juntou 149 alertas
+# abertos em 17 meses. Aqui ele passa a propor a atualização.
+version: 2
+updates:
+  # ---------------------------------------------------------------------------
+  # Frontend - npm. É onde estavam todos os 149 alertas.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: npm
+    directory: /frontend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'deps'
+      prefix-development: 'deps-dev'
+
+    groups:
+      # O Angular versiona os próprios pacotes em conjunto e eles têm peer
+      # dependency exata entre si: subir @angular/core sozinho não resolve,
+      # o npm rejeita. Precisam vir todos no mesmo PR.
+      angular:
+        patterns:
+          - '@angular*'
+          - '@schematics/angular'
+      # Mesma história para o Nx: os plugins acompanham o core.
+      nx:
+        patterns:
+          - '@nx/*'
+          - 'nx'
+      # O resto é ferramental de build e teste, que não chega ao navegador.
+      # Agrupado para não virar uma enxurrada de PRs de um pacote cada.
+      ferramental:
+        dependency-type: development
+        patterns:
+          - '*'
+        exclude-patterns:
+          - '@angular*'
+          - '@schematics/angular'
+          - '@nx/*'
+          - 'nx'
+
+  # ---------------------------------------------------------------------------
+  # Backend - Gradle. Hoje sem nenhum alerta, mas o Spring Boot 3.5.0 e o
+  # Kotlin 1.9.25 são de maio de 2025: é questão de tempo.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: gradle
+    directory: /backend
+    schedule:
+      interval: weekly
+      day: monday
+    open-pull-requests-limit: 5
+    commit-message:
+      prefix: 'deps'
+    groups:
+      spring:
+        patterns:
+          - 'org.springframework*'
+          - 'io.spring*'
+      kotlin:
+        patterns:
+          - 'org.jetbrains.kotlin*'
+
+  # ---------------------------------------------------------------------------
+  # As próprias actions do CI. actions/checkout@v4 e companhia também
+  # envelhecem, e ninguém recebe e-mail sobre isso.
+  # ---------------------------------------------------------------------------
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    commit-message:
+      prefix: 'ci'
