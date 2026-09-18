@@ -19,6 +19,13 @@ class EntityTenantService (
     fun checkListTenantsPassword(password: String): Boolean {
         return listTenantPagePassword.isNotEmpty() && password == listTenantPagePassword
     }
+    @Transactional(rollbackFor = [Exception::class])
+    fun deleteTenant(idTenant: Long, password: String) {
+        if (!checkListTenantsPassword(password)) {
+            throw Exception("Senha incorreta.")
+        }
+        sqlService.deleteTenant(idTenant)
+    }
     fun getTenantByIdentifier(identifier: String): TenantDto? {
         return sqlService.getTenantByIdentifier(identifier)
     }

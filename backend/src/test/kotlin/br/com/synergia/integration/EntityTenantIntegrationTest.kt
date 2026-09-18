@@ -4,6 +4,7 @@ import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
 import br.com.synergia.integration.support.postJson
 import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
+import br.com.synergia.libs.entityTenant.models.DeleteTenantDto
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
 import io.kotest.matchers.collections.shouldHaveSize
@@ -28,6 +29,55 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     private val store = "/api/entity-tenant/store"
     private val listar = "/api/entity-tenant/list-all-tenants"
     private val checarSenhaListagem = "/api/entity-tenant/check-list-tenants-password"
+    private val deletar = "/api/entity-tenant/delete"
+
+    /** Monta um tenant com uma linha em cada tabela que pertence a ele. */
+    private fun criarTenantCompleto(identifier: String): Long {
+        val idTenant = criarTenant(identifier = identifier, title = identifier)
+        val idTag = criarTag(idTenant, "Tag $identifier", paraProjetos = true, paraEventos = true, paraContas = true)
+        val idConta = criarConta(idTenant, "aluno-$identifier", tags = listOf(idTag))
+        val idProjeto = criarProjeto(idTenant, "Projeto $identifier")
+        val idEvento = criarEvento(idTenant, "Evento $identifier")
+        vincularContaAoProjeto(idConta, idProjeto)
+        vincularContaAoEvento(idConta, idEvento)
+        vincularTagAoProjeto(idTag, idProjeto)
+        vincularTagAoEvento(idTag, idEvento)
+        val idPost = jdbc.queryForObject(
+            "INSERT INTO post (id_account, title, content) VALUES (?, 'Post', 'Conteúdo') RETURNING id",
+            Long::class.java, idConta,
+        )!!
+        jdbc.update("INSERT INTO event_post_relationship (id_event, id_post) VALUES (?, ?)", idEvento, idPost)
+        return idTenant
+    }
+
+    private fun contarTudo(): Map<String, Int> =
+        TABELAS_NA_ORDEM_DE_EXCLUSAO.associateWith { contarLinhas(it) }
+
+    @Test
+    fun `deletar tenant apaga tudo que pertence a ele e mantém os outros`() {
+        val idApagado = criarTenantCompleto("apagado")
+        criarTenantCompleto("mantido")
+        val antes = contarTudo()
+
+        val resposta = rest.postJson<Void>(deletar, DeleteTenantDto(idApagado, "SenhaListagem"))
+
+        resposta.statusCode shouldBe HttpStatus.OK
+        // Cada tabela tinha uma linha de cada tenant; sobra só a do mantido.
+        contarTudo() shouldBe antes.mapValues { (_, n) -> n / 2 }
+        contarLinhas("tenant", "identifier = ?", "mantido") shouldBe 1
+    }
+
+    @Test
+    fun `deletar tenant com senha errada não apaga nada`() {
+        val idTenant = criarTenantCompleto("fag")
+        val antes = contarTudo()
+
+        val resposta = rest.postJson<String>(deletar, DeleteTenantDto(idTenant, "errada"))
+
+        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.headers.getFirst("x-error") shouldBe "Senha incorreta."
+        contarTudo() shouldBe antes
+    }
 
     @Test
     fun `senha da listagem de tenants confere com LIST_TENANT_PAGE_PASSWORD`() {

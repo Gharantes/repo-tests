@@ -43,3 +43,28 @@
     color: #666;
   }
 }
+.tenant-row {
+  display: flex;
+  align-items: center;
+  column-gap: 4px;
+}
+.tenant-confirm {
+  display: flex;
+  flex-direction: column;
+  row-gap: 8px;
+  padding: 10px 14px;
+  font-size: 0.9rem;
+  color: #2a2a2a;
+  border: 1px solid #c62828;
+  border-radius: 6px;
+
+  .tenant-confirm-actions {
+    display: flex;
+    justify-content: flex-end;
+    column-gap: 8px;
+  }
+  .tenant-delete-confirm {
+    color: #fff;
+    background: #c62828;
+  }
+}

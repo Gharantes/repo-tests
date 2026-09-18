@@ -25,6 +25,7 @@ export class RouteListTenantsComponent {
   public readonly isUnlocked = signal(false);
   public readonly isSubmitting = signal(false);
   public readonly tenants = signal<TenantDto[]>([]);
+  public readonly deletingId = signal<number | null>(null);
 
   @Output() public goBackEvent = new EventEmitter<void>();
 
@@ -51,6 +52,27 @@ export class RouteListTenantsComponent {
           this.snackService.catchError(err, 'Erro ao verificar a senha.');
           this.goBackEvent.emit();
         },
+      });
+  }
+
+  public deleteTenant(tenant: TenantDto) {
+    if (this.deletingId() != null) {
+      return;
+    }
+    this.deletingId.set(tenant.id);
+
+    this.entityTenantService
+      .deleteTenant({ idTenant: tenant.id, password: this.connector.form.controls.password.value })
+      .pipe(
+        catchError((err) => {
+          this.snackService.catchError(err, 'Erro ao deletar tenant.');
+          return EMPTY;
+        }),
+        finalize(() => this.deletingId.set(null))
+      )
+      .subscribe(() => {
+        this.snackService.showMessage(`Tenant "${tenant.title}" deletado.`);
+        this.tenants.update((list) => list.filter((t) => t.id !== tenant.id));
       });
   }
 

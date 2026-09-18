@@ -17,6 +17,9 @@ object SqlPath {
         LIST_EVENTS_BY_TENANT("/sql/entity-event/list-events-by-tenant.sql"),
         LIST_EVENTS_BY_ACCOUNT("/sql/entity-event/list-events-by-account.sql"),
     }
+    enum class EntityTenant (override val path: String) : ISqlFile {
+        DELETE_TENANT("/sql/entity-tenant/delete-tenant.sql"),
+    }
     enum class EntityProject (override val path: String) : ISqlFile {
         LIST_PROJECTS_BY_TENANT("/sql/entity-project/list-projects-by-tenant.sql"),
         LIST_PROJECTS_BY_ACCOUNT("/sql/entity-project/list-projects-by-account.sql"),

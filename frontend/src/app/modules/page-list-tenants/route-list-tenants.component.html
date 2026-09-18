@@ -1,6 +1,8 @@
 @if (isUnlocked()) {
   <app-view-list-tenants
     [tenants]="tenants()"
+    [deletingId]="deletingId()"
+    (deleteTenantEvent)="deleteTenant($event)"
     (goToTenantEvent)="routingService.goToLogin($event)"
     (goBackEvent)="goBackEvent.emit()"
   ></app-view-list-tenants>
