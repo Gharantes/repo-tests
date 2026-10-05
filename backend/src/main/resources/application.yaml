@@ -1,13 +1,31 @@
+server:
+  port: 8080
 spring:
   application:
     name: synergia
+  servlet:
+    multipart:
+      max-file-size: 1024MB
+      max-request-size: 1024MB
+  output:
+    ansi:
+      enabled: always
   config:
     import:
-      - "classpath:application-server.yaml"
-      - "classpath:application-springdoc.yaml"
       - "classpath:application-datasource.yaml"
       # Variáveis locais (ex.: LIST_TENANT_PAGE_PASSWORD). Ver .env.example.
       - "optional:file:.env[.properties]"
       - "classpath:application-evoge.yaml"
       # - "classpath:application-datasource-windows.yaml"
       # - "classpath:application-datasource-render.yaml"
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  disable-i18n: true
+  model-converters:
+    pageable-converter:
+      enabled: true
+  show-actuator: false
+  api-docs:
+    groups:
+      enabled: true
