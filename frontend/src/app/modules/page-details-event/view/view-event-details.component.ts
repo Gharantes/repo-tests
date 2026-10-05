@@ -6,13 +6,14 @@ import {
 } from '@synergia-frontend/components';
 import { MatChip, MatChipSet } from '@angular/material/chips';
 import { MatIconModule } from '@angular/material/icon';
+import { ParentNotesComponent } from '@synergia-frontend/components';
 
 @Component({
   selector: 'app-view-event-details',
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [
+  imports: [ParentNotesComponent, 
     SafeImageComponent,
     MatChip,
     MatChipSet,

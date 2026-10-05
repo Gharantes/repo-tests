@@ -38,6 +38,11 @@
       <div class="section-header">Descrição</div>
       <p class="section-body">{{ project$.description }}</p>
     </div>
+
+    <div class="section">
+      <div class="section-header">Lousa</div>
+      <lib-parent-notes parentEntity="PROJECT" [parentId]="project$.id"></lib-parent-notes>
+    </div>
   </div>
 
   <div id="info-sidebar">

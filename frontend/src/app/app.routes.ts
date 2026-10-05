@@ -47,6 +47,7 @@ export const appRoutes: Route[] = [
         component: NormalLayoutComponent,
         children: [
           { path: 'dashboard', component: RouteDashboardComponent },
+          { path: 'lousa', loadComponent: () => import('./modules/page-lousa/route-lousa.component').then((m) => m.RouteLousaComponent) },
           // Usuários
           { path: 'accounts', component: RouteListAccountsComponent },
           { path: 'create-account', component: RouteUpsertAccountComponent },

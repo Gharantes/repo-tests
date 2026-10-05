@@ -52,6 +52,11 @@ export class RoutingService {
     this.navigateInTenant(['dashboard']);
   }
 
+  public goToLousa() {
+    this.routeLabel.set('Lousa');
+    this.navigateInTenant(['lousa']);
+  }
+
   /** ============ ACCOUNTS ============= **/
   public goToListAccounts() {
     this.routeLabel.set('Usuários');

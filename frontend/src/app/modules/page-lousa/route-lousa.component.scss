@@ -1,0 +1,139 @@
+* { box-sizing: border-box; }
+
+:host {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+  padding: 24px 28px;
+  gap: 20px;
+}
+
+#toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+#search {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: 1;
+  min-width: 200px;
+  padding: 6px 12px;
+  border: 1px solid #e8e4dc;
+  border-radius: 8px;
+  background: #fff;
+
+  input { border: none; outline: none; flex: 1; font: inherit; }
+}
+
+#board {
+  columns: 260px;
+  column-gap: 16px;
+}
+#empty { color: #888; }
+
+.note {
+  break-inside: avoid;
+  margin-bottom: 16px;
+  padding: 12px;
+  border-radius: 8px;
+  border: 1px solid #e8e4dc;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.note--padrao { background: #fff; }
+.note--amarelo { background: #fff4c2; }
+.note--verde { background: #d9f2dc; }
+.note--azul { background: #dbe8fb; }
+.note--rosa { background: #fadbe6; }
+
+.note-top { display: flex; align-items: center; gap: 2px; }
+.note-title {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-weight: 600;
+  outline: none;
+}
+.note-content {
+  width: 100%;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  resize: vertical;
+  outline: none;
+}
+
+.action {
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #777;
+  padding: 2px;
+  display: flex;
+
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  &.on { color: #4A5FD8; }
+  &.mini mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+.list { display: flex; flex-direction: column; gap: 4px; }
+.item {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &.done .item-text { text-decoration: line-through; color: #888; }
+}
+.item-text {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  font: inherit;
+  font-size: 0.9rem;
+  outline: none;
+}
+.add-item, .parent {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  color: #4A5FD8;
+  font: inherit;
+  font-size: 0.8rem;
+  padding: 0;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+
+.note-footer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.75rem;
+  color: #777;
+
+  .when { margin-left: auto; }
+}
+
+.swatch {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  border-radius: 50%;
+  border: 1px solid #ccc;
+  margin-right: 8px;
+  vertical-align: middle;
+}

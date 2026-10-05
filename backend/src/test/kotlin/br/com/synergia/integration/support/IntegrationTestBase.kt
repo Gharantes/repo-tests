@@ -233,6 +233,9 @@ abstract class IntegrationTestBase {
 
     companion object {
         val TABELAS_NA_ORDEM_DE_EXCLUSAO = listOf(
+            "project_note_relationship",
+            "event_note_relationship",
+            "note",
             "event_post_relationship",
             "post",
             "account_tag_relationship",

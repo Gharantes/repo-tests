@@ -1,0 +1,154 @@
+<header id="toolbar">
+  <div id="search">
+    <mat-icon>search</mat-icon>
+    <input
+      type="search"
+      [placeholder]="showArchived() ? 'Buscar nos arquivados…' : 'Buscar na lousa…'"
+      [value]="search()"
+      (input)="search.set($any($event.target).value)"
+    />
+  </div>
+  @if (showArchived()) {
+    <button matButton="filled" (click)="setView(false)">
+      <mat-icon>arrow_back</mat-icon> Ao mural
+    </button>
+  } @else {
+    <button matButton="filled" (click)="create('TEXT')">
+      <mat-icon>note_add</mat-icon> Nota
+    </button>
+    <button matButton="outlined" (click)="create('LIST')">
+      <mat-icon>checklist</mat-icon> Lista
+    </button>
+    @if (archivedCount(); as n) {
+      <button matButton (click)="setView(true)">
+        <mat-icon>inventory_2</mat-icon> Arquivados ({{ n }})
+      </button>
+    }
+  }
+</header>
+
+<div id="board">
+  @for (note of visible(); track note.id) {
+    <article class="note" [class]="'note--' + note.color">
+      <header class="note-top">
+        <input
+          class="note-title"
+          placeholder="Título (opcional)"
+          [value]="note.title"
+          (input)="patch(note, { title: $any($event.target).value }, true)"
+        />
+        @if (note.archivedAt) {
+          <button type="button" class="action" matTooltip="Devolver ao mural" (click)="archive(note, false)">
+            <mat-icon>unarchive</mat-icon>
+          </button>
+        } @else {
+          <button
+            type="button"
+            class="action"
+            [class.on]="note.pinned"
+            [matTooltip]="note.pinned ? 'Desafixar' : 'Fixar no topo'"
+            (click)="patch(note, { pinned: !note.pinned })"
+          >
+            <mat-icon>push_pin</mat-icon>
+          </button>
+          <button type="button" class="action" matTooltip="Arquivar" (click)="archive(note, true)">
+            <mat-icon>archive</mat-icon>
+          </button>
+        }
+        <button type="button" class="action" matTooltip="Vincular a projeto ou evento" [matMenuTriggerFor]="attachMenu">
+          <mat-icon>link</mat-icon>
+        </button>
+        <mat-menu #attachMenu="matMenu">
+          @if (note.parentEntity) {
+            <button mat-menu-item (click)="attach(note)">
+              <mat-icon>link_off</mat-icon> Desvincular
+            </button>
+          }
+          @for (p of projects(); track p.id) {
+            <button mat-menu-item (click)="attach(note, { entity: 'PROJECT', id: p.id, title: p.title })">
+              <mat-icon>folder</mat-icon> {{ p.title }}
+            </button>
+          }
+          @for (e of events(); track e.id) {
+            <button mat-menu-item (click)="attach(note, { entity: 'EVENT', id: e.id, title: e.title })">
+              <mat-icon>calendar_month</mat-icon> {{ e.title }}
+            </button>
+          }
+          @if (!projects().length && !events().length) {
+            <button mat-menu-item disabled>Você não participa de projeto ou evento</button>
+          }
+        </mat-menu>
+        <button type="button" class="action" matTooltip="Cor" [matMenuTriggerFor]="colorMenu">
+          <mat-icon>palette</mat-icon>
+        </button>
+        <mat-menu #colorMenu="matMenu">
+          @for (color of colors; track color) {
+            <button mat-menu-item (click)="patch(note, { color })">
+              <span class="swatch" [class]="'note--' + color"></span>
+              {{ color === 'padrao' ? 'Sem cor' : color }}
+            </button>
+          }
+        </mat-menu>
+        <button type="button" class="action" matTooltip="Apagar" (click)="remove(note)">
+          <mat-icon>delete</mat-icon>
+        </button>
+      </header>
+
+      @if (note.type === 'LIST') {
+        <div class="list">
+          @for (item of note.items; track $index; let i = $index) {
+            <div class="item" [class.done]="item.done">
+              <input type="checkbox" [checked]="item.done" (change)="setItem(note, i, { done: !item.done })" />
+              <input
+                class="item-text"
+                placeholder="Escreva um passo…"
+                [value]="item.text"
+                (input)="setItem(note, i, { text: $any($event.target).value }, true)"
+                (keydown.enter)="enterOnItem(note, i, $event)"
+              />
+              <button type="button" class="action mini" matTooltip="Remover linha" (click)="removeItem(note, i)">
+                <mat-icon>close</mat-icon>
+              </button>
+            </div>
+          }
+          <button type="button" class="add-item" (click)="addItem(note)">
+            <mat-icon>add</mat-icon> Nova linha
+          </button>
+        </div>
+      } @else {
+        <textarea
+          class="note-content"
+          placeholder="Anotação…"
+          rows="4"
+          [value]="note.content"
+          (input)="patch(note, { content: $any($event.target).value }, true)"
+        ></textarea>
+      }
+
+      <footer class="note-footer">
+        @if (note.type === 'LIST' && note.items.length) {
+          <span>{{ progress(note).done }} de {{ progress(note).total }}</span>
+        }
+        @if (note.parentEntity) {
+          <button type="button" class="parent" (click)="goToParent(note)">
+            <mat-icon>{{ note.parentEntity === 'PROJECT' ? 'folder' : 'calendar_month' }}</mat-icon>
+            {{ note.parentTitle }}
+          </button>
+        }
+        <span class="when">
+          {{ note.archivedAt ? 'Arquivado ' + formatDateTime(note.archivedAt) : formatDateTime(note.updatedAt) }}
+        </span>
+      </footer>
+    </article>
+  } @empty {
+    <p id="empty">
+      @if (search()) {
+        Nenhum bloco com esse texto.
+      } @else if (showArchived()) {
+        Nenhum bloco arquivado.
+      } @else {
+        Nada na lousa ainda. Comece uma nota ou uma lista.
+      }
+    </p>
+  }
+</div>

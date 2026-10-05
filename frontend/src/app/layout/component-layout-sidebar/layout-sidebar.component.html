@@ -11,6 +11,11 @@
     <span>Início</span>
   </div>
 
+  <div class="nav-item" matRipple (click)="routingService.goToLousa()">
+    <mat-icon>edit_note</mat-icon>
+    <span>Lousa</span>
+  </div>
+
   <div class="nav-item nav-group" matRipple (click)="exploreOpen = !exploreOpen">
     <mat-icon>search</mat-icon>
     <span>Explorar</span>

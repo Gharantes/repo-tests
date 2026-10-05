@@ -24,6 +24,9 @@ object SqlPath {
         LIST_PROJECTS_BY_TENANT("/sql/entity-project/list-projects-by-tenant.sql"),
         LIST_PROJECTS_BY_ACCOUNT("/sql/entity-project/list-projects-by-account.sql"),
     }
+    enum class EntityNote (override val path: String) : ISqlFile {
+        LIST_NOTES("/sql/entity-note/list-notes.sql"),
+    }
     enum class PageListPermissions (override val path: String) : ISqlFile {
         LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")
     }

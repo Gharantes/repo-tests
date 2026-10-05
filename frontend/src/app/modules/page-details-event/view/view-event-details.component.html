@@ -28,6 +28,11 @@
     </div>
 
     <div class="section">
+      <div class="section-header">Lousa</div>
+      <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
+    </div>
+
+    <div class="section">
       <div class="section-header">Feed</div>
       <div id="feed-container">
         <lib-add-post-btn (savePostEvent)="savePostEvent.emit($event)"></lib-add-post-btn>

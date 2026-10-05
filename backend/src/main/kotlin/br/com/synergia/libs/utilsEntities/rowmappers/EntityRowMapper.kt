@@ -7,4 +7,5 @@ object EntityRowMapper {
     val tagRowMapper = TagRowMapper()
     val eventRowMapper = EventRowMapper()
     val permissionRowMapper = PermissionRowMapper()
+    val noteRowMapper = NoteRowMapper()
 }
