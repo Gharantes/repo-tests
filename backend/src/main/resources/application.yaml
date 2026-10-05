@@ -12,12 +12,19 @@ spring:
       enabled: always
   config:
     import:
-      - "classpath:application-datasource.yaml"
       # Variáveis locais (ex.: LIST_TENANT_PAGE_PASSWORD). Ver .env.example.
       - "optional:file:.env[.properties]"
       - "classpath:application-evoge.yaml"
-      # - "classpath:application-datasource-windows.yaml"
-      # - "classpath:application-datasource-render.yaml"
+  datasource:
+    url: ${DATABASE_URL}
+    username: ${DATABASE_USERNAME}
+    password: ${DATABASE_PASSWORD}
+    name: ${DATABASE_NAME}
+  jpa:
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
+    hibernate:
+      ddl-auto: update
+      generate-ddl: true
 springdoc:
   default-consumes-media-type: application/json
   default-produces-media-type: application/json

@@ -1,5 +1,4 @@
 HELP.md
-.env
 .gradle
 build/
 !**/src/main/**/build/
