@@ -1,9 +1,9 @@
 spring:
   datasource:
-    url: jdbc:postgresql://localhost:5432/repo_test
+    url: jdbc:postgresql://localhost:5432/test_dev
     username: evoge_user
     password: evoge_pass
-    name: repo_test
+    name: test_dev
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
     hibernate:
