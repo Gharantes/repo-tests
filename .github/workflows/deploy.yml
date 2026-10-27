@@ -1,0 +1,112 @@
+# Deploy contínuo do backend no Render.
+#
+# A cada push na main (ou seja, a cada PR aceito):
+#
+#   verificar  ->  testes de unidade + build da imagem Docker (a mesma que o Render constrói)
+#   deploy     ->  dispara o Deploy Hook do Render e espera a versão nova ficar no ar
+#
+# Configuração (uma vez só, ver tests/README.md):
+#   - no Render, desligar o Auto-Deploy do serviço, para que só este workflow publique;
+#   - secret RENDER_DEPLOY_HOOK_URL: a URL do Deploy Hook do serviço (obrigatório);
+#   - secret RENDER_API_KEY: chave da API do Render (opcional; com ela o job
+#     espera o deploy terminar e falha se o Render falhar).
+name: Deploy
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Deploys nunca rodam em paralelo nem são cancelados no meio: o segundo espera.
+concurrency:
+  group: deploy-producao
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+env:
+  URL_PRODUCAO: https://repo-tests.onrender.com
+
+jobs:
+  verificar:
+    name: Verificar antes de publicar
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instalar JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Testes de unidade
+        working-directory: backend
+        run: ./gradlew unitTest --no-daemon
+
+      # O Render constrói a partir do backend/Dockerfile. Se a imagem não
+      # constrói aqui, também não construiria lá - melhor descobrir antes.
+      - name: Construir a imagem Docker
+        run: docker build --tag synergia-backend:${{ github.sha }} backend
+
+  deploy:
+    name: Publicar no Render
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: verificar
+    environment:
+      name: producao
+      url: ${{ env.URL_PRODUCAO }}
+    steps:
+      - name: Disparar o Deploy Hook
+        id: hook
+        env:
+          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+        run: |
+          if [ -z "$HOOK" ]; then
+            echo "::error::Secret RENDER_DEPLOY_HOOK_URL não configurado (Settings > Secrets and variables > Actions)."
+            exit 1
+          fi
+          resposta=$(curl -fsS -X POST "$HOOK")
+          echo "Resposta do Render: $resposta"
+          echo "deploy_id=$(echo "$resposta" | jq -r '.deploy.id // empty')" >> "$GITHUB_OUTPUT"
+          # A URL do hook é https://api.render.com/deploy/<id-do-serviço>?key=...
+          echo "service_id=$(echo "$HOOK" | sed -E 's#.*/deploy/([^?]+).*#\1#')" >> "$GITHUB_OUTPUT"
+
+      - name: Esperar o deploy terminar
+        env:
+          RENDER_API_KEY: ${{ secrets.RENDER_API_KEY }}
+          SERVICE_ID: ${{ steps.hook.outputs.service_id }}
+          DEPLOY_ID: ${{ steps.hook.outputs.deploy_id }}
+        run: |
+          if [ -z "$RENDER_API_KEY" ] || [ -z "$DEPLOY_ID" ]; then
+            echo "Sem RENDER_API_KEY (ou sem id do deploy): acompanhe o deploy pelo painel do Render."
+            exit 0
+          fi
+          for i in $(seq 1 90); do
+            status=$(curl -fsS -H "Authorization: Bearer $RENDER_API_KEY" \
+              "https://api.render.com/v1/services/$SERVICE_ID/deploys/$DEPLOY_ID" | jq -r '.status')
+            echo "[$((i * 10))s] $status"
+            case "$status" in
+              live) exit 0 ;;
+              *failed|canceled|deactivated) echo "::error::Deploy terminou com status $status."; exit 1 ;;
+            esac
+            sleep 10
+          done
+          echo "::error::O deploy não terminou em 15 minutos."
+          exit 1
+
+      - name: Teste de fumaça em produção
+        run: |
+          for i in $(seq 1 30); do
+            if curl -fsS -o /dev/null -X POST "$URL_PRODUCAO/api/entity-tenant/list-all-tenants"; then
+              echo "Produção respondendo."
+              exit 0
+            fi
+            sleep 10
+          done
+          echo "::error::$URL_PRODUCAO não respondeu depois do deploy."
+          exit 1
