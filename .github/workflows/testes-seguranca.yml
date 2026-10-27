@@ -1,0 +1,91 @@
+# Testes de segurança em todo Pull Request.
+#
+# Sobe um PostgreSQL efêmero, empacota e liga o backend do próprio PR, e roda a
+# suíte de tests/ (IDOR, criptografia/senhas, injeção, bots) contra ele. É o
+# mesmo script que roda na máquina de desenvolvimento (tests/rodar.sh), então o
+# que passa aqui passa lá e vice-versa.
+#
+# Para o PR ficar bloqueado enquanto houver falha de segurança, marque o check
+# "Testes de segurança" como obrigatório na proteção da branch main.
+name: Testes de segurança
+
+on:
+  pull_request:
+    branches: [main]
+  workflow_dispatch:
+
+concurrency:
+  group: seguranca-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+jobs:
+  seguranca:
+    name: Testes de segurança
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: synergia
+          POSTGRES_PASSWORD: synergia
+          POSTGRES_DB: synergia_seguranca
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U synergia -d synergia_seguranca"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
+    # Credenciais do banco efêmero do job: ele nasce e morre aqui, não são segredo.
+    env:
+      PGHOST: localhost
+      PGPORT: '5432'
+      PGDATABASE: synergia_seguranca
+      PGUSER: synergia
+      PGPASSWORD: synergia
+      API_URL: http://localhost:8080
+
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instalar JDK 25
+        uses: actions/setup-java@v6
+        with:
+          distribution: temurin
+          java-version: '25'
+          cache: gradle
+
+      - name: Instalar Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: tests/package-lock.json
+
+      - name: Instalar dependências da suíte
+        working-directory: tests
+        run: npm ci --no-audit --no-fund
+
+      - name: Empacotar o backend
+        working-directory: backend
+        run: ./gradlew bootJar -x test --no-daemon
+
+      - name: Rodar os testes de segurança
+        run: bash tests/rodar.sh test:ci
+
+      - name: Guardar o relatório e o log do backend
+        if: always()
+        uses: actions/upload-artifact@v7
+        with:
+          name: relatorio-seguranca
+          path: |
+            tests/relatorio-seguranca.xml
+            ${{ runner.temp }}/backend-seguranca.log
+          if-no-files-found: ignore
+          retention-days: 14
