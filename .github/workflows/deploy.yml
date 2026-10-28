@@ -1,15 +1,18 @@
-# Deploy contínuo do backend no Render.
+# Deploy contínuo do Synergia no Render: backend (Web Service) e frontend (Static Site).
 #
 # A cada push na main (ou seja, a cada PR aceito):
 #
-#   verificar  ->  testes de unidade + build da imagem Docker (a mesma que o Render constrói)
-#   deploy     ->  dispara o Deploy Hook do Render e espera a versão nova ficar no ar
+#   verificar-backend   ->  testes de unidade + build da imagem Docker (a mesma que o Render constrói)
+#   verificar-frontend  ->  build de produção do Angular (o mesmo que o Render roda)
+#   deploy              ->  só se as duas verificações passarem: dispara o Deploy Hook de cada
+#                           serviço e confere que ele está respondendo
 #
 # Configuração (uma vez só, ver tests/README.md):
-#   - no Render, desligar o Auto-Deploy do serviço, para que só este workflow publique;
-#   - secret RENDER_DEPLOY_HOOK_URL: a URL do Deploy Hook do serviço (obrigatório);
-#   - secret RENDER_API_KEY: chave da API do Render (opcional; com ela o job
-#     espera o deploy terminar e falha se o Render falhar).
+#   - no Render, desligar o Auto-Deploy dos dois serviços, para que só este workflow publique;
+#   - secret RENDER_DEPLOY_HOOK_URL: Deploy Hook do backend;
+#   - secret RENDER_FRONTEND_DEPLOY_HOOK_URL: Deploy Hook do frontend;
+#   - secret RENDER_API_KEY (opcional): com ela o job espera cada deploy terminar e
+#     falha se o Render falhar.
 name: Deploy
 
 on:
@@ -25,12 +28,9 @@ concurrency:
 permissions:
   contents: read
 
-env:
-  URL_PRODUCAO: https://repo-tests.onrender.com
-
 jobs:
-  verificar:
-    name: Verificar antes de publicar
+  verificar-backend:
+    name: Verificar o backend
     runs-on: ubuntu-latest
     timeout-minutes: 20
     steps:
@@ -52,22 +52,62 @@ jobs:
       - name: Construir a imagem Docker
         run: docker build --tag synergia-backend:${{ github.sha }} backend
 
-  deploy:
-    name: Publicar no Render
+  verificar-frontend:
+    name: Verificar o frontend
     runs-on: ubuntu-latest
     timeout-minutes: 20
-    needs: verificar
+    env:
+      NX_DAEMON: 'false'
+      NX_NO_CLOUD: 'true'
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Instalar Node 24
+        uses: actions/setup-node@v7
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Instalar dependências
+        working-directory: frontend
+        run: npm ci --no-audit --no-fund
+
+      - name: Build de produção
+        working-directory: frontend
+        run: npx nx build synergia-frontend --configuration=production
+
+  deploy:
+    name: Publicar o ${{ matrix.nome }}
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    needs: [verificar-backend, verificar-frontend]
+    strategy:
+      # Um lado falhar não aborta o deploy do outro no meio do caminho.
+      fail-fast: false
+      matrix:
+        include:
+          - nome: backend
+            hook: RENDER_DEPLOY_HOOK_URL
+            url: https://repo-tests.onrender.com
+            fumaca: https://repo-tests.onrender.com/api/entity-tenant/list-all-tenants
+            metodo: POST
+          - nome: frontend
+            hook: RENDER_FRONTEND_DEPLOY_HOOK_URL
+            url: https://repo-tests-frontend.onrender.com
+            fumaca: https://repo-tests-frontend.onrender.com
+            metodo: GET
     environment:
-      name: producao
-      url: ${{ env.URL_PRODUCAO }}
+      name: producao-${{ matrix.nome }}
+      url: ${{ matrix.url }}
     steps:
       - name: Disparar o Deploy Hook
         id: hook
         env:
-          HOOK: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+          HOOK: ${{ secrets[matrix.hook] }}
         run: |
           if [ -z "$HOOK" ]; then
-            echo "::error::Secret RENDER_DEPLOY_HOOK_URL não configurado (Settings > Secrets and variables > Actions)."
+            echo "::error::Secret ${{ matrix.hook }} não configurado (Settings > Secrets and variables > Actions)."
             exit 1
           fi
           resposta=$(curl -fsS -X POST "$HOOK")
@@ -99,14 +139,16 @@ jobs:
           echo "::error::O deploy não terminou em 15 minutos."
           exit 1
 
+      # O plano gratuito do Render "dorme" o backend: a primeira resposta pode
+      # levar mais de um minuto, por isso a espera é longa.
       - name: Teste de fumaça em produção
         run: |
           for i in $(seq 1 30); do
-            if curl -fsS -o /dev/null -X POST "$URL_PRODUCAO/api/entity-tenant/list-all-tenants"; then
-              echo "Produção respondendo."
+            if curl -fsS -m 120 -o /dev/null -X ${{ matrix.metodo }} "${{ matrix.fumaca }}"; then
+              echo "${{ matrix.url }} respondendo."
               exit 0
             fi
             sleep 10
           done
-          echo "::error::$URL_PRODUCAO não respondeu depois do deploy."
+          echo "::error::${{ matrix.url }} não respondeu depois do deploy."
           exit 1

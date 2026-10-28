@@ -101,19 +101,27 @@ Para o PR ficar **bloqueado** enquanto houver falha de segurança, abra *Setting
 
 ### `deploy.yml`: deploy contínuo no Render
 
-Roda a cada push na `main`, ou seja, a cada PR aceito:
+Roda a cada push na `main`, ou seja, a cada PR aceito, e publica as duas partes:
 
-1. **verificar**: roda os testes de unidade e constrói a imagem do `backend/Dockerfile`, que é a mesma que o Render constrói.
-2. **deploy**: dispara o Deploy Hook do Render, espera a versão nova ficar `live` e faz um teste de fumaça em `https://repo-tests.onrender.com`.
+| Parte | Serviço no Render | Endereço |
+| --- | --- | --- |
+| Backend (Spring) | Web Service, a partir do `backend/Dockerfile` | `https://repo-tests.onrender.com` |
+| Frontend (Angular) | Static Site, a partir do build de `frontend/` | `https://repo-tests-frontend.onrender.com` |
+
+1. **verificar-backend**: roda os testes de unidade e constrói a imagem do `backend/Dockerfile`, que é a mesma que o Render constrói.
+2. **verificar-frontend**: faz o build de produção do Angular, o mesmo que o Render roda.
+3. **deploy**: só roda se as duas verificações passarem. Dispara o Deploy Hook de cada serviço, espera a versão nova ficar `live` e faz um teste de fumaça em cada endereço.
 
 Configuração, feita uma vez só:
 
-1. No Render, abra o serviço do backend. Em *Settings*, desligue o **Auto-Deploy**, para que só o workflow publique, e copie a URL do **Deploy Hook**.
+1. No Render, em cada um dos dois serviços, abra *Settings*. Desligue o **Auto-Deploy**, para que só o workflow publique, e copie a URL do **Deploy Hook**.
 2. No GitHub, em *Settings → Secrets and variables → Actions*, crie:
-   - `RENDER_DEPLOY_HOOK_URL`: a URL do Deploy Hook. É **obrigatório**.
-   - `RENDER_API_KEY`: uma chave criada em *Account Settings → API Keys* do Render. É **opcional**. Com ela, o job espera o deploy terminar e fica vermelho se o Render falhar.
+   - `RENDER_DEPLOY_HOOK_URL`: o Deploy Hook do backend. É **obrigatório**.
+   - `RENDER_FRONTEND_DEPLOY_HOOK_URL`: o Deploy Hook do frontend. É **obrigatório**.
+   - `RENDER_API_KEY`: uma chave criada em *Account Settings → API Keys* do Render. É **opcional**. Com ela, o job espera cada deploy terminar e fica vermelho se o Render falhar.
+3. No backend, a variável de ambiente `FRONTEND_URL` deve ser o endereço do frontend. Sem ela, o navegador bloqueia as chamadas por CORS.
 
-O deploy depende dos testes de unidade, e não da suíte de segurança. Se dependesse dela, nada seria publicado enquanto as falhas da tabela acima continuassem abertas. Depois que elas forem corrigidas, basta pôr o job de segurança no `needs:` do deploy.
+O deploy depende dos testes de unidade e do build, e não da suíte de segurança. Se dependesse dela, nada seria publicado enquanto as falhas da tabela acima continuassem abertas. Depois que elas forem corrigidas, basta pôr o job de segurança no `needs:` do deploy.
 
 ## Estrutura
 
