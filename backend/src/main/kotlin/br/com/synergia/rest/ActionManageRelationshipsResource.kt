@@ -2,6 +2,7 @@ package br.com.synergia.rest
 
 import br.com.synergia.libs.actionManageRelationships.services.ActionManageRelationshipsService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
+import br.com.synergia.libs.utilsEntities.models.EventDto
 import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestMapping
@@ -13,6 +14,12 @@ import org.springframework.web.bind.annotation.RestController
 class ActionManageRelationshipsResource (
     private val service: ActionManageRelationshipsService
 ) {
+    @PostMapping("/list-events-of-project")
+    fun listEventsOfProject(
+        @RequestParam("id-project") idProject: Long,
+    ): ResponseEntity<List<EventDto>> {
+        return ResponseMessenger.buildResponse { service.listEventsOfProject(idProject) }
+    }
     @PostMapping("/create-relationship-event-and-project")
     fun createRelationshipEventAndProject(
         @RequestParam("id-event") idEvent: Long,

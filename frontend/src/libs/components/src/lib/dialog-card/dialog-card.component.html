@@ -56,7 +56,9 @@
     </button>
     <div class="row">
       <button mat-stroked-button (click)="onAction('edit')"><mat-icon>edit</mat-icon>{{ view.editLabel }}</button>
-      <button mat-stroked-button (click)="onAction('register')"><mat-icon>{{ view.registerIcon }}</mat-icon>{{ view.registerLabel }}</button>
+      @if (view.registerLabel) {
+        <button mat-stroked-button (click)="onAction('register')"><mat-icon>{{ view.registerIcon }}</mat-icon>{{ view.registerLabel }}</button>
+      }
     </div>
   </div>
 </section>

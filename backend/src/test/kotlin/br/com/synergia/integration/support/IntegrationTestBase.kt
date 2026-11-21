@@ -238,6 +238,7 @@ abstract class IntegrationTestBase {
             "note",
             "event_post_relationship",
             "post",
+            "project_event_relationship",
             "account_tag_relationship",
             "project_tag_relationship",
             "event_tag_relationship",
