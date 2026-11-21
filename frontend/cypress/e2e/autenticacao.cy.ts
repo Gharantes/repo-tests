@@ -24,6 +24,18 @@ describe('Sistema: autenticação', () => {
     cy.contains('button', 'Login').should('not.exist');
   });
 
+  it('a raiz não navega quando o identifier digitado não existe', () => {
+    cy.visit('/');
+
+    const identifier = `inexistente-${Date.now()}`;
+    cy.preencherCampo('Identifier do Tenant', identifier);
+    cy.contains('button', 'Entrar').click();
+
+    cy.contains(`Nenhum tenant com o identifier "${identifier}".`).should('be.visible');
+    cy.contains('button', 'Entrar').should('not.be.disabled');
+    cy.location('pathname').should('eq', '/');
+  });
+
   it('a raiz leva ao login da instituição pelo identifier digitado', () => {
     cy.criarInstituicao().then((instituicao) => {
       cy.visit('/');

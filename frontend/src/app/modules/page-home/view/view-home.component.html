@@ -11,7 +11,11 @@
       (keydown.enter)="submit()">
   </mat-form-field>
 
-  <button class="auth-primary-button" matRipple [disabled]="!connector.form.valid" (click)="submit()">
+  @if (connector.notFound$(); as identifier) {
+    <p class="auth-error">Nenhum tenant com o identifier "{{ identifier }}".</p>
+  }
+
+  <button class="auth-primary-button" matRipple [disabled]="!connector.form.valid || connector.checking$()" (click)="submit()">
     Entrar
   </button>
 
