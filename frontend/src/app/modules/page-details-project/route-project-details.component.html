@@ -1,3 +1,7 @@
 @if (project$(); as project) {
-  <app-view-project-details [project$]="project"></app-view-project-details>
+  <app-view-project-details
+    [project$]="project"
+    (goToParentPageEvent)="goToList()"
+    (editEvent)="goToEdit(project.id)"
+  ></app-view-project-details>
 }

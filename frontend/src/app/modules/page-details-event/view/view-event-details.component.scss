@@ -1,74 +1,135 @@
+// Mesmo layout e valores da tela de criar/editar (view-upsert-*), em modo leitura.
 * { box-sizing: border-box; }
 
 :host {
   display: flex;
-  flex-direction: column;
+  flex: 1;
   width: 100%;
   height: 100%;
-  overflow-y: auto;
-}
-
-#banner {
-  width: 100%;
-  height: 220px;
-  flex-shrink: 0;
-  overflow: hidden;
-}
-
-#two-col {
-  display: grid;
-  grid-template-columns: 1fr 260px;
-  flex: 1;
   min-height: 0;
+  background: #fff;
 }
 
-#main-col {
-  padding: 24px 28px;
+.page { display: flex; flex-direction: column; flex: 1; min-height: 0; }
+.scroll { flex: 1; overflow: auto; }
+
+.cover {
   display: flex;
-  flex-direction: column;
-  gap: 20px;
-  overflow-y: auto;
-  border-right: 1px solid #e8e4dc;
-}
-
-#event-title {
-  font-size: 1.4rem;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
-}
-
-.section {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.section-header {
-  font-size: 0.95rem;
-  font-weight: 600;
-  color: #1a1a1a;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-}
-.section-body {
-  font-size: 0.9rem;
-  color: #444;
-  line-height: 1.65;
-  margin: 0;
-  text-align: justify;
-}
-
-#tags-container {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
   align-items: center;
+  justify-content: center;
+  height: 200px;
+  overflow: hidden;
+  lib-safe-image { display: block; width: 100%; height: 100%; }
 }
 
-#info-sidebar {
-  padding: 24px 20px;
+.monogram { font-size: 72px; font-weight: 800; color: rgba(255, 255, 255, .85); }
+
+.doc {
   display: flex;
   flex-direction: column;
-  gap: 20px;
-  background: #fafaf7;
+  gap: 14px;
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 24px 24px 48px;
 }
+
+.crumbs {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  font-size: 13px;
+  color: #9a978f;
+
+  button { padding: 0; border: none; background: none; color: #3B52CC; font: inherit; font-weight: 600; cursor: pointer; &:hover { text-decoration: underline; } }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+  span { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+}
+
+.title { margin: 0; font-size: 34px; font-weight: 800; line-height: 1.2; letter-spacing: -0.01em; color: #121840; overflow-wrap: anywhere; }
+
+.props {
+  display: flex;
+  flex-direction: column;
+  margin: 4px 0 6px;
+  padding: 6px 0;
+  border-top: 1px solid #efede7;
+  border-bottom: 1px solid #efede7;
+}
+
+.prop {
+  display: grid;
+  grid-template-columns: 120px minmax(0, 1fr);
+  align-items: center;
+  gap: 12px;
+  min-height: 42px;
+
+  dt { display: flex; align-items: center; gap: 8px; font-size: 13.5px; color: #9a978f; mat-icon { font-size: 18px; width: 18px; height: 18px; } }
+  dd { display: flex; align-items: center; gap: 8px; margin: 0; min-width: 0; }
+  .wrap { flex-wrap: wrap; padding: 7px 0; }
+}
+
+.tag, .member {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 28px;
+  font-size: 13px;
+  color: #1b1f3a;
+  background: #f3f2ee;
+}
+.tag { padding: 0 10px; border-radius: 6px; }
+.member { padding: 0 10px 0 3px; border-radius: 999px; gap: 8px; }
+
+.dot { width: 8px; height: 8px; border-radius: 999px; }
+
+.avatar {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  color: #fff;
+  font-size: 9.5px;
+  font-weight: 700;
+}
+
+.body { margin: 0; font-size: 16px; line-height: 1.7; color: #33312c; white-space: pre-line; overflow-wrap: anywhere; }
+
+.muted { color: #b3b0a8; font-size: 14px; }
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 18px;
+  padding-top: 18px;
+  border-top: 1px solid #efede7;
+
+  h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; font-weight: 700; color: #121840; mat-icon { font-size: 20px; width: 20px; height: 20px; color: #9a978f; } }
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px max(16px, calc((100% - 720px) / 2 + 24px));
+  border-top: 1px solid #efede7;
+  background: #fbfaf8;
+  button { height: 38px; border-radius: 10px; font-weight: 600; }
+}
+
+.status { display: flex; align-items: center; gap: 6px; margin-right: auto; font-size: 13px; color: #77746c; mat-icon { font-size: 18px; width: 18px; height: 18px; } }
+
+.edit { --mat-button-filled-container-color: #3B52CC; --mat-button-filled-label-text-color: #fff; padding: 0 20px; }
+
+@media (max-width: 600px) {
+  .doc { padding: 16px 16px 32px; }
+  .title { font-size: 26px; }
+  .prop { grid-template-columns: 1fr; gap: 2px; padding: 6px 0; }
+  .status { display: none; }
+  .edit { margin-left: auto; }
+}
+
+// Feed: o botão de postagem é de outro componente; aqui só alinha ao visual da página.
+.feed ::ng-deep #add-new-post-btn { height: 52px; margin: 0; border: 1px dashed #dcd9d1; border-radius: 10px; background: #faf9f6; color: #4a4842; font: inherit; &:hover { background: #f3f2ee; } }

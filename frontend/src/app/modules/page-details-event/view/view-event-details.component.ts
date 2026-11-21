@@ -1,30 +1,39 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
 import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
 import {
   AddPostBtnComponent,
+  colorForId,
+  memberInitials,
+  memberName,
+  ParentNotesComponent,
   SafeImageComponent,
 } from '@synergia-frontend/components';
-import { MatChip, MatChipSet } from '@angular/material/chips';
-import { MatIconModule } from '@angular/material/icon';
-import { ParentNotesComponent } from '@synergia-frontend/components';
 
+/** Página do evento: mesmo layout da tela de criar/editar, só leitura, com atalho para editar. */
 @Component({
   selector: 'app-view-event-details',
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, 
-    SafeImageComponent,
-    MatChip,
-    MatChipSet,
-    MatIconModule,
-    AddPostBtnComponent,
-  ],
+  imports: [ParentNotesComponent, SafeImageComponent, AddPostBtnComponent, MatButtonModule, MatIconModule],
 })
 export class ViewEventDetailsComponent {
   @Input() public event$!: IEventModel;
-  @Output() addNewPostEvent = new EventEmitter<void>();
-  @Output() removeTagEvent = new EventEmitter<ITagModel>();
-  @Output() saveTagEvent = new EventEmitter<ITagModel>();
-  @Output() savePostEvent = new EventEmitter<ITagModel>();
+  @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
+  @Output() public readonly editEvent = new EventEmitter<void>();
+  @Output() public readonly savePostEvent = new EventEmitter<ITagModel>();
+
+  public readonly colorFor = colorForId;
+  public readonly initials = memberInitials;
+  public readonly nameOf = memberName;
+
+  public get bannerBg(): string {
+    return this.event$.bannerColor || colorForId(this.event$.id);
+  }
+
+  public get initial(): string {
+    return (this.event$.title?.trim()?.[0] ?? '#').toUpperCase();
+  }
 }

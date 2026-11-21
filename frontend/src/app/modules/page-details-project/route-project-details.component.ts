@@ -54,4 +54,12 @@ export class RouteProjectDetailsComponent {
       )
       .subscribe();
   }
+
+  public goToList() {
+    this.routingService.goToListProjects();
+  }
+
+  public goToEdit(id: number) {
+    this.routingService.goToEditProject(id);
+  }
 }

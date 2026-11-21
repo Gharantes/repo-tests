@@ -1,51 +1,65 @@
-<div id="banner">
-  <lib-safe-image
-    [url]="project$.bannerUrl"
-    [altColor]="project$.bannerColor"
-  ></lib-safe-image>
-</div>
+<div class="page">
+  <div class="scroll">
+    <div class="cover" [style.background]="bannerBg">
+      @if (project$.bannerUrl) {
+        <lib-safe-image [url]="project$.bannerUrl" [altColor]="bannerBg"></lib-safe-image>
+      } @else {
+        <span class="monogram">{{ initial }}</span>
+      }
+    </div>
 
-<div id="two-col">
-  <div id="main-col">
-    <h2 id="project-title">{{ project$.title }}</h2>
+    <div class="doc">
+      <nav class="crumbs">
+        <button type="button" (click)="goToParentPageEvent.emit()">Projetos</button>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ project$.title }}</span>
+      </nav>
 
-    <div class="section">
-      <div class="section-header">Tags</div>
-      <div id="tags-container">
-        <mat-chip-set>
-          @for (tag of project$.tags; track tag.id) {
-            <mat-chip>
-              {{ tag.title }}
-            </mat-chip>
-          }
-        </mat-chip-set>
+      <h1 class="title">{{ project$.title }}</h1>
+
+      <dl class="props">
+        <div class="prop">
+          <dt><mat-icon>sell</mat-icon>Tags</dt>
+          <dd class="wrap">
+            @for (tag of project$.tags; track tag.id) {
+              <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
+            } @empty {
+              <span class="muted">Sem tags</span>
+            }
+          </dd>
         </div>
-    </div>
+        <div class="prop">
+          <dt><mat-icon>group</mat-icon>Membros</dt>
+          <dd class="wrap">
+            @for (m of project$.members; track m.id) {
+              <span class="member">
+                <span class="avatar" [style.background]="colorFor(m.id)">{{ initials(m) }}</span>{{ nameOf(m) }}
+              </span>
+            } @empty {
+              <span class="muted">Nenhum membro</span>
+            }
+          </dd>
+        </div>
+      </dl>
 
-    <div class="section">
-      <div class="section-header">Membros</div>
-      <div class="member-list">
-        @for (member of project$.members; track member.id) {
-          <div class="member-item">
-            <div class="member-avatar">{{ member.firstName.charAt(0).toUpperCase() + member.lastName.charAt(0).toUpperCase() }}</div>
-            <span class="member-name">{{ member.firstName }} {{ member.lastName }}</span>
-          </div>
-        }
-      </div>
-    </div>
+      @if (project$.description?.trim()) {
+        <p class="body">{{ project$.description }}</p>
+      } @else {
+        <p class="body muted">Este projeto ainda não tem descrição.</p>
+      }
 
-    <div class="section">
-      <div class="section-header">Descrição</div>
-      <p class="section-body">{{ project$.description }}</p>
-    </div>
-
-    <div class="section">
-      <div class="section-header">Lousa</div>
-      <lib-parent-notes parentEntity="PROJECT" [parentId]="project$.id"></lib-parent-notes>
+      <section class="block">
+        <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
+        <lib-parent-notes parentEntity="PROJECT" [parentId]="project$.id"></lib-parent-notes>
+      </section>
     </div>
   </div>
 
-  <div id="info-sidebar">
-    <!-- right sidebar content will go here -->
-  </div>
+  <footer class="bar">
+    <span class="status"><mat-icon>visibility</mat-icon>Visualizando projeto</span>
+    <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
+    <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
+      <mat-icon>edit</mat-icon>Editar projeto
+    </button>
+  </footer>
 </div>

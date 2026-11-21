@@ -1,5 +1,7 @@
 @if (event$(); as event$) {
   <app-view-event-details
     [event$]="event$"
+    (goToParentPageEvent)="goToList()"
+    (editEvent)="goToEdit(event$.id)"
   ></app-view-event-details>
 }

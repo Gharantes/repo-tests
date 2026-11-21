@@ -56,4 +56,12 @@ export class RouteEventDetailsComponent {
       )
       .subscribe();
   }
+
+  public goToList() {
+    this.routingService.goToListEvents();
+  }
+
+  public goToEdit(id: number) {
+    this.routingService.goToEditEvent(id);
+  }
 }

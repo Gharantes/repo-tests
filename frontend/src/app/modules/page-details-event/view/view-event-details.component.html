@@ -1,46 +1,70 @@
-<div id="banner">
-  <lib-safe-image
-    [url]="event$.bannerUrl"
-    [altColor]="event$.bannerColor"
-  ></lib-safe-image>
-</div>
-
-<div id="two-col">
-  <div id="main-col">
-    <h2 id="event-title">{{ event$.title }}</h2>
-
-    <div class="section">
-      <div class="section-header">Tags</div>
-      <div id="tags-container">
-        <mat-chip-set>
-          @for (tag of event$.tags; track tag.id) {
-            <mat-chip>
-              {{ tag.title }}
-            </mat-chip>
-          }
-        </mat-chip-set>
-      </div>
+<div class="page">
+  <div class="scroll">
+    <div class="cover" [style.background]="bannerBg">
+      @if (event$.bannerUrl) {
+        <lib-safe-image [url]="event$.bannerUrl" [altColor]="bannerBg"></lib-safe-image>
+      } @else {
+        <span class="monogram">{{ initial }}</span>
+      }
     </div>
 
-    <div class="section">
-      <div class="section-header">Descrição</div>
-      <p class="section-body">{{ event$.description }}</p>
-    </div>
+    <div class="doc">
+      <nav class="crumbs">
+        <button type="button" (click)="goToParentPageEvent.emit()">Eventos</button>
+        <mat-icon>chevron_right</mat-icon>
+        <span>{{ event$.title }}</span>
+      </nav>
 
-    <div class="section">
-      <div class="section-header">Lousa</div>
-      <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
-    </div>
+      <h1 class="title">{{ event$.title }}</h1>
 
-    <div class="section">
-      <div class="section-header">Feed</div>
-      <div id="feed-container">
+      <dl class="props">
+        <div class="prop">
+          <dt><mat-icon>sell</mat-icon>Tags</dt>
+          <dd class="wrap">
+            @for (tag of event$.tags; track tag.id) {
+              <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
+            } @empty {
+              <span class="muted">Sem tags</span>
+            }
+          </dd>
+        </div>
+        <div class="prop">
+          <dt><mat-icon>group</mat-icon>Membros</dt>
+          <dd class="wrap">
+            @for (m of event$.members; track m.id) {
+              <span class="member">
+                <span class="avatar" [style.background]="colorFor(m.id)">{{ initials(m) }}</span>{{ nameOf(m) }}
+              </span>
+            } @empty {
+              <span class="muted">Nenhum membro</span>
+            }
+          </dd>
+        </div>
+      </dl>
+
+      @if (event$.description?.trim()) {
+        <p class="body">{{ event$.description }}</p>
+      } @else {
+        <p class="body muted">Este evento ainda não tem descrição.</p>
+      }
+
+      <section class="block">
+        <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
+        <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
+      </section>
+
+      <section class="block feed">
+        <h2><mat-icon>forum</mat-icon>Feed</h2>
         <lib-add-post-btn (savePostEvent)="savePostEvent.emit($event)"></lib-add-post-btn>
-      </div>
+      </section>
     </div>
   </div>
 
-  <div id="info-sidebar">
-    <!-- right sidebar content will go here -->
-  </div>
+  <footer class="bar">
+    <span class="status"><mat-icon>visibility</mat-icon>Visualizando evento</span>
+    <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
+    <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
+      <mat-icon>edit</mat-icon>Editar evento
+    </button>
+  </footer>
 </div>
