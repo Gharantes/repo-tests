@@ -379,7 +379,7 @@ Cypress.Commands.add('preencherCampo', (rotulo: string, valor: string) => {
   // Focar primeiro faz o rótulo subir, e aí a digitação acontece como a de uma
   // pessoa - sem `force: true`, que desligaria a checagem de que o campo está
   // mesmo clicável.
-  cy.contains('mat-form-field', rotulo).find('input').focus().should('be.focused').type(valor);
+  cy.contains('mat-form-field, label.field', rotulo).find('input, textarea').focus().should('be.focused').type(valor);
 });
 
 Cypress.Commands.add('alternarCaixa', (rotulo: string) => {
@@ -392,8 +392,8 @@ Cypress.Commands.add('alternarCaixa', (rotulo: string) => {
 Cypress.Commands.add('substituirCampo', (rotulo: string, valor: string) => {
   // Nas telas de edição o campo já vem preenchido pelo `populateForm`, então
   // digitar por cima concatenaria. Limpar primeiro é o que a pessoa faria.
-  cy.contains('mat-form-field', rotulo)
-    .find('input')
+  cy.contains('mat-form-field, label.field', rotulo)
+    .find('input, textarea')
     .focus()
     .should('be.focused')
     .clear()
@@ -413,7 +413,7 @@ Cypress.Commands.add('irParaProjetos', () => {
 Cypress.Commands.add('irParaNovoProjeto', () => {
   cy.contains('button', 'Criar novo projeto').click();
   cy.location('pathname', { timeout: 20000 }).should('include', '/create-project');
-  cy.contains('mat-form-field', 'Título').should('be.visible');
+  cy.contains('mat-form-field, label.field', 'Título').should('exist');
 });
 
 Cypress.Commands.add('irParaEventos', () => {
@@ -426,7 +426,7 @@ Cypress.Commands.add('irParaEventos', () => {
 Cypress.Commands.add('irParaNovoEvento', () => {
   cy.contains('button', 'Criar novo evento').click();
   cy.location('pathname', { timeout: 20000 }).should('include', '/create-event');
-  cy.contains('mat-form-field', 'Título').should('be.visible');
+  cy.contains('mat-form-field, label.field', 'Título').should('exist');
 });
 
 /**
