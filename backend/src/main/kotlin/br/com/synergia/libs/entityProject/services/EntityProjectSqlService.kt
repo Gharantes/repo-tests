@@ -60,7 +60,7 @@ class EntityProjectSqlService (
         val sql = SqlPath.PageExtendedEvent.LIST_PROJECTS_OF_EVENT.load()
         val paramMap = MapSqlParameterSource()
             .addValue("id_event", idEvent, Types.BIGINT)
-            .addValue("text", text, Types.VARCHAR)
+            .addValue("text", text.parseStringToWildCard(), Types.VARCHAR)
         return template.query(sql, paramMap, EntityRowMapper.projectRowMapper)
     }
 

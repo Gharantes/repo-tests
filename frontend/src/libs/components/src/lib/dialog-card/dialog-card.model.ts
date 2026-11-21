@@ -11,7 +11,7 @@ export interface DialogCardData {
   entity: DialogCardEntity;
 }
 
-export type DialogCardAction = 'open' | 'edit' | 'register' | 'close';
+export type DialogCardAction = 'open' | 'edit' | 'close';
 
 /** Tudo que o card precisa para ser desenhado, já resolvido para o tipo. */
 export interface DialogCardView {
@@ -23,24 +23,19 @@ export interface DialogCardView {
   monogram: string;
   openLabel: string;
   editLabel: string;
-  /** Sem rótulo, o card não mostra o botão (projeto: registrar em evento fica na página do projeto). */
-  registerLabel: string | null;
-  registerIcon: string;
   emptyDescription: string;
   emptyMembers: string;
 }
 
 const LABELS: Record<
   DialogCardType,
-  Pick<DialogCardView, 'kindLabel' | 'kindIcon' | 'openLabel' | 'editLabel' | 'registerLabel' | 'registerIcon' | 'emptyDescription' | 'emptyMembers'>
+  Pick<DialogCardView, 'kindLabel' | 'kindIcon' | 'openLabel' | 'editLabel' | 'emptyDescription' | 'emptyMembers'>
 > = {
   project: {
     kindLabel: 'Projeto',
     kindIcon: 'rocket_launch',
     openLabel: 'Abrir projeto',
     editLabel: 'Editar',
-    registerLabel: null,
-    registerIcon: 'event_available',
     emptyDescription: 'Este projeto ainda não tem descrição.',
     emptyMembers: 'Nenhum membro no projeto.',
   },
@@ -49,8 +44,6 @@ const LABELS: Record<
     kindIcon: 'event',
     openLabel: 'Abrir evento',
     editLabel: 'Editar',
-    registerLabel: 'Registrar projeto',
-    registerIcon: 'add_task',
     emptyDescription: 'Este evento ainda não tem descrição.',
     emptyMembers: 'Nenhum membro no evento.',
   },
