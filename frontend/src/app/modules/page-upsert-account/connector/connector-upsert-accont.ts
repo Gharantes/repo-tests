@@ -41,6 +41,7 @@ export class ConnectorUpsertAccont {
     this.form.controls.firstName.setValue(res.firstName);
     this.form.controls.login.setValue(res.login);
     this.form.controls.lastName.setValue(res.lastName);
+    this.form.controls.email.setValue(res.email ?? '');
     this.form.controls.tags.setValue(res.tags);
   }
 }
