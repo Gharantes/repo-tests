@@ -32,4 +32,5 @@ export class ViewUpsertTagComponent {
   @Output() readonly saveEvent = new EventEmitter<void>();
 
   @Input() connector!: ConnectorUpsertTag;
+  @Input() editing = false;
 }

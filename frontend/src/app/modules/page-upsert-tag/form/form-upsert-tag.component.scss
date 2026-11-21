@@ -4,6 +4,23 @@
 :host {
   display: flex;
   flex-direction: column;
-  row-gap: 15px;
-  padding: 10px;
+  row-gap: 20px;
+  padding: 24px 20px 20px;
+}
+
+.field {
+  width: 100%;
+}
+
+.group {
+  display: flex;
+  flex-direction: column;
+  row-gap: 2px;
+}
+
+.group-label {
+  margin-bottom: 4px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a4842;
 }

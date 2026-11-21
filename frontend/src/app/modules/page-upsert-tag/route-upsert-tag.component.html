@@ -1,5 +1,6 @@
 <app-view-upsert-tag
   [connector]="connector"
+  [editing]="idTag() != null"
   (saveEvent)="save()"
   (goToParentPageEvent)="goToParentPage()"
 ></app-view-upsert-tag>

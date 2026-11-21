@@ -1,13 +1,22 @@
-<app-form-upsert-tag
-  [connector]="connector"
-></app-form-upsert-tag>
+<div class="container">
+  <header class="page-head">
+    <h1>{{ editing ? 'Editar tag' : 'Nova tag' }}</h1>
+    <p>Defina o nome e onde a tag poderá ser usada.</p>
+  </header>
 
-<div class="btn-line">
-  <button mat-raised-button (click)="goToParentPageEvent.emit()">Voltar</button>
-  <button
-    mat-raised-button
-    [disabled]="!connector.form.valid"
-    (click)="saveEvent.emit()">
-    Salvar
-  </button>
+  <section class="card">
+    <app-form-upsert-tag [connector]="connector"></app-form-upsert-tag>
+
+    <footer class="btn-line">
+      <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
+      <button
+        mat-flat-button
+        class="save"
+        type="button"
+        [disabled]="!connector.form.valid"
+        (click)="saveEvent.emit()">
+        Salvar
+      </button>
+    </footer>
+  </section>
 </div>
