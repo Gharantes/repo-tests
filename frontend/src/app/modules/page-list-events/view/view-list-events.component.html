@@ -65,9 +65,6 @@
         </div>
         <div class="body">
           <h3 class="card-primary">{{ event.title }}</h3>
-          @if (event.description) {
-            <p class="desc">{{ event.description }}</p>
-          }
           <div class="foot">
             <div class="tags">
               @for (tag of event.tags.slice(0, 3); track tag.id) {
