@@ -7,6 +7,7 @@ import { IEventModel } from '@synergia-frontend/interfaces';
 import {
   colorForId,
   EventFeedComponent,
+  EventProjectsComponent,
   memberInitials,
   memberName,
   ParentNotesComponent,
@@ -19,7 +20,7 @@ import {
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, SafeImageComponent, EventFeedComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [ParentNotesComponent, SafeImageComponent, EventFeedComponent, EventProjectsComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class ViewEventDetailsComponent {
   @Input() public event$!: IEventModel;

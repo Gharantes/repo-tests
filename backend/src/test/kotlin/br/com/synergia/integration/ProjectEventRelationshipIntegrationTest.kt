@@ -4,6 +4,7 @@ import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
 import br.com.synergia.integration.support.postSemCorpo
 import br.com.synergia.libs.utilsEntities.models.EventDto
+import br.com.synergia.libs.utilsEntities.models.ProjectDto
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
@@ -35,6 +36,22 @@ class ProjectEventRelationshipIntegrationTest : IntegrationTestBase() {
 
         eventosDo(idProjeto).map { it.title } shouldBe listOf("Feira", "Mostra")
         contarLinhas("project_event_relationship") shouldBe 2
+    }
+
+    @Test
+    fun `evento lista os projetos registrados nele`() {
+        val idTenant = criarTenant()
+        val idRobotica = criarProjeto(idTenant, "Robótica")
+        val idHorta = criarProjeto(idTenant, "Horta")
+        criarProjeto(idTenant, "Fora")
+        val idFeira = criarEvento(idTenant, "Feira")
+
+        rest.postSemCorpo<Void>("$base/create-relationship-event-and-project?id-event=$idFeira&id-project=$idRobotica")
+        rest.postSemCorpo<Void>("$base/create-relationship-event-and-project?id-event=$idFeira&id-project=$idHorta")
+
+        val projetos = rest.postForList<ProjectDto>("/api/entity-project/list-projects-of-event?id-event=$idFeira")
+            .body.shouldNotBeNull()
+        projetos.map { it.title } shouldBe listOf("Horta", "Robótica")
     }
 
     @Test

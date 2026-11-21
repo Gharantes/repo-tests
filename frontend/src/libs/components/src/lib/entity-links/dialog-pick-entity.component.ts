@@ -2,44 +2,55 @@ import { ChangeDetectionStrategy, Component, computed, inject, signal } from '@a
 import { MAT_DIALOG_DATA, MatDialog, MatDialogRef } from '@angular/material/dialog';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
-import { EntityEventResourceService } from '@synergia-frontend/api';
-import { IEventModel } from '@synergia-frontend/interfaces';
-import { EventDtoToModel } from '@synergia-frontend/mappers';
-import { SessionService, SnackbarService } from '@synergia-frontend/services';
+import { SnackbarService } from '@synergia-frontend/services';
+import { Observable } from 'rxjs';
 import { colorForId } from '../dialog-card/dialog-card.model';
 
-interface PickEventData {
-  /** Eventos em que o projeto já está; ficam fora da lista. */
+/** O mínimo de um projeto ou evento para aparecer na lista. */
+export interface IPickEntity {
+  id: number;
+  title: string;
+  description: string;
+  bannerColor: string;
+}
+
+export interface PickEntityData {
+  heading: string;
+  searchPlaceholder: string;
+  /** Mostrado quando não sobra nada para escolher (sem busca). */
+  emptyText: string;
+  options: Observable<IPickEntity[]>;
+  /** Já vinculados; ficam fora da lista. */
   excludeIds: number[];
 }
 
-/** Escolhe um evento do tenant para registrar o projeto. Devolve o evento escolhido. */
+/** Escolhe um projeto ou evento de uma lista com busca. Devolve o escolhido. */
 @Component({
-  selector: 'lib-dialog-pick-event',
+  selector: 'lib-dialog-pick-entity',
   standalone: true,
   imports: [MatButtonModule, MatIconModule],
   template: `
     <div class="container">
-      <h2 class="heading">Registrar em evento</h2>
+      <h2 class="heading">{{ data.heading }}</h2>
       <label class="search">
         <mat-icon>search</mat-icon>
-        <input placeholder="Buscar eventos…" [value]="query()" (input)="query.set($any($event.target).value)" />
+        <input [placeholder]="data.searchPlaceholder" [value]="query()" (input)="query.set($any($event.target).value)" />
       </label>
       <div class="list">
-        @for (event of filtered(); track event.id) {
-          <button type="button" class="option" (click)="pick(event)">
-            <span class="thumb" [style.background]="event.bannerColor || colorFor(event.id)">{{ initial(event) }}</span>
+        @for (item of filtered(); track item.id) {
+          <button type="button" class="option" (click)="pick(item)">
+            <span class="thumb" [style.background]="item.bannerColor || colorFor(item.id)">{{ initial(item) }}</span>
             <span class="text">
-              <strong>{{ event.title }}</strong>
-              @if (event.description.trim()) {
-                <small>{{ event.description }}</small>
+              <strong>{{ item.title }}</strong>
+              @if (item.description.trim()) {
+                <small>{{ item.description }}</small>
               }
             </span>
             <mat-icon class="add">add</mat-icon>
           </button>
         } @empty {
           @if (loaded()) {
-            <span class="empty">{{ query().trim() ? 'Nenhum evento encontrado.' : 'O projeto já está em todos os eventos.' }}</span>
+            <span class="empty">{{ query().trim() ? 'Nada encontrado.' : data.emptyText }}</span>
           }
         }
       </div>
@@ -71,23 +82,23 @@ interface PickEventData {
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class DialogPickEventComponent {
-  private readonly data: PickEventData = inject(MAT_DIALOG_DATA);
-  private readonly dialogRef = inject<MatDialogRef<DialogPickEventComponent, IEventModel>>(MatDialogRef);
+export class DialogPickEntityComponent {
+  public readonly data: PickEntityData = inject(MAT_DIALOG_DATA);
+  private readonly dialogRef = inject<MatDialogRef<DialogPickEntityComponent, IPickEntity>>(MatDialogRef);
 
-  public readonly events = signal<IEventModel[]>([]);
+  public readonly items = signal<IPickEntity[]>([]);
   public readonly loaded = signal(false);
   public readonly query = signal('');
   public readonly colorFor = colorForId;
   public readonly filtered = computed(() => {
     const q = this.query().trim().toLowerCase();
-    return this.events().filter((e) => !q || e.title.toLowerCase().includes(q));
+    return this.items().filter((e) => !q || e.title.toLowerCase().includes(q));
   });
 
-  public static open(dialog: MatDialog, excludeIds: number[]) {
+  public static open(dialog: MatDialog, data: PickEntityData) {
     return dialog
-      .open<DialogPickEventComponent, PickEventData, IEventModel>(DialogPickEventComponent, {
-        data: { excludeIds },
+      .open<DialogPickEntityComponent, PickEntityData, IPickEntity>(DialogPickEntityComponent, {
+        data,
         width: '520px',
         maxWidth: '100%',
         height: '560px',
@@ -97,31 +108,23 @@ export class DialogPickEventComponent {
   }
 
   constructor() {
-    const idTenant = inject(SessionService).getTenantId()!;
     const snackbar = inject(SnackbarService);
     const exclude = new Set(this.data.excludeIds);
-    inject(EntityEventResourceService)
-      .listEventsByTenant(idTenant)
-      .subscribe({
-        next: (res) => {
-          this.events.set(
-            res
-              .map((e) => EventDtoToModel(e))
-              .filter((e) => !exclude.has(e.id))
-              .sort((a, b) => a.title.localeCompare(b.title))
-          );
-          this.loaded.set(true);
-        },
-        error: (err) => snackbar.catchError(err, 'Erro ao carregar os eventos.'),
-      });
+    this.data.options.subscribe({
+      next: (res) => {
+        this.items.set(res.filter((e) => !exclude.has(e.id)).sort((a, b) => a.title.localeCompare(b.title)));
+        this.loaded.set(true);
+      },
+      error: (err) => snackbar.catchError(err, 'Erro ao carregar a lista.'),
+    });
   }
 
-  public initial(event: IEventModel) {
-    return (event.title?.trim()?.[0] ?? '#').toUpperCase();
+  public initial(item: IPickEntity) {
+    return (item.title?.trim()?.[0] ?? '#').toUpperCase();
   }
 
-  public pick(event: IEventModel) {
-    this.dialogRef.close(event);
+  public pick(item: IPickEntity) {
+    this.dialogRef.close(item);
   }
 
   public close() {

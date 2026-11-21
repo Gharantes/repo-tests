@@ -81,9 +81,6 @@ export class DialogCardComponent {
         if (isProject) this.routingService.goToEditProject(id);
         else this.routingService.goToEditEvent(id);
         break;
-      case 'register':
-        // TODO: fluxo de "registrar em evento" / "registrar projeto" ainda não existe (já era vazio nos cards antigos).
-        return;
       case 'close':
         break;
     }

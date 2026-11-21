@@ -66,6 +66,16 @@
         <lib-parent-notes #parentNotes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
       </section>
 
+      <section class="block">
+        <div class="block-head">
+          <h2><mat-icon>rocket_launch</mat-icon>Projetos</h2>
+          <button matIconButton type="button" matTooltip="Registrar projeto" aria-label="Registrar projeto" (click)="eventProjects.openAdd()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <lib-event-projects #eventProjects [idEvent]="event$.id"></lib-event-projects>
+      </section>
+
       <section class="block feed">
         <div class="block-head">
           <h2><mat-icon>forum</mat-icon>Feed</h2>
