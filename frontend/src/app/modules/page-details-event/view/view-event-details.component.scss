@@ -131,6 +131,3 @@
   .status { display: none; }
   .edit { margin-left: auto; }
 }
-
-// Feed: o botão de postagem é de outro componente; aqui só alinha ao visual da página.
-.feed ::ng-deep #add-new-post-btn { height: 52px; margin: 0; border: 1px dashed #dcd9d1; border-radius: 10px; background: #faf9f6; color: #4a4842; font: inherit; &:hover { background: #f3f2ee; } }

@@ -67,8 +67,13 @@
       </section>
 
       <section class="block feed">
-        <h2><mat-icon>forum</mat-icon>Feed</h2>
-        <lib-event-feed [idEvent]="event$.id"></lib-event-feed>
+        <div class="block-head">
+          <h2><mat-icon>forum</mat-icon>Feed</h2>
+          <button matIconButton type="button" matTooltip="Nova postagem" aria-label="Nova postagem" (click)="eventFeed.openNew()">
+            <mat-icon>add</mat-icon>
+          </button>
+        </div>
+        <lib-event-feed #eventFeed [idEvent]="event$.id"></lib-event-feed>
       </section>
     </div>
   </div>
