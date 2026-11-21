@@ -3,33 +3,22 @@
     <mat-icon>search</mat-icon>
     <input
       type="search"
-      [placeholder]="showArchived() ? 'Buscar nos arquivados…' : 'Buscar na lousa…'"
+      placeholder="Buscar na lousa…"
       [value]="search()"
       (input)="search.set($any($event.target).value)"
     />
   </div>
-  @if (showArchived()) {
-    <button matButton="filled" (click)="setView(false)">
-      <mat-icon>arrow_back</mat-icon> Ao mural
+  <button matIconButton id="new-block" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newMenu">
+    <mat-icon>add</mat-icon>
+  </button>
+  <mat-menu #newMenu="matMenu">
+    <button mat-menu-item (click)="create('TEXT')">
+      <mat-icon>note_add</mat-icon> Nota
     </button>
-  } @else {
-    <button matIconButton id="new-block" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newMenu">
-      <mat-icon>add</mat-icon>
+    <button mat-menu-item (click)="create('LIST')">
+      <mat-icon>checklist</mat-icon> Lista
     </button>
-    <mat-menu #newMenu="matMenu">
-      <button mat-menu-item (click)="create('TEXT')">
-        <mat-icon>note_add</mat-icon> Nota
-      </button>
-      <button mat-menu-item (click)="create('LIST')">
-        <mat-icon>checklist</mat-icon> Lista
-      </button>
-    </mat-menu>
-    @if (archivedCount(); as n) {
-      <button matButton (click)="setView(true)">
-        <mat-icon>inventory_2</mat-icon> Arquivados ({{ n }})
-      </button>
-    }
-  }
+  </mat-menu>
 </header>
 
 <div id="board">
@@ -42,24 +31,6 @@
           [value]="note.title"
           (input)="patch(note, { title: $any($event.target).value }, true)"
         />
-        @if (note.archivedAt) {
-          <button type="button" class="action" matTooltip="Devolver ao mural" (click)="archive(note, false)">
-            <mat-icon>unarchive</mat-icon>
-          </button>
-        } @else {
-          <button
-            type="button"
-            class="action"
-            [class.on]="note.pinned"
-            [matTooltip]="note.pinned ? 'Desafixar' : 'Fixar no topo'"
-            (click)="patch(note, { pinned: !note.pinned })"
-          >
-            <mat-icon>push_pin</mat-icon>
-          </button>
-          <button type="button" class="action" matTooltip="Arquivar" (click)="archive(note, true)">
-            <mat-icon>archive</mat-icon>
-          </button>
-        }
         <button type="button" class="action" matTooltip="Vincular a projeto ou evento" [matMenuTriggerFor]="attachMenu">
           <mat-icon>link</mat-icon>
         </button>
@@ -140,17 +111,13 @@
             {{ note.parentTitle }}
           </button>
         }
-        <span class="when">
-          {{ note.archivedAt ? 'Arquivado ' + formatDateTime(note.archivedAt) : formatDateTime(note.updatedAt) }}
-        </span>
+        <span class="when">{{ formatDateTime(note.updatedAt) }}</span>
       </footer>
     </article>
   } @empty {
     <p id="empty">
       @if (search()) {
         Nenhum bloco com esse texto.
-      } @else if (showArchived()) {
-        Nenhum bloco arquivado.
       } @else {
         Nada na lousa ainda. Comece uma nota ou uma lista.
       }
