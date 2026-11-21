@@ -3,7 +3,7 @@
 
   <mat-form-field [appearance]="'outline'" class="field" subscriptSizing="dynamic">
     <mat-label>Título (opcional)</mat-label>
-    <input type="text" matInput [formControl]="postTitleControl">
+    <input type="text" matInput maxlength="255" [formControl]="postTitleControl">
   </mat-form-field>
 
   <div class="tabs" role="tablist">
