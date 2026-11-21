@@ -3,7 +3,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ITagModel } from '@synergia-frontend/interfaces';
-import { AddTagBtnComponent } from '@synergia-frontend/components';
+import { AddTagBtnComponent, BannerColorPickerComponent } from '@synergia-frontend/components';
 import { ConnectorUpsertEvent } from '../connector/connector-upsert-event';
 
 const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777', '#CA8A04', '#4F46E5'];
@@ -15,7 +15,7 @@ const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777
   templateUrl: './view-upsert-event.component.html',
   styleUrl: './view-upsert-event.component.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, AddTagBtnComponent],
+  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, AddTagBtnComponent, BannerColorPickerComponent],
 })
 export class ViewUpsertEventComponent {
   @Input() public connector!: ConnectorUpsertEvent;
@@ -39,11 +39,13 @@ export class ViewUpsertEventComponent {
     return (this.title[0] ?? '#').toUpperCase();
   }
 
-  /** Cor estável derivada do título, usada quando não há imagem. */
-  public get accent(): string {
-    let h = 0;
-    for (const ch of this.title) h = (h * 31 + ch.charCodeAt(0)) | 0;
-    return PALETTE[Math.abs(h) % PALETTE.length];
+  /** Cor de fundo da capa; aparece sozinha quando não há imagem. */
+  public get bannerColor(): string {
+    return this.c.bannerColor.value;
+  }
+
+  public setBannerColor(hex: string) {
+    this.c.bannerColor.setValue(hex);
   }
 
   public get bannerUrl(): string {

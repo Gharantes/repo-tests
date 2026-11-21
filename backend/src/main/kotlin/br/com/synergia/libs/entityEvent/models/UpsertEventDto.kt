@@ -6,5 +6,6 @@ data class UpsertEventDto(
     val title: String,
     val description: String,
     val bannerUrl: String?,
+    val bannerColor: String? = null,
     val tags: List<Long>
 )

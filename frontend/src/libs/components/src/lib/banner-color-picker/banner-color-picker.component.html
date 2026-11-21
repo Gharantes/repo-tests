@@ -1,0 +1,24 @@
+<button type="button" class="trigger" [matMenuTriggerFor]="palette" aria-label="Escolher a cor do banner">
+  <span class="swatch" [style.background]="color"></span>
+  {{ label }}
+  <mat-icon>expand_more</mat-icon>
+</button>
+
+<mat-menu #palette="matMenu" class="banner-color-menu">
+  <div class="grid">
+    @for (c of colors; track c.hex) {
+      <button
+        type="button"
+        class="option"
+        [class.selected]="isSelected(c.hex)"
+        [style.background]="c.hex"
+        [attr.title]="c.label"
+        [attr.aria-label]="c.label"
+        [attr.aria-pressed]="isSelected(c.hex)"
+        (click)="pick(c.hex)"
+      >
+        @if (isSelected(c.hex)) { <mat-icon>check</mat-icon> }
+      </button>
+    }
+  </div>
+</mat-menu>

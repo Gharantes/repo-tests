@@ -1,0 +1,52 @@
+:host { display: inline-flex; }
+
+.trigger {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  height: 32px;
+  padding: 0 6px 0 8px;
+  border: none;
+  border-radius: 8px;
+  background: none;
+  font: inherit;
+  font-size: 13px;
+  color: #77746c;
+  cursor: pointer;
+  &:hover { background: #f7f6f2; color: #1b1f3a; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}
+
+.swatch {
+  width: 14px;
+  height: 14px;
+  border-radius: 4px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .12);
+}
+
+// O conteúdo do mat-menu é renderizado no overlay, mas continua com o encapsulamento deste componente.
+.grid {
+  display: grid;
+  grid-template-columns: repeat(5, 32px);
+  gap: 8px;
+  padding: 8px 12px;
+}
+
+.option {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: none;
+  border-radius: 8px;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, .08);
+  color: #1b1f3a;
+  cursor: pointer;
+  transition: transform .1s;
+  &:hover { transform: scale(1.08); }
+  &:focus-visible { outline: 2px solid #3B52CC; outline-offset: 2px; }
+  &.selected { box-shadow: 0 0 0 2px #fff, 0 0 0 4px #3B52CC; }
+  mat-icon { font-size: 18px; width: 18px; height: 18px; }
+}

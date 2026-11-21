@@ -73,7 +73,7 @@ class EntityEventSqlService (
             title = params.title,
             description = params.description,
             bannerUrl = params.bannerUrl,
-            bannerColor = ColorsEnum.randomHex()
+            bannerColor = ColorsEnum.fromHex(params.bannerColor)?.hex ?: ColorsEnum.randomHex()
         )
         return eventRepository.save(event).id!!
     }
@@ -104,6 +104,7 @@ class EntityEventSqlService (
             event.title = params.title
             event.description = params.description
             event.bannerUrl = params.bannerUrl
+            ColorsEnum.fromHex(params.bannerColor)?.let { event.bannerColor = it.hex }
             eventRepository.save(event)
         }
     }

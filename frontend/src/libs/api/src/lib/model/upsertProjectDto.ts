@@ -15,6 +15,7 @@ export interface UpsertProjectDto {
     title: string;
     description: string;
     bannerUrl?: string;
+    bannerColor?: string;
     tags: Array<number>;
 }
 

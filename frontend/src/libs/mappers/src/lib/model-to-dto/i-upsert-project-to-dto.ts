@@ -8,6 +8,7 @@ export function IUpsertProjectToDto(input: IUpsertProjectModel): UpsertProjectDt
     description: input.description,
     idAccount: input.idAccount,
     idTenant: input.idTenant,
-    bannerUrl: input.bannerUrl
+    bannerUrl: input.bannerUrl,
+    bannerColor: input.bannerColor
   }
 }

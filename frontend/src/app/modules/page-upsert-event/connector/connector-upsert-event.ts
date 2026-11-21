@@ -6,6 +6,7 @@ import {
   IUpsertEventModel,
 } from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
+import { randomBannerColor } from '@synergia-frontend/utils';
 
 @Injectable()
 export class ConnectorUpsertEvent {
@@ -22,6 +23,8 @@ export class ConnectorUpsertEvent {
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     bannerUrl: this.fb.control<string | undefined>(undefined),
+    /** Cor do banner quando não há imagem; um novo registro já começa com uma cor da paleta. */
+    bannerColor: this.fb.control<string>(randomBannerColor()),
     tags: this.fb.control<ITagModel[]>([]),
   });
 
@@ -41,6 +44,7 @@ export class ConnectorUpsertEvent {
       description: v.description,
       title: v.title,
       bannerUrl: v.bannerUrl,
+      bannerColor: v.bannerColor,
       tags: v.tags?.map(v => v.id) ?? [],
     };
   }
@@ -48,6 +52,7 @@ export class ConnectorUpsertEvent {
     this.form.controls.title.setValue(res.title);
     this.form.controls.description.setValue(res.description);
     this.form.controls.bannerUrl.setValue(res.bannerUrl);
+    if (res.bannerColor) this.form.controls.bannerColor.setValue(res.bannerColor);
     this.form.controls.tags.setValue(res.tags)
   }
 }

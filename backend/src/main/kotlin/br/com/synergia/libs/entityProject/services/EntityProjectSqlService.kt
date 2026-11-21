@@ -70,7 +70,7 @@ class EntityProjectSqlService (
             description = params.description,
             title = params.title,
             bannerUrl = params.bannerUrl,
-            bannerColor = ColorsEnum.randomHex()
+            bannerColor = ColorsEnum.fromHex(params.bannerColor)?.hex ?: ColorsEnum.randomHex()
         )
         return projectRepository.save(project).id!!
     }
@@ -93,6 +93,7 @@ class EntityProjectSqlService (
         project.title = params.title
         project.description = params.description
         project.bannerUrl = params.bannerUrl
+        ColorsEnum.fromHex(params.bannerColor)?.let { project.bannerColor = it.hex }
         projectRepository.save(project)
     }
 

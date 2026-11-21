@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { IProjectModel, ITagModel, IUpsertProjectModel } from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
+import { randomBannerColor } from '@synergia-frontend/utils';
 import { IUpsertProjectToDto } from '@synergia-frontend/mappers';
 import { UpsertProjectDto } from '@synergia-frontend/api';
 
@@ -16,6 +17,8 @@ export class ConnectorUpsertProject {
     title: this.fb.control('', [Validators.required]),
     description: this.fb.control('', [Validators.required]),
     bannerUrl: this.fb.control<string|undefined>(undefined),
+    /** Cor do banner quando não há imagem; um novo registro já começa com uma cor da paleta. */
+    bannerColor: this.fb.control<string>(randomBannerColor()),
     tags: this.fb.control<ITagModel[]>([]),
   });
 
@@ -30,6 +33,7 @@ export class ConnectorUpsertProject {
       idTenant: v.idTenant,
       title: v.title,
       bannerUrl: v.bannerUrl,
+      bannerColor: v.bannerColor,
       tags: v.tags?.map((t) => t.id) ?? [],
     };
     return IUpsertProjectToDto(obj)
@@ -39,6 +43,7 @@ export class ConnectorUpsertProject {
     this.form.controls.title.setValue(value.title);
     this.form.controls.description.setValue(value.description);
     this.form.controls.bannerUrl.setValue(value.bannerUrl);
+    if (value.bannerColor) this.form.controls.bannerColor.setValue(value.bannerColor);
     this.form.controls.tags.setValue(value.tags);
   }
 }

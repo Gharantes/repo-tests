@@ -15,6 +15,7 @@ export interface UpsertEventDto {
     title: string;
     description: string;
     bannerUrl?: string;
+    bannerColor?: string;
     tags: Array<number>;
 }
 

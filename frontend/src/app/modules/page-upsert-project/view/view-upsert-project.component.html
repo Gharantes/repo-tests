@@ -1,19 +1,19 @@
 <div class="page">
   <div class="scroll">
-    @if (showImage) {
-      <div class="cover"><img [src]="bannerUrl" alt="" (error)="onImageError()" /></div>
-    }
+    <div class="cover" [style.background]="bannerColor">
+      @if (showImage) {
+        <img [src]="bannerUrl" alt="" (error)="onImageError()" />
+      } @else {
+        <span class="monogram">{{ initial }}</span>
+      }
+    </div>
 
-    <div class="doc" [class.has-cover]="showImage">
+    <div class="doc">
       <nav class="crumbs">
         <button type="button" (click)="goToParentPageEvent.emit()">Projetos</button>
         <mat-icon>chevron_right</mat-icon>
         <span>{{ editing ? (title || 'Editar projeto') : 'Novo projeto' }}</span>
       </nav>
-
-      @if (!showImage) {
-        <span class="badge" [style.background]="accent">{{ initial }}</span>
-      }
 
       <label class="field title">
         <span class="sr">Título</span>
@@ -34,14 +34,20 @@
           </dd>
         </div>
         <div class="prop">
-          <dt><mat-icon>image</mat-icon>Banner</dt>
+          <dt><mat-icon>image</mat-icon>URL do banner</dt>
           <dd>
             <label class="field inline">
-              <span class="sr">URL do Banner</span>
+              <span class="sr">URL do banner</span>
               <input type="text" placeholder="Cole o link de uma imagem" [formControl]="c.bannerUrl" />
               @if (bannerUrl) { <button type="button" class="x" (click)="clearBanner()" aria-label="Remover imagem"><mat-icon>close</mat-icon></button> }
             </label>
             @if (imageBroken) { <span class="warn">Não carregou</span> }
+          </dd>
+        </div>
+        <div class="prop">
+          <dt><mat-icon>palette</mat-icon>Cor do banner</dt>
+          <dd>
+            <lib-banner-color-picker [color]="bannerColor" (colorChange)="setBannerColor($event)"></lib-banner-color-picker>
           </dd>
         </div>
       </dl>

@@ -25,5 +25,8 @@ enum class ColorsEnum(val hex: String) {
     companion object {
         fun random(): ColorsEnum = entries.random()
         fun randomHex(): String = entries.random().hex
+
+        /** Devolve a cor da paleta com esse hex (sem diferenciar maiúsculas), ou null se não for uma delas. */
+        fun fromHex(hex: String?): ColorsEnum? = entries.find { it.hex.equals(hex?.trim(), ignoreCase = true) }
     }
 }

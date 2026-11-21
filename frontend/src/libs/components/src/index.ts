@@ -21,3 +21,5 @@ export * from './lib/add-tag-btn/add-tag-btn.component';
 
 export * from './lib/add-post-btn/add-post-btn.component';
 export * from './lib/parent-notes/parent-notes.component';
+
+export * from './lib/banner-color-picker/banner-color-picker.component';
