@@ -1,13 +1,82 @@
-<app-form-upsert-account
-  [connector]="connector"
-></app-form-upsert-account>
+<div class="container">
+  <article class="profile" [style.--accent]="accent">
+    <div class="banner">
+      <button type="button" class="back" (click)="goToParentRouteEvent.emit()">
+        <mat-icon>arrow_back</mat-icon> Usuários
+      </button>
+      <span class="mode">{{ editing ? 'Editando' : 'Novo cadastro' }}</span>
+    </div>
 
-<div class="btn-line">
-  <button mat-raised-button (click)="goToParentRouteEvent.emit()">Voltar</button>
-  <button
-    [disabled]="!connector.form.valid"
-    mat-raised-button
-    (click)="saveEvent.emit()">
-    Salvar
-  </button>
+    <div class="identity">
+      <span class="avatar">{{ initials }}</span>
+      <h1>{{ fullName || (editing ? 'Editar usuário' : 'Novo usuário') }}</h1>
+      <span class="handle">&#64;{{ c.login.value || 'username' }}</span>
+    </div>
+
+    <div class="body">
+      <div class="pair">
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Nome</mat-label>
+          <input type="text" matInput [formControl]="c.firstName" autocomplete="new-password" />
+        </mat-form-field>
+        <mat-form-field appearance="outline" subscriptSizing="dynamic">
+          <mat-label>Sobrenome</mat-label>
+          <input type="text" matInput [formControl]="c.lastName" autocomplete="new-password" />
+        </mat-form-field>
+      </div>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Username</mat-label>
+        <mat-icon matPrefix>alternate_email</mat-icon>
+        <input type="text" matInput [formControl]="c.login" autocomplete="new-password" />
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Email</mat-label>
+        <mat-icon matPrefix>mail_outline</mat-icon>
+        <input type="text" matInput [formControl]="c.email" autocomplete="new-password" />
+        @if (c.email.hasError('email')) { <mat-error>Email inválido.</mat-error> }
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" subscriptSizing="dynamic">
+        <mat-label>Senha</mat-label>
+        <mat-icon matPrefix>lock_outline</mat-icon>
+        <input [type]="showPassword ? 'text' : 'password'" matInput [formControl]="c.password" autocomplete="new-password" />
+        <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Esconder senha' : 'Mostrar senha'">
+          <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
+        </button>
+        @if (editing) { <mat-hint>Deixe em branco para manter a senha atual.</mat-hint> }
+      </mat-form-field>
+      @if (c.password.value) {
+        <div class="strength">
+          <div class="meter"><span [style.width.%]="passwordScore * 25" [attr.data-score]="passwordScore"></span></div>
+          <span>Senha {{ passwordLabel.toLowerCase() }}</span>
+        </div>
+      }
+
+      <div class="tags-box">
+        <div class="tags-head">
+          <mat-icon>sell</mat-icon>
+          <span>Tags</span>
+          <lib-add-tag-btn class="add-tag" [forAccounts]="true" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
+        </div>
+        <div class="tags">
+          @for (tag of c.tags.value; track tag.id) {
+            <span class="tag">
+              <span class="dot" [style.background]="tagColor(tag)"></span>{{ tag.title }}
+              <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
+            </span>
+          } @empty {
+            <span class="muted">Sem tags — use o botão acima para adicionar.</span>
+          }
+        </div>
+      </div>
+
+      <button mat-flat-button class="save" type="button" [disabled]="!connector.form.valid" (click)="save()">
+        <mat-icon>check</mat-icon>
+        Salvar
+      </button>
+      <button mat-button class="cancel" type="button" (click)="goToParentRouteEvent.emit()">Voltar</button>
+    </div>
+  </article>
 </div>
