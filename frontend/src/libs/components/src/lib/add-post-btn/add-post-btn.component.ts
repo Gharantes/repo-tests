@@ -2,9 +2,8 @@ import { Component, EventEmitter, Output, ChangeDetectionStrategy } from '@angul
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatDialog } from '@angular/material/dialog';
-import { ITagModel } from '@synergia-frontend/interfaces';
-import { tap } from 'rxjs';
-import { DialogAddPostComponent } from './dialog-add-post/dialog-add-post.component';
+import { IPostDraft } from '@synergia-frontend/interfaces';
+import { openPostDialog } from './dialog-add-post/open-post-dialog';
 
 @Component({
   selector: 'lib-add-post-btn',
@@ -15,24 +14,17 @@ import { DialogAddPostComponent } from './dialog-add-post/dialog-add-post.compon
   imports: [MatButtonModule, MatIconModule],
 })
 export class AddPostBtnComponent {
-  @Output() savePostEvent = new EventEmitter<ITagModel>();
+  @Output() savePostEvent = new EventEmitter<IPostDraft>();
 
   constructor(
     private readonly dialog: MatDialog
   ) {}
 
   protected addPost() {
-    this.dialog.open(DialogAddPostComponent, {
-      width: '600px',
-      maxWidth: '100%',
-      height: '600px',
-      maxHeight: '100%',
-    }).afterClosed().pipe(
-      tap((res: null|undefined|ITagModel) => {
-        if (res != null) {
-          this.savePostEvent.emit(res)
-        }
-      })
-    ).subscribe();
+    openPostDialog(this.dialog).subscribe((res) => {
+      if (res != null) {
+        this.savePostEvent.emit(res);
+      }
+    });
   }
 }

@@ -68,7 +68,7 @@
 
       <section class="block feed">
         <h2><mat-icon>forum</mat-icon>Feed</h2>
-        <lib-add-post-btn (savePostEvent)="savePostEvent.emit($event)"></lib-add-post-btn>
+        <lib-event-feed [idEvent]="event$.id"></lib-event-feed>
       </section>
     </div>
   </div>

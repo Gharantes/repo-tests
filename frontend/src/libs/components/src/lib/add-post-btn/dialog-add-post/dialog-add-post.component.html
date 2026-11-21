@@ -1,27 +1,48 @@
 <div id="container">
-  <mat-form-field [appearance]="'outline'" class="field">
-    <mat-label>Título</mat-label>
+  <h2 class="heading">{{ isEdit ? 'Editar postagem' : 'Nova postagem' }}</h2>
+
+  <mat-form-field [appearance]="'outline'" class="field" subscriptSizing="dynamic">
+    <mat-label>Título (opcional)</mat-label>
     <input type="text" matInput [formControl]="postTitleControl">
   </mat-form-field>
 
-  <mat-form-field [appearance]="'outline'" class="field textarea-container">
-    <mat-label>Conteúdo</mat-label>
+  <div class="tabs" role="tablist">
+    <button type="button" role="tab" [class.active]="!preview()" [attr.aria-selected]="!preview()" (click)="preview.set(false)">
+      <mat-icon>edit</mat-icon>Escrever
+    </button>
+    <button type="button" role="tab" [class.active]="preview()" [attr.aria-selected]="preview()" (click)="preview.set(true)">
+      <mat-icon>visibility</mat-icon>Visualizar
+    </button>
+  </div>
+
+  @if (preview()) {
+    <div class="preview">
+      @if (content().trim()) {
+        <lib-markdown [source]="content()"></lib-markdown>
+      } @else {
+        <span class="muted">Nada para visualizar ainda.</span>
+      }
+    </div>
+  } @else {
     <textarea class="textarea"
-      matInput
-      cdkTextareaAutosize
+      placeholder="Escreva em Markdown…"
       [formControl]="postContentControl"
     ></textarea>
-  </mat-form-field>
+  }
+
+  <p class="hint">
+    Aceita Markdown: <code># título</code> <code>**negrito**</code> <code>_itálico_</code> <code>~~riscado~~</code>
+    <code>&gt; citação</code> <code>- lista</code> <code>- [ ] tarefa</code> <code>[link](url)</code> <code>![imagem](url)</code>
+  </p>
 
   <div id="button-container">
-    <button mat-raised-button class="cancel-btn" (click)="close()">
+    <button mat-button class="cancel-btn" (click)="close()">
       Cancelar
-      <mat-icon>clear</mat-icon>
     </button>
 
-    <button mat-raised-button class="save-btn" (click)="publishPost()">
-      Enviar
-      <mat-icon>check</mat-icon>
+    <button mat-flat-button class="save-btn" [disabled]="isEmpty()" (click)="publishPost()">
+      <mat-icon>send</mat-icon>
+      {{ isEdit ? 'Salvar' : 'Publicar' }}
     </button>
   </div>
 </div>
