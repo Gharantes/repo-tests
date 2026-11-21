@@ -1,14 +1,101 @@
-<div id="topline">
-  <app-form-list-projects [connector]="connector"></app-form-list-projects>
-  <button mat-raised-button (click)="createProjectEvent.emit()" class="primary-button create-btn">
-    <mat-icon>add</mat-icon>
-    <span>Criar novo projeto</span>
-  </button>
-</div>
+<div class="container">
+  <header class="page-head">
+    <div>
+      <h1>Projetos <span class="count">{{ data$.length }}</span></h1>
+      <p>Explore o que a instituição está construindo.</p>
+    </div>
+    <button mat-flat-button class="create" (click)="createProjectEvent.emit()">
+      <mat-icon>add</mat-icon>
+      Criar novo projeto
+    </button>
+  </header>
 
-<div id="page">
-  <lib-project-card-grid
-    [data$]="data$"
-    (cardInteractionEvent)="openCardEvent.emit($event)"
-  ></lib-project-card-grid>
+  <div class="toolbar">
+    <label class="field search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar projetos..." [formControl]="connector.form.controls.text" />
+      @if (connector.form.controls.text.value) {
+        <button type="button" class="clear" (click)="clearSearch()" aria-label="Limpar busca"><mat-icon>close</mat-icon></button>
+      }
+    </label>
+    <label class="field tag-field">
+      <mat-icon>sell</mat-icon>
+      <input
+        type="text"
+        placeholder="Filtrar por tags..."
+        [formControl]="tagSearchControl"
+        [matAutocomplete]="tagAuto"
+      />
+      <mat-autocomplete #tagAuto="matAutocomplete" [hideSingleSelectionIndicator]="true" (optionSelected)="toggleTag($event.option.value); tagSearchControl.setValue('')">
+        @for (tag of availableTags$(); track tag.id) {
+          <mat-option [value]="tag">
+            <span class="opt">
+              <span class="dot" [style.background]="colorFor(tag.id)"></span>
+              {{ tag.title }}
+              @if (isSelected(tag)) { <mat-icon class="check">check</mat-icon> }
+            </span>
+          </mat-option>
+        }
+      </mat-autocomplete>
+    </label>
+  </div>
+
+  @if (activeTags.length) {
+    <div class="active-filters">
+      <span class="label">Filtrando por</span>
+      @for (tag of activeTags; track tag.id) {
+        <span class="filter-chip">
+          {{ tag.title }}
+          <button type="button" (click)="toggleTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
+        </span>
+      }
+      <button type="button" class="link" (click)="clearFilters()">Limpar tudo</button>
+    </div>
+  }
+
+  <div class="grid">
+    @for (project of data$; track project.id) {
+      <article class="card" tabindex="0" (click)="openCardEvent.emit(project)" (keydown.enter)="openCardEvent.emit(project)">
+        <div class="banner" [style.background]="bannerBg(project)">
+          @if (project.bannerUrl) {
+            <lib-safe-image [url]="project.bannerUrl" [altColor]="bannerBg(project)"></lib-safe-image>
+          } @else {
+            <span class="monogram">{{ initialOf(project) }}</span>
+          }
+        </div>
+        <div class="body">
+          <h3 class="card-primary">{{ project.title }}</h3>
+          @if (project.description) {
+            <p class="desc">{{ project.description }}</p>
+          }
+          <div class="foot">
+            <div class="tags">
+              @for (tag of project.tags.slice(0, 3); track tag.id) {
+                <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
+              }
+              @if (project.tags.length > 3) { <span class="tag more">+{{ project.tags.length - 3 }}</span> }
+            </div>
+            @if (project.members.length) {
+              <div class="members">
+                @for (m of project.members.slice(0, 3); track m.id) {
+                  <span class="member" [style.background]="colorFor(m.id)">{{ memberInitials(m) }}</span>
+                }
+              </div>
+            }
+          </div>
+        </div>
+      </article>
+    } @empty {
+      <div class="empty">
+        <mat-icon>{{ hasFilters ? 'search_off' : 'rocket_launch' }}</mat-icon>
+        @if (hasFilters) {
+          <p>Nenhum projeto encontrado com esses filtros.</p>
+          <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
+        } @else {
+          <p>Ainda não há projetos.</p>
+          <button mat-stroked-button (click)="createProjectEvent.emit()">Criar o primeiro</button>
+        }
+      </div>
+    }
+  </div>
 </div>

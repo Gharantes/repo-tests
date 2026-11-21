@@ -74,7 +74,7 @@ describe('Sistema: projetos', () => {
         cy.contains('.card-primary', 'Horta Vertical').should('be.visible');
 
         // Digitar na busca dispara a consulta com ILIKE no backend.
-        cy.preencherCampo('Procure por Projetos', 'Horta');
+        cy.get('input[placeholder="Buscar projetos..."]').type('Horta');
 
         cy.contains('.card-primary', 'Horta Vertical').should('be.visible');
         cy.contains('.card-primary', 'Robótica Colaborativa').should('not.exist');
@@ -90,7 +90,7 @@ describe('Sistema: projetos', () => {
         cy.entrarPelaInterface(instituicao);
         cy.irParaProjetos();
 
-        cy.preencherCampo('Procure por Projetos', 'CIÊNCIAS');
+        cy.get('input[placeholder="Buscar projetos..."]').type('CIÊNCIAS');
 
         cy.contains('.card-primary', 'Feira de Ciências').should('be.visible');
       });
@@ -106,7 +106,7 @@ describe('Sistema: projetos', () => {
         cy.irParaProjetos();
         cy.contains('.card-primary', 'Robótica Colaborativa').should('be.visible');
 
-        cy.preencherCampo('Procure por Projetos', 'Astronomia Quântica');
+        cy.get('input[placeholder="Buscar projetos..."]').type('Astronomia Quântica');
 
         cy.get('.card-primary').should('not.exist');
         // A tela continua de pé: o botão de criar segue disponível.

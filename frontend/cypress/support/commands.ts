@@ -461,16 +461,13 @@ Cypress.Commands.add('irParaUsuarios', () => {
 });
 
 Cypress.Commands.add('filtrarPorTag', (titulo: string) => {
-  // O filtro é um autocomplete de seleção múltipla: escolher uma opção limpa o
-  // texto digitado e reabre o painel, para permitir escolher a próxima. Fechar
-  // com Esc no fim deixa a listagem visível para as verificações.
-  cy.contains('mat-form-field', 'Filtrar por Tags')
-    .find('input')
-    .focus()
-    .should('be.focused')
-    .type(titulo);
+  // O filtro é um autocomplete: escolher uma opção liga a tag, limpa o texto
+  // digitado e fecha o painel. O Esc no fim garante o painel fechado, deixando
+  // a listagem visível para as verificações.
+  const campo = 'input[placeholder="Filtrar por tags..."]';
+  cy.get(campo).focus().should('be.focused').type(titulo);
   cy.get('mat-option').contains(titulo).click();
-  cy.contains('mat-form-field', 'Filtrar por Tags').find('input').type('{esc}');
+  cy.get(campo).type('{esc}');
   cy.get('mat-option').should('not.exist');
 });
 
