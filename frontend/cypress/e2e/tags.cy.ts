@@ -1,8 +1,8 @@
 /**
  * Teste de sistema: administrar tags (RF06, RN02).
  *
- * As tags são a única entidade do Synergia que a interface expõe numa tabela
- * com menu de ações, e não em cards. O ciclo completo - criar, buscar, editar,
+ * As tags aparecem numa lista com chips de disponibilidade e menu de ações
+ * por linha. O ciclo completo - criar, buscar, editar,
  * excluir - é percorrido pela tela, incluindo as três bandeiras de uso, que
  * decidem em quais telas a tag pode ser escolhida depois.
  */
@@ -14,7 +14,7 @@ describe('Sistema: tags', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
 
-      cy.contains('button', 'Criar nova Tag').click();
+      cy.contains('button', 'Criar nova tag').click();
       cy.location('pathname', { timeout: 20000 }).should('include', '/create-tag');
 
       cy.preencherCampo('Título', titulo);
@@ -23,7 +23,7 @@ describe('Sistema: tags', () => {
       cy.contains('button', 'Salvar').should('not.be.disabled').click();
 
       cy.location('pathname', { timeout: 20000 }).should('include', '/tags');
-      cy.contains('tr', titulo).should('be.visible');
+      cy.contains('.tag-row', titulo).should('be.visible');
 
       cy.listarTagsPelaApi(instituicao.idTenant, titulo).then((tags) => {
         const criada = tags.find((t) => t.title === titulo);
@@ -39,7 +39,7 @@ describe('Sistema: tags', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
 
-      cy.contains('button', 'Criar nova Tag').click();
+      cy.contains('button', 'Criar nova tag').click();
       cy.location('pathname', { timeout: 20000 }).should('include', '/create-tag');
 
       cy.preencherCampo('Título', titulo);
@@ -50,9 +50,9 @@ describe('Sistema: tags', () => {
       cy.contains('button', 'Salvar').click();
       cy.location('pathname', { timeout: 20000 }).should('include', '/tags');
 
-      // A tabela mostra as bandeiras como caixas desabilitadas: duas marcadas.
-      cy.contains('tr', titulo)
-        .find('input[type="checkbox"]:checked')
+      // A lista mostra as bandeiras como chips: dois acesos.
+      cy.contains('.tag-row', titulo)
+        .find('.chip.on')
         .should('have.length', 2);
 
       // E o banco concorda, coluna por coluna.
@@ -74,13 +74,13 @@ describe('Sistema: tags', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
 
-      cy.contains('tr', 'Sustentabilidade').should('be.visible');
-      cy.contains('tr', 'Robótica').should('be.visible');
+      cy.contains('.tag-row', 'Sustentabilidade').should('be.visible');
+      cy.contains('.tag-row', 'Robótica').should('be.visible');
 
-      cy.preencherCampo('Nome', 'Sustenta');
+      cy.get('input[placeholder="Buscar tags..."]').type('Sustenta');
 
-      cy.contains('tr', 'Sustentabilidade').should('be.visible');
-      cy.contains('tr', 'Robótica').should('not.exist');
+      cy.contains('.tag-row', 'Sustentabilidade').should('be.visible');
+      cy.contains('.tag-row', 'Robótica').should('not.exist');
     });
   });
 
@@ -104,8 +104,8 @@ describe('Sistema: tags', () => {
       cy.contains('button', 'Salvar').click();
 
       cy.location('pathname', { timeout: 20000 }).should('include', '/tags');
-      cy.contains('tr', novoTitulo).should('be.visible');
-      cy.contains('tr', titulo).should('not.exist');
+      cy.contains('.tag-row', novoTitulo).should('be.visible');
+      cy.contains('.tag-row', titulo).should('not.exist');
 
       cy.listarTagsPelaApi(instituicao.idTenant).then((tags) => {
         expect(tags.find((t) => t.title === novoTitulo), 'título novo no banco').to.not.be
@@ -130,7 +130,7 @@ describe('Sistema: tags', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
 
-      cy.contains('tr', titulo).find('input[type="checkbox"]:checked').should('have.length', 1);
+      cy.contains('.tag-row', titulo).find('.chip.on').should('have.length', 1);
 
       cy.acaoDaLinha(titulo, 'Editar');
       cy.location('pathname', { timeout: 20000 }).should('include', '/edit-tag/');
@@ -140,7 +140,7 @@ describe('Sistema: tags', () => {
       cy.contains('button', 'Salvar').click();
 
       cy.location('pathname', { timeout: 20000 }).should('include', '/tags');
-      cy.contains('tr', titulo).find('input[type="checkbox"]:checked').should('have.length', 2);
+      cy.contains('.tag-row', titulo).find('.chip.on').should('have.length', 2);
 
       cy.listarTagsPelaApi(instituicao.idTenant, titulo).then((tags) => {
         const tag = tags.find((t) => t.title === titulo);
@@ -158,11 +158,11 @@ describe('Sistema: tags', () => {
 
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
-      cy.contains('tr', titulo).should('be.visible');
+      cy.contains('.tag-row', titulo).should('be.visible');
 
       cy.acaoDaLinha(titulo, 'Deletar');
 
-      cy.contains('tr', titulo).should('not.exist');
+      cy.contains('.tag-row', titulo).should('not.exist');
 
       cy.listarTagsPelaApi(instituicao.idTenant).then((tags) => {
         expect(
@@ -178,7 +178,7 @@ describe('Sistema: tags', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaTags();
 
-      cy.contains('button', 'Criar nova Tag').click();
+      cy.contains('button', 'Criar nova tag').click();
       cy.location('pathname', { timeout: 20000 }).should('include', '/create-tag');
 
       cy.contains('button', 'Salvar').should('be.disabled');
@@ -200,8 +200,8 @@ describe('Sistema: tags', () => {
         cy.entrarPelaInterface(instituicaoB);
         cy.irParaTags();
 
-        cy.contains('button', 'Criar nova Tag').should('be.visible');
-        cy.contains('tr', 'Tag Exclusiva da A').should('not.exist');
+        cy.contains('button', 'Criar nova tag').should('be.visible');
+        cy.contains('.tag-row', 'Tag Exclusiva da A').should('not.exist');
       });
     });
   });

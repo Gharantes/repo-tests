@@ -1,18 +1,76 @@
-<div id="topline">
-  <mat-form-field class="field" [appearance]="'outline'">
-    <mat-label>Nome</mat-label>
-    <input type="text" matInput [formControl]="connector.textFieldControl" />
-  </mat-form-field>
-  <button mat-raised-button (click)="createTagEvent.emit()" class="primary-button create-btn">
-    <mat-icon>add</mat-icon>
-    <span>Criar nova Tag</span>
-  </button>
-</div>
+<div class="container">
+  <header class="page-head">
+    <div>
+      <h1>Tags</h1>
+      <p>Organize projetos, eventos e usuários com etiquetas.</p>
+    </div>
+    <button mat-flat-button class="create" (click)="createTagEvent.emit()">
+      <mat-icon>add</mat-icon>
+      Criar nova tag
+    </button>
+  </header>
 
-<div id="page">
-  <lib-sig-extendable-table
-    [actions]="actions"
-    [columns]="columns"
-    [data$]="data$"
-  ></lib-sig-extendable-table>
+  <div class="toolbar">
+    <label class="search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar tags..." [formControl]="connector.textFieldControl" />
+      @if (connector.textFieldControl.value) {
+        <button type="button" class="clear" (click)="clearSearch()" aria-label="Limpar busca">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </label>
+
+    <div class="filters" role="group" aria-label="Filtrar por disponibilidade">
+      <button type="button" class="filter" [class.active]="scopeFilter === null" (click)="scopeFilter = null">
+        Todas <span class="n">{{ data$.length }}</span>
+      </button>
+      @for (s of scopes; track s.key) {
+        <button type="button" class="filter" [class.active]="scopeFilter === s.key" (click)="toggleFilter(s.key)">
+          <mat-icon>{{ s.icon }}</mat-icon>
+          {{ s.label }} <span class="n">{{ countFor(s.key) }}</span>
+        </button>
+      }
+    </div>
+  </div>
+
+  <ul class="list">
+    @for (tag of filtered; track tag.id) {
+      <li class="row tag-row">
+        <span class="avatar" [style.background]="colorFor(tag)">{{ initialOf(tag) }}</span>
+
+        <div class="info">
+          <span class="name">{{ tag.title }}</span>
+          <span class="meta">ID {{ tag.id }}@if (tag.createdAt) { · criada em {{ tag.createdAt }} }</span>
+        </div>
+
+        <div class="chips">
+          @for (s of scopes; track s.key) {
+            <span class="chip" [class.on]="tag[s.key]" [attr.title]="(tag[s.key] ? 'Disponível' : 'Indisponível') + ' para ' + s.label">
+              <mat-icon>{{ s.icon }}</mat-icon>
+              {{ s.label }}
+            </span>
+          }
+        </div>
+
+        <button mat-icon-button class="more row-menu-btn" [matMenuTriggerFor]="menu" aria-label="Ações">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="editTagEvent.emit(tag)">
+            <mat-icon>edit</mat-icon><span>Editar</span>
+          </button>
+          <button mat-menu-item class="danger" (click)="deleteTagEvent.emit(tag)">
+            <mat-icon>delete_outline</mat-icon><span>Deletar</span>
+          </button>
+        </mat-menu>
+      </li>
+    } @empty {
+      <li class="empty">
+        <mat-icon>label_off</mat-icon>
+        <p>Nenhuma tag por aqui.</p>
+        <button mat-stroked-button (click)="createTagEvent.emit()">Criar a primeira</button>
+      </li>
+    }
+  </ul>
 </div>

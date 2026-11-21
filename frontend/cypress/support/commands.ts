@@ -450,7 +450,7 @@ Cypress.Commands.add('irParaTags', () => {
   garantirAdministracaoAberta('Tags');
   cy.contains('.nav-sub-item', 'Tags').should('be.visible').click();
   cy.location('pathname', { timeout: 20000 }).should('include', '/tags');
-  cy.contains('button', 'Criar nova Tag').should('be.visible');
+  cy.contains('button', 'Criar nova tag').should('be.visible');
 });
 
 Cypress.Commands.add('irParaUsuarios', () => {
@@ -490,10 +490,10 @@ Cypress.Commands.add('abrirCardDoEvento', (titulo: string) => {
 });
 
 Cypress.Commands.add('acaoDaLinha', (textoDaLinha: string, acao: string) => {
-  // As tabelas de tags e usuários escondem editar/deletar atrás do menu de três
-  // pontos da linha. O menu do Material é renderizado num overlay fora da
-  // tabela, por isso a busca pelo item acontece no painel, e não na linha.
-  cy.contains('tr', textoDaLinha).find('.expand-action-menu-btn').click();
+  // A tabela de usuários e a lista de tags escondem editar/deletar atrás do menu
+  // da linha. O menu do Material é renderizado num overlay fora da linha, por
+  // isso a busca pelo item acontece no painel, e não na linha.
+  cy.contains('tr, .tag-row', textoDaLinha).find('.expand-action-menu-btn, .row-menu-btn').click();
   cy.get('.mat-mdc-menu-panel').should('be.visible').contains('button', acao).click();
   cy.get('.mat-mdc-menu-panel').should('not.exist');
 });

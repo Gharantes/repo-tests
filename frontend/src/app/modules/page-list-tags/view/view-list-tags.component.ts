@@ -1,16 +1,21 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
-import { SigExtendableTableComponent } from '@synergia-frontend/components';
-import {
-  IDoExtendableTableActions,
-  IDoExtendableTableColumnInfo,
-  ITagModel,
-} from '@synergia-frontend/interfaces';
-import { MatInput, MatLabel } from '@angular/material/input';
-import { MatFormField } from '@angular/material/form-field';
 import { ReactiveFormsModule } from '@angular/forms';
-import { ConnectorListTags } from '../connector/connector-list-tags';
-import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { ITagModel } from '@synergia-frontend/interfaces';
+import { ConnectorListTags } from '../connector/connector-list-tags';
+
+type TagScopeKey = 'forProjects' | 'forEvents' | 'forAccounts';
+
+interface ITagScope {
+  key: TagScopeKey;
+  label: string;
+  icon: string;
+}
+
+/** Cores derivadas do ID, para cada tag ter uma identidade visual estável. */
+const TAG_PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777', '#CA8A04', '#4F46E5'];
 
 @Component({
   selector: 'app-view-list-tags',
@@ -18,15 +23,7 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './view-list-tags.component.html',
   styleUrl: `./view-list-tags.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [
-    SigExtendableTableComponent,
-    MatInput,
-    MatFormField,
-    MatLabel,
-    ReactiveFormsModule,
-    MatButtonModule,
-    MatIconModule
-  ],
+  imports: [ReactiveFormsModule, MatButtonModule, MatIconModule, MatMenuModule],
 })
 export class ViewListTagsComponent {
   @Input() public data$!: ITagModel[];
@@ -36,15 +33,37 @@ export class ViewListTagsComponent {
   @Output() public readonly deleteTagEvent = new EventEmitter<ITagModel>();
   @Output() public readonly editTagEvent = new EventEmitter<ITagModel>();
 
-  public readonly columns: IDoExtendableTableColumnInfo<ITagModel>[] = [
-    { def: 'id', header: 'ID', value: (el) => el.id },
-    { def: 'name', header: 'Nome', value: (el) => el.title },
-    { def: 'for_projects', header: 'Disponível para Projetos', value: (el) => el.forProjects, special: 'BOOLEAN' },
-    { def: 'for_events', header: 'Disponível para Eventos', value: (el) => el.forEvents, special: 'BOOLEAN' },
-    { def: 'for_accounts', header: 'Disponível para Usuários', value: (el) => el.forAccounts, special: 'BOOLEAN' },
+  public readonly scopes: ITagScope[] = [
+    { key: 'forProjects', label: 'Projetos', icon: 'folder' },
+    { key: 'forEvents', label: 'Eventos', icon: 'event' },
+    { key: 'forAccounts', label: 'Usuários', icon: 'person' },
   ];
-  public readonly actions: IDoExtendableTableActions<ITagModel>[] = [
-    { label: 'Editar', action: (el) => this.editTagEvent.emit(el), icon: '', isAllowed: () => true },
-    { label: 'Deletar', action: (el) => this.deleteTagEvent.emit(el), icon: '', isAllowed: () => true }
-  ];
+
+  /** Filtro local por disponibilidade (sobre as tags já carregadas). */
+  public scopeFilter: TagScopeKey | null = null;
+
+  public get filtered(): ITagModel[] {
+    const f = this.scopeFilter;
+    return f ? this.data$.filter((t) => t[f]) : this.data$;
+  }
+
+  public countFor(key: TagScopeKey): number {
+    return this.data$.filter((t) => t[key]).length;
+  }
+
+  public toggleFilter(key: TagScopeKey) {
+    this.scopeFilter = this.scopeFilter === key ? null : key;
+  }
+
+  public colorFor(tag: ITagModel): string {
+    return TAG_PALETTE[Math.abs(tag.id) % TAG_PALETTE.length];
+  }
+
+  public initialOf(tag: ITagModel): string {
+    return (tag.title?.trim()?.[0] ?? '#').toUpperCase();
+  }
+
+  public clearSearch() {
+    this.connector.textFieldControl.setValue('');
+  }
 }
