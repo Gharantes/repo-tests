@@ -3,3 +3,4 @@ export * from './lib/session.service';
 export * from './lib/snackbar.service';
 export * from './lib/note.service';
 export * from './lib/post.service';
+export * from './lib/project-events.service';

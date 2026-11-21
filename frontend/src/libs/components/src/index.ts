@@ -22,6 +22,7 @@ export * from './lib/add-tag-btn/add-tag-btn.component';
 export * from './lib/add-post-btn/add-post-btn.component';
 export * from './lib/markdown/markdown.component';
 export * from './lib/event-feed/event-feed.component';
+export * from './lib/project-events/project-events.component';
 export * from './lib/parent-notes/parent-notes.component';
 
 export * from './lib/banner-color-picker/banner-color-picker.component';

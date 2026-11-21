@@ -9,6 +9,7 @@ import {
   memberInitials,
   memberName,
   ParentNotesComponent,
+  ProjectEventsComponent,
   SafeImageComponent,
 } from '@synergia-frontend/components';
 
@@ -18,7 +19,7 @@ import {
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
