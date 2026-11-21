@@ -49,8 +49,21 @@
       }
 
       <section class="block">
-        <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
-        <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
+        <div class="block-head">
+          <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
+          <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
+            <mat-icon>add</mat-icon>
+          </button>
+          <mat-menu #newNoteMenu="matMenu">
+            <button mat-menu-item (click)="parentNotes.startDraft('TEXT')">
+              <mat-icon>note_add</mat-icon> Nota
+            </button>
+            <button mat-menu-item (click)="parentNotes.startDraft('LIST')">
+              <mat-icon>checklist</mat-icon> Lista
+            </button>
+          </mat-menu>
+        </div>
+        <lib-parent-notes #parentNotes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
       </section>
 
       <section class="block feed">

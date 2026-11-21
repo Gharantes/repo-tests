@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IProjectModel } from '@synergia-frontend/interfaces';
 import {
   colorForId,
@@ -16,7 +18,7 @@ import {
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, SafeImageComponent, MatButtonModule, MatIconModule],
+  imports: [ParentNotesComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;

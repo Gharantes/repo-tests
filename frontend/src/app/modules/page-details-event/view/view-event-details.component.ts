@@ -1,6 +1,8 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatTooltipModule } from '@angular/material/tooltip';
 import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
 import {
   AddPostBtnComponent,
@@ -17,7 +19,7 @@ import {
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, SafeImageComponent, AddPostBtnComponent, MatButtonModule, MatIconModule],
+  imports: [ParentNotesComponent, SafeImageComponent, AddPostBtnComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class ViewEventDetailsComponent {
   @Input() public event$!: IEventModel;
