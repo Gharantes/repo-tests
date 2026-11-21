@@ -30,11 +30,16 @@
   input { border: none; outline: none; flex: 1; font: inherit; }
 }
 
+#new-block {
+  background: #4A5FD8;
+  color: #fff;
+}
+
 #board {
   columns: 260px;
   column-gap: 16px;
 }
-#empty { color: #888; }
+#empty { color: #888; column-span: all; margin: 0; }
 
 .note {
   break-inside: avoid;

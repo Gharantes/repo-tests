@@ -13,12 +13,17 @@
       <mat-icon>arrow_back</mat-icon> Ao mural
     </button>
   } @else {
-    <button matButton="filled" (click)="create('TEXT')">
-      <mat-icon>note_add</mat-icon> Nota
+    <button matIconButton id="new-block" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newMenu">
+      <mat-icon>add</mat-icon>
     </button>
-    <button matButton="outlined" (click)="create('LIST')">
-      <mat-icon>checklist</mat-icon> Lista
-    </button>
+    <mat-menu #newMenu="matMenu">
+      <button mat-menu-item (click)="create('TEXT')">
+        <mat-icon>note_add</mat-icon> Nota
+      </button>
+      <button mat-menu-item (click)="create('LIST')">
+        <mat-icon>checklist</mat-icon> Lista
+      </button>
+    </mat-menu>
     @if (archivedCount(); as n) {
       <button matButton (click)="setView(true)">
         <mat-icon>inventory_2</mat-icon> Arquivados ({{ n }})
