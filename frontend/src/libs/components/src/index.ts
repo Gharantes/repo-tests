@@ -14,8 +14,8 @@ export * from './lib/grid-event/event-card-grid-entry/event-card-grid-entry.comp
 export * from './lib/grid-project/project-card-grid/project-card-grid.component';
 export * from './lib/grid-project/project-card-grid-entry/project-card-grid-entry.component';
 
-export * from './lib/dialog-card-event/dialog-card-event.component';
-export * from './lib/dialog-card-project/dialog-card-project.component';
+export * from './lib/dialog-card/dialog-card.model';
+export * from './lib/dialog-card/dialog-card.component';
 
 export * from './lib/add-tag-btn/add-tag-btn.component';
 

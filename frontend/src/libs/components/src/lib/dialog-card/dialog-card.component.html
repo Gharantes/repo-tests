@@ -1,0 +1,62 @@
+@let view = view$();
+
+<aside class="hero" [style.background]="view.bannerBg">
+  @if (view.entity.bannerUrl) {
+    <lib-safe-image [url]="view.entity.bannerUrl" [altColor]="view.bannerBg"></lib-safe-image>
+  } @else {
+    <span class="monogram">{{ view.monogram }}</span>
+  }
+  <div class="shade"></div>
+  <div class="hero-text">
+    <span class="kind"><mat-icon>{{ view.kindIcon }}</mat-icon>{{ view.kindLabel }}</span>
+    <h2 class="title" id="dialog-card-title">{{ view.entity.title }}</h2>
+    @if (view.entity.tags.length) {
+      <div class="tags">
+        @for (tag of view.entity.tags; track tag.id) {
+          <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
+        }
+      </div>
+    }
+  </div>
+</aside>
+
+<section class="side">
+  <button type="button" class="close" (click)="onAction('close')" aria-label="Fechar"><mat-icon>close</mat-icon></button>
+
+  <div class="scroll">
+    <h3 class="label">Sobre</h3>
+    @if (view.entity.description?.trim()) {
+      <p class="description">{{ view.entity.description }}</p>
+    } @else {
+      <p class="description muted">{{ view.emptyDescription }}</p>
+    }
+
+    <h3 class="label">
+      Membros
+      @if (view.entity.members.length) { <span class="count">{{ view.entity.members.length }}</span> }
+    </h3>
+    <ul class="members">
+      @for (m of view.entity.members; track m.id) {
+        <li>
+          <span class="avatar" [style.background]="colorFor(m.id)">{{ initials(m) }}</span>
+          <span class="who">
+            <span class="name">{{ nameOf(m) }}</span>
+            <span class="sub">{{ m.email || '@' + m.login }}</span>
+          </span>
+        </li>
+      } @empty {
+        <li class="muted">{{ view.emptyMembers }}</li>
+      }
+    </ul>
+  </div>
+
+  <div class="actions">
+    <button mat-flat-button class="primary" (click)="onAction('open')">
+      {{ view.openLabel }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
+    </button>
+    <div class="row">
+      <button mat-stroked-button (click)="onAction('edit')"><mat-icon>edit</mat-icon>{{ view.editLabel }}</button>
+      <button mat-stroked-button (click)="onAction('register')"><mat-icon>{{ view.registerIcon }}</mat-icon>{{ view.registerLabel }}</button>
+    </div>
+  </div>
+</section>

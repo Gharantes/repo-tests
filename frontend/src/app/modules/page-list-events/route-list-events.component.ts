@@ -10,7 +10,7 @@ import { EventDtoToModel } from '@synergia-frontend/mappers';
 import { MatDialog } from '@angular/material/dialog';
 import { ViewListEventsComponent } from './view/view-list-events.component';
 import { ConnectorListEvents } from './connector/connector-list-events';
-import { DialogCardEventComponent } from '@synergia-frontend/components';
+import { DialogCardComponent } from '@synergia-frontend/components';
 import { EntityEventResourceService } from '@synergia-frontend/api';
 
 @Component({
@@ -62,16 +62,6 @@ export class RouteListEventsComponent {
   }
 
   public openCard($event: IEventModel) {
-    this.dialog
-      .open(DialogCardEventComponent, {
-        data: $event,
-        maxWidth: '100%',
-        maxHeight: '100%',
-        width: '80%',
-        height: '80%',
-      })
-      .afterClosed()
-      .pipe()
-      .subscribe();
+    DialogCardComponent.open(this.dialog, { type: 'event', entity: $event });
   }
 }

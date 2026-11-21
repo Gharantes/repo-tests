@@ -2,3 +2,11 @@
 .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
   display: none;
 }
+/** Card de projeto/evento (lib-dialog-card): tira o limite de 560px do M3 e usa cantos menores. */
+.cdk-overlay-pane.lib-dialog-card-panel {
+  --mat-dialog-container-max-width: 94vw;
+  --mat-dialog-container-small-max-width: calc(100vw - 24px);
+  --mat-dialog-container-min-width: 0;
+  --mat-dialog-container-shape: 16px;
+  --mat-dialog-container-color: #fff;
+}

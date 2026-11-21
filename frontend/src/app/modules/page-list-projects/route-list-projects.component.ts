@@ -12,7 +12,7 @@ import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { MatDialog } from '@angular/material/dialog';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EntityProjectResourceService } from '@synergia-frontend/api';
-import { DialogCardProjectComponent } from '@synergia-frontend/components';
+import { DialogCardComponent } from '@synergia-frontend/components';
 
 @Component({
   selector: 'app-page-list-projects-route',
@@ -70,12 +70,6 @@ export class RouteListProjectsComponent {
     this.routingService.goToCreateProject();
   }
   openCard($event: IProjectModel) {
-    this.dialog.open(DialogCardProjectComponent, {
-      data: $event,
-      maxWidth: '100%',
-      maxHeight: '100%',
-      width: '80%',
-      height: '80%'
-    });
+    DialogCardComponent.open(this.dialog, { type: 'project', entity: $event });
   }
 }
