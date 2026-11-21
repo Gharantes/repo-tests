@@ -73,7 +73,7 @@ describe('Sistema: eventos', () => {
         cy.contains('.card-primary', 'Congresso de Robótica').should('be.visible');
         cy.contains('.card-primary', 'Feira de Sustentabilidade').should('be.visible');
 
-        cy.preencherCampo('Procure por Eventos', 'Feira');
+        cy.get('input[placeholder="Buscar eventos..."]').type('Feira');
 
         cy.contains('.card-primary', 'Feira de Sustentabilidade').should('be.visible');
         cy.contains('.card-primary', 'Congresso de Robótica').should('not.exist');
@@ -89,7 +89,7 @@ describe('Sistema: eventos', () => {
         cy.entrarPelaInterface(instituicao);
         cy.irParaEventos();
 
-        cy.preencherCampo('Procure por Eventos', 'ACADÊMICA');
+        cy.get('input[placeholder="Buscar eventos..."]').type('ACADÊMICA');
 
         cy.contains('.card-primary', 'Jornada Acadêmica').should('be.visible');
       });
@@ -105,7 +105,7 @@ describe('Sistema: eventos', () => {
         cy.irParaEventos();
         cy.contains('.card-primary', 'Congresso de Robótica').should('be.visible');
 
-        cy.preencherCampo('Procure por Eventos', 'Simpósio de Astrofísica');
+        cy.get('input[placeholder="Buscar eventos..."]').type('Simpósio de Astrofísica');
 
         cy.get('.card-primary').should('not.exist');
         cy.contains('button', 'Criar novo evento').should('be.visible');
