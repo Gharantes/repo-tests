@@ -22,16 +22,14 @@ export class RouteLousaComponent implements OnDestroy {
   public readonly formatDateTime = formatDateTime;
   public readonly colors = ['padrao', 'amarelo', 'verde', 'azul', 'rosa'];
   public readonly search = signal('');
-  public readonly showArchived = signal(false);
   public readonly notes = signal<INoteModel[]>([]);
   public readonly projects = signal<{ id: number; title: string }[]>([]);
   public readonly events = signal<{ id: number; title: string }[]>([]);
 
-  public readonly archivedCount = computed(() => this.notes().filter((n) => n.archivedAt).length);
   public readonly visible = computed(() =>
     this.notes()
-      .filter((n) => !!n.archivedAt === this.showArchived() && matches(n, this.search()))
-      .sort((a, b) => Number(b.pinned) - Number(a.pinned) || b.id - a.id)
+      .filter((n) => matches(n, this.search()))
+      .sort((a, b) => b.id - a.id)
   );
 
   private readonly idAccount: number;
@@ -52,11 +50,6 @@ export class RouteLousaComponent implements OnDestroy {
     noteService.listByAccount(this.idAccount).subscribe((res) => this.notes.set(res));
     projectService.listProjectsByAccount(this.idAccount).subscribe((res) => this.projects.set(res));
     eventService.listEventsByAccount(this.idAccount).subscribe((res) => this.events.set(res));
-  }
-
-  public setView(archived: boolean) {
-    this.showArchived.set(archived);
-    this.search.set('');
   }
 
   public create(type: NoteType) {
@@ -88,11 +81,6 @@ export class RouteLousaComponent implements OnDestroy {
     );
     clearTimeout(this.timers.get(note.id));
     this.timers.set(note.id, setTimeout(() => this.flush(note.id), debounce ? SAVE_DELAY_MS : 0));
-  }
-
-  public archive(note: INoteModel, archived: boolean) {
-    this.patch(note, { archivedAt: archived ? new Date().toISOString() : null, pinned: false });
-    if (!archived && this.archivedCount() === 0) this.setView(false);
   }
 
   public setItem(note: INoteModel, index: number, changes: Partial<INoteModel['items'][number]>, debounce = false) {
@@ -142,7 +130,6 @@ export class RouteLousaComponent implements OnDestroy {
     const label = note.title ? `"${note.title}"` : 'este bloco';
     if (!confirm(`Apagar ${label}? Não tem como desfazer.`)) return;
     this.deleteNote(note);
-    if (this.showArchived() && this.archivedCount() === 0) this.setView(false);
   }
 
   /** Ao sair da tela, grava o pendente e descarta blocos em branco. */
@@ -190,8 +177,8 @@ export class RouteLousaComponent implements OnDestroy {
       content: note.content,
       items: note.items,
       color: note.color,
-      pinned: note.pinned,
-      archived: !!note.archivedAt,
+      pinned: false,
+      archived: false,
     };
   }
 }
