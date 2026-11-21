@@ -1,15 +1,88 @@
-<div id="topline">
-  <app-form-list-accounts [connector]="connector"></app-form-list-accounts>
-  <button mat-raised-button (click)="createAccountEvent.emit()" class="primary-button create-btn">
-    <mat-icon>add</mat-icon>
-    <span>Criar novo usuário</span>
-  </button>
-</div>
+<div class="container">
+  <header class="page-head">
+    <div>
+      <h1>Usuários <span class="count">{{ data$.length }}</span></h1>
+      <p>Gerencie quem tem acesso à instituição e como cada pessoa está classificada.</p>
+    </div>
+    <button mat-flat-button class="create" (click)="createAccountEvent.emit()">
+      <mat-icon>person_add</mat-icon>
+      Criar novo usuário
+    </button>
+  </header>
 
-<div id="page">
-  <lib-sig-extendable-table
-    [data$]="data$"
-    [columns]="columns"
-    [actions]="tableActions"
-  ></lib-sig-extendable-table>
+  <div class="toolbar">
+    <label class="search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar por nome, login ou email..." [formControl]="connector.form.controls.text" />
+      @if (connector.form.controls.text.value) {
+        <button type="button" class="clear" (click)="clearSearch()" aria-label="Limpar busca">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </label>
+    <lib-add-tag-btn class="add-tag" [forAccounts]="true" (saveTagEvent)="addTagFilter($event)"></lib-add-tag-btn>
+  </div>
+
+  @if (activeTags.length > 0) {
+    <div class="active-filters">
+      <span class="label">Filtrando por</span>
+      @for (tag of activeTags; track tag.id) {
+        <span class="filter-chip">
+          <span class="dot" [style.background]="colorFor(tag.id)"></span>
+          {{ tag.title }}
+          <button type="button" (click)="removeTagFilter(tag)" [attr.aria-label]="'Remover ' + tag.title">
+            <mat-icon>close</mat-icon>
+          </button>
+        </span>
+      }
+      <button type="button" class="link" (click)="clearFilters()">Limpar tudo</button>
+    </div>
+  }
+
+  <ul class="list">
+    @for (account of data$; track account.id) {
+      <li class="row account-row">
+        <span class="avatar" [style.background]="colorFor(account.id)">{{ initials(account) }}</span>
+
+        <div class="info">
+          <span class="name">{{ fullName(account) }}</span>
+          <span class="meta">
+            <span class="login">&#64;{{ account.login }}</span>
+            @if (account.email) { <span class="sep">·</span>{{ account.email }} }
+          </span>
+        </div>
+
+        <div class="tags">
+          @for (tag of account.tags; track tag.id) {
+            <button type="button" class="tag" (click)="addTagFilter(tag)" title="Filtrar por esta tag">
+              <span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}
+            </button>
+          }
+        </div>
+
+        <button mat-icon-button class="more row-menu-btn" [matMenuTriggerFor]="menu" aria-label="Ações">
+          <mat-icon>more_horiz</mat-icon>
+        </button>
+        <mat-menu #menu="matMenu" xPosition="before">
+          <button mat-menu-item (click)="editAccountEvent.emit(account)">
+            <mat-icon>edit</mat-icon><span>Editar Usuário</span>
+          </button>
+          <button mat-menu-item class="danger" (click)="deleteAccountEvent.emit(account)">
+            <mat-icon>delete_outline</mat-icon><span>Deletar Usuário</span>
+          </button>
+        </mat-menu>
+      </li>
+    } @empty {
+      <li class="empty">
+        <mat-icon>{{ hasFilters ? 'search_off' : 'group_off' }}</mat-icon>
+        @if (hasFilters) {
+          <p>Nenhum usuário encontrado com esses filtros.</p>
+          <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
+        } @else {
+          <p>Ainda não há usuários.</p>
+          <button mat-stroked-button (click)="createAccountEvent.emit()">Criar o primeiro</button>
+        }
+      </li>
+    }
+  </ul>
 </div>

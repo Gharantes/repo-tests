@@ -8,7 +8,7 @@
  * passar. É o oposto de um "frontend de mentira".
  */
 describe('Sistema: usuários', () => {
-  it('criar um usuário pela interface grava no banco e ele aparece na tabela', () => {
+  it('criar um usuário pela interface grava no banco e ele aparece na lista', () => {
     const login = `ALUNO${Date.now()}`;
 
     cy.criarInstituicao().then((instituicao) => {
@@ -27,8 +27,8 @@ describe('Sistema: usuários', () => {
       cy.contains('button', 'Salvar').should('not.be.disabled').click();
 
       cy.location('pathname', { timeout: 20000 }).should('include', '/accounts');
-      cy.contains('tr', login).should('be.visible');
-      cy.contains('tr', 'Marina Duarte').should('be.visible');
+      cy.contains('.account-row', login).should('be.visible');
+      cy.contains('.account-row', 'Marina Duarte').should('be.visible');
 
       cy.listarContasPelaApi(instituicao.idTenant, login).then((contas) => {
         const criada = contas.find((c) => c.login === login);
@@ -85,7 +85,7 @@ describe('Sistema: usuários', () => {
     });
   });
 
-  it('a busca filtra a tabela de usuários por login e por nome', () => {
+  it('a busca filtra a lista de usuários por login e por nome', () => {
     const loginA = `MARINA${Date.now()}`;
     const loginB = `RAFAEL${Date.now()}`;
 
@@ -96,22 +96,22 @@ describe('Sistema: usuários', () => {
       cy.entrarPelaInterface(instituicao);
       cy.irParaUsuarios();
 
-      cy.contains('tr', loginA).should('be.visible');
-      cy.contains('tr', loginB).should('be.visible');
+      cy.contains('.account-row', loginA).should('be.visible');
+      cy.contains('.account-row', loginB).should('be.visible');
 
       // Por login.
-      cy.preencherCampo('Procure por usuários', loginA);
-      cy.contains('tr', loginA).should('be.visible');
-      cy.contains('tr', loginB).should('not.exist');
+      cy.get('input[placeholder="Buscar por nome, login ou email..."]').type(loginA);
+      cy.contains('.account-row', loginA).should('be.visible');
+      cy.contains('.account-row', loginB).should('not.exist');
 
       // Por nome: a mesma consulta procura em login, nome e sobrenome.
-      cy.contains('mat-form-field', 'Procure por usuários').find('input').clear().type('Nunes');
-      cy.contains('tr', loginB).should('be.visible');
-      cy.contains('tr', loginA).should('not.exist');
+      cy.get('input[placeholder="Buscar por nome, login ou email..."]').clear().type('Nunes');
+      cy.contains('.account-row', loginB).should('be.visible');
+      cy.contains('.account-row', loginA).should('not.exist');
     });
   });
 
-  it('editar um usuário pela tabela troca o nome na tela e no banco', () => {
+  it('editar um usuário pela lista troca o nome na tela e no banco', () => {
     const login = `ALUNO${Date.now()}`;
 
     cy.criarInstituicao().then((instituicao) => {
@@ -131,7 +131,7 @@ describe('Sistema: usuários', () => {
       cy.contains('button', 'Salvar').should('not.be.disabled').click();
 
       cy.location('pathname', { timeout: 20000 }).should('include', '/accounts');
-      cy.contains('tr', 'Marina Duarte Lima').should('be.visible');
+      cy.contains('.account-row', 'Marina Duarte Lima').should('be.visible');
 
       cy.listarContasPelaApi(instituicao.idTenant, login).then((contas) => {
         const conta = contas.find((c) => c.login === login);
@@ -165,7 +165,7 @@ describe('Sistema: usuários', () => {
     });
   });
 
-  it('deletar um usuário pela tabela some com ele da tela e do banco', () => {
+  it('deletar um usuário pela lista some com ele da tela e do banco', () => {
     const login = `ALUNO${Date.now()}`;
 
     cy.criarInstituicao().then((instituicao) => {
@@ -173,11 +173,11 @@ describe('Sistema: usuários', () => {
 
       cy.entrarPelaInterface(instituicao);
       cy.irParaUsuarios();
-      cy.contains('tr', login).should('be.visible');
+      cy.contains('.account-row', login).should('be.visible');
 
       cy.acaoDaLinha(login, 'Deletar Usuário');
 
-      cy.contains('tr', login).should('not.exist');
+      cy.contains('.account-row', login).should('not.exist');
 
       cy.listarContasPelaApi(instituicao.idTenant).then((contas) => {
         expect(
@@ -224,8 +224,8 @@ describe('Sistema: usuários', () => {
         cy.irParaUsuarios();
 
         // A instituição nova só enxerga o próprio ADMIN.
-        cy.contains('tr', 'ADMIN').should('be.visible');
-        cy.contains('tr', login).should('not.exist');
+        cy.contains('.account-row', 'ADMIN').should('be.visible');
+        cy.contains('.account-row', login).should('not.exist');
       });
     });
   });

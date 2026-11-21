@@ -490,10 +490,10 @@ Cypress.Commands.add('abrirCardDoEvento', (titulo: string) => {
 });
 
 Cypress.Commands.add('acaoDaLinha', (textoDaLinha: string, acao: string) => {
-  // A tabela de usuários e a lista de tags escondem editar/deletar atrás do menu
-  // da linha. O menu do Material é renderizado num overlay fora da linha, por
+  // As listas de usuários e de tags escondem editar/deletar atrás do menu da
+  // linha. O menu do Material é renderizado num overlay fora da linha, por
   // isso a busca pelo item acontece no painel, e não na linha.
-  cy.contains('tr, .tag-row', textoDaLinha).find('.expand-action-menu-btn, .row-menu-btn').click();
+  cy.contains('tr, .tag-row, .account-row', textoDaLinha).find('.expand-action-menu-btn, .row-menu-btn').click();
   cy.get('.mat-mdc-menu-panel').should('be.visible').contains('button', acao).click();
   cy.get('.mat-mdc-menu-panel').should('not.exist');
 });
