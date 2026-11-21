@@ -1,5 +1,6 @@
 import { Component, signal, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { RoutingService } from '@synergia-frontend/services';
 import { map, tap } from 'rxjs';
@@ -26,17 +27,22 @@ export class RouteProjectDetailsComponent {
     this.getFromRouteParams();
   }
 
+  /**
+   * O Angular reaproveita o componente quando só o :id muda
+   * (ex.: /project/5 -> /project/6), então é preciso ouvir o paramMap
+   * continuamente em vez de ler só o primeiro valor.
+   */
   private getFromRouteParams() {
-    this.routingService
-      .getParamFromRoute(this.activatedRoute, 'id')
-      .then((id) => {
+    this.activatedRoute.paramMap
+      .pipe(takeUntilDestroyed())
+      .subscribe((params) => {
+        const id = params.get('id');
         if (id == null) {
           this.routingService.goToListProjects();
           return;
-        } else {
-          this.idProject.set(Number(id));
-          this.lookupProject();
         }
+        this.idProject.set(Number(id));
+        this.lookupProject();
       });
   }
 
