@@ -27,6 +27,9 @@ object SqlPath {
     enum class EntityNote (override val path: String) : ISqlFile {
         LIST_NOTES("/sql/entity-note/list-notes.sql"),
     }
+    enum class EntityPost (override val path: String) : ISqlFile {
+        LIST_POSTS_OF_EVENT("/sql/entity-post/list-posts-of-event.sql"),
+    }
     enum class PageListPermissions (override val path: String) : ISqlFile {
         LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")
     }

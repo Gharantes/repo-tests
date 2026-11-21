@@ -8,4 +8,5 @@ object EntityRowMapper {
     val eventRowMapper = EventRowMapper()
     val permissionRowMapper = PermissionRowMapper()
     val noteRowMapper = NoteRowMapper()
+    val postRowMapper = PostRowMapper()
 }

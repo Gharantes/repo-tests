@@ -15,3 +15,4 @@ export * from './lib/entities/i-tag.model';
 export * from './lib/entities/i-tenant.model';
 export * from './lib/entities/i-permission.model';
 export * from './lib/entities/i-note.model';
+export * from './lib/entities/i-post.model';

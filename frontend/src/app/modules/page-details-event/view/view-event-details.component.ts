@@ -3,10 +3,10 @@ import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
-import { IEventModel, ITagModel } from '@synergia-frontend/interfaces';
+import { IEventModel } from '@synergia-frontend/interfaces';
 import {
-  AddPostBtnComponent,
   colorForId,
+  EventFeedComponent,
   memberInitials,
   memberName,
   ParentNotesComponent,
@@ -19,13 +19,12 @@ import {
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, SafeImageComponent, AddPostBtnComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [ParentNotesComponent, SafeImageComponent, EventFeedComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class ViewEventDetailsComponent {
   @Input() public event$!: IEventModel;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();
-  @Output() public readonly savePostEvent = new EventEmitter<ITagModel>();
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;
