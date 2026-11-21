@@ -91,28 +91,32 @@ interface INoteDraft {
         <ng-container *ngTemplateOutlet="editor; context: { $implicit: draft() }"></ng-container>
       } @else {
         <article class="note" [class]="'note--' + note.color">
-          @if (isMine(note)) {
-            <header class="top tools">
-              <button type="button" class="action" matTooltip="Editar" (click)="edit(note)">
-                <mat-icon>edit</mat-icon>
-              </button>
-              <button type="button" class="action" matTooltip="Cor" [matMenuTriggerFor]="colorMenu">
-                <mat-icon>palette</mat-icon>
-              </button>
-              <mat-menu #colorMenu="matMenu">
-                @for (color of colors; track color) {
-                  <button mat-menu-item (click)="recolor(note, color)">
-                    <span class="swatch" [class]="'note--' + color"></span>{{ colorLabel(color) }}
+          @if (note.title || isMine(note)) {
+            <header class="top">
+              @if (note.title) {
+                <strong class="title">{{ note.title }}</strong>
+              }
+              @if (isMine(note)) {
+                <div class="tools">
+                  <button type="button" class="action" matTooltip="Editar" (click)="edit(note)">
+                    <mat-icon>edit</mat-icon>
                   </button>
-                }
-              </mat-menu>
-              <button type="button" class="action" matTooltip="Apagar" (click)="remove(note)">
-                <mat-icon>delete</mat-icon>
-              </button>
+                  <button type="button" class="action" matTooltip="Cor" [matMenuTriggerFor]="colorMenu">
+                    <mat-icon>palette</mat-icon>
+                  </button>
+                  <mat-menu #colorMenu="matMenu">
+                    @for (color of colors; track color) {
+                      <button mat-menu-item (click)="recolor(note, color)">
+                        <span class="swatch" [class]="'note--' + color"></span>{{ colorLabel(color) }}
+                      </button>
+                    }
+                  </mat-menu>
+                  <button type="button" class="action" matTooltip="Apagar" (click)="remove(note)">
+                    <mat-icon>delete</mat-icon>
+                  </button>
+                </div>
+              }
             </header>
-          }
-          @if (note.title) {
-            <strong>{{ note.title }}</strong>
           }
           @if (note.type === 'LIST') {
             @for (item of note.items; track $index; let i = $index) {
@@ -149,7 +153,8 @@ interface INoteDraft {
     .note--rosa { background: #fadbe6; }
 
     .top { display: flex; align-items: center; gap: 2px; }
-    .tools { justify-content: flex-end; margin: -6px -6px -4px 0; }
+    .top .title { flex: 1; min-width: 0; overflow-wrap: anywhere; }
+    .tools { display: flex; gap: 2px; margin: -4px -6px -4px auto; }
     .action { display: inline-flex; border: 0; background: none; color: #8a877f; cursor: pointer; padding: 3px; border-radius: 4px; }
     .action:hover { background: rgba(0, 0, 0, .06); color: #333; }
     .action mat-icon { font-size: 18px; width: 18px; height: 18px; }
