@@ -26,3 +26,6 @@ hs_err_pid*
 replay_pid*
 
 .idea
+
+# Cache do Angular CLI (o real fica em frontend/.angular)
+.angular
