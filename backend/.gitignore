@@ -67,3 +67,6 @@ out/
 
 ### Kotlin ###
 .kotlin
+
+### Variáveis locais ###
+.env
