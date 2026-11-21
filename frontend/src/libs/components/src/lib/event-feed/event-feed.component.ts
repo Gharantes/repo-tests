@@ -6,7 +6,6 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { IPostDraft, IPostModel } from '@synergia-frontend/interfaces';
 import { PostService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { formatDateTime } from '@synergia-frontend/utils';
-import { AddPostBtnComponent } from '../add-post-btn/add-post-btn.component';
 import { openPostDialog } from '../add-post-btn/dialog-add-post/open-post-dialog';
 import { colorForId } from '../dialog-card/dialog-card.model';
 import { MarkdownComponent } from '../markdown/markdown.component';
@@ -18,10 +17,8 @@ import { MarkdownComponent } from '../markdown/markdown.component';
 @Component({
   selector: 'lib-event-feed',
   standalone: true,
-  imports: [AddPostBtnComponent, MarkdownComponent, MatIconModule, MatMenuModule, MatTooltipModule],
+  imports: [MarkdownComponent, MatIconModule, MatMenuModule, MatTooltipModule],
   template: `
-    <lib-add-post-btn (savePostEvent)="create($event)"></lib-add-post-btn>
-
     @for (post of posts(); track post.id) {
       <article class="post">
         <header class="author">
@@ -108,7 +105,14 @@ export class EventFeedComponent {
     return ((parts[0]?.[0] ?? '?') + (parts.length > 1 ? parts[parts.length - 1][0] : '')).toUpperCase();
   }
 
-  public create(draft: IPostDraft) {
+  /** Abre o diálogo de nova postagem; o botão fica no cabeçalho da seção, fora deste componente. */
+  public openNew() {
+    openPostDialog(this.dialog).subscribe((draft) => {
+      if (draft != null) this.create(draft);
+    });
+  }
+
+  private create(draft: IPostDraft) {
     this.postService.storeOnEvent(this.idEvent(), this.idAccount, draft).subscribe({
       next: () => this.load(this.idEvent()),
       error: (err) => this.snackbar.catchError(err, 'Erro ao publicar a postagem.'),
