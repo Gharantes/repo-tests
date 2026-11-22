@@ -1,4 +1,5 @@
 <div id="card-grid">
+  <ng-content></ng-content>
   @for (entry of data$; track entry.id) {
     <lib-project-card-grid-entry
       [entry]="entry"
