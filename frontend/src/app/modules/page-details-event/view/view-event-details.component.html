@@ -57,34 +57,8 @@
         }
       }
 
-      <!-- O "+" fica na linha das abas, à direita, e muda conforme a aba aberta. -->
+      <!-- O "+" de cada aba fica no topo dela, à esquerda, logo abaixo dos nomes das abas. -->
       <div class="sections">
-        <div class="tab-actions">
-          @switch (tab()) {
-            @case (0) {
-              <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
-                <mat-icon>add</mat-icon>
-              </button>
-            }
-            @case (1) {
-              <button matIconButton type="button" matTooltip="Registrar projeto" aria-label="Registrar projeto" (click)="projects()?.openAdd()">
-                <mat-icon>add</mat-icon>
-              </button>
-            }
-            @case (2) {
-              <button matIconButton type="button" matTooltip="Nova postagem" aria-label="Nova postagem" (click)="feed()?.openNew()">
-                <mat-icon>add</mat-icon>
-              </button>
-            }
-            @case (3) {
-              @if (isMember) {
-                <button matIconButton type="button" matTooltip="Marcar data" aria-label="Marcar data" (click)="calendar()?.openNew()">
-                  <mat-icon>add</mat-icon>
-                </button>
-              }
-            }
-          }
-        </div>
         <mat-menu #newNoteMenu="matMenu">
           <button mat-menu-item (click)="notes()?.startDraft('TEXT')">
             <mat-icon>note_add</mat-icon> Nota
@@ -99,24 +73,46 @@
           <mat-tab>
             <ng-template mat-tab-label><mat-icon>dashboard</mat-icon>Lousa</ng-template>
             <div class="tab-body">
+              <div class="tab-actions">
+                <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
               <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
             </div>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label><mat-icon>rocket_launch</mat-icon>Projetos</ng-template>
             <div class="tab-body">
+              <div class="tab-actions">
+                <button matIconButton type="button" matTooltip="Registrar projeto" aria-label="Registrar projeto" (click)="projects()?.openAdd()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
               <lib-event-projects [idEvent]="event$.id"></lib-event-projects>
             </div>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label><mat-icon>forum</mat-icon>Feed</ng-template>
             <div class="tab-body">
+              <div class="tab-actions">
+                <button matIconButton type="button" matTooltip="Nova postagem" aria-label="Nova postagem" (click)="feed()?.openNew()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              </div>
               <lib-event-feed [idEvent]="event$.id"></lib-event-feed>
             </div>
           </mat-tab>
           <mat-tab>
             <ng-template mat-tab-label><mat-icon>calendar_month</mat-icon>Calendário</ng-template>
             <div class="tab-body">
+              @if (isMember) {
+                <div class="tab-actions">
+                  <button matIconButton type="button" matTooltip="Marcar data" aria-label="Marcar data" (click)="calendar()?.openNew()">
+                    <mat-icon>add</mat-icon>
+                  </button>
+                </div>
+              }
               <lib-parent-calendar parentEntity="EVENT" [parentId]="event$.id" [canEdit]="isMember"></lib-parent-calendar>
             </div>
           </mat-tab>
