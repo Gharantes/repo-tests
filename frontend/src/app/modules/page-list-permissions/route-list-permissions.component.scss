@@ -1,8 +1,11 @@
 * { box-sizing: border-box; }
 
-:host { display: flex; flex: 1; min-height: 0; overflow: auto; background: #F0EEE8; }
+// Quem rola é o corpo da aba aberta, não a página: só assim a barra de salvar (sticky)
+// fica presa no rodapé. Com a página rolando, o mat-tab-body vira o contêiner do sticky
+// e a barra acaba lá embaixo, depois da última permissão, fora da tela.
+:host { display: flex; flex: 1; min-height: 0; overflow: hidden; background: #F0EEE8; }
 
-.container { display: flex; flex-direction: column; width: 100%; padding: 20px 16px 0; }
+.container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; padding: 20px 16px 0; }
 
 .page-head {
   display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 8px;
@@ -17,6 +20,8 @@
 
 .tabs {
   flex: 1;
+  min-height: 0;
+  ::ng-deep .mat-mdc-tab-body-wrapper { flex: 1; min-height: 0; }
   --mat-tab-divider-color: #e3e0d8;
   --mat-tab-active-indicator-color: #3B52CC;
   --mat-tab-active-focus-indicator-color: #3B52CC;

@@ -7,7 +7,7 @@ import { AuthPermission, PermissionService, RoutingService, SessionService } fro
 import { EntityEventResourceService, EntityProjectResourceService } from "@synergia-frontend/api";
 import { IEventModel, IProjectModel } from "@synergia-frontend/interfaces";
 import { EventDtoToModel, ProjectDtoToModel } from "@synergia-frontend/mappers";
-import { filter, map, tap } from "rxjs";
+import { catchError, EMPTY, filter, map, tap } from "rxjs";
 
 @Component({
   selector: 'app-layout-sidebar',
@@ -41,7 +41,11 @@ export class LayoutSidebarComponent {
     this.refreshOnNavigation();
   }
 
-  /** O layout não é recriado entre rotas; sem isso, criar/excluir projeto ou evento não aparece aqui. */
+  /**
+   * O layout não é recriado entre rotas; sem isso, criar/excluir projeto ou evento não aparece aqui.
+   * As permissões também são relidas: quem ganha ou perde uma permissão vê a mudança ao navegar,
+   * sem precisar sair e entrar de novo.
+   */
   private refreshOnNavigation() {
     this.router.events
       .pipe(
@@ -51,6 +55,7 @@ export class LayoutSidebarComponent {
       .subscribe(() => {
         this.lookupProjects();
         this.lookupEvents();
+        this.permissions.refresh().pipe(catchError(() => EMPTY)).subscribe();
       });
   }
 
