@@ -1,5 +1,5 @@
 import { Component, ChangeDetectionStrategy, computed, inject } from '@angular/core';
-import { JoinRequestService, NotificationService, RoutingService, SessionService } from '@synergia-frontend/services';
+import { JoinRequestService, MessageService, NotificationService, RoutingService, SessionService } from '@synergia-frontend/services';
 import { activityIcon, activityVerb, formatRelativeTime } from '@synergia-frontend/utils';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -17,6 +17,7 @@ import { MatBadgeModule } from '@angular/material/badge';
 export class LayoutTopbarComponent {
   public readonly notifications = inject(NotificationService);
   public readonly joinRequests = inject(JoinRequestService);
+  private readonly messages = inject(MessageService);
   public readonly iconFor = activityIcon;
   public readonly verbFor = activityVerb;
   public readonly relative = (value: string) => formatRelativeTime(value);
@@ -30,6 +31,7 @@ export class LayoutTopbarComponent {
     public readonly sessionService: SessionService
   ) {
     this.notifications.startPolling();
+    this.messages.startPolling();
   }
 
   public getInitials(): string {
@@ -43,6 +45,7 @@ export class LayoutTopbarComponent {
   public logout() {
     const identifier = this.sessionService.getTenantIdentifier();
     this.notifications.reset();
+    this.messages.reset();
     this.sessionService.logout();
     this.routingService.goToLogin(identifier);
   }

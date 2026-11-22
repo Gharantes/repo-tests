@@ -2,6 +2,17 @@
 -- relacionamentos antes das entidades. `permission` é global e fica.
 DELETE FROM notification WHERE id_tenant = :id_tenant;
 DELETE FROM project_join_request WHERE id_tenant = :id_tenant;
+DELETE FROM conversation_message
+WHERE id_conversation IN (SELECT id FROM conversation WHERE id_tenant = :id_tenant);
+
+DELETE FROM conversation_read
+WHERE id_conversation IN (SELECT id FROM conversation WHERE id_tenant = :id_tenant);
+
+DELETE FROM conversation_member
+WHERE id_conversation IN (SELECT id FROM conversation WHERE id_tenant = :id_tenant);
+
+DELETE FROM conversation WHERE id_tenant = :id_tenant;
+
 DELETE FROM project_note_relationship
 WHERE id_note IN (SELECT id FROM note WHERE id_tenant = :id_tenant);
 

@@ -11,4 +11,8 @@ object EntityRowMapper {
     val postRowMapper = PostRowMapper()
     val notificationRowMapper = NotificationRowMapper()
     val calendarEntryRowMapper = CalendarEntryRowMapper()
+    val conversationRowMapper = ConversationRowMapper()
+    val messageRowMapper = MessageRowMapper()
+    val conversationMemberRowMapper = ConversationMemberRowMapper()
+    val messageContactRowMapper = MessageContactRowMapper()
 }

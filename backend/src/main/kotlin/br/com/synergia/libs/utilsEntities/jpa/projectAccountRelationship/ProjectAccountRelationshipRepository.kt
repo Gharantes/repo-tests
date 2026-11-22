@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 @Repository
 interface ProjectAccountRelationshipRepository : JpaRepository<ProjectAccountRelationship, Long> {
     fun existsByIdProjectAndIdAccount(idProject: Long, idAccount: Long): Boolean
+    fun findAllByIdAccount(idAccount: Long): List<ProjectAccountRelationship>
 }

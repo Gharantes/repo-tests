@@ -38,6 +38,7 @@ export const appRoutes: Route[] = [
         children: [
           { path: 'dashboard', loadComponent: () => import('./modules/page-dashboard/route-dashboard.component').then((m) => m.RouteDashboardComponent) },
           { path: 'lousa', loadComponent: () => import('./modules/page-lousa/route-lousa.component').then((m) => m.RouteLousaComponent) },
+          { path: 'mensagens', loadComponent: () => import('./modules/page-messages/route-messages.component').then((m) => m.RouteMessagesComponent) },
           // Usuários
           { path: 'accounts', loadComponent: () => import('./modules/page-list-accounts/route-list-accounts.component').then((m) => m.RouteListAccountsComponent), canActivate: [hasPermission(AuthPermission.VIEW_ACCOUNTS_PAGE)] },
           { path: 'create-account', loadComponent: () => import('./modules/page-upsert-account/route-upsert-account.component').then((m) => m.RouteUpsertAccountComponent), canActivate: [hasPermission(AuthPermission.CREATE_USER)] },

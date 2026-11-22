@@ -34,6 +34,12 @@ object SqlPath {
     enum class EntityCalendar (override val path: String) : ISqlFile {
         LIST_CALENDAR_ENTRIES("/sql/entity-calendar/list-calendar-entries.sql"),
     }
+    enum class EntityMessage (override val path: String) : ISqlFile {
+        LIST_CONVERSATIONS_OF_ACCOUNT("/sql/entity-message/list-conversations-of-account.sql"),
+        LIST_MESSAGES("/sql/entity-message/list-messages.sql"),
+        LIST_MEMBERS_OF_CONVERSATION("/sql/entity-message/list-members-of-conversation.sql"),
+        LIST_CONTACTS_OF_ACCOUNT("/sql/entity-message/list-contacts-of-account.sql"),
+    }
     enum class EntityNotification (override val path: String) : ISqlFile {
         LIST_NOTIFICATIONS_OF_ACCOUNT("/sql/entity-notification/list-notifications-of-account.sql"),
         NOTIFY_EVENT_AUDIENCE("/sql/entity-notification/notify-event-audience.sql"),

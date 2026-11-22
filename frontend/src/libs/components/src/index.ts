@@ -24,6 +24,7 @@ export * from './lib/markdown/markdown.component';
 export * from './lib/event-feed/event-feed.component';
 export * from './lib/entity-links/project-events.component';
 export * from './lib/entity-links/event-projects.component';
+export * from './lib/entity-links/dialog-pick-entity.component';
 export * from './lib/parent-notes/parent-notes.component';
 export * from './lib/parent-calendar/parent-calendar.component';
 

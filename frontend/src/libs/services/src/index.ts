@@ -4,6 +4,7 @@ export * from './lib/snackbar.service';
 export * from './lib/note.service';
 export * from './lib/post.service';
 export * from './lib/calendar.service';
+export * from './lib/message.service';
 export * from './lib/notification.service';
 export * from './lib/join-request.service';
 export * from './lib/project-events.service';
