@@ -87,9 +87,12 @@
     }
   }
 
-  <div class="nav-item" matRipple>
+  <div class="nav-item" matRipple (click)="routingService.goToMessages()">
     <mat-icon>chat</mat-icon>
     <span>Mensagens</span>
+    @if (messages.unread() > 0) {
+      <span class="nav-badge">{{ messages.unread() > 99 ? '99+' : messages.unread() }}</span>
+    }
   </div>
 </nav>
 

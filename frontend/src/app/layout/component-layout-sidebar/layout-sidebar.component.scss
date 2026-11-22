@@ -73,6 +73,20 @@
 
   span { flex: 1; }
 
+  .nav-badge {
+    flex: none;
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px;
+    border-radius: 10px;
+    background: #3B52CC;
+    color: #fff;
+    font-size: 0.72rem;
+    font-weight: 700;
+    line-height: 20px;
+    text-align: center;
+  }
+
   &.nav-group .chevron {
     margin-left: auto;
     flex-shrink: 0;

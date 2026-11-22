@@ -62,6 +62,12 @@ export class RoutingService {
     this.navigateInTenant(['lousa']);
   }
 
+  /** `idConversation` abre direto uma conversa. */
+  public goToMessages(idConversation?: number) {
+    this.routeLabel.set('Mensagens');
+    this.navigateInTenant(['mensagens'], idConversation != null ? { c: String(idConversation) } : undefined);
+  }
+
   /** ============ ACCOUNTS ============= **/
   public goToListAccounts() {
     this.routeLabel.set('Usuários');

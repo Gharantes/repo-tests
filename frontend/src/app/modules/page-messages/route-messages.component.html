@@ -1,0 +1,208 @@
+<aside id="conversations" [class.hidden-mobile]="selectedId() !== null">
+  <header class="list-head">
+    <label class="search">
+      <mat-icon>search</mat-icon>
+      <input
+        type="search"
+        placeholder="Buscar conversa"
+        [value]="search()"
+        (input)="search.set($any($event.target).value)"
+      />
+    </label>
+    <button matIconButton class="new-btn" matTooltip="Nova conversa" aria-label="Nova conversa" [matMenuTriggerFor]="newMenu">
+      <mat-icon>edit_square</mat-icon>
+    </button>
+    <mat-menu #newMenu="matMenu" xPosition="before">
+      <button mat-menu-item (click)="startDirect()">
+        <mat-icon>person</mat-icon> Conversa privada
+      </button>
+      <button mat-menu-item (click)="startProjectEvent()">
+        <mat-icon>forum</mat-icon> Grupo com um evento
+      </button>
+    </mat-menu>
+  </header>
+
+  <div class="list">
+    @for (c of filtered(); track c.id) {
+      <button type="button" class="conversation" [class.active]="c.id === selectedId()" (click)="select(c)">
+        @switch (c.type) {
+          @case ('DIRECT') {
+            <span class="avatar" [style.background]="colorFor(c.idOtherAccount ?? c.id)">{{ initials(titleOf(c)) }}</span>
+          }
+          @case ('PROJECT') {
+            <span class="avatar avatar--project"><mat-icon>groups</mat-icon></span>
+          }
+          @case ('PROJECT_EVENT') {
+            <span class="avatar avatar--event"><mat-icon>forum</mat-icon></span>
+          }
+        }
+        <span class="conversation-text">
+          <span class="conversation-top">
+            <strong class="ellipsis">{{ titleOf(c) }}</strong>
+            @if (c.lastMessageAt) {
+              <small class="when">{{ relative(c.lastMessageAt) }}</small>
+            }
+          </span>
+          <span class="conversation-bottom">
+            <small class="ellipsis" [class.unread]="c.unreadCount > 0">{{ previewOf(c) }}</small>
+            @if (c.unreadCount > 0) {
+              <span class="badge">{{ c.unreadCount > 99 ? '99+' : c.unreadCount }}</span>
+            }
+          </span>
+        </span>
+      </button>
+    } @empty {
+      @if (listLoaded()) {
+        <p class="empty">
+          @if (search()) {
+            Nenhuma conversa com esse nome.
+          } @else {
+            Você ainda não tem conversas. Entre num projeto para falar com o grupo, ou comece uma conversa pelo botão acima.
+          }
+        </p>
+      }
+    }
+  </div>
+</aside>
+
+<section id="chat" [class.hidden-mobile]="selectedId() === null">
+  @if (selected(); as c) {
+    <header class="chat-head">
+      <button matIconButton class="back" aria-label="Voltar para as conversas" (click)="close()">
+        <mat-icon>arrow_back</mat-icon>
+      </button>
+      <span class="chat-title">
+        <strong class="ellipsis">{{ titleOf(c) }}</strong>
+        <small class="ellipsis">
+          {{ subtitleOf(c) }}
+          @if (c.type !== 'DIRECT' && members().length) {
+            · {{ members().length }} {{ members().length === 1 ? 'participante' : 'participantes' }}
+          }
+        </small>
+      </span>
+      <button
+        matIconButton
+        [class.toggled]="membersOpen()"
+        matTooltip="Participantes"
+        aria-label="Participantes"
+        (click)="membersOpen.set(!membersOpen())"
+      >
+        <mat-icon>group</mat-icon>
+      </button>
+    </header>
+
+    <div id="messages" #scroller>
+      @if (hasOlder()) {
+        <button type="button" class="older" [disabled]="loadingOlder()" (click)="loadOlder()">
+          {{ loadingOlder() ? 'Carregando…' : 'Carregar mensagens anteriores' }}
+        </button>
+      }
+      @for (item of timeline(); track item.key) {
+        @if (item.kind === 'day') {
+          <div class="day"><span>{{ item.label }}</span></div>
+        } @else {
+          <div class="message" [class.mine]="item.mine" [class.first]="item.showAuthor">
+            <div class="bubble">
+              @if (item.showAuthor) {
+                <span class="author" [style.color]="colorFor(item.message.idAccount)">{{ item.message.authorName }}</span>
+              }
+              <span class="content">{{ item.message.content }}</span>
+              <span class="time">{{ timeOf(item.message) }}</span>
+            </div>
+          </div>
+        }
+      } @empty {
+        @if (!loadingMessages()) {
+          <p class="empty-chat">
+            @switch (c.type) {
+              @case ('PROJECT') { Nenhuma mensagem ainda. Tudo o que for escrito aqui é visto por todo o projeto. }
+              @case ('PROJECT_EVENT') { Nenhuma mensagem ainda. Adicione o Organizador do evento pelos participantes para conversar com ele. }
+              @default { Nenhuma mensagem ainda. Só vocês dois veem esta conversa. }
+            }
+          </p>
+        }
+      }
+    </div>
+
+    <form class="composer" (submit)="$event.preventDefault(); send()">
+      <textarea
+        #composer
+        rows="1"
+        placeholder="Escreva uma mensagem…"
+        [maxLength]="maxLength"
+        [value]="draft()"
+        (input)="draft.set($any($event.target).value)"
+        (keydown)="onComposerKeydown($event)"
+      ></textarea>
+      <button matIconButton type="submit" class="send" aria-label="Enviar" [disabled]="!draft().trim() || sending()">
+        <mat-icon>send</mat-icon>
+      </button>
+    </form>
+  } @else if (selectedId() !== null && listLoaded()) {
+    <p class="placeholder">Conversa não encontrada, ou você não participa mais dela.</p>
+  } @else {
+    <div class="placeholder">
+      <mat-icon>chat</mat-icon>
+      <p>Escolha uma conversa ao lado.</p>
+    </div>
+  }
+</section>
+
+@if (membersOpen() && selected(); as c) {
+  <aside id="members">
+    <header class="members-head">
+      <strong>Participantes</strong>
+      <button matIconButton aria-label="Fechar" (click)="membersOpen.set(false)"><mat-icon>close</mat-icon></button>
+    </header>
+
+    @if (c.type === 'DIRECT') {
+      @for (m of members(); track m.idAccount) {
+        <div class="member">
+          <span class="avatar small" [style.background]="colorFor(m.idAccount)">{{ initials(m.name) }}</span>
+          <span class="ellipsis">{{ m.name }}{{ m.idAccount === idAccount ? ' (você)' : '' }}</span>
+        </div>
+      }
+    } @else {
+      <h4>Projeto {{ c.projectTitle }}</h4>
+      @for (m of projectMembers(); track m.idAccount) {
+        <div class="member">
+          <span class="avatar small" [style.background]="colorFor(m.idAccount)">{{ initials(m.name) }}</span>
+          <span class="member-text">
+            <span class="ellipsis">{{ m.name }}{{ m.idAccount === idAccount ? ' (você)' : '' }}</span>
+            @if (m.membershipLabel) { <small>{{ m.membershipLabel }}</small> }
+          </span>
+        </div>
+      }
+
+      @if (c.type === 'PROJECT_EVENT') {
+        <h4>Evento {{ c.eventTitle }}</h4>
+        @for (m of eventMembers(); track m.idAccount) {
+          <div class="member">
+            <span class="avatar small" [style.background]="colorFor(m.idAccount)">{{ initials(m.name) }}</span>
+            <span class="member-text">
+              <span class="ellipsis">{{ m.name }}{{ m.idAccount === idAccount ? ' (você)' : '' }}</span>
+              @if (m.membershipLabel) { <small>{{ m.membershipLabel }}</small> }
+            </span>
+            @if (isProjectMember() || m.idAccount === idAccount) {
+              <button
+                type="button"
+                class="remove"
+                [matTooltip]="m.idAccount === idAccount ? 'Sair do grupo' : 'Tirar do grupo'"
+                (click)="removeMember(m)"
+              >
+                <mat-icon>{{ m.idAccount === idAccount ? 'logout' : 'person_remove' }}</mat-icon>
+              </button>
+            }
+          </div>
+        } @empty {
+          <p class="hint">Ninguém do evento foi adicionado ainda.</p>
+        }
+        @if (isProjectMember()) {
+          <button type="button" class="add-member" (click)="addEventMember()">
+            <mat-icon>person_add</mat-icon> Adicionar pessoa do evento
+          </button>
+        }
+      }
+    }
+  </aside>
+}
