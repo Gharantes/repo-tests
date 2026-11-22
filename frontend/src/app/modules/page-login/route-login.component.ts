@@ -12,7 +12,20 @@ import {
   SessionService,
   SnackbarService,
 } from '@synergia-frontend/services';
-import { catchError, EMPTY, filter, map, Observable, of, switchMap, tap } from 'rxjs';
+import {
+  catchError,
+  combineLatest,
+  EMPTY,
+  filter,
+  finalize,
+  map,
+  Observable,
+  of,
+  startWith,
+  Subject,
+  switchMap,
+  tap,
+} from 'rxjs';
 import { ConnectorLogin } from './connector/connector-login';
 import { TenantDtoToModel } from '@synergia-frontend/mappers';
 import { ITenantModel } from '@synergia-frontend/interfaces';
@@ -32,6 +45,11 @@ export class RouteLoginComponent {
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
   private readonly permissionService = inject(PermissionService);
+  private readonly reloadTenant$ = new Subject<void>();
+
+  public retryTenant(): void {
+    this.reloadTenant$.next();
+  }
 
   constructor(
     public readonly routingService: RoutingService,
@@ -40,10 +58,12 @@ export class RouteLoginComponent {
     private readonly snackService: SnackbarService,
     private readonly sessionService: SessionService
   ) {
-    this.route.paramMap
+    combineLatest([
+      this.route.paramMap.pipe(map((params) => params.get('tenant') ?? '')),
+      this.reloadTenant$.pipe(startWith(undefined)),
+    ])
       .pipe(
-        map((params) => params.get('tenant') ?? ''),
-        switchMap((identifier) => this.resolveTenant(identifier)),
+        switchMap(([identifier]) => this.resolveTenant(identifier)),
         takeUntilDestroyed(this.destroyRef)
       )
       .subscribe((tenant) => {
@@ -56,13 +76,17 @@ export class RouteLoginComponent {
   private resolveTenant(identifier: string): Observable<ITenantModel | null> {
     this.connector.tenant$.set(null);
     this.connector.tenantNotFound$.set(null);
+    this.connector.tenantLoadFailed$.set(false);
+    this.connector.tenantLoading$.set(true);
 
     return this.tenantService.listAllTenants().pipe(
       map((res) => res.map((v) => TenantDtoToModel(v)).find((t) => t.identifier === identifier) ?? null),
       catchError((err) => {
         this.snackService.catchError(err, 'Erro ao carregar o tenant.');
+        this.connector.tenantLoadFailed$.set(true);
         return EMPTY;
       }),
+      finalize(() => this.connector.tenantLoading$.set(false)),
       tap((tenant) => {
         this.connector.tenant$.set(tenant);
         this.connector.tenantNotFound$.set(tenant == null ? identifier : null);

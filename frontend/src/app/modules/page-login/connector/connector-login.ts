@@ -10,6 +10,10 @@ export class ConnectorLogin {
   public tenant$ = signal<ITenantModel | null>(null);
   /** Identifier da URL que não corresponde a nenhum tenant. */
   public tenantNotFound$ = signal<string | null>(null);
+  /** Lista de tenants ainda carregando. */
+  public tenantLoading$ = signal<boolean>(false);
+  /** A lista de tenants não pôde ser carregada. */
+  public tenantLoadFailed$ = signal<boolean>(false);
 
   public readonly form = this.fb.group({
     user: this.fb.control<string>('', [Validators.required]),
