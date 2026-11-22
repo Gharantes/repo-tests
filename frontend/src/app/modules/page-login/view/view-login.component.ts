@@ -28,13 +28,25 @@ export class ViewLoginComponent {
 
   @Output() public goToHomeEvent = new EventEmitter<void>();
   @Output() public attemptLoginEvent = new EventEmitter<void>();
+  @Output() public retryTenantEvent = new EventEmitter<void>();
 
+  /**
+   * Só depende do tenant: a validade do formulário é conferida no clique. Com autofill do navegador
+   * (Chrome/Opera), os valores só chegam ao formulário após uma interação do usuário — se o botão
+   * dependesse de `form.valid`, ele ficaria desabilitado com os campos visualmente preenchidos.
+   */
   public canSubmit(): boolean {
-    return this.connector.form.valid && this.connector.tenant$() != null;
+    return this.connector.tenant$() != null;
   }
   public submit() {
-    if (this.canSubmit()) {
-      this.attemptLoginEvent.emit();
+    if (!this.canSubmit()) {
+      return;
     }
+    const form = this.connector.form;
+    if (form.invalid) {
+      form.markAllAsTouched();
+      return;
+    }
+    this.attemptLoginEvent.emit();
   }
 }

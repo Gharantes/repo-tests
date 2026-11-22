@@ -6,18 +6,32 @@
   } @else {
     <div>
       <h1 class="auth-title">Login</h1>
-      <p class="auth-subtitle">{{ connector.tenant$()?.title }}</p>
+      <p class="auth-subtitle">
+        @if (connector.tenantLoading$()) {
+          Carregando tenant…
+        } @else if (connector.tenantLoadFailed$()) {
+          Não foi possível carregar o tenant.
+        } @else {
+          {{ connector.tenant$()?.title }}
+        }
+      </p>
     </div>
 
     <app-form-login [connector]="connector" (submitEvent)="submit()"></app-form-login>
 
-    <button
-      class="auth-primary-button"
-      matRipple
-      [disabled]="!canSubmit()"
-      (click)="submit()">
-      Login
-    </button>
+    @if (connector.tenantLoadFailed$()) {
+      <button class="auth-primary-button" matRipple (click)="retryTenantEvent.emit()">
+        Tentar novamente
+      </button>
+    } @else {
+      <button
+        class="auth-primary-button"
+        matRipple
+        [disabled]="!canSubmit()"
+        (click)="submit()">
+        Login
+      </button>
+    }
 
     <button mat-stroked-button class="auth-secondary-button" (click)="goToHomeEvent.emit()">
       Trocar Tenant
