@@ -67,6 +67,11 @@ export class RoutingService {
     this.routeLabel.set('Mensagens');
     this.navigateInTenant(['mensagens'], idConversation != null ? { c: String(idConversation) } : undefined);
   }
+  /** Abre o grupo do projeto em Mensagens (ex.: a apresentação de quem pediu para participar). */
+  public goToProjectMessages(idProject: number) {
+    this.routeLabel.set('Mensagens');
+    this.navigateInTenant(['mensagens'], { project: String(idProject) });
+  }
 
   /** ============ ACCOUNTS ============= **/
   public goToListAccounts() {

@@ -1,7 +1,8 @@
 -- Com quem :id_account pode abrir uma conversa privada:
 --  1. colegas dos projetos dele;
 --  2. membros dos eventos em que os projetos dele estão registrados;
---  3. (sendo ele de um evento) membros dos projetos registrados nesse evento.
+--  3. (sendo ele de um evento) membros dos projetos registrados nesse evento;
+--  4 e 5. quem tem pedido pendente para um projeto dele, e vice-versa.
 SELECT
     a.id as id_account,
     a.first_name || ' ' || a.last_name as contact_name,
@@ -41,5 +42,33 @@ INNER JOIN project_event_relationship per ON per.id_event = mine.id_event
 INNER JOIN project_account_relationship par ON par.id_project = per.id_project AND par.id_account <> :id_account
 INNER JOIN account a ON a.id = par.id_account
 INNER JOIN project p ON p.id = per.id_project
+WHERE mine.id_account = :id_account
+UNION
+-- 4. quem pediu para participar de um projeto dele (pedido pendente), para responder em privado;
+SELECT
+    a.id as id_account,
+    a.first_name || ' ' || a.last_name as contact_name,
+    'PROJECT' as contact_relation,
+    p.id as contact_parent_id,
+    p.title as contact_parent_title,
+    'Pediu para participar' as membership_label
+FROM project_account_relationship mine
+INNER JOIN project_join_request pjr ON pjr.id_project = mine.id_project AND pjr.id_account <> :id_account
+INNER JOIN account a ON a.id = pjr.id_account
+INNER JOIN project p ON p.id = mine.id_project
+WHERE mine.id_account = :id_account
+UNION
+-- 5. (tendo ele um pedido pendente) os membros do projeto que ele pediu.
+SELECT
+    a.id as id_account,
+    a.first_name || ' ' || a.last_name as contact_name,
+    'PROJECT' as contact_relation,
+    p.id as contact_parent_id,
+    p.title as contact_parent_title,
+    par.membership_label
+FROM project_join_request mine
+INNER JOIN project_account_relationship par ON par.id_project = mine.id_project AND par.id_account <> :id_account
+INNER JOIN account a ON a.id = par.id_account
+INNER JOIN project p ON p.id = mine.id_project
 WHERE mine.id_account = :id_account
 ORDER BY contact_name, contact_parent_title

@@ -100,6 +100,33 @@
       @for (item of timeline(); track item.key) {
         @if (item.kind === 'day') {
           <div class="day"><span>{{ item.label }}</span></div>
+        } @else if (item.kind === 'message' && item.message.joinRequestStatus; as status) {
+          <!-- Apresentação de quem pediu para participar: ainda não é membro do projeto. -->
+          <div class="join-request" [attr.data-status]="status">
+            <div class="join-head">
+              <span class="join-tag"><mat-icon>person_add</mat-icon> Quer participar</span>
+              <strong class="ellipsis">{{ item.message.authorName }}</strong>
+              <span class="time">{{ timeOf(item.message) }}</span>
+            </div>
+            <span class="content">{{ item.message.content }}</span>
+            @switch (status) {
+              @case ('PENDING') {
+                @if (!item.mine) {
+                  <div class="join-actions">
+                    <button type="button" class="join-accept" (click)="answerJoinRequest(item.message, 'accept')">Aceitar</button>
+                    <button type="button" class="join-decline" (click)="answerJoinRequest(item.message, 'decline')">Recusar</button>
+                    <button type="button" class="join-reply" (click)="replyPrivately(item.message)">
+                      <mat-icon>chat</mat-icon> Responder em privado
+                    </button>
+                  </div>
+                } @else {
+                  <small class="join-status">Aguardando resposta dos membros.</small>
+                }
+              }
+              @case ('ACCEPTED') { <small class="join-status"><mat-icon>check_circle</mat-icon> Pedido aceito: entrou no projeto.</small> }
+              @case ('DECLINED') { <small class="join-status"><mat-icon>cancel</mat-icon> Pedido recusado.</small> }
+            }
+          </div>
         } @else {
           <div class="message" [class.mine]="item.mine" [class.first]="item.showAuthor">
             <div class="bubble">

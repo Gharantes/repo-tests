@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityMessage.services
 
 import br.com.synergia.libs.utilsCommons.enums.ConversationTypeEnum
+import br.com.synergia.libs.utilsCommons.enums.JoinRequestStatusEnum
 import br.com.synergia.libs.utilsEntities.jpa.conversation.Conversation
 import br.com.synergia.libs.utilsEntities.jpa.conversation.ConversationRepository
 import br.com.synergia.libs.utilsEntities.jpa.conversationMember.ConversationMember
@@ -98,8 +99,32 @@ class EntityMessageSqlService (
         memberRepository.deleteByIdConversationAndIdAccount(idConversation, idAccount)
     }
 
-    fun createMessage(idConversation: Long, idAccount: Long, content: String): ConversationMessage {
-        return messageRepository.save(ConversationMessage(idConversation = idConversation, idAccount = idAccount, content = content))
+    fun createMessage(
+        idConversation: Long,
+        idAccount: Long,
+        content: String,
+        idJoinRequest: Long? = null,
+        joinRequestStatus: JoinRequestStatusEnum? = null
+    ): ConversationMessage {
+        return messageRepository.save(
+            ConversationMessage(
+                idConversation = idConversation,
+                idAccount = idAccount,
+                content = content,
+                idJoinRequest = idJoinRequest,
+                joinRequestStatus = joinRequestStatus
+            )
+        )
+    }
+
+    fun setJoinRequestStatus(idJoinRequest: Long, status: JoinRequestStatusEnum) {
+        val message = messageRepository.findByIdJoinRequest(idJoinRequest) ?: return
+        message.joinRequestStatus = status
+        messageRepository.save(message)
+    }
+
+    fun deleteJoinRequestMessage(idJoinRequest: Long) {
+        messageRepository.deleteByIdJoinRequest(idJoinRequest)
     }
 
     /** Marca como lido até a última mensagem da conversa. Nunca volta o marcador para trás. */

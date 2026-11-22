@@ -1,0 +1,77 @@
+/* Apresentação de quem pediu para participar do projeto (mensagem de futuro membro). */
+$accent: #3B52CC;
+$muted: #8a877f;
+
+.join-request {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-self: center;
+  width: min(100%, 620px);
+  margin: 10px 0;
+  padding: 12px 14px;
+  border: 1px solid #d9cdf3;
+  border-left: 4px solid #6b3fc4;
+  border-radius: 10px;
+  background: #faf7ff;
+
+  &[data-status='ACCEPTED'] { border-color: #cfe8d9; border-left-color: #2f8f6b; background: #f6fbf8; }
+  &[data-status='DECLINED'] { border-color: #e8e4dc; border-left-color: #b8b4aa; background: #fbfaf7; }
+
+  .content { font-size: 0.9rem; color: #222; white-space: pre-wrap; overflow-wrap: anywhere; }
+  .time { margin-left: auto; font-size: 0.68rem; color: $muted; }
+}
+.join-head {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+
+  strong { font-size: 0.9rem; color: #1b1f3a; }
+}
+.join-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  flex: none;
+  padding: 2px 8px;
+  border-radius: 10px;
+  background: #ece3fb;
+  color: #6b3fc4;
+  font-size: 0.72rem;
+  font-weight: 700;
+
+  mat-icon { font-size: 14px; width: 14px; height: 14px; }
+}
+.join-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 4px;
+
+  button {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    height: 30px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.82rem;
+    font-weight: 600;
+    cursor: pointer;
+  }
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}
+.join-accept { border: 0; background: $accent; color: #fff; &:hover { background: #2f44b3; } }
+.join-decline { border: 1px solid #dcd9d1; background: #fff; color: #1b1f3a; &:hover { background: #f3f2ee; } }
+.join-reply { border: 0; background: none; color: $accent; &:hover { text-decoration: underline; } }
+.join-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.78rem;
+  color: $muted;
+
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+}

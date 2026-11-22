@@ -17,6 +17,7 @@
     mat-icon-button
     aria-label="Notificações"
     [matMenuTriggerFor]="notificationsMenu"
+    #bellTrigger="matMenuTrigger"
     (menuOpened)="notifications.load()"
   >
     <mat-icon
@@ -48,6 +49,7 @@
             <span class="notif-actions">
               <button type="button" class="notif-accept" (click)="joinRequests.accept(n)">Aceitar</button>
               <button type="button" class="notif-decline" (click)="joinRequests.decline(n)">Recusar</button>
+              <button type="button" class="notif-decline" (click)="bellTrigger.closeMenu(); notifications.open(n)">Ver mensagem</button>
             </span>
           </span>
         </div>

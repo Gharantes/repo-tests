@@ -6,7 +6,9 @@ SELECT
     m.id_account,
     COALESCE(a.first_name || ' ' || a.last_name, 'Usuário removido') as message_author_name,
     m.content as message_content,
-    m.created_at as message_created_at
+    m.created_at as message_created_at,
+    m.id_join_request,
+    m.join_request_status
 FROM conversation_message m
 LEFT JOIN account a ON a.id = m.id_account
 WHERE
