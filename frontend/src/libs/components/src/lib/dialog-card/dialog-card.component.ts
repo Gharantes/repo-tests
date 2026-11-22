@@ -27,7 +27,7 @@ import {
   selector: 'lib-dialog-card',
   standalone: true,
   templateUrl: './dialog-card.component.html',
-  styleUrl: './dialog-card.component.scss',
+  styleUrls: ['./dialog-card.component.scss', './dialog-card.actions.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, MatIconModule, SafeImageComponent],
 })

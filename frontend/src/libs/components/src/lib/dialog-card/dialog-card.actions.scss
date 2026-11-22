@@ -1,0 +1,51 @@
+// Rodapé do card (abrir, editar, pedir para participar). Fica numa folha à parte porque o build de
+// produção limita cada folha de estilo de componente a 4 kB.
+$accent: #3B52CC;
+$ink: #1b1f3a;
+$line: #efede7;
+
+.actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 16px 28px 24px;
+  border-top: 1px solid $line;
+
+  button { height: 40px; border-radius: 10px; font-weight: 600; }
+  .row { display: flex; gap: 8px; button { flex: 1; min-width: 0; --mat-button-outlined-outline-color: #dcd9d1; --mat-button-outlined-label-text-color: #{$ink}; } }
+}
+.join {
+  width: 100%;
+  --mat-button-outlined-outline-color: #{$accent};
+  --mat-button-outlined-label-text-color: #{$accent};
+}
+.join-pending {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  min-height: 40px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #eef0fb;
+  color: #2b3a8f;
+  font-size: 13.5px;
+  mat-icon { font-size: 18px; width: 18px; height: 18px; flex-shrink: 0; }
+  span { flex: 1; min-width: 0; }
+}
+.join-cancel {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: $accent;
+  font: inherit;
+  font-weight: 600;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+  &:focus-visible { outline: 2px solid $accent; outline-offset: 2px; }
+}
+.primary { width: 100%; --mat-button-filled-container-color: #{$accent}; --mat-button-filled-label-text-color: #fff; }
+
+@media (max-width: 720px) {
+  .actions { padding: 12px 18px 18px; .row { flex-direction: column; } }
+}
