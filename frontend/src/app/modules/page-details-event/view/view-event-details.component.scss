@@ -1,4 +1,4 @@
-// Mesmo layout e valores da tela de criar/editar (view-upsert-*), em modo leitura.
+// Mesmo layout e valores da tela de criar (view-upsert-*). No modo edição o topo usa app-entity-form-fields.
 * { box-sizing: border-box; }
 
 :host {
@@ -138,6 +138,8 @@
 }
 
 .status { display: flex; align-items: center; gap: 6px; margin-right: auto; font-size: 13px; color: #77746c; mat-icon { font-size: 18px; width: 18px; height: 18px; } }
+
+.pip { width: 8px; height: 8px; border-radius: 999px; background: #ea8a00; &.ok { background: #16A34A; } }
 
 .edit { --mat-button-filled-container-color: #3B52CC; --mat-button-filled-label-text-color: #fff; padding: 0 20px; }
 

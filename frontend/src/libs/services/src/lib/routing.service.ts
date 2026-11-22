@@ -93,9 +93,10 @@ export class RoutingService {
     this.routeLabel.set("Registrar Evento")
     this.navigateInTenant(["create-event"])
   }
+  /** Editar acontece na própria página do evento, aberta já em modo edição. */
   public goToEditEvent(idEvent: number) {
-    this.routeLabel.set('Editar Evento')
-    this.navigateInTenant(["edit-event", idEvent])
+    this.routeLabel.set('Detalhes do Evento');
+    this.navigateInTenant(['event', idEvent], { edit: '1' });
   }
   public goToEventDetails(idEvent: number) {
     this.routeLabel.set('Detalhes do Evento');

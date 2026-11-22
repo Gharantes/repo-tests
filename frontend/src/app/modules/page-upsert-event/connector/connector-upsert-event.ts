@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import {
   IEventModel,
@@ -28,6 +28,9 @@ export class ConnectorUpsertEvent {
     tags: this.fb.control<ITagModel[]>([]),
   });
 
+  /** Última URL de banner que falhou ao carregar (compartilhada entre a capa e o campo da URL). */
+  public readonly brokenBannerUrl = signal<string | null>(null);
+
   public getFormValue(): IUpsertEventModel | null {
     const v = this.form.value;
     if (
@@ -49,6 +52,7 @@ export class ConnectorUpsertEvent {
     };
   }
   public populateForm(res: IEventModel) {
+    this.brokenBannerUrl.set(null);
     this.form.controls.title.setValue(res.title);
     this.form.controls.description.setValue(res.description);
     this.form.controls.bannerUrl.setValue(res.bannerUrl);

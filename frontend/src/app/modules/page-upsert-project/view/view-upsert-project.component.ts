@@ -2,8 +2,8 @@ import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from 
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
-import { ProjectCoverFieldComponent } from '../fields/project-cover-field.component';
-import { ProjectFormFieldsComponent } from '../fields/project-form-fields.component';
+import { EntityCoverFieldComponent } from '../../../shared/entity-fields/entity-cover-field.component';
+import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-form-fields.component';
 
 /** Criar projeto no estilo documento. Editar acontece na própria página do projeto. */
 @Component({
@@ -12,7 +12,7 @@ import { ProjectFormFieldsComponent } from '../fields/project-form-fields.compon
   templateUrl: './view-upsert-project.component.html',
   styleUrl: './view-upsert-project.component.scss',
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatButtonModule, MatIconModule, ProjectCoverFieldComponent, ProjectFormFieldsComponent],
+  imports: [MatButtonModule, MatIconModule, EntityCoverFieldComponent, EntityFormFieldsComponent],
 })
 export class ViewUpsertProjectComponent {
   @Input() public connector!: ConnectorUpsertProject;

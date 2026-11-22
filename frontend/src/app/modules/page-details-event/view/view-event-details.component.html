@@ -1,12 +1,16 @@
 <div class="page">
   <div class="scroll">
-    <div class="cover" [style.background]="bannerBg">
-      @if (event$.bannerUrl) {
-        <lib-safe-image [url]="event$.bannerUrl" [altColor]="bannerBg"></lib-safe-image>
-      } @else {
-        <span class="monogram">{{ initial }}</span>
-      }
-    </div>
+    @if (editing) {
+      <app-entity-cover-field [connector]="connector"></app-entity-cover-field>
+    } @else {
+      <div class="cover" [style.background]="bannerBg">
+        @if (event$.bannerUrl) {
+          <lib-safe-image [url]="event$.bannerUrl" [altColor]="bannerBg"></lib-safe-image>
+        } @else {
+          <span class="monogram">{{ initial }}</span>
+        }
+      </div>
+    }
 
     <div class="doc">
       <nav class="crumbs">
@@ -15,37 +19,42 @@
         <span>{{ event$.title }}</span>
       </nav>
 
-      <h1 class="title">{{ event$.title }}</h1>
-
-      <dl class="props">
-        <div class="prop">
-          <dt><mat-icon>sell</mat-icon>Tags</dt>
-          <dd class="wrap">
-            @for (tag of event$.tags; track tag.id) {
-              <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
-            } @empty {
-              <span class="muted">Sem tags</span>
-            }
-          </dd>
-        </div>
-        <div class="prop">
-          <dt><mat-icon>group</mat-icon>Membros</dt>
-          <dd class="wrap">
-            @for (m of event$.members; track m.id) {
-              <span class="member">
-                <span class="avatar" [style.background]="colorFor(m.id)">{{ initials(m) }}</span>{{ nameOf(m) }}
-              </span>
-            } @empty {
-              <span class="muted">Nenhum membro</span>
-            }
-          </dd>
-        </div>
-      </dl>
-
-      @if (event$.description?.trim()) {
-        <p class="body">{{ event$.description }}</p>
+      <!-- Só o topo vira campos; as abas abaixo não são recriadas ao entrar/sair da edição. -->
+      @if (editing) {
+        <app-entity-form-fields kind="event" [connector]="connector"></app-entity-form-fields>
       } @else {
-        <p class="body muted">Este evento ainda não tem descrição.</p>
+        <h1 class="title">{{ event$.title }}</h1>
+
+        <dl class="props">
+          <div class="prop">
+            <dt><mat-icon>sell</mat-icon>Tags</dt>
+            <dd class="wrap">
+              @for (tag of event$.tags; track tag.id) {
+                <span class="tag"><span class="dot" [style.background]="colorFor(tag.id)"></span>{{ tag.title }}</span>
+              } @empty {
+                <span class="muted">Sem tags</span>
+              }
+            </dd>
+          </div>
+          <div class="prop">
+            <dt><mat-icon>group</mat-icon>Membros</dt>
+            <dd class="wrap">
+              @for (m of event$.members; track m.id) {
+                <span class="member">
+                  <span class="avatar" [style.background]="colorFor(m.id)">{{ initials(m) }}</span>{{ nameOf(m) }}
+                </span>
+              } @empty {
+                <span class="muted">Nenhum membro</span>
+              }
+            </dd>
+          </div>
+        </dl>
+
+        @if (event$.description?.trim()) {
+          <p class="body">{{ event$.description }}</p>
+        } @else {
+          <p class="body muted">Este evento ainda não tem descrição.</p>
+        }
       }
 
       <!-- O "+" fica na linha das abas, à direita, e muda conforme a aba aberta. -->
@@ -104,10 +113,19 @@
   </div>
 
   <footer class="bar">
-    <span class="status"><mat-icon>visibility</mat-icon>Visualizando evento</span>
-    <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
-    <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
-      <mat-icon>edit</mat-icon>Editar evento
-    </button>
+    @if (editing) {
+      <span class="status">
+        <span class="pip" [class.ok]="connector.form.valid"></span>
+        {{ connector.form.valid ? 'Editando evento' : 'Título e descrição são obrigatórios' }}
+      </span>
+      <button mat-button type="button" (click)="cancelEditEvent.emit()">Cancelar</button>
+      <button mat-flat-button class="edit" type="button" [disabled]="!connector.form.valid" (click)="saveEvent.emit()">Salvar</button>
+    } @else {
+      <span class="status"><mat-icon>visibility</mat-icon>Visualizando evento</span>
+      <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
+      <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
+        <mat-icon>edit</mat-icon>Editar evento
+      </button>
+    }
   </footer>
 </div>

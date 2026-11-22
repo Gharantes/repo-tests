@@ -1,7 +1,11 @@
 @if (event$(); as event$) {
   <app-view-event-details
     [event$]="event$"
+    [editing]="editing()"
+    [connector]="connector"
     (goToParentPageEvent)="goToList()"
-    (editEvent)="goToEdit(event$.id)"
+    (editEvent)="startEditing()"
+    (cancelEditEvent)="cancelEditing()"
+    (saveEvent)="save()"
   ></app-view-event-details>
 }

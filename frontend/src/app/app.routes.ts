@@ -55,7 +55,8 @@ export const appRoutes: Route[] = [
           // Eventos
           { path: 'events', component: RouteListEventsComponent },
           { path: 'create-event', component: RouteUpsertEventComponent },
-          { path: 'edit-event/:id', component: RouteUpsertEventComponent },
+          // Links antigos: a edição agora é feita na própria página do evento.
+          { path: 'edit-event/:id', redirectTo: ({ params }) => `event/${params['id']}?edit=1` },
           { path: 'event/:id', component: RouteEventDetailsComponent },
           // Projetos
           { path: 'projects', component: RouteListProjectsComponent },
