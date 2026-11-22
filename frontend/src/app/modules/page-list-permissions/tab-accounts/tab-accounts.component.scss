@@ -1,0 +1,36 @@
+@use '../tab-layout';
+
+.search {
+  display: flex; align-items: center; gap: 6px; height: 40px; padding: 0 12px; margin-bottom: 8px;
+  border: 1px solid transparent; border-radius: 10px; background: #f6f5f1; color: #8a8780;
+  &:focus-within { border-color: #3B52CC; background: #fff; }
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+  input { flex: 1; min-width: 0; border: none; outline: none; background: none; font: inherit; }
+}
+
+.clear { display: flex; padding: 0; border: none; background: none; color: inherit; cursor: pointer; }
+
+.avatar {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 34px; height: 34px;
+  border-radius: 999px; color: #fff; font-weight: 700; font-size: 13px;
+  &.lg { width: 48px; height: 48px; font-size: 16px; }
+}
+
+.you { margin-left: 4px; color: #3B52CC; font-size: 11px; }
+
+.section-label {
+  margin: 14px 0 8px; font-size: 12px; font-weight: 700; letter-spacing: .04em; text-transform: uppercase; color: #77746c;
+  .hint { margin-left: 6px; font-weight: 400; letter-spacing: 0; text-transform: none; color: #9a978f; }
+}
+
+.profiles { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+
+.chip {
+  display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 6px 0 10px;
+  border-radius: 999px; background: #3B52CC; color: #fff; font-size: 13px; font-weight: 500;
+  mat-icon { font-size: 16px; width: 16px; height: 16px; }
+  button { display: flex; padding: 2px; border: none; border-radius: 999px; background: rgba(255, 255, 255, .18); color: #fff; cursor: pointer; }
+}
+
+.add { height: 32px; border-radius: 999px; }
+.muted { color: #9a978f; font-size: 13px; }

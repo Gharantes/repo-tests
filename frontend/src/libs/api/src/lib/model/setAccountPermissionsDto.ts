@@ -13,5 +13,6 @@ export interface SetAccountPermissionsDto {
     idRequester: number;
     idAccount: number;
     idPermissions: Array<number>;
+    idProfiles: Array<number>;
 }
 

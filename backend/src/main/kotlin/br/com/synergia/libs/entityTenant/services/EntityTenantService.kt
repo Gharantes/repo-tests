@@ -51,7 +51,7 @@ class EntityTenantService (
         val idTenant = getTenantByIdentifier(params.identifier)?.id ?: throw Exception("Erro ao criar Tenant.")
         val idAdmin = sqlService.createAdminAccountForTenant(idTenant, login, params.password)
         // O admin é quem distribui as permissões para o resto do tenant.
-        entityPermissionService.grantAllPermissions(idAdmin)
+        entityPermissionService.setUpTenantAdmin(idTenant, idAdmin)
     }
     fun updateTenant(idTenant: Long, params: UpsertTenantDto) {
         validateIdentifier(params.identifier)

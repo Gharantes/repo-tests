@@ -1,0 +1,35 @@
+@for (g of groups; track g.category) {
+  <section class="group">
+    <header class="group-head">
+      <mat-icon>{{ g.icon }}</mat-icon>
+      <h3>{{ g.category }}</h3>
+      <span class="n">{{ onCount(g) }}/{{ g.permissions.length }}</span>
+      @if (!disabled && editableIds(g).length) {
+        <button type="button" class="link" (click)="toggleGroupEvent.emit(editableIds(g))">
+          {{ allEditableOn(g) ? 'Desmarcar todas' : 'Marcar todas' }}
+        </button>
+      }
+    </header>
+    <ul class="perm-list">
+      @for (p of g.permissions; track p.id) {
+        <li class="perm">
+          <div class="perm-text">
+            <span class="desc">{{ p.description }}</span>
+            <code class="code">{{ p.name }}</code>
+          </div>
+          @if (inherited.get(p.id); as source) {
+            <span class="via" [matTooltip]="'Vem do perfil ' + source + '. Para tirar, remova o perfil ou edite-o.'">
+              <mat-icon>badge</mat-icon>{{ source }}
+            </span>
+          }
+          <mat-slide-toggle
+            [checked]="isOn(p.id)"
+            [disabled]="disabled || inherited.has(p.id)"
+            [attr.aria-label]="p.description"
+            (change)="toggleEvent.emit(p.id)"
+          ></mat-slide-toggle>
+        </li>
+      }
+    </ul>
+  </section>
+}

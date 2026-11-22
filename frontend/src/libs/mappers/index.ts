@@ -5,6 +5,7 @@ export * from './src/lib/model-to-dto/i-upsert-account-to-dto';
 export * from './src/lib/entity-dto-to-model/tenant-dto-to-model';
 export * from './src/lib/entity-dto-to-model/tag-dto-to-model';
 export * from './src/lib/entity-dto-to-model/permission-dto-to-model';
+export * from './src/lib/entity-dto-to-model/permission-profile-dto-to-model';
 export * from './src/lib/entity-dto-to-model/event-dto-to-model';
 export * from './src/lib/entity-dto-to-model/account-dto-to-model';
 export * from './src/lib/entity-dto-to-model/project-dto-to-model';

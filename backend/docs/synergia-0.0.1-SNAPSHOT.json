@@ -1345,6 +1345,169 @@
           }
         }
       }
+    },
+    "/api/entity-permission/get-account-permissions-detail": {
+      "get": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "getAccountPermissionsDetail",
+        "parameters": [
+          {
+            "name": "id-account",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AccountPermissionsDetailDto"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-permission/list-profiles": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "listProfiles",
+        "parameters": [
+          {
+            "name": "id-tenant",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PermissionProfileDto"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-permission/create-profile": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "createProfile",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertPermissionProfileDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "integer",
+                  "format": "int64"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/entity-permission/update-profile/{id-profile}": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "updateProfile",
+        "parameters": [
+          {
+            "name": "id-profile",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpsertPermissionProfileDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-permission/delete-profile/{id-profile}": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "deleteProfile",
+        "parameters": [
+          {
+            "name": "id-profile",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          {
+            "name": "id-requester",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1797,6 +1960,7 @@
         "required": [
           "idAccount",
           "idPermissions",
+          "idProfiles",
           "idRequester"
         ],
         "type": "object",
@@ -1808,6 +1972,99 @@
           "idAccount": {
             "type": "integer",
             "format": "int64"
+          },
+          "idPermissions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "idProfiles": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "AccountPermissionsDetailDto": {
+        "required": [
+          "idPermissions",
+          "idProfiles"
+        ],
+        "type": "object",
+        "properties": {
+          "idPermissions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "idProfiles": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        }
+      },
+      "PermissionProfileDto": {
+        "required": [
+          "accountCount",
+          "id",
+          "idPermissions",
+          "idTenant",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
+          },
+          "idPermissions": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "format": "int64"
+            }
+          },
+          "accountCount": {
+            "type": "integer",
+            "format": "int64"
+          }
+        }
+      },
+      "UpsertPermissionProfileDto": {
+        "required": [
+          "idPermissions",
+          "idRequester",
+          "idTenant",
+          "title"
+        ],
+        "type": "object",
+        "properties": {
+          "idRequester": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "idTenant": {
+            "type": "integer",
+            "format": "int64"
+          },
+          "title": {
+            "type": "string"
           },
           "idPermissions": {
             "type": "array",

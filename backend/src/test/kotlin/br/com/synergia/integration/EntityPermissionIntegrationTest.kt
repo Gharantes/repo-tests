@@ -82,7 +82,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             definir,
-            SetAccountPermissionsDto(idAdmin, idAluno, listOf(AuthPermissionsEnum.CREATE_TAG.id, AuthPermissionsEnum.EDIT_TAG.id)),
+            SetAccountPermissionsDto(idAdmin, idAluno, listOf(AuthPermissionsEnum.CREATE_TAG.id, AuthPermissionsEnum.EDIT_TAG.id), idProfiles = emptyList()),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -96,7 +96,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             definir,
-            SetAccountPermissionsDto(idAluno, idAluno, AuthPermissionsEnum.entries.map { it.id }),
+            SetAccountPermissionsDto(idAluno, idAluno, AuthPermissionsEnum.entries.map { it.id }, idProfiles = emptyList()),
         )
 
         resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -111,7 +111,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             definir,
-            SetAccountPermissionsDto(idAdmin, idOutro, listOf(AuthPermissionsEnum.CREATE_TAG.id)),
+            SetAccountPermissionsDto(idAdmin, idOutro, listOf(AuthPermissionsEnum.CREATE_TAG.id), idProfiles = emptyList()),
         )
 
         resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -126,7 +126,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             definir,
-            SetAccountPermissionsDto(idAdmin, idAdmin, listOf(AuthPermissionsEnum.CREATE_TAG.id)),
+            SetAccountPermissionsDto(idAdmin, idAdmin, listOf(AuthPermissionsEnum.CREATE_TAG.id), idProfiles = emptyList()),
         )
 
         resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
