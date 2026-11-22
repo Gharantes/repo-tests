@@ -1,5 +1,14 @@
 <div id="page">
   <div class="section">
+    <div class="section-title">Novidades</div>
+    <app-dashboard-feed
+      [items]="feed$"
+      [loaded]="feedLoaded"
+      (openEvent)="openFeedItemEvent.emit($event)"
+    ></app-dashboard-feed>
+  </div>
+
+  <div class="section">
     <div class="section-title">Seus Projetos</div>
     <lib-project-card-grid
       [data$]="projects$"

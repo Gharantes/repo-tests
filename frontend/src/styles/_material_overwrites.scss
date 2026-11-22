@@ -2,6 +2,15 @@
 .mat-mdc-form-field-subscript-wrapper.mat-mdc-form-field-bottom-align {
   display: none;
 }
+/** Menu do sino (topbar): mais largo que o padrão de 280px do mat-menu, com rolagem própria. */
+.mat-mdc-menu-panel.notifications-menu {
+  width: 380px;
+  max-width: calc(100vw - 24px);
+  max-height: min(520px, calc(100vh - 80px));
+}
+.mat-mdc-menu-panel.notifications-menu .mat-mdc-menu-content {
+  padding: 0;
+}
 /** Card de projeto/evento (lib-dialog-card): tira o limite de 560px do M3 e usa cantos menores. */
 .cdk-overlay-pane.lib-dialog-card-panel {
   --mat-dialog-container-max-width: 94vw;

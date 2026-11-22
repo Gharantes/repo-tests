@@ -70,6 +70,101 @@
   mat-icon { font-size: 20px; }
 }
 
+/* ---- Menu do sino. O painel fica no overlay, mas estes elementos são do template, então o
+   encapsulamento ainda vale. Largura do painel: styles/_material_overwrites.scss. ---- */
+.notif-head {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fff;
+  border-bottom: 1px solid #ece8e0;
+  color: #1b1f3a;
+  strong { font-size: 0.95rem; }
+}
+.notif-link {
+  border: 0;
+  background: none;
+  padding: 0;
+  color: #3B52CC;
+  font: inherit;
+  font-size: 0.8rem;
+  cursor: pointer;
+  &:hover { text-decoration: underline; }
+}
+
+.notif.mat-mdc-menu-item {
+  height: auto;
+  min-height: 64px;
+  padding: 10px 16px;
+  align-items: flex-start;
+  border-bottom: 1px solid #f2efe9;
+  white-space: normal;
+  &.unread { background: #f3f5ff; }
+  ::ng-deep .mat-mdc-menu-item-text {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    width: 100%;
+  }
+}
+.notif-icon {
+  flex: none;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #e8ebfb;
+  color: #3B52CC;
+  &[data-type='NOTE'] { background: #fff4c2; color: #8a6d00; }
+  &[data-type='LIST'] { background: #d9f2dc; color: #2e7d32; }
+  mat-icon { margin: 0; font-size: 18px; width: 18px; height: 18px; color: inherit; }
+}
+.notif-text {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  line-height: 1.35;
+}
+.notif-line {
+  font-size: 0.85rem;
+  color: #333;
+  b { color: #121840; font-weight: 600; }
+}
+.notif-meta {
+  font-size: 0.75rem;
+  color: #8a877f;
+}
+.notif-ref {
+  overflow-wrap: anywhere;
+}
+.notif-dot {
+  flex: none;
+  width: 8px;
+  height: 8px;
+  margin-top: 6px;
+  border-radius: 50%;
+  background: #3B52CC;
+}
+.notif-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 28px 16px;
+  color: #888;
+  font-size: 0.85rem;
+  mat-icon { font-size: 28px; width: 28px; height: 28px; color: #bbb; }
+}
+
 #user-info {
   text-align: right;
   cursor: pointer;

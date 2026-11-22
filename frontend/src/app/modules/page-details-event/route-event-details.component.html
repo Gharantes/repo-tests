@@ -2,6 +2,7 @@
   <app-view-event-details
     [event$]="event$"
     [editing]="editing()"
+    [openTab]="openTab()"
     [canEdit]="permissions.canEditEvent(event$)"
     [canEditTags]="permissions.canChangeEventTags(event$)"
     [connector]="connector"

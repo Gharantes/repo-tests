@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityEvent.services
 
 import br.com.synergia.libs.entityEvent.models.UpsertEventDto
+import br.com.synergia.libs.utilsCommons.enums.MembershipLabels
 import br.com.synergia.libs.utilsEntities.models.EventDto
 import org.springframework.stereotype.Service
 
@@ -29,7 +30,7 @@ class EntityEventService (
     }
     fun createEvent(params: UpsertEventDto) {
         val idEvent = sqlService.createEvent(params)
-        sqlService.createEventAccountRelationship(idEvent, params.idAccount, membershipLabel = "Organizador")
+        sqlService.createEventAccountRelationship(idEvent, params.idAccount, membershipLabel = MembershipLabels.EVENT_LEAD)
         sqlService.createEventTagRelationship(idEvent, params.tags)
     }
     fun updateEvent(idEvent: Long, params: UpsertEventDto) {

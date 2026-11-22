@@ -1,8 +1,11 @@
 <app-view-dashboard
   [projects$]="projects$()"
   [events$]="events$()"
+  [feed$]="feed$()"
+  [feedLoaded]="feedLoaded()"
   (createProjectEvent)="goToCreateProject()"
   (createEventEvent)="goToCreateEvent()"
   (openProjectEvent)="openProject($event)"
   (openEventEvent)="openEvent($event)"
+  (openFeedItemEvent)="openFeedItem($event)"
 ></app-view-dashboard>
