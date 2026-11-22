@@ -2,7 +2,7 @@ import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EntityGetByIdResourceService, EntityProjectResourceService } from '@synergia-frontend/api';
-import { PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
+import { EntityChangesService, PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { map, tap } from 'rxjs';
 import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { IProjectModel } from '@synergia-frontend/interfaces';
@@ -27,6 +27,7 @@ export class RouteProjectDetailsComponent {
   private readonly routingService = inject(RoutingService);
   public readonly permissions = inject(PermissionService);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly entityChanges = inject(EntityChangesService);
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly entityProjectService = inject(EntityProjectResourceService);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -114,6 +115,7 @@ export class RouteProjectDetailsComponent {
           this.snackbarService.showMessage('Projeto atualizado com sucesso.');
           this.editing.set(false);
           this.lookupProject();
+          this.entityChanges.notifyProjectsChanged();
         })
       )
       .subscribe();

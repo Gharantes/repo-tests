@@ -7,3 +7,4 @@ export * from './lib/calendar.service';
 export * from './lib/notification.service';
 export * from './lib/project-events.service';
 export * from './lib/permission.service';
+export * from './lib/entity-changes.service';
