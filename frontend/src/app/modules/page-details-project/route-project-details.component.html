@@ -1,7 +1,11 @@
 @if (project$(); as project) {
   <app-view-project-details
     [project$]="project"
+    [editing]="editing()"
+    [connector]="connector"
     (goToParentPageEvent)="goToList()"
-    (editEvent)="goToEdit(project.id)"
+    (editEvent)="startEditing()"
+    (cancelEditEvent)="cancelEditing()"
+    (saveEvent)="save()"
   ></app-view-project-details>
 }

@@ -24,13 +24,13 @@ export class RoutingService {
    * As rotas internas ficam sob /<identifier do tenant>/. Sem tenant na sessão
    * não há para onde ir, então volta para a raiz.
    */
-  private navigateInTenant(commands: (string | number)[]) {
+  private navigateInTenant(commands: (string | number)[], queryParams?: Record<string, string>) {
     const identifier = this.sessionService.getTenantIdentifier();
     if (identifier == null) {
       this.goToHome();
       return;
     }
-    this.router.navigate([identifier, ...commands]).then();
+    this.router.navigate([identifier, ...commands], { queryParams }).then();
   }
 
   public goToHome() {
@@ -79,9 +79,10 @@ export class RoutingService {
     this.routeLabel.set("Registrar Projetos")
     this.navigateInTenant(["create-project"])
   }
+  /** Editar acontece na própria página do projeto, aberta já em modo edição. */
   public goToEditProject(idProject: number) {
-    this.routeLabel.set('Editar Projeto');
-    this.navigateInTenant(['edit-project', idProject]);
+    this.routeLabel.set('Detalhes do Projeto');
+    this.navigateInTenant(['project', idProject], { edit: '1' });
   }
   /** ============ EVENTS ============= **/
   public goToListEvents() {

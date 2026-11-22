@@ -1,61 +1,15 @@
 <div class="page">
   <div class="scroll">
-    <div class="cover" [style.background]="bannerColor">
-      @if (showImage) {
-        <img [src]="bannerUrl" alt="" (error)="onImageError()" />
-      } @else {
-        <span class="monogram">{{ initial }}</span>
-      }
-    </div>
+    <app-project-cover-field [connector]="connector"></app-project-cover-field>
 
     <div class="doc">
       <nav class="crumbs">
         <button type="button" (click)="goToParentPageEvent.emit()">Projetos</button>
         <mat-icon>chevron_right</mat-icon>
-        <span>{{ editing ? (title || 'Editar projeto') : 'Novo projeto' }}</span>
+        <span>Novo projeto</span>
       </nav>
 
-      <label class="field title">
-        <span class="sr">Título</span>
-        <input type="text" placeholder="Sem título" [formControl]="c.title" />
-      </label>
-
-      <dl class="props">
-        <div class="prop">
-          <dt><mat-icon>sell</mat-icon>Tags</dt>
-          <dd class="tags">
-            @for (tag of c.tags.value; track tag.id) {
-              <span class="tag">
-                <span class="dot" [style.background]="tagColor(tag)"></span>{{ tag.title }}
-                <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
-              </span>
-            }
-            <lib-add-tag-btn class="add-tag" [forProjects]="true" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
-          </dd>
-        </div>
-        <div class="prop">
-          <dt><mat-icon>image</mat-icon>URL do banner</dt>
-          <dd>
-            <label class="field inline">
-              <span class="sr">URL do banner</span>
-              <input type="text" placeholder="Cole o link de uma imagem" [formControl]="c.bannerUrl" />
-              @if (bannerUrl) { <button type="button" class="x" (click)="clearBanner()" aria-label="Remover imagem"><mat-icon>close</mat-icon></button> }
-            </label>
-            @if (imageBroken) { <span class="warn">Não carregou</span> }
-          </dd>
-        </div>
-        <div class="prop">
-          <dt><mat-icon>palette</mat-icon>Cor do banner</dt>
-          <dd>
-            <lib-banner-color-picker [color]="bannerColor" (colorChange)="setBannerColor($event)"></lib-banner-color-picker>
-          </dd>
-        </div>
-      </dl>
-
-      <label class="field body">
-        <span class="sr">Descrição</span>
-        <textarea rows="10" placeholder="Descreva o projeto: objetivo, quem pode participar, o que já foi feito..." [formControl]="c.description"></textarea>
-      </label>
+      <app-project-form-fields [connector]="connector"></app-project-form-fields>
     </div>
   </div>
 

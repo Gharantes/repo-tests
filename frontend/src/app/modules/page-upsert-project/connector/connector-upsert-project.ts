@@ -1,4 +1,4 @@
-import { inject, Injectable } from '@angular/core';
+import { inject, Injectable, signal } from '@angular/core';
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { IProjectModel, ITagModel, IUpsertProjectModel } from '@synergia-frontend/interfaces';
 import { SessionService } from '@synergia-frontend/services';
@@ -22,6 +22,9 @@ export class ConnectorUpsertProject {
     tags: this.fb.control<ITagModel[]>([]),
   });
 
+  /** Última URL de banner que falhou ao carregar (compartilhada entre a capa e o campo da URL). */
+  public readonly brokenBannerUrl = signal<string | null>(null);
+
   public getFormValue(): UpsertProjectDto | null {
     const v = this.form.value;
     if (v.title == null || v.description == null || v.idTenant == null || v.idAccount == null) {
@@ -40,6 +43,7 @@ export class ConnectorUpsertProject {
   }
 
   public populateForm(value: IProjectModel) {
+    this.brokenBannerUrl.set(null);
     this.form.controls.title.setValue(value.title);
     this.form.controls.description.setValue(value.description);
     this.form.controls.bannerUrl.setValue(value.bannerUrl);

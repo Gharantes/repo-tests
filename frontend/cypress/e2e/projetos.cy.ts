@@ -244,13 +244,18 @@ describe('Sistema: projetos', () => {
         cy.abrirCardDoProjeto(titulo);
         cy.contains('button', 'Editar Projeto').click();
 
-        cy.location('pathname', { timeout: 20000 }).should('include', '/edit-project/');
-        cy.contains('mat-form-field', 'Título').find('input').should('have.value', titulo);
+        // A edição acontece na própria página do projeto, que já abre em modo edição.
+        cy.location('pathname', { timeout: 20000 }).should('include', '/project/');
+        cy.contains('label.field', 'Título').find('input').should('have.value', titulo);
 
         cy.substituirCampo('Título', novoTitulo);
         cy.contains('button', 'Salvar').should('not.be.disabled').click();
 
-        cy.location('pathname', { timeout: 20000 }).should('include', '/projects');
+        // Salvar volta ao modo leitura na mesma página, já com o título novo.
+        cy.contains('h1.title', novoTitulo, { timeout: 20000 }).should('be.visible');
+        cy.location('pathname').should('include', '/project/');
+
+        cy.irParaProjetos();
         cy.contains('.card-primary', novoTitulo).should('be.visible');
         cy.contains('.card-primary', titulo).should('not.exist');
 
