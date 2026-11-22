@@ -184,17 +184,22 @@ describe('Sistema: eventos', () => {
         cy.abrirCardDoEvento(titulo);
         cy.contains('button', 'Editar Evento').click();
 
-        cy.location('pathname', { timeout: 20000 }).should('include', '/edit-event/');
+        // A edição acontece na própria página do evento, que já abre em modo edição.
+        cy.location('pathname', { timeout: 20000 }).should('include', '/event/');
 
         // O formulário chega preenchido pelo getEventById.
-        cy.contains('mat-form-field', 'Título')
+        cy.contains('label.field', 'Título')
           .find('input')
           .should('have.value', titulo);
 
         cy.substituirCampo('Título', novoTitulo);
         cy.contains('button', 'Salvar').should('not.be.disabled').click();
 
-        cy.location('pathname', { timeout: 20000 }).should('include', '/events');
+        // Salvar volta ao modo leitura na mesma página, já com o título novo.
+        cy.contains('h1.title', novoTitulo, { timeout: 20000 }).should('be.visible');
+        cy.location('pathname').should('include', '/event/');
+
+        cy.irParaEventos();
         cy.contains('.card-primary', novoTitulo).should('be.visible');
         cy.contains('.card-primary', titulo).should('not.exist');
 

@@ -13,7 +13,7 @@
           <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
         </span>
       }
-      <lib-add-tag-btn class="add-tag" [forProjects]="true" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
+      <lib-add-tag-btn class="add-tag" [forProjects]="kind === 'project'" [forEvents]="kind === 'event'" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
     </dd>
   </div>
   <div class="prop">
@@ -37,5 +37,5 @@
 
 <label class="field body">
   <span class="sr">Descrição</span>
-  <textarea rows="10" placeholder="Descreva o projeto: objetivo, quem pode participar, o que já foi feito..." [formControl]="c.description"></textarea>
+  <textarea rows="10" [placeholder]="descriptionPlaceholder" [formControl]="c.description"></textarea>
 </label>

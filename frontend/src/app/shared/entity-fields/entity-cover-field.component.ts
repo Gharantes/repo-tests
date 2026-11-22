@@ -1,9 +1,9 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
+import { IEntityFormConnector } from './entity-form-connector';
 
-/** Capa do projeto em edição: mostra a imagem da URL digitada ou a cor do banner com a inicial. */
+/** Capa de um projeto/evento em edição: mostra a imagem da URL digitada ou a cor do banner com a inicial. */
 @Component({
-  selector: 'app-project-cover-field',
+  selector: 'app-entity-cover-field',
   template: `
     <div class="cover" [style.background]="bannerColor">
       @if (showImage) {
@@ -28,8 +28,8 @@ import { ConnectorUpsertProject } from '../connector/connector-upsert-project';
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
 })
-export class ProjectCoverFieldComponent {
-  @Input() public connector!: ConnectorUpsertProject;
+export class EntityCoverFieldComponent {
+  @Input() public connector!: IEntityFormConnector;
 
   public get bannerColor(): string {
     return this.connector.form.controls.bannerColor.value;

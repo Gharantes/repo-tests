@@ -1,7 +1,7 @@
 <div class="page">
   <div class="scroll">
     @if (editing) {
-      <app-project-cover-field [connector]="connector"></app-project-cover-field>
+      <app-entity-cover-field [connector]="connector"></app-entity-cover-field>
     } @else {
       <div class="cover" [style.background]="bannerBg">
         @if (project$.bannerUrl) {
@@ -21,7 +21,7 @@
 
       <!-- Só o topo vira campos; as abas abaixo não são recriadas ao entrar/sair da edição. -->
       @if (editing) {
-        <app-project-form-fields [connector]="connector"></app-project-form-fields>
+        <app-entity-form-fields kind="project" [connector]="connector"></app-entity-form-fields>
       } @else {
         <h1 class="title">{{ project$.title }}</h1>
 

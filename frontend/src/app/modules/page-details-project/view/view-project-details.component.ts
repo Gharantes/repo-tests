@@ -14,8 +14,8 @@ import {
   SafeImageComponent,
 } from '@synergia-frontend/components';
 import { ConnectorUpsertProject } from '../../page-upsert-project/connector/connector-upsert-project';
-import { ProjectCoverFieldComponent } from '../../page-upsert-project/fields/project-cover-field.component';
-import { ProjectFormFieldsComponent } from '../../page-upsert-project/fields/project-form-fields.component';
+import { EntityCoverFieldComponent } from '../../../shared/entity-fields/entity-cover-field.component';
+import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-form-fields.component';
 
 /** Página do projeto: leitura por padrão; em modo edição o topo vira os mesmos campos da tela de criar. */
 @Component({
@@ -23,7 +23,7 @@ import { ProjectFormFieldsComponent } from '../../page-upsert-project/fields/pro
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ProjectCoverFieldComponent, ProjectFormFieldsComponent, ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
+  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
