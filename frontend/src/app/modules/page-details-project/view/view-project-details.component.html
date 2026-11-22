@@ -48,33 +48,47 @@
         <p class="body muted">Este projeto ainda não tem descrição.</p>
       }
 
-      <section class="block">
-        <div class="block-head">
-          <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
-          <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
-            <mat-icon>add</mat-icon>
-          </button>
-          <mat-menu #newNoteMenu="matMenu">
-            <button mat-menu-item (click)="parentNotes.startDraft('TEXT')">
-              <mat-icon>note_add</mat-icon> Nota
-            </button>
-            <button mat-menu-item (click)="parentNotes.startDraft('LIST')">
-              <mat-icon>checklist</mat-icon> Lista
-            </button>
-          </mat-menu>
+      <!-- O "+" fica na linha das abas, à direita, e muda conforme a aba aberta. -->
+      <div class="sections">
+        <div class="tab-actions">
+          @switch (tab()) {
+            @case (0) {
+              <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+            @case (1) {
+              <button matIconButton type="button" matTooltip="Registrar em evento" aria-label="Registrar em evento" (click)="events()?.openAdd()">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+          }
         </div>
-        <lib-parent-notes #parentNotes parentEntity="PROJECT" [parentId]="project$.id"></lib-parent-notes>
-      </section>
+        <mat-menu #newNoteMenu="matMenu">
+          <button mat-menu-item (click)="notes()?.startDraft('TEXT')">
+            <mat-icon>note_add</mat-icon> Nota
+          </button>
+          <button mat-menu-item (click)="notes()?.startDraft('LIST')">
+            <mat-icon>checklist</mat-icon> Lista
+          </button>
+        </mat-menu>
 
-      <section class="block">
-        <div class="block-head">
-          <h2><mat-icon>event</mat-icon>Eventos</h2>
-          <button matIconButton type="button" matTooltip="Registrar em evento" aria-label="Registrar em evento" (click)="projectEvents.openAdd()">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <lib-project-events #projectEvents [idProject]="project$.id"></lib-project-events>
-      </section>
+        <mat-tab-group class="tabs" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent
+          [selectedIndex]="tab()" (selectedIndexChange)="tab.set($event)">
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>dashboard</mat-icon>Lousa</ng-template>
+            <div class="tab-body">
+              <lib-parent-notes parentEntity="PROJECT" [parentId]="project$.id"></lib-parent-notes>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>event</mat-icon>Eventos</ng-template>
+            <div class="tab-body">
+              <lib-project-events [idProject]="project$.id"></lib-project-events>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
   </div>
 

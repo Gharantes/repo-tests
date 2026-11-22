@@ -98,17 +98,34 @@
 
 .muted { color: #b3b0a8; font-size: 14px; }
 
-.block {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  margin-top: 18px;
-  padding-top: 18px;
-  border-top: 1px solid #efede7;
+// Lousa / Projetos / Eventos / Feed em abas. O "+" da aba aberta fica à direita da linha das abas.
+.sections { position: relative; margin-top: 18px; }
 
-  .block-head { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: -6px 0; }
-  h2 { display: flex; align-items: center; gap: 8px; margin: 0; font-size: 17px; font-weight: 700; color: #121840; mat-icon { font-size: 20px; width: 20px; height: 20px; color: #9a978f; } }
+.tab-actions { position: absolute; top: 4px; right: 0; z-index: 1; }
+
+.tabs {
+  --mat-tab-container-height: 48px;
+  --mat-tab-divider-color: #efede7;
+  --mat-tab-active-indicator-color: #3B52CC;
+  --mat-tab-active-focus-indicator-color: #3B52CC;
+  --mat-tab-active-hover-indicator-color: #3B52CC;
+  --mat-tab-active-label-text-color: #121840;
+  --mat-tab-active-focus-label-text-color: #121840;
+  --mat-tab-active-hover-label-text-color: #121840;
+  --mat-tab-inactive-label-text-color: #9a978f;
+  --mat-tab-inactive-hover-label-text-color: #4a4842;
+  --mat-tab-label-text-weight: 600;
+  --mat-tab-label-text-size: 15px;
+
+  // Espaço para o "+" não cobrir a última aba.
+  ::ng-deep .mat-mdc-tab-header { padding-right: 48px; }
+  ::ng-deep .mat-mdc-tab { padding: 0 14px; min-width: 0; }
+  ::ng-deep .mat-mdc-tab-labels { gap: 4px; }
+
+  mat-icon { font-size: 19px; width: 19px; height: 19px; margin-right: 8px; }
 }
+
+.tab-body { display: flex; flex-direction: column; gap: 12px; padding-top: 16px; }
 
 .bar {
   display: flex;

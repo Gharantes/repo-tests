@@ -48,43 +48,58 @@
         <p class="body muted">Este evento ainda não tem descrição.</p>
       }
 
-      <section class="block">
-        <div class="block-head">
-          <h2><mat-icon>dashboard</mat-icon>Lousa</h2>
-          <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
-            <mat-icon>add</mat-icon>
-          </button>
-          <mat-menu #newNoteMenu="matMenu">
-            <button mat-menu-item (click)="parentNotes.startDraft('TEXT')">
-              <mat-icon>note_add</mat-icon> Nota
-            </button>
-            <button mat-menu-item (click)="parentNotes.startDraft('LIST')">
-              <mat-icon>checklist</mat-icon> Lista
-            </button>
-          </mat-menu>
+      <!-- O "+" fica na linha das abas, à direita, e muda conforme a aba aberta. -->
+      <div class="sections">
+        <div class="tab-actions">
+          @switch (tab()) {
+            @case (0) {
+              <button matIconButton type="button" matTooltip="Novo bloco" aria-label="Novo bloco" [matMenuTriggerFor]="newNoteMenu">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+            @case (1) {
+              <button matIconButton type="button" matTooltip="Registrar projeto" aria-label="Registrar projeto" (click)="projects()?.openAdd()">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+            @case (2) {
+              <button matIconButton type="button" matTooltip="Nova postagem" aria-label="Nova postagem" (click)="feed()?.openNew()">
+                <mat-icon>add</mat-icon>
+              </button>
+            }
+          }
         </div>
-        <lib-parent-notes #parentNotes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
-      </section>
+        <mat-menu #newNoteMenu="matMenu">
+          <button mat-menu-item (click)="notes()?.startDraft('TEXT')">
+            <mat-icon>note_add</mat-icon> Nota
+          </button>
+          <button mat-menu-item (click)="notes()?.startDraft('LIST')">
+            <mat-icon>checklist</mat-icon> Lista
+          </button>
+        </mat-menu>
 
-      <section class="block">
-        <div class="block-head">
-          <h2><mat-icon>rocket_launch</mat-icon>Projetos</h2>
-          <button matIconButton type="button" matTooltip="Registrar projeto" aria-label="Registrar projeto" (click)="eventProjects.openAdd()">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <lib-event-projects #eventProjects [idEvent]="event$.id"></lib-event-projects>
-      </section>
-
-      <section class="block feed">
-        <div class="block-head">
-          <h2><mat-icon>forum</mat-icon>Feed</h2>
-          <button matIconButton type="button" matTooltip="Nova postagem" aria-label="Nova postagem" (click)="eventFeed.openNew()">
-            <mat-icon>add</mat-icon>
-          </button>
-        </div>
-        <lib-event-feed #eventFeed [idEvent]="event$.id"></lib-event-feed>
-      </section>
+        <mat-tab-group class="tabs" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent
+          [selectedIndex]="tab()" (selectedIndexChange)="tab.set($event)">
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>dashboard</mat-icon>Lousa</ng-template>
+            <div class="tab-body">
+              <lib-parent-notes parentEntity="EVENT" [parentId]="event$.id"></lib-parent-notes>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>rocket_launch</mat-icon>Projetos</ng-template>
+            <div class="tab-body">
+              <lib-event-projects [idEvent]="event$.id"></lib-event-projects>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>forum</mat-icon>Feed</ng-template>
+            <div class="tab-body">
+              <lib-event-feed [idEvent]="event$.id"></lib-event-feed>
+            </div>
+          </mat-tab>
+        </mat-tab-group>
+      </div>
     </div>
   </div>
 
