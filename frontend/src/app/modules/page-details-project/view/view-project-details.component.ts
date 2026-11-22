@@ -9,6 +9,7 @@ import {
   colorForId,
   memberInitials,
   memberName,
+  ParentCalendarComponent,
   ParentNotesComponent,
   ProjectEventsComponent,
   SafeImageComponent,
@@ -23,7 +24,7 @@ import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
+  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ParentCalendarComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
@@ -32,17 +33,20 @@ export class ViewProjectDetailsComponent {
   @Input() public canEdit = false;
   /** Membro, ou quem tem ASSIGN_TAGS_*_AS_NON_MEMBER. */
   @Input() public canEditTags = false;
+  /** Só membros marcam datas no calendário. */
+  @Input() public isMember = false;
   @Input() public connector!: ConnectorUpsertProject;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();
   @Output() public readonly cancelEditEvent = new EventEmitter<void>();
   @Output() public readonly saveEvent = new EventEmitter<void>();
 
-  /** Aba aberta: 0 Lousa, 1 Eventos. */
+  /** Aba aberta: 0 Lousa, 1 Eventos, 2 Calendário. */
   public readonly tab = signal(0);
   // Os "+" ficam fora das abas e chamam o componente da aba aberta.
   public readonly notes = viewChild(ParentNotesComponent);
   public readonly events = viewChild(ProjectEventsComponent);
+  public readonly calendar = viewChild(ParentCalendarComponent);
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;

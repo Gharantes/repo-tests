@@ -76,6 +76,13 @@
                 <mat-icon>add</mat-icon>
               </button>
             }
+            @case (3) {
+              @if (isMember) {
+                <button matIconButton type="button" matTooltip="Marcar data" aria-label="Marcar data" (click)="calendar()?.openNew()">
+                  <mat-icon>add</mat-icon>
+                </button>
+              }
+            }
           }
         </div>
         <mat-menu #newNoteMenu="matMenu">
@@ -105,6 +112,12 @@
             <ng-template mat-tab-label><mat-icon>forum</mat-icon>Feed</ng-template>
             <div class="tab-body">
               <lib-event-feed [idEvent]="event$.id"></lib-event-feed>
+            </div>
+          </mat-tab>
+          <mat-tab>
+            <ng-template mat-tab-label><mat-icon>calendar_month</mat-icon>Calendário</ng-template>
+            <div class="tab-body">
+              <lib-parent-calendar parentEntity="EVENT" [parentId]="event$.id" [canEdit]="isMember"></lib-parent-calendar>
             </div>
           </mat-tab>
         </mat-tab-group>

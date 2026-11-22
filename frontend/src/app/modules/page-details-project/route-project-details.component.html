@@ -4,6 +4,7 @@
     [editing]="editing()"
     [canEdit]="permissions.canEditProject(project)"
     [canEditTags]="permissions.canChangeProjectTags(project)"
+    [isMember]="permissions.isMemberOf(project)"
     [connector]="connector"
     (goToParentPageEvent)="goToList()"
     (editEvent)="startEditing()"

@@ -69,6 +69,11 @@ export class PermissionService {
     return me != null && (members ?? []).some((m) => m.id === me);
   }
 
+  /** Só membros mexem no calendário; não há permissão "como não membro" para isso. */
+  public isMemberOf(entity: { members?: { id: number }[] }): boolean {
+    return this.isMember(entity.members);
+  }
+
   public canEditProject(project: { members?: { id: number }[] }): boolean {
     return this.isMember(project.members) || this.has(AuthPermission.EDIT_PROJECT_AS_NON_MEMBER);
   }

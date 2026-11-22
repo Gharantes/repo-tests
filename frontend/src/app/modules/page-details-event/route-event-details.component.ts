@@ -35,7 +35,7 @@ export class RouteEventDetailsComponent {
   private readonly idEvent = signal<number | null>(null);
   public readonly event$ = signal<IEventModel | null>(null);
   public readonly editing = signal(false);
-  /** `?tab=feed|lousa|projetos`: muda de aba mesmo com a página já aberta (aviso do sino). */
+  /** `?tab=feed|lousa|projetos|calendario`: muda de aba mesmo com a página já aberta (aviso do sino). */
   public readonly openTab = toSignal(this.activatedRoute.queryParamMap.pipe(map((q) => q.get('tab'))), {
     initialValue: null,
   });

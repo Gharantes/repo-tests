@@ -4,7 +4,7 @@ import { firstValueFrom } from 'rxjs';
 import { SessionService } from './session.service';
 
 /** Valores de `?tab=` na página do evento. */
-export type EventDetailsTab = 'lousa' | 'projetos' | 'feed';
+export type EventDetailsTab = 'lousa' | 'projetos' | 'feed' | 'calendario';
 
 @Injectable({
   providedIn: 'root',
