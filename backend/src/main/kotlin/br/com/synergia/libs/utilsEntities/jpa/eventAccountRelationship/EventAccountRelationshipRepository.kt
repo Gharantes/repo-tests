@@ -4,4 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.stereotype.Repository
 
 @Repository
-interface EventAccountRelationshipRepository : JpaRepository<EventAccountRelationship, Long>
+interface EventAccountRelationshipRepository : JpaRepository<EventAccountRelationship, Long> {
+    fun existsByIdEventAndIdAccount(idEvent: Long, idAccount: Long): Boolean
+}

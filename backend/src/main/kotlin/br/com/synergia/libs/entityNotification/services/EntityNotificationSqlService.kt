@@ -2,6 +2,7 @@ package br.com.synergia.libs.entityNotification.services
 
 import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.MembershipLabels
+import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
 import br.com.synergia.libs.utilsEntities.jpa.notification.NotificationRepository
 import br.com.synergia.libs.utilsEntities.models.NotificationDto
 import br.com.synergia.libs.utilsEntities.rowmappers.EntityRowMapper
@@ -46,6 +47,19 @@ class EntityNotificationSqlService (
         return template.update(sql, paramMap)
     }
 
+    /**
+     * Data marcada no calendário. Não exige Organizador/Líder: qualquer membro que marca avisa.
+     * Data de projeto avisa os membros do projeto; data de evento avisa os membros dos projetos
+     * registrados no evento. Devolve quantas notificações foram gravadas.
+     */
+    fun notifyCalendarAudience(parentEntity: NoteParentEnum, parentId: Long, idActor: Long, idEntry: Long): Int {
+        val sql = SqlPath.EntityNotification.NOTIFY_CALENDAR_AUDIENCE.load()
+        val paramMap = notifyParams(idActor, ActivityTypeEnum.DATE, idEntry, leadLabel = "")
+            .addValue("parent_entity", parentEntity.name, Types.VARCHAR)
+            .addValue("parent_id", parentId, Types.BIGINT)
+        return template.update(sql, paramMap)
+    }
+
     private fun notifyParams(idActor: Long, type: ActivityTypeEnum, referenceId: Long, leadLabel: String) =
         MapSqlParameterSource()
             .addValue("id_actor", idActor, Types.BIGINT)
@@ -74,5 +88,9 @@ class EntityNotificationSqlService (
 
     fun deleteOfNote(idNote: Long) {
         notificationRepository.deleteByReference(listOf(ActivityTypeEnum.NOTE, ActivityTypeEnum.LIST), idNote)
+    }
+
+    fun deleteOfCalendarEntry(idEntry: Long) {
+        notificationRepository.deleteByReference(listOf(ActivityTypeEnum.DATE), idEntry)
     }
 }

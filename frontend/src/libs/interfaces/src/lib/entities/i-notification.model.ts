@@ -1,7 +1,7 @@
 import { NoteParent } from './i-note.model';
 
-/** O que aconteceu num evento/projeto: postagem no feed, nota ou lista na lousa. */
-export type ActivityType = 'POST' | 'NOTE' | 'LIST';
+/** O que aconteceu num evento/projeto: postagem no feed, nota ou lista na lousa, data no calendário. */
+export type ActivityType = 'POST' | 'NOTE' | 'LIST' | 'DATE';
 
 /** Aviso do sino do topo e da seção "Notificações" do dashboard. */
 export interface INotificationModel {

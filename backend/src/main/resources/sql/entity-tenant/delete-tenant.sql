@@ -9,6 +9,8 @@ WHERE id_note IN (SELECT id FROM note WHERE id_tenant = :id_tenant);
 
 DELETE FROM note WHERE id_tenant = :id_tenant;
 
+DELETE FROM calendar_entry WHERE id_tenant = :id_tenant;
+
 DELETE FROM event_post_relationship
 WHERE id_event IN (SELECT id FROM event WHERE id_tenant = :id_tenant)
    OR id_post IN (SELECT p.id FROM post p JOIN account a ON a.id = p.id_account WHERE a.id_tenant = :id_tenant);

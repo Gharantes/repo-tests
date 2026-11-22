@@ -8,7 +8,8 @@ import org.springframework.stereotype.Service
 /**
  * Sino do topo. Quando o Organizador de um evento posta no feed ou vincula uma nota/lista à lousa
  * do evento, quem participa do evento é avisado. O mesmo vale para o Líder de um projeto e a lousa
- * do projeto. O autor nunca recebe aviso do que ele mesmo fez.
+ * do projeto. Data marcada no calendário avisa quem é de um projeto envolvido, seja quem marcou
+ * Líder ou não (ver [notifyCalendarEntry]). O autor nunca recebe aviso do que ele mesmo fez.
  */
 @Service
 class EntityNotificationService (
@@ -37,7 +38,16 @@ class EntityNotificationService (
         }
     }
 
+    /**
+     * Data no calendário de um projeto: avisa os membros do projeto. Data no calendário de um
+     * evento: avisa os membros dos projetos registrados no evento (cada pessoa uma vez só).
+     */
+    fun notifyCalendarEntry(parentEntity: NoteParentEnum, parentId: Long, idActor: Long, idEntry: Long) {
+        sqlService.notifyCalendarAudience(parentEntity, parentId, idActor, idEntry)
+    }
+
     fun deleteOfPost(idPost: Long) = sqlService.deleteOfPost(idPost)
+    fun deleteOfCalendarEntry(idEntry: Long) = sqlService.deleteOfCalendarEntry(idEntry)
     fun deleteOfNote(idNote: Long) = sqlService.deleteOfNote(idNote)
 
     companion object {

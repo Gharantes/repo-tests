@@ -11,6 +11,7 @@ import {
   EventProjectsComponent,
   memberInitials,
   memberName,
+  ParentCalendarComponent,
   ParentNotesComponent,
   SafeImageComponent,
 } from '@synergia-frontend/components';
@@ -19,7 +20,7 @@ import { EntityCoverFieldComponent } from '../../../shared/entity-fields/entity-
 import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-form-fields.component';
 
 /** Na ordem das abas; casa com EventDetailsTab do RoutingService. */
-const TAB_NAMES = ['lousa', 'projetos', 'feed'];
+const TAB_NAMES = ['lousa', 'projetos', 'feed', 'calendario'];
 
 /** Página do evento: leitura por padrão; em modo edição o topo vira os mesmos campos da tela de criar. */
 @Component({
@@ -27,7 +28,7 @@ const TAB_NAMES = ['lousa', 'projetos', 'feed'];
   templateUrl: './view-event-details.component.html',
   styleUrl: `./view-event-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, SafeImageComponent, EventFeedComponent, EventProjectsComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
+  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ParentCalendarComponent, SafeImageComponent, EventFeedComponent, EventProjectsComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
 })
 export class ViewEventDetailsComponent {
   @Input() public event$!: IEventModel;
@@ -36,13 +37,15 @@ export class ViewEventDetailsComponent {
   @Input() public canEdit = false;
   /** Membro, ou quem tem ASSIGN_TAGS_*_AS_NON_MEMBER. */
   @Input() public canEditTags = false;
+  /** Só membros marcam datas no calendário. */
+  @Input() public isMember = false;
   @Input() public connector!: ConnectorUpsertEvent;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();
   @Output() public readonly cancelEditEvent = new EventEmitter<void>();
   @Output() public readonly saveEvent = new EventEmitter<void>();
 
-  /** Aba aberta: 0 Lousa, 1 Projetos, 2 Feed. */
+  /** Aba aberta: 0 Lousa, 1 Projetos, 2 Feed, 3 Calendário. */
   public readonly tab = signal(0);
   /** Nome da aba vindo de `?tab=`; desconhecido ou vazio mantém a aba atual. */
   @Input() public set openTab(name: string | null) {
@@ -53,6 +56,7 @@ export class ViewEventDetailsComponent {
   public readonly notes = viewChild(ParentNotesComponent);
   public readonly projects = viewChild(EventProjectsComponent);
   public readonly feed = viewChild(EventFeedComponent);
+  public readonly calendar = viewChild(ParentCalendarComponent);
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;

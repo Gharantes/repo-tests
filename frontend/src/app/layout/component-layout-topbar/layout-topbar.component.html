@@ -42,7 +42,7 @@
         <span class="notif-icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
         <span class="notif-text">
           <span class="notif-line">
-            <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>
+            <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>@if (n.type === 'DATE' && n.referenceTitle) {: {{ n.referenceTitle }}}
           </span>
           <span class="notif-meta">{{ relative(n.createdAt) }}</span>
         </span>

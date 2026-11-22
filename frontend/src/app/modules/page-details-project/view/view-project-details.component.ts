@@ -9,6 +9,7 @@ import {
   colorForId,
   memberInitials,
   memberName,
+  ParentCalendarComponent,
   ParentNotesComponent,
   ProjectEventsComponent,
   SafeImageComponent,
@@ -17,13 +18,16 @@ import { ConnectorUpsertProject } from '../../page-upsert-project/connector/conn
 import { EntityCoverFieldComponent } from '../../../shared/entity-fields/entity-cover-field.component';
 import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-form-fields.component';
 
+/** Na ordem das abas; casa com ProjectDetailsTab do RoutingService. */
+const TAB_NAMES = ['lousa', 'eventos', 'calendario'];
+
 /** Página do projeto: leitura por padrão; em modo edição o topo vira os mesmos campos da tela de criar. */
 @Component({
   selector: 'app-view-project-details',
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
+  imports: [EntityCoverFieldComponent, EntityFormFieldsComponent, ParentNotesComponent, ParentCalendarComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
@@ -32,17 +36,25 @@ export class ViewProjectDetailsComponent {
   @Input() public canEdit = false;
   /** Membro, ou quem tem ASSIGN_TAGS_*_AS_NON_MEMBER. */
   @Input() public canEditTags = false;
+  /** Só membros marcam datas no calendário. */
+  @Input() public isMember = false;
   @Input() public connector!: ConnectorUpsertProject;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();
   @Output() public readonly cancelEditEvent = new EventEmitter<void>();
   @Output() public readonly saveEvent = new EventEmitter<void>();
 
-  /** Aba aberta: 0 Lousa, 1 Eventos. */
+  /** Aba aberta: 0 Lousa, 1 Eventos, 2 Calendário. */
   public readonly tab = signal(0);
+  /** Nome da aba vindo de `?tab=`; desconhecido ou vazio mantém a aba atual. */
+  @Input() public set openTab(name: string | null) {
+    const index = name == null ? -1 : TAB_NAMES.indexOf(name);
+    if (index >= 0) this.tab.set(index);
+  }
   // Os "+" ficam fora das abas e chamam o componente da aba aberta.
   public readonly notes = viewChild(ParentNotesComponent);
   public readonly events = viewChild(ProjectEventsComponent);
+  public readonly calendar = viewChild(ParentCalendarComponent);
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;

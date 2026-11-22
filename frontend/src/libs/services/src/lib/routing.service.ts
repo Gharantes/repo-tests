@@ -4,7 +4,9 @@ import { firstValueFrom } from 'rxjs';
 import { SessionService } from './session.service';
 
 /** Valores de `?tab=` na página do evento. */
-export type EventDetailsTab = 'lousa' | 'projetos' | 'feed';
+export type EventDetailsTab = 'lousa' | 'projetos' | 'feed' | 'calendario';
+/** Valores de `?tab=` na página do projeto. */
+export type ProjectDetailsTab = 'lousa' | 'eventos' | 'calendario';
 
 @Injectable({
   providedIn: 'root',
@@ -106,9 +108,10 @@ export class RoutingService {
     this.routeLabel.set('Detalhes do Evento');
     this.navigateInTenant(['event', idEvent], tab ? { tab } : undefined)
   }
-  public goToProjectDetails(idProject: number) {
+  /** `tab` abre direto uma aba (ex.: o calendário, ao clicar num aviso de data). */
+  public goToProjectDetails(idProject: number, tab?: ProjectDetailsTab) {
     this.routeLabel.set('Detalhes do Projeto');
-    this.navigateInTenant(['project', idProject]);
+    this.navigateInTenant(['project', idProject], tab ? { tab } : undefined);
   }
   /** ============ TAGS ============= **/
   public goToListTags() {

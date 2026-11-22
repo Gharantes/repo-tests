@@ -5,6 +5,7 @@
     [openTab]="openTab()"
     [canEdit]="permissions.canEditEvent(event$)"
     [canEditTags]="permissions.canChangeEventTags(event$)"
+    [isMember]="permissions.isMemberOf(event$)"
     [connector]="connector"
     (goToParentPageEvent)="goToList()"
     (editEvent)="startEditing()"

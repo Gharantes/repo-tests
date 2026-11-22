@@ -18,3 +18,4 @@ export * from './lib/entities/i-permission-profile.model';
 export * from './lib/entities/i-note.model';
 export * from './lib/entities/i-post.model';
 export * from './lib/entities/i-notification.model';
+export * from './lib/entities/i-calendar-entry.model';
