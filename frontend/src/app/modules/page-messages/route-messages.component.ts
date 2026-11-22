@@ -14,7 +14,13 @@ import {
   IMessageContactModel,
   IMessageModel,
 } from '@synergia-frontend/interfaces';
-import { MessageService, ProjectEventsService, SessionService, SnackbarService } from '@synergia-frontend/services';
+import {
+  JoinRequestService,
+  MessageService,
+  ProjectEventsService,
+  SessionService,
+  SnackbarService,
+} from '@synergia-frontend/services';
 import { formatRelativeTime } from '@synergia-frontend/utils';
 import { catchError, filter, forkJoin, map, of, switchMap } from 'rxjs';
 
@@ -38,13 +44,14 @@ type TimelineItem =
 @Component({
   selector: 'app-route-messages',
   templateUrl: './route-messages.component.html',
-  // Três folhas: cada uma precisa caber no limite de 4 kB por estilo do build de produção.
-  styleUrls: ['./route-messages.component.scss', './route-messages.chat.scss', './route-messages.members.scss'],
+  // Folhas separadas: cada uma precisa caber no limite de 4 kB por estilo do build de produção.
+  styleUrls: ['./route-messages.component.scss', './route-messages.chat.scss', './route-messages.members.scss', './route-messages.join-request.scss'],
   changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatButtonModule, MatIconModule, MatMenuModule, MatTooltipModule],
 })
 export class RouteMessagesComponent {
   private readonly messageService = inject(MessageService);
+  private readonly joinRequests = inject(JoinRequestService);
   private readonly projectEvents = inject(ProjectEventsService);
   private readonly projectService = inject(EntityProjectResourceService);
   private readonly snackbar = inject(SnackbarService);
@@ -111,19 +118,23 @@ export class RouteMessagesComponent {
         mine,
         showAuthor: isGroup && !mine && lastAuthor !== message.idAccount,
       });
-      lastAuthor = message.idAccount;
+      // A apresentação de um futuro membro é um bloco à parte: a próxima mensagem volta a mostrar o autor.
+      lastAuthor = message.joinRequestStatus ? null : message.idAccount;
     }
     return items;
   });
 
   constructor() {
     this.loadConversations();
-    this.route.queryParamMap
-      .pipe(
-        map((params) => Number(params.get('c')) || null),
-        takeUntilDestroyed()
-      )
-      .subscribe((id) => this.open(id));
+    this.route.queryParamMap.pipe(takeUntilDestroyed()).subscribe((params) => {
+      // ?project=<id> (ex.: aviso de pedido para participar) abre o grupo desse projeto.
+      const idProject = Number(params.get('project')) || null;
+      if (idProject != null) {
+        this.openProjectGroup(idProject);
+        return;
+      }
+      this.open(Number(params.get('c')) || null);
+    });
 
     const timer = setInterval(() => this.poll(), MESSAGES_POLL_MS);
     inject(DestroyRef).onDestroy(() => clearInterval(timer));
@@ -349,7 +360,50 @@ export class RouteMessagesComponent {
     return new Date(message.createdAt).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
   }
 
+  // ---------------------------------------------------------------- pedidos para participar
+
+  /** Aceita ou recusa pela própria mensagem de apresentação. */
+  public answerJoinRequest(message: IMessageModel, action: 'accept' | 'decline') {
+    if (message.idJoinRequest == null || message.joinRequestStatus !== 'PENDING') return;
+    const status = action === 'accept' ? 'ACCEPTED' : 'DECLINED';
+    this.joinRequests.respond(message.idJoinRequest, action).subscribe({
+      next: () => {
+        this.messages.update((list) => list.map((m) => (m.id === message.id ? { ...m, joinRequestStatus: status } : m)));
+        const verb = action === 'accept' ? 'agora participa do projeto' : 'teve o pedido recusado';
+        this.snackbar.showMessage(`${message.authorName} ${verb}.`);
+        const open = this.selectedId();
+        if (action === 'accept' && open !== null) this.loadMembers(open);
+      },
+      // Ex.: outro membro respondeu antes. Relê para mostrar o estado certo.
+      error: (err) => {
+        this.snackbar.catchError(err, 'Não foi possível responder ao pedido.');
+        this.reloadMessages();
+      },
+    });
+  }
+
+  /** Conversa privada com quem pediu para participar (enquanto o pedido está pendente, são contatos). */
+  public replyPrivately(message: IMessageModel) {
+    this.messageService.openDirect(message.idAccount).subscribe({
+      next: (id) => this.goTo(id),
+      error: (err) => this.snackbar.catchError(err, 'Não foi possível abrir a conversa.'),
+    });
+  }
+
   // ---------------------------------------------------------------- internos
+
+  private openProjectGroup(idProject: number) {
+    this.loadConversations(() => {
+      const group = this.conversations().find((c) => c.type === 'PROJECT' && c.idProject === idProject);
+      const queryParams = group ? { c: group.id } : {};
+      this.router.navigate([], { relativeTo: this.route, queryParams, replaceUrl: true }).then();
+    });
+  }
+
+  private reloadMessages() {
+    const id = this.selectedId();
+    if (id != null) this.open(id);
+  }
 
   private goTo(idConversation: number) {
     this.loadConversations(() =>

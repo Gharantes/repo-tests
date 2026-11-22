@@ -1,5 +1,6 @@
 package br.com.synergia.rest
 
+import br.com.synergia.libs.entityJoinRequest.models.RequestToJoinDto
 import br.com.synergia.libs.entityJoinRequest.services.EntityJoinRequestService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import org.springframework.http.ResponseEntity
@@ -20,9 +21,10 @@ class EntityJoinRequestResource (
     @PostMapping("/request")
     fun requestToJoin(
         @RequestParam("id-project") idProject: Long,
-        @RequestParam("id-account") idAccount: Long
+        @RequestParam("id-account") idAccount: Long,
+        @RequestBody params: RequestToJoinDto
     ): ResponseEntity<Long> {
-        return ResponseMessenger.buildResponse { service.requestToJoin(idProject, idAccount) }
+        return ResponseMessenger.buildResponse { service.requestToJoin(idProject, idAccount, params.message) }
     }
     @PostMapping("/cancel")
     fun cancelRequest(

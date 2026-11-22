@@ -2,6 +2,7 @@ package br.com.synergia.libs.entityMessage.services
 
 import br.com.synergia.libs.entityMessage.models.SendMessageDto
 import br.com.synergia.libs.utilsCommons.enums.ConversationTypeEnum
+import br.com.synergia.libs.utilsCommons.enums.JoinRequestStatusEnum
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
 import br.com.synergia.libs.utilsEntities.jpa.conversation.Conversation
 import br.com.synergia.libs.utilsEntities.jpa.eventAccountRelationship.EventAccountRelationshipRepository
@@ -66,9 +67,7 @@ class EntityMessageService (
     /** Envia e já marca como lida para quem enviou. */
     @Transactional(rollbackFor = [Exception::class])
     fun sendMessage(idConversation: Long, params: SendMessageDto): MessageDto {
-        val content = params.content.trim()
-        require(content.isNotEmpty()) { "A mensagem está vazia." }
-        require(content.length <= MAX_LENGTH) { "A mensagem passa de $MAX_LENGTH caracteres." }
+        val content = requireMessageContent(params.content)
         getConversationAsParticipant(idConversation, params.idAccount)
         val author = accountRepository.findById(params.idAccount)
             .orElseThrow { NoSuchElementException("Conta ${params.idAccount} não existe.") }
@@ -148,14 +147,46 @@ class EntityMessageService (
         sqlService.removeMember(idConversation, idMember)
     }
 
+    /**
+     * Apresentação de quem pediu para participar: vai para o grupo do projeto, mesmo a pessoa ainda
+     * não sendo membro (ela não passa a ver o grupo por isso). Quem chama já validou o pedido.
+     */
+    fun postJoinRequest(idProject: Long, idRequester: Long, idRequest: Long, content: String) {
+        val text = requireMessageContent(content)
+        val project = projectRepository.findById(idProject).orElseThrow { NoSuchElementException("Projeto $idProject não existe.") }
+        val conversation = projectConversation(project.idTenant, idProject, idRequester)
+        sqlService.createMessage(conversation.id!!, idRequester, text, idRequest, JoinRequestStatusEnum.PENDING)
+    }
+
+    /** Pedido respondido: a apresentação fica no grupo, marcada como aceita ou recusada. */
+    fun closeJoinRequest(idRequest: Long, status: JoinRequestStatusEnum) {
+        sqlService.setJoinRequestStatus(idRequest, status)
+    }
+
+    /** Quem pediu desistiu: a apresentação sai do grupo. */
+    fun withdrawJoinRequest(idRequest: Long) {
+        sqlService.deleteJoinRequestMessage(idRequest)
+    }
+
+    private fun requireMessageContent(content: String): String {
+        val text = content.trim()
+        require(text.isNotEmpty()) { "A mensagem está vazia." }
+        require(text.length <= MAX_LENGTH) { "A mensagem passa de $MAX_LENGTH caracteres." }
+        return text
+    }
+
+    private fun projectConversation(idTenant: Long, idProject: Long, idCreator: Long): Conversation {
+        val key = Conversation.projectKey(idProject)
+        return findOrCreate(key) {
+            sqlService.createConversation(idTenant, ConversationTypeEnum.PROJECT, key, idCreator, idProject)
+        }
+    }
+
     private fun ensureProjectConversations(idAccount: Long) {
         projectMembers.findAllByIdAccount(idAccount).forEach { membership ->
-            val key = Conversation.projectKey(membership.idProject)
-            if (sqlService.findConversation(key) != null) return@forEach
+            if (sqlService.findConversation(Conversation.projectKey(membership.idProject)) != null) return@forEach
             val project = projectRepository.findById(membership.idProject).orElse(null) ?: return@forEach
-            findOrCreate(key) {
-                sqlService.createConversation(project.idTenant, ConversationTypeEnum.PROJECT, key, idAccount, project.id)
-            }
+            projectConversation(project.idTenant, membership.idProject, idAccount)
         }
     }
 

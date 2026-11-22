@@ -2,9 +2,16 @@ package br.com.synergia.integration
 
 import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
+import br.com.synergia.integration.support.postJson
 import br.com.synergia.integration.support.postSemCorpo
+import br.com.synergia.libs.entityJoinRequest.models.RequestToJoinDto
 import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
+import br.com.synergia.libs.utilsCommons.enums.ConversationTypeEnum
+import br.com.synergia.libs.utilsCommons.enums.JoinRequestStatusEnum
+import br.com.synergia.libs.utilsEntities.models.ConversationDto
+import br.com.synergia.libs.utilsEntities.models.MessageContactDto
+import br.com.synergia.libs.utilsEntities.models.MessageDto
 import br.com.synergia.libs.utilsEntities.models.NotificationDto
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
@@ -20,8 +27,8 @@ class EntityJoinRequestIntegrationTest : IntegrationTestBase() {
 
     private val base = "/api/entity-join-request"
 
-    private fun pedir(idProjeto: Long, idConta: Long) =
-        rest.postSemCorpo<Long>("$base/request?id-project=$idProjeto&id-account=$idConta")
+    private fun pedir(idProjeto: Long, idConta: Long, apresentacao: String = "Sei programar em Python e quero ajudar no robô.") =
+        rest.postJson<Long>("$base/request?id-project=$idProjeto&id-account=$idConta", RequestToJoinDto(apresentacao))
 
     private fun pendente(idProjeto: Long, idConta: Long) =
         rest.postSemCorpo<Boolean>("$base/has-pending-request?id-project=$idProjeto&id-account=$idConta").body.shouldNotBeNull()
@@ -136,5 +143,94 @@ class EntityJoinRequestIntegrationTest : IntegrationTestBase() {
         rest.postSemCorpo<Void>("$base/cancel?id-project=$idProjeto&id-account=$interessada").statusCode shouldBe HttpStatus.OK
         pendente(idProjeto, interessada) shouldBe false
         avisos(lider).shouldBeEmpty()
+    }
+
+    // ---------------------------------------------------------------- apresentação no grupo do projeto
+
+    private fun grupoDoProjeto(idConta: Long) =
+        rest.postForList<ConversationDto>("/api/entity-message/list-conversations?id-account=$idConta").body.shouldNotBeNull()
+            .single { it.type == ConversationTypeEnum.PROJECT }
+
+    private fun mensagens(idConversa: Long, idConta: Long) =
+        rest.postForList<MessageDto>("/api/entity-message/list-messages/$idConversa?id-account=$idConta")
+
+    @Test
+    fun `pedido sem apresentação é recusado`() {
+        val idTenant = criarTenant()
+        val lider = criarConta(idTenant, login = "lider")
+        val interessada = criarConta(idTenant, login = "interessada")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(lider, idProjeto, papel = "Líder")
+
+        pedir(idProjeto, interessada, apresentacao = "   ").statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        contarLinhas("project_join_request") shouldBe 0
+        contarLinhas("conversation_message") shouldBe 0
+    }
+
+    @Test
+    fun `a apresentação vai para o grupo do projeto como mensagem de futuro membro, sem dar acesso ao grupo`() {
+        val idTenant = criarTenant()
+        val lider = criarConta(idTenant, login = "lider")
+        val interessada = criarConta(idTenant, login = "interessada", primeiroNome = "Ana", sobrenome = "Souza")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(lider, idProjeto, papel = "Líder")
+
+        val idPedido = pedir(idProjeto, interessada, "  Quero cuidar da parte elétrica; já fiz curso de Arduino.  ").body.shouldNotBeNull()
+        pedir(idProjeto, interessada, "Outra vez").body shouldBe idPedido
+
+        val grupo = grupoDoProjeto(lider)
+        grupo.unreadCount shouldBe 1
+        val lista = mensagens(grupo.id, lider).body.shouldNotBeNull()
+        lista shouldHaveSize 1
+        lista[0].idAccount shouldBe interessada
+        lista[0].authorName shouldBe "Ana Souza"
+        lista[0].content shouldBe "Quero cuidar da parte elétrica; já fiz curso de Arduino."
+        lista[0].idJoinRequest shouldBe idPedido
+        lista[0].joinRequestStatus shouldBe JoinRequestStatusEnum.PENDING
+
+        // Pedir não faz ninguém entrar no grupo.
+        mensagens(grupo.id, interessada).statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+    }
+
+    @Test
+    fun `aceitar e recusar ficam registrados na mensagem, e cancelar tira a mensagem do grupo`() {
+        val idTenant = criarTenant()
+        val lider = criarConta(idTenant, login = "lider")
+        val aceita = criarConta(idTenant, login = "aceita")
+        val recusado = criarConta(idTenant, login = "recusado")
+        val desistiu = criarConta(idTenant, login = "desistiu")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(lider, idProjeto, papel = "Líder")
+
+        val idAceito = pedir(idProjeto, aceita).body.shouldNotBeNull()
+        val idRecusado = pedir(idProjeto, recusado).body.shouldNotBeNull()
+        pedir(idProjeto, desistiu)
+
+        rest.postSemCorpo<Void>("$base/accept/$idAceito?id-account=$lider").statusCode shouldBe HttpStatus.OK
+        rest.postSemCorpo<Void>("$base/decline/$idRecusado?id-account=$lider").statusCode shouldBe HttpStatus.OK
+        rest.postSemCorpo<Void>("$base/cancel?id-project=$idProjeto&id-account=$desistiu").statusCode shouldBe HttpStatus.OK
+
+        val grupo = grupoDoProjeto(lider)
+        val status = mensagens(grupo.id, lider).body.shouldNotBeNull().associate { it.idAccount to it.joinRequestStatus }
+        status shouldBe mapOf(aceita to JoinRequestStatusEnum.ACCEPTED, recusado to JoinRequestStatusEnum.DECLINED)
+
+        // Quem foi aceita agora lê o grupo, inclusive a própria apresentação.
+        mensagens(grupo.id, aceita).body.shouldNotBeNull() shouldHaveSize 2
+    }
+
+    @Test
+    fun `membros e quem pediu podem conversar em privado enquanto o pedido está pendente`() {
+        val idTenant = criarTenant()
+        val lider = criarConta(idTenant, login = "lider")
+        val interessada = criarConta(idTenant, login = "interessada")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(lider, idProjeto, papel = "Líder")
+        pedir(idProjeto, interessada)
+
+        val contatos = rest.postForList<MessageContactDto>("/api/entity-message/list-contacts?id-account=$lider").body.shouldNotBeNull()
+        contatos.single().idAccount shouldBe interessada
+        contatos.single().membershipLabel shouldBe "Pediu para participar"
+        rest.postSemCorpo<Long>("/api/entity-message/open-direct?id-account=$lider&id-other=$interessada").statusCode shouldBe HttpStatus.OK
+        rest.postSemCorpo<Long>("/api/entity-message/open-direct?id-account=$interessada&id-other=$lider").statusCode shouldBe HttpStatus.OK
     }
 }

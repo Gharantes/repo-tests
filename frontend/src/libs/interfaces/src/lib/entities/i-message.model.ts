@@ -25,6 +25,13 @@ export interface IConversationModel {
   createdAt: string;
 }
 
+/** Situação do pedido para participar que acompanha a apresentação de um futuro membro. */
+export type JoinRequestStatus = 'PENDING' | 'ACCEPTED' | 'DECLINED';
+
+/**
+ * Mensagem. Com `joinRequestStatus`, é a apresentação de quem pediu para participar do projeto
+ * (ainda não é membro); enquanto PENDING, `idJoinRequest` é o pedido a aceitar ou recusar.
+ */
 export interface IMessageModel {
   id: number;
   idConversation: number;
@@ -32,6 +39,8 @@ export interface IMessageModel {
   authorName: string;
   content: string;
   createdAt: string;
+  idJoinRequest: number | null;
+  joinRequestStatus: JoinRequestStatus | null;
 }
 
 /** Participante. `origin`: PROJECT (membro do projeto), EVENT (adicionado do evento), null numa DIRECT. */

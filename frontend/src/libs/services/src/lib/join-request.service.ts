@@ -31,11 +31,28 @@ export class JoinRequestService {
     });
   }
 
-  public request(idProject: number): Observable<number> {
+  /** `message`: a apresentação (o que quer fazer, o que sabe fazer). Vai para o grupo do projeto. */
+  public request(idProject: number, message: string): Observable<number> {
     const idAccount = this.session.getUserId();
-    return this.http.post<number>(`${this.url}/request`, null, {
+    return this.http.post<number>(`${this.url}/request`, { message }, {
       params: { 'id-project': idProject, 'id-account': idAccount ?? -1 },
     });
+  }
+
+  /**
+   * Responde pelo id do pedido (ex.: pela mensagem no grupo do projeto). O aviso do sino some junto,
+   * por isso os avisos são relidos.
+   */
+  public respond(idRequest: number, action: 'accept' | 'decline'): Observable<void> {
+    const idAccount = this.session.getUserId();
+    return this.http
+      .post<void>(`${this.url}/${action}/${idRequest}`, null, { params: { 'id-account': idAccount ?? -1 } })
+      .pipe(
+        tap(() => {
+          if (action === 'accept') this.entityChanges.notifyProjectsChanged();
+          this.notifications.load();
+        })
+      );
   }
 
   public cancel(idProject: number): Observable<void> {
@@ -58,14 +75,11 @@ export class JoinRequestService {
     const idAccount = this.session.getUserId();
     if (idAccount == null || notification.type !== 'REQUEST') return;
     this.notifications.remove(notification);
-    this.http
-      .post<void>(`${this.url}/${action}/${notification.referenceId}`, null, { params: { 'id-account': idAccount } })
-      .pipe(tap(() => action === 'accept' && this.entityChanges.notifyProjectsChanged()))
+    this.respond(notification.referenceId, action)
       .subscribe({
         next: () => {
           const verb = action === 'accept' ? 'agora participa de' : 'teve o pedido recusado em';
           this.snackbar.showMessage(`${notification.actorName} ${verb} ${notification.parentTitle}.`);
-          this.notifications.load();
         },
         // Ex.: outro membro respondeu antes. A releitura mostra o estado certo.
         error: (err) => {

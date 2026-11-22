@@ -7,6 +7,7 @@ import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { EventDtoToModel, ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { JoinRequestService, PermissionService, RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { SafeImageComponent } from '../safe-image/safe-image.component';
+import { DialogJoinRequestComponent } from './dialog-join-request.component';
 import {
   buildDialogCardView,
   colorForId,
@@ -39,6 +40,7 @@ export class DialogCardComponent {
   private readonly session = inject(SessionService);
   private readonly joinRequests = inject(JoinRequestService);
   private readonly snackbar = inject(SnackbarService);
+  private readonly dialog = inject(MatDialog);
 
   /** Começa com o que veio da listagem e é substituído pela versão completa do backend. */
   private readonly entity$ = signal<DialogCardEntity>(this.data.entity);
@@ -94,15 +96,19 @@ export class DialogCardComponent {
     }
   }
 
+  /** Pede uma apresentação; ela vai para o grupo do projeto em Mensagens junto com o pedido. */
   public requestJoin() {
     if (this.joinState$() !== 'idle') return;
-    this.joinState$.set('sending');
-    this.joinRequests.request(this.data.entity.id).subscribe({
-      next: () => this.joinState$.set('pending'),
-      error: (err) => {
-        this.joinState$.set('idle');
-        this.snackbar.catchError(err, 'Não foi possível enviar o pedido.');
-      },
+    DialogJoinRequestComponent.open(this.dialog, { projectTitle: this.entity$().title }).subscribe((message) => {
+      if (!message) return;
+      this.joinState$.set('sending');
+      this.joinRequests.request(this.data.entity.id, message).subscribe({
+        next: () => this.joinState$.set('pending'),
+        error: (err) => {
+          this.joinState$.set('idle');
+          this.snackbar.catchError(err, 'Não foi possível enviar o pedido.');
+        },
+      });
     });
   }
 

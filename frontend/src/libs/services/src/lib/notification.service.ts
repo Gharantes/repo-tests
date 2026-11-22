@@ -83,12 +83,19 @@ export class NotificationService {
       .subscribe({ next: (n) => this.unread.set(n), error: () => undefined });
   }
 
-  /** Marca como lida e abre o evento/projeto na aba onde a novidade está. */
+  /**
+   * Marca como lida e abre onde a novidade está. Pedido para participar abre o grupo do projeto em
+   * Mensagens, onde está a apresentação de quem pediu.
+   */
   public open(notification: INotificationModel) {
     this.markAsRead(notification);
-    if (notification.type === 'REQUEST' || notification.type === 'ACCEPTED') {
+    if (notification.type === 'REQUEST') {
+      this.routing.goToProjectMessages(notification.parentId);
+      return;
+    }
+    if (notification.type === 'ACCEPTED') {
       // Pedido aceito: o projeto passa a ser "seu" e a sidebar precisa reler a lista.
-      if (notification.type === 'ACCEPTED') this.entityChanges.notifyProjectsChanged();
+      this.entityChanges.notifyProjectsChanged();
       this.routing.goToProjectDetails(notification.parentId);
       return;
     }

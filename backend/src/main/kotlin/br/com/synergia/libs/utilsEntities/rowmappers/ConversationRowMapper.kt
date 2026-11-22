@@ -1,6 +1,7 @@
 package br.com.synergia.libs.utilsEntities.rowmappers
 
 import br.com.synergia.libs.utilsCommons.enums.ConversationTypeEnum
+import br.com.synergia.libs.utilsCommons.enums.JoinRequestStatusEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
 import br.com.synergia.libs.utilsEntities.models.ConversationDto
 import br.com.synergia.libs.utilsEntities.models.ConversationMemberDto
@@ -39,7 +40,9 @@ class MessageRowMapper : RowMapper<MessageDto> {
             idAccount = rs.getLong("id_account"),
             authorName = rs.getString("message_author_name"),
             content = rs.getString("message_content"),
-            createdAt = rs.getTimestamp("message_created_at").toLocalDateTime()
+            createdAt = rs.getTimestamp("message_created_at").toLocalDateTime(),
+            idJoinRequest = rs.getLongOrNull("id_join_request"),
+            joinRequestStatus = rs.getString("join_request_status")?.let { JoinRequestStatusEnum.valueOf(it) }
         )
     }
 }
