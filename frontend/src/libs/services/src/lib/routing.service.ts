@@ -3,6 +3,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 import { SessionService } from './session.service';
 
+/** Valores de `?tab=` na página do evento. */
+export type EventDetailsTab = 'lousa' | 'projetos' | 'feed';
+
 @Injectable({
   providedIn: 'root',
 })
@@ -98,9 +101,10 @@ export class RoutingService {
     this.routeLabel.set('Detalhes do Evento');
     this.navigateInTenant(['event', idEvent], { edit: '1' });
   }
-  public goToEventDetails(idEvent: number) {
+  /** `tab` abre direto a aba do feed ou da lousa (ex.: ao clicar num aviso do sino). */
+  public goToEventDetails(idEvent: number, tab?: EventDetailsTab) {
     this.routeLabel.set('Detalhes do Evento');
-    this.navigateInTenant(['event', idEvent])
+    this.navigateInTenant(['event', idEvent], tab ? { tab } : undefined)
   }
   public goToProjectDetails(idProject: number) {
     this.routeLabel.set('Detalhes do Projeto');

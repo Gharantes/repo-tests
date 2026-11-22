@@ -18,6 +18,9 @@ import { ConnectorUpsertEvent } from '../../page-upsert-event/connector/connecto
 import { EntityCoverFieldComponent } from '../../../shared/entity-fields/entity-cover-field.component';
 import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-form-fields.component';
 
+/** Na ordem das abas; casa com EventDetailsTab do RoutingService. */
+const TAB_NAMES = ['lousa', 'projetos', 'feed'];
+
 /** Página do evento: leitura por padrão; em modo edição o topo vira os mesmos campos da tela de criar. */
 @Component({
   selector: 'app-view-event-details',
@@ -41,6 +44,11 @@ export class ViewEventDetailsComponent {
 
   /** Aba aberta: 0 Lousa, 1 Projetos, 2 Feed. */
   public readonly tab = signal(0);
+  /** Nome da aba vindo de `?tab=`; desconhecido ou vazio mantém a aba atual. */
+  @Input() public set openTab(name: string | null) {
+    const index = name == null ? -1 : TAB_NAMES.indexOf(name);
+    if (index >= 0) this.tab.set(index);
+  }
   // Os "+" ficam fora das abas e chamam o componente da aba aberta.
   public readonly notes = viewChild(ParentNotesComponent);
   public readonly projects = viewChild(EventProjectsComponent);

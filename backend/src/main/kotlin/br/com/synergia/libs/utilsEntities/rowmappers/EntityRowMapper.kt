@@ -9,4 +9,4 @@ object EntityRowMapper {
     val permissionRowMapper = PermissionRowMapper()
     val noteRowMapper = NoteRowMapper()
     val postRowMapper = PostRowMapper()
-}
+    val notificationRowMapper = NotificationRowMapper()}

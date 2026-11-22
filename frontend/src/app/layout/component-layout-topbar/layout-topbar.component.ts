@@ -1,8 +1,10 @@
-import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { RoutingService, SessionService } from '@synergia-frontend/services';
+import { Component, ChangeDetectionStrategy, computed, inject } from '@angular/core';
+import { NotificationService, RoutingService, SessionService } from '@synergia-frontend/services';
+import { activityIcon, activityVerb, formatRelativeTime } from '@synergia-frontend/utils';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
+import { MatBadgeModule } from '@angular/material/badge';
 
 @Component({
   selector: 'app-layout-topbar',
@@ -10,13 +12,24 @@ import { MatButtonModule } from '@angular/material/button';
   templateUrl: './layout-topbar.component.html',
   styleUrl: `./layout-topbar.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatMenuModule, MatIconModule, MatButtonModule]
+  imports: [MatMenuModule, MatIconModule, MatButtonModule, MatBadgeModule]
 })
 export class LayoutTopbarComponent {
+  public readonly notifications = inject(NotificationService);
+  public readonly iconFor = activityIcon;
+  public readonly verbFor = activityVerb;
+  public readonly relative = (value: string) => formatRelativeTime(value);
+  public readonly badgeText = computed(() => {
+    const n = this.notifications.unread();
+    return n > 99 ? '99+' : String(n);
+  });
+
   constructor(
     public readonly routingService: RoutingService,
     public readonly sessionService: SessionService
-  ) {}
+  ) {
+    this.notifications.startPolling();
+  }
 
   public getInitials(): string {
     const label = this.sessionService.getUserLabel() ?? '';
@@ -28,6 +41,7 @@ export class LayoutTopbarComponent {
 
   public logout() {
     const identifier = this.sessionService.getTenantIdentifier();
+    this.notifications.reset();
     this.sessionService.logout();
     this.routingService.goToLogin(identifier);
   }

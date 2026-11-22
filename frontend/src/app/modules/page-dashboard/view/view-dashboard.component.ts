@@ -1,8 +1,9 @@
 import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { IEventModel, IProjectModel } from '@synergia-frontend/interfaces';
+import { IEventModel, INotificationModel, IProjectModel } from '@synergia-frontend/interfaces';
 import { EventCardGridComponent, ProjectCardGridComponent } from '@synergia-frontend/components';
 import { AuthPermission, PermissionService } from '@synergia-frontend/services';
+import { DashboardNotificationsComponent } from '../notifications/dashboard-notifications.component';
 
 @Component({
   selector: 'app-view-dashboard',
@@ -10,11 +11,13 @@ import { AuthPermission, PermissionService } from '@synergia-frontend/services';
   templateUrl: 'view-dashboard.component.html',
   styleUrl: `view-dashboard.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [MatIconModule, ProjectCardGridComponent, EventCardGridComponent],
+  imports: [MatIconModule, ProjectCardGridComponent, EventCardGridComponent, DashboardNotificationsComponent],
 })
 export class ViewDashboardComponent {
   @Input() projects$: IProjectModel[] = [];
   @Input() events$: IEventModel[] = [];
+  @Input() notifications$: INotificationModel[] = [];
+  @Input() notificationsLoaded = false;
   public readonly permissions = inject(PermissionService);
   public readonly P = AuthPermission;
 
@@ -22,4 +25,7 @@ export class ViewDashboardComponent {
   @Output() createEventEvent = new EventEmitter<void>();
   @Output() openProjectEvent = new EventEmitter<IProjectModel>();
   @Output() openEventEvent = new EventEmitter<IEventModel>();
+  @Output() openNotificationEvent = new EventEmitter<INotificationModel>();
+  @Output() markReadEvent = new EventEmitter<INotificationModel>();
+  @Output() markAllReadEvent = new EventEmitter<void>();
 }

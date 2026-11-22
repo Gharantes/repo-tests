@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityProject.services
 
 import br.com.synergia.libs.entityProject.models.UpsertProjectDto
+import br.com.synergia.libs.utilsCommons.enums.MembershipLabels
 import br.com.synergia.libs.utilsEntities.models.ProjectDto
 import org.springframework.stereotype.Service
 
@@ -19,7 +20,7 @@ class EntityProjectService (
     }
     fun createProject(params: UpsertProjectDto) {
         val idProject = sqlService.createProject(params)
-        sqlService.createProjectAccountRelationship(params.idAccount, idProject, membershipLabel = "Líder")
+        sqlService.createProjectAccountRelationship(params.idAccount, idProject, membershipLabel = MembershipLabels.PROJECT_LEAD)
         sqlService.createProjectTagRelationship(idProject, params.tags)
     }
     fun updateProject(idProject: Long, params: UpsertProjectDto) {

@@ -1,8 +1,13 @@
 <app-view-dashboard
   [projects$]="projects$()"
   [events$]="events$()"
+  [notifications$]="notifications.unreadList()"
+  [notificationsLoaded]="notifications.loaded()"
   (createProjectEvent)="goToCreateProject()"
   (createEventEvent)="goToCreateEvent()"
   (openProjectEvent)="openProject($event)"
   (openEventEvent)="openEvent($event)"
+  (openNotificationEvent)="notifications.open($event)"
+  (markReadEvent)="notifications.markAsRead($event)"
+  (markAllReadEvent)="notifications.markAllAsRead()"
 ></app-view-dashboard>

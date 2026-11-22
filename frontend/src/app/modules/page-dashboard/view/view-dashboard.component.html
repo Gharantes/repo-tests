@@ -1,5 +1,16 @@
 <div id="page">
   <div class="section">
+    <div class="section-title">Notificações</div>
+    <app-dashboard-notifications
+      [items]="notifications$"
+      [loaded]="notificationsLoaded"
+      (openEvent)="openNotificationEvent.emit($event)"
+      (markReadEvent)="markReadEvent.emit($event)"
+      (markAllEvent)="markAllReadEvent.emit()"
+    ></app-dashboard-notifications>
+  </div>
+
+  <div class="section">
     <div class="section-title">Seus Projetos</div>
     <lib-project-card-grid
       [data$]="projects$"

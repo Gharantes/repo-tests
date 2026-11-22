@@ -12,9 +12,55 @@
   <button class="icon-btn" mat-icon-button>
     <mat-icon>settings</mat-icon>
   </button>
-  <button class="icon-btn" mat-icon-button>
-    <mat-icon>notifications</mat-icon>
+  <button
+    class="icon-btn"
+    mat-icon-button
+    aria-label="Notificações"
+    [matMenuTriggerFor]="notificationsMenu"
+    (menuOpened)="notifications.load()"
+  >
+    <mat-icon
+      aria-hidden="false"
+      [matBadge]="badgeText()"
+      [matBadgeHidden]="notifications.unread() === 0"
+      matBadgeSize="small"
+      matBadgeColor="warn"
+      [attr.aria-label]="notifications.unread() + ' notificações não lidas'"
+      >notifications</mat-icon
+    >
   </button>
+
+  <mat-menu #notificationsMenu="matMenu" xPosition="before" class="notifications-menu">
+    <div class="notif-head" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+      <strong>Notificações</strong>
+      @if (notifications.unread() > 0) {
+        <button type="button" class="notif-link" (click)="notifications.markAllAsRead()">Marcar todas como lidas</button>
+      }
+    </div>
+    @for (n of notifications.notifications(); track n.id) {
+      <button mat-menu-item class="notif" [class.unread]="!n.readAt" (click)="notifications.open(n)">
+        <span class="notif-icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
+        <span class="notif-text">
+          <span class="notif-line">
+            <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>
+          </span>
+          <span class="notif-meta">{{ relative(n.createdAt) }}</span>
+        </span>
+        @if (!n.readAt) {
+          <span class="notif-dot" aria-label="Não lida"></span>
+        }
+      </button>
+    } @empty {
+      <div class="notif-empty" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+        @if (notifications.loading()) {
+          Carregando…
+        } @else {
+          <mat-icon>notifications_none</mat-icon>
+          <span>Nenhuma notificação por enquanto.</span>
+        }
+      </div>
+    }
+  </mat-menu>
 
   <div id="user-info" [matMenuTriggerFor]="userMenu">
     <div id="user-name">{{ sessionService.getUserLabel() }}</div>

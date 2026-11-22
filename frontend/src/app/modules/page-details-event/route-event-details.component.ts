@@ -1,6 +1,6 @@
 import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EntityEventResourceService, EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
@@ -35,6 +35,10 @@ export class RouteEventDetailsComponent {
   private readonly idEvent = signal<number | null>(null);
   public readonly event$ = signal<IEventModel | null>(null);
   public readonly editing = signal(false);
+  /** `?tab=feed|lousa|projetos`: muda de aba mesmo com a página já aberta (aviso do sino). */
+  public readonly openTab = toSignal(this.activatedRoute.queryParamMap.pipe(map((q) => q.get('tab'))), {
+    initialValue: null,
+  });
 
   constructor() {
     this.getFromRouteParams();

@@ -1,6 +1,8 @@
 package br.com.synergia.libs.entityNote.services
 
 import br.com.synergia.libs.entityNote.models.UpsertNoteDto
+import br.com.synergia.libs.entityNotification.services.EntityNotificationService
+import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
 import br.com.synergia.libs.utilsEntities.jpa.note.Note
 import br.com.synergia.libs.utilsEntities.models.NoteDto
@@ -10,6 +12,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class EntityNoteService (
     private val sqlService: EntityNoteSqlService,
+    private val notificationService: EntityNotificationService,
 ) {
     fun listNotesByAccount(idAccount: Long): List<NoteDto> {
         return sqlService.listNotes(idAccount = idAccount, includeArchived = true)
@@ -29,14 +32,20 @@ class EntityNoteService (
     @Transactional(rollbackFor = [Exception::class])
     fun deleteNote(idNote: Long, idAccount: Long) {
         getOwnNote(idNote, idAccount)
+        notificationService.deleteOfNote(idNote)
         sqlService.deleteNoteRelationships(idNote)
         sqlService.deleteNote(idNote)
     }
 
-    /** Liga o bloco a um projeto ou evento, trocando o vínculo anterior. Sem parent, só desvincula. */
+    /**
+     * Liga o bloco a um projeto ou evento, trocando o vínculo anterior. Sem parent, só desvincula.
+     * Os avisos do vínculo anterior somem; se quem vincula é Organizador/Líder, os membros do novo
+     * evento/projeto são avisados.
+     */
     @Transactional(rollbackFor = [Exception::class])
     fun attachNote(idNote: Long, idAccount: Long, parentEntity: NoteParentEnum?, parentId: Long?) {
         val note = getOwnNote(idNote, idAccount)
+        notificationService.deleteOfNote(idNote)
         sqlService.deleteNoteRelationships(idNote)
         if (parentEntity == null) return
         requireNotNull(parentId) { "parent-id é obrigatório junto com parent-entity." }
@@ -44,6 +53,7 @@ class EntityNoteService (
             NoteParentEnum.PROJECT -> sqlService.createProjectNoteRelationship(parentId, note)
             NoteParentEnum.EVENT -> sqlService.createEventNoteRelationship(parentId, note)
         }
+        notificationService.notifyActivity(parentEntity, parentId, idAccount, ActivityTypeEnum.of(note.type), idNote)
     }
 
     private fun getOwnNote(idNote: Long, idAccount: Long): Note {
