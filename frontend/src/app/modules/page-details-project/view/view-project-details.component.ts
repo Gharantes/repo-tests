@@ -13,19 +13,26 @@ import {
   ProjectEventsComponent,
   SafeImageComponent,
 } from '@synergia-frontend/components';
+import { ConnectorUpsertProject } from '../../page-upsert-project/connector/connector-upsert-project';
+import { ProjectCoverFieldComponent } from '../../page-upsert-project/fields/project-cover-field.component';
+import { ProjectFormFieldsComponent } from '../../page-upsert-project/fields/project-form-fields.component';
 
-/** Página do projeto: mesmo layout da tela de criar/editar, só leitura, com atalho para editar. */
+/** Página do projeto: leitura por padrão; em modo edição o topo vira os mesmos campos da tela de criar. */
 @Component({
   selector: 'app-view-project-details',
   templateUrl: './view-project-details.component.html',
   styleUrl: `./view-project-details.component.scss`,
   changeDetection: ChangeDetectionStrategy.Eager,
-  imports: [ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
+  imports: [ProjectCoverFieldComponent, ProjectFormFieldsComponent, ParentNotesComponent, ProjectEventsComponent, SafeImageComponent, MatButtonModule, MatIconModule, MatMenuModule, MatTabsModule, MatTooltipModule],
 })
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
+  @Input() public editing = false;
+  @Input() public connector!: ConnectorUpsertProject;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();
+  @Output() public readonly cancelEditEvent = new EventEmitter<void>();
+  @Output() public readonly saveEvent = new EventEmitter<void>();
 
   /** Aba aberta: 0 Lousa, 1 Eventos. */
   public readonly tab = signal(0);

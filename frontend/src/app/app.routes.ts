@@ -60,7 +60,8 @@ export const appRoutes: Route[] = [
           // Projetos
           { path: 'projects', component: RouteListProjectsComponent },
           { path: 'create-project', component: RouteUpsertProjectComponent },
-          { path: 'edit-project/:id', component: RouteUpsertProjectComponent },
+          // Links antigos: a edição agora é feita na própria página do projeto.
+          { path: 'edit-project/:id', redirectTo: ({ params }) => `project/${params['id']}?edit=1` },
           { path: 'project/:id', component: RouteProjectDetailsComponent },
           // Tags
           { path: 'tags', component: RouteListTagsComponent },
