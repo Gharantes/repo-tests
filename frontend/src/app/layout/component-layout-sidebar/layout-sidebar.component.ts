@@ -3,11 +3,11 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
-import { RoutingService, SessionService } from "@synergia-frontend/services";
+import { AuthPermission, PermissionService, RoutingService, SessionService } from "@synergia-frontend/services";
 import { EntityEventResourceService, EntityProjectResourceService } from "@synergia-frontend/api";
 import { IEventModel, IProjectModel } from "@synergia-frontend/interfaces";
 import { EventDtoToModel, ProjectDtoToModel } from "@synergia-frontend/mappers";
-import { filter, map, tap } from "rxjs";
+import { catchError, EMPTY, filter, map, tap } from "rxjs";
 
 @Component({
   selector: 'app-layout-sidebar',
@@ -25,10 +25,12 @@ export class LayoutSidebarComponent {
 
   public readonly projects$ = signal<IProjectModel[]>([]);
   public readonly events$ = signal<IEventModel[]>([]);
+  public readonly P = AuthPermission;
 
   constructor(
     public readonly routingService: RoutingService,
     public readonly sessionService: SessionService,
+    public readonly permissions: PermissionService,
     private readonly entityProjectService: EntityProjectResourceService,
     private readonly entityEventService: EntityEventResourceService,
     private readonly router: Router,
@@ -39,7 +41,11 @@ export class LayoutSidebarComponent {
     this.refreshOnNavigation();
   }
 
-  /** O layout não é recriado entre rotas; sem isso, criar/excluir projeto ou evento não aparece aqui. */
+  /**
+   * O layout não é recriado entre rotas; sem isso, criar/excluir projeto ou evento não aparece aqui.
+   * As permissões também são relidas: quem ganha ou perde uma permissão vê a mudança ao navegar,
+   * sem precisar sair e entrar de novo.
+   */
   private refreshOnNavigation() {
     this.router.events
       .pipe(
@@ -49,6 +55,7 @@ export class LayoutSidebarComponent {
       .subscribe(() => {
         this.lookupProjects();
         this.lookupEvents();
+        this.permissions.refresh().pipe(catchError(() => EMPTY)).subscribe();
       });
   }
 

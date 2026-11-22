@@ -1,5 +1,26 @@
-<app-view-list-permissions
-  [data$]="data$()"
-  [connector]="connector"
-  (lookupEvent)="searchForPermissions()"
-></app-view-list-permissions>
+<div class="container">
+  <header class="page-head">
+    <div>
+      <h1>Permissões</h1>
+      <p>Monte perfis com as permissões de cada papel e atribua-os aos usuários.</p>
+    </div>
+    @if (!store.canManage()) {
+      <span class="readonly-badge"><mat-icon>visibility</mat-icon>Somente leitura</span>
+    }
+  </header>
+
+  <!-- preserveContent: trocar de aba não perde o rascunho da outra. -->
+  <mat-tab-group class="tabs" animationDuration="0ms" mat-stretch-tabs="false" mat-align-tabs="start" preserveContent>
+    <mat-tab>
+      <ng-template mat-tab-label><mat-icon>group</mat-icon>Usuários</ng-template>
+      <app-permissions-tab-accounts></app-permissions-tab-accounts>
+    </mat-tab>
+    <mat-tab>
+      <ng-template mat-tab-label>
+        <mat-icon>badge</mat-icon>Perfis
+        <span class="count">{{ store.profiles$().length }}</span>
+      </ng-template>
+      <app-permissions-tab-profiles></app-permissions-tab-profiles>
+    </mat-tab>
+  </mat-tab-group>
+</div>

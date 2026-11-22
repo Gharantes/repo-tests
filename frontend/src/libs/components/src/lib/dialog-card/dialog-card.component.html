@@ -54,8 +54,10 @@
     <button mat-flat-button class="primary" (click)="onAction('open')">
       {{ view.openLabel }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
     </button>
-    <div class="row">
-      <button mat-stroked-button (click)="onAction('edit')"><mat-icon>edit</mat-icon>{{ view.editLabel }}</button>
-    </div>
+    @if (canEdit$()) {
+      <div class="row">
+        <button mat-stroked-button (click)="onAction('edit')"><mat-icon>edit</mat-icon>{{ view.editLabel }}</button>
+      </div>
+    }
   </div>
 </section>

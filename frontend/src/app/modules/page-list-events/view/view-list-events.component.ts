@@ -7,7 +7,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { debounceTime, map } from 'rxjs';
 import { IAccountModel, IEventModel, ITagModel } from '@synergia-frontend/interfaces';
 import { EntityTagResourceService } from '@synergia-frontend/api';
-import { SessionService } from '@synergia-frontend/services';
+import { AuthPermission, PermissionService, SessionService } from '@synergia-frontend/services';
 import { TagDtoToModel } from '@synergia-frontend/mappers';
 import { SafeImageComponent } from '@synergia-frontend/components';
 import { ConnectorListEvents } from '../connector/connector-list-events';
@@ -25,6 +25,8 @@ const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777
 })
 export class ViewListEventsComponent implements OnInit {
   @Input() data$!: IEventModel[];
+  public readonly permissions = inject(PermissionService);
+  public readonly P = AuthPermission;
   @Input() connector!: ConnectorListEvents;
 
   @Output() lookupEvent = new EventEmitter<void>();

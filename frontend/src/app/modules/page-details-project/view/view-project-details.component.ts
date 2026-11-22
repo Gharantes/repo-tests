@@ -28,6 +28,10 @@ import { EntityFormFieldsComponent } from '../../../shared/entity-fields/entity-
 export class ViewProjectDetailsComponent {
   @Input() public project$!: IProjectModel;
   @Input() public editing = false;
+  /** Membro, ou quem tem EDIT_*_AS_NON_MEMBER. */
+  @Input() public canEdit = false;
+  /** Membro, ou quem tem ASSIGN_TAGS_*_AS_NON_MEMBER. */
+  @Input() public canEditTags = false;
   @Input() public connector!: ConnectorUpsertProject;
   @Output() public readonly goToParentPageEvent = new EventEmitter<void>();
   @Output() public readonly editEvent = new EventEmitter<void>();

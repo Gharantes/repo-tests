@@ -1,7 +1,8 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { IEventModel, IProjectModel } from '@synergia-frontend/interfaces';
 import { EventCardGridComponent, ProjectCardGridComponent } from '@synergia-frontend/components';
+import { AuthPermission, PermissionService } from '@synergia-frontend/services';
 
 @Component({
   selector: 'app-view-dashboard',
@@ -14,6 +15,8 @@ import { EventCardGridComponent, ProjectCardGridComponent } from '@synergia-fron
 export class ViewDashboardComponent {
   @Input() projects$: IProjectModel[] = [];
   @Input() events$: IEventModel[] = [];
+  public readonly permissions = inject(PermissionService);
+  public readonly P = AuthPermission;
 
   @Output() createProjectEvent = new EventEmitter<void>();
   @Output() createEventEvent = new EventEmitter<void>();

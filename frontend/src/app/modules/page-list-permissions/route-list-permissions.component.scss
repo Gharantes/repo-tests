@@ -1,36 +1,41 @@
-* {
-    box-sizing: border-box;
+* { box-sizing: border-box; }
+
+// Quem rola é o corpo da aba aberta, não a página: só assim a barra de salvar (sticky)
+// fica presa no rodapé. Com a página rolando, o mat-tab-body vira o contêiner do sticky
+// e a barra acaba lá embaixo, depois da última permissão, fora da tela.
+:host { display: flex; flex: 1; min-height: 0; overflow: hidden; background: #F0EEE8; }
+
+.container { display: flex; flex-direction: column; width: 100%; height: 100%; min-height: 0; padding: 20px 16px 0; }
+
+.page-head {
+  display: flex; align-items: flex-end; justify-content: space-between; flex-wrap: wrap; gap: 16px; margin-bottom: 8px;
+  h1 { margin: 0; font-size: 26px; color: #121840; }
+  p { margin: 4px 0 0; color: #77746c; font-size: 14px; }
 }
-:host {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    overflow: auto;
-    row-gap: 25px;
-    padding: 10px;
+
+.readonly-badge {
+  display: inline-flex; align-items: center; gap: 6px; color: #77746c; font-size: 13px;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
 }
-#topline {
-    display: flex;
-    height: 70px;
-    column-gap: 10px;
-    align-items: center;
-    .field { flex: 1; }
-    button {
-        border: none;
-        background: none;
-        outline: none;
-        background: #4687ff;
-        color: #eeeeee;
-        padding: 10px;
-        border-radius: 5px;
-        height: 45px;
-        font-weight: 600;
-        font-size: 0.90rem;
-        &:hover {
-            background: #3872e2;
-            cursor: pointer;
-        }
-    }
+
+.tabs {
+  flex: 1;
+  min-height: 0;
+  ::ng-deep .mat-mdc-tab-body-wrapper { flex: 1; min-height: 0; }
+  --mat-tab-divider-color: #e3e0d8;
+  --mat-tab-active-indicator-color: #3B52CC;
+  --mat-tab-active-focus-indicator-color: #3B52CC;
+  --mat-tab-active-hover-indicator-color: #3B52CC;
+  --mat-tab-active-label-text-color: #121840;
+  --mat-tab-active-focus-label-text-color: #121840;
+  --mat-tab-active-hover-label-text-color: #121840;
+  --mat-tab-inactive-label-text-color: #9a978f;
+  --mat-tab-label-text-weight: 600;
+
+  ::ng-deep .mat-mdc-tab { padding: 0 14px; min-width: 0; }
+  mat-icon { font-size: 19px; width: 19px; height: 19px; margin-right: 8px; }
+}
+
+.count {
+  margin-left: 8px; padding: 1px 8px; border-radius: 999px; background: #e3e7fa; color: #3B52CC; font-size: 12px;
 }

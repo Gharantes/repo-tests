@@ -62,21 +62,29 @@
     }
   }
 
-  <div class="nav-item nav-group" matRipple (click)="administrationOpen = !administrationOpen">
-    <mat-icon>admin_panel_settings</mat-icon>
-    <span>Administração</span>
-    <mat-icon class="chevron">{{ administrationOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
-  </div>
-  @if (administrationOpen) {
-    <div class="nav-sub-item" matRipple (click)="routingService.goToListAccounts()">
-      <span class="dot">•</span><span>Usuários</span>
+  @if (permissions.hasAny(P.VIEW_ACCOUNTS_PAGE, P.VIEW_TAGS_PAGE, P.VIEW_PERMISSIONS_PAGE)) {
+    <div class="nav-item nav-group" matRipple (click)="administrationOpen = !administrationOpen">
+      <mat-icon>admin_panel_settings</mat-icon>
+      <span>Administração</span>
+      <mat-icon class="chevron">{{ administrationOpen ? 'expand_less' : 'expand_more' }}</mat-icon>
     </div>
-    <div class="nav-sub-item" matRipple (click)="routingService.goToListTags()">
-      <span class="dot">•</span><span>Tags</span>
-    </div>
-    <div class="nav-sub-item" matRipple (click)="routingService.goToListPermissions()">
-      <span class="dot">•</span><span>Permissões</span>
-    </div>
+    @if (administrationOpen) {
+      @if (permissions.has(P.VIEW_ACCOUNTS_PAGE)) {
+        <div class="nav-sub-item" matRipple (click)="routingService.goToListAccounts()">
+          <span class="dot">•</span><span>Usuários</span>
+        </div>
+      }
+      @if (permissions.has(P.VIEW_TAGS_PAGE)) {
+        <div class="nav-sub-item" matRipple (click)="routingService.goToListTags()">
+          <span class="dot">•</span><span>Tags</span>
+        </div>
+      }
+      @if (permissions.has(P.VIEW_PERMISSIONS_PAGE)) {
+        <div class="nav-sub-item" matRipple (click)="routingService.goToListPermissions()">
+          <span class="dot">•</span><span>Permissões</span>
+        </div>
+      }
+    }
   }
 
   <div class="nav-item" matRipple>
@@ -86,8 +94,10 @@
 </nav>
 
 <div id="bottom-nav">
-  <div class="nav-item" matRipple (click)="routingService.goToListAccounts()">
-    <mat-icon>settings</mat-icon>
-    <span>Configurações</span>
-  </div>
+  @if (permissions.has(P.VIEW_ACCOUNTS_PAGE)) {
+    <div class="nav-item" matRipple (click)="routingService.goToListAccounts()">
+      <mat-icon>settings</mat-icon>
+      <span>Configurações</span>
+    </div>
+  }
 </div>

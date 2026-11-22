@@ -1,0 +1,89 @@
+<div class="layout">
+  <aside class="panel side">
+    @if (store.canManage()) {
+      <button mat-flat-button class="save new" type="button" (click)="startNew()">
+        <mat-icon>add</mat-icon>Novo perfil
+      </button>
+    }
+    <ul class="side-list">
+      @if (selected$() === 'new') {
+        <li>
+          <button type="button" class="item active">
+            <span class="badge"><mat-icon>badge</mat-icon></span>
+            <span class="who"><span class="name">{{ titleControl.value.trim() || 'Novo perfil' }}</span><span class="sub">Não salvo</span></span>
+          </button>
+        </li>
+      }
+      @for (profile of store.profiles$(); track profile.id) {
+        <li>
+          <button type="button" class="item" [class.active]="profile.id === selected$()" (click)="select(profile)">
+            <span class="badge"><mat-icon>badge</mat-icon></span>
+            <span class="who">
+              <span class="name">{{ profile.title }}</span>
+              <span class="sub">{{ countLabel(profile) }}</span>
+            </span>
+          </button>
+        </li>
+      } @empty {
+        @if (selected$() !== 'new') {
+          <li class="side-empty">Nenhum perfil ainda.</li>
+        }
+      }
+    </ul>
+  </aside>
+
+  <section class="panel detail">
+    @if (selected$() != null) {
+      <div class="detail-head">
+        <label class="title-field" [class.invalid]="titleError$() && store.canManage()">
+          <span class="sr">Nome do perfil</span>
+          <input type="text" placeholder="Nome do perfil (ex.: Aluno, Gestor de eventos)" [formControl]="titleControl" [readonly]="!store.canManage()" />
+        </label>
+        @if (current$(); as profile) {
+          <span class="summary">{{ countLabel(profile) }}</span>
+        }
+      </div>
+      @if (titleError$() && store.canManage()) {
+        <p class="error">{{ titleError$() }}</p>
+      }
+
+      <div class="detail-body">
+        <app-permission-groups
+          [catalog]="store.catalog$()"
+          [granted]="draftPermissions$()"
+          [inherited]="noInheritance"
+          [disabled]="!store.canManage() || saving$()"
+          (toggleEvent)="toggle($event)"
+          (toggleGroupEvent)="toggleGroup($event)"
+        ></app-permission-groups>
+      </div>
+    } @else {
+      <div class="placeholder">
+        <mat-icon>badge</mat-icon>
+        <p>Perfis juntam permissões com um nome, como "Aluno" ou "Gestor de eventos".<br />Selecione um perfil ou crie um novo.</p>
+      </div>
+    }
+  </section>
+</div>
+
+@if (selected$() != null && store.canManage()) {
+  <footer class="bar">
+    <span class="status">
+      <span class="pip" [class.dirty]="dirty$()"></span>
+      {{ selected$() === 'new' ? 'Perfil novo, ainda não salvo' : dirty$() ? 'Alterações não salvas' : 'Tudo salvo' }}
+    </span>
+    @if (current$()) {
+      <button mat-button type="button" class="danger" [disabled]="saving$()" (click)="remove()">
+        <mat-icon>delete_outline</mat-icon>Excluir
+      </button>
+    }
+    @if (selected$() === 'new') {
+      <button mat-button type="button" [disabled]="saving$()" (click)="cancelNew()">Cancelar</button>
+    } @else {
+      <button mat-button type="button" [disabled]="!dirty$() || saving$()" (click)="discard()">Descartar</button>
+    }
+    <button mat-flat-button class="save" type="button" [disabled]="!dirty$() || saving$() || !!titleError$()" (click)="save()">
+      {{ saving$() ? 'Salvando...' : selected$() === 'new' ? 'Criar perfil' : 'Salvar' }}
+    </button>
+  </footer>
+}

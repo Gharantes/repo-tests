@@ -77,7 +77,7 @@ class EntityProjectIntegrationTest : IntegrationTestBase() {
 
         rest.postJson<Void>(
             store,
-            UpsertProjectDto(idTenant, idAutor, "Horta Vertical", "Projeto de horta na faculdade.", null, emptyList()),
+            UpsertProjectDto(idTenant, idAutor, "Horta Vertical", "Projeto de horta na faculdade.", null, tags = emptyList()),
         )
 
         val lista = rest.postForList<ProjectDto>("$porTenant?id-tenant=$idTenant")
@@ -251,7 +251,7 @@ class EntityProjectIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             "/api/entity-project/update/$idProjeto",
-            UpsertProjectDto(idTenant, idAutor, "Título Novo", "Descrição nova.", null, listOf(idBio)),
+            UpsertProjectDto(idTenant, idAutor, "Título Novo", "Descrição nova.", null, tags = listOf(idBio)),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -274,7 +274,7 @@ class EntityProjectIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<String>(
             "/api/entity-project/update/999999",
-            UpsertProjectDto(idTenant, idAutor, "Fantasma", "Não deveria existir.", null, emptyList()),
+            UpsertProjectDto(idTenant, idAutor, "Fantasma", "Não deveria existir.", null, tags = emptyList()),
         )
 
         resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR

@@ -7,6 +7,7 @@ import {
   PageLoginResourceService,
 } from '@synergia-frontend/api';
 import {
+  PermissionService,
   RoutingService,
   SessionService,
   SnackbarService,
@@ -30,6 +31,7 @@ export class RouteLoginComponent {
   public readonly connector = inject(ConnectorLogin);
   private readonly route = inject(ActivatedRoute);
   private readonly destroyRef = inject(DestroyRef);
+  private readonly permissionService = inject(PermissionService);
 
   constructor(
     public readonly routingService: RoutingService,
@@ -121,8 +123,17 @@ export class RouteLoginComponent {
             label: res.login,
           });
           this.sessionService.saveSessionOnLocalStorage();
-          this.routingService.goToDashboard();
-        })
+        }),
+        // As telas e as rotas conferem as permissões; elas precisam estar carregadas antes de entrar.
+        switchMap(() =>
+          this.permissionService.refresh().pipe(
+            catchError(() => {
+              this.snackService.showMessage('Não foi possível carregar suas permissões.');
+              return of(undefined);
+            })
+          )
+        ),
+        tap(() => this.routingService.goToDashboard())
       )
       .subscribe();
   }

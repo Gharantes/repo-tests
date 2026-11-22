@@ -32,7 +32,7 @@ class EntityTenantSqlService (
         )
         tenantRepository.save(tenant)
     }
-    fun createAdminAccountForTenant(idTenant: Long, login: String, password: String) {
+    fun createAdminAccountForTenant(idTenant: Long, login: String, password: String): Long {
         val account = Account(
             idTenant = idTenant,
             login = login,
@@ -40,7 +40,7 @@ class EntityTenantSqlService (
             firstName = "System",
             lastName = "Admin",
         )
-        accountRepository.save(account)
+        return accountRepository.save(account).id!!
     }
     fun updateTenant(idTenant: Long, params: UpsertTenantDto) {
         tenantRepository.findById(idTenant).ifPresent { tenant ->

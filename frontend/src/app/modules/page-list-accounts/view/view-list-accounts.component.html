@@ -4,10 +4,12 @@
       <h1>Usuários <span class="count">{{ data$.length }}</span></h1>
       <p>Gerencie quem tem acesso à instituição e como cada pessoa está classificada.</p>
     </div>
-    <button mat-flat-button class="create" (click)="createAccountEvent.emit()">
-      <mat-icon>person_add</mat-icon>
-      Criar novo usuário
-    </button>
+    @if (permissions.has(P.CREATE_USER)) {
+      <button mat-flat-button class="create" (click)="createAccountEvent.emit()">
+        <mat-icon>person_add</mat-icon>
+        Criar novo usuário
+      </button>
+    }
   </header>
 
   <div class="toolbar">
@@ -60,16 +62,22 @@
           }
         </div>
 
+        @if (permissions.canEditAccount(account.id) || permissions.has(P.DELETE_USER)) {
         <button mat-icon-button class="more row-menu-btn" [matMenuTriggerFor]="menu" aria-label="Ações">
           <mat-icon>more_horiz</mat-icon>
         </button>
+        }
         <mat-menu #menu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="editAccountEvent.emit(account)">
-            <mat-icon>edit</mat-icon><span>Editar Usuário</span>
-          </button>
-          <button mat-menu-item class="danger" (click)="deleteAccountEvent.emit(account)">
-            <mat-icon>delete_outline</mat-icon><span>Deletar Usuário</span>
-          </button>
+          @if (permissions.canEditAccount(account.id)) {
+            <button mat-menu-item (click)="editAccountEvent.emit(account)">
+              <mat-icon>edit</mat-icon><span>Editar Usuário</span>
+            </button>
+          }
+          @if (permissions.has(P.DELETE_USER)) {
+            <button mat-menu-item class="danger" (click)="deleteAccountEvent.emit(account)">
+              <mat-icon>delete_outline</mat-icon><span>Deletar Usuário</span>
+            </button>
+          }
         </mat-menu>
       </li>
     } @empty {
@@ -80,7 +88,9 @@
           <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
         } @else {
           <p>Ainda não há usuários.</p>
-          <button mat-stroked-button (click)="createAccountEvent.emit()">Criar o primeiro</button>
+          @if (permissions.has(P.CREATE_USER)) {
+            <button mat-stroked-button (click)="createAccountEvent.emit()">Criar o primeiro</button>
+          }
         }
       </li>
     }

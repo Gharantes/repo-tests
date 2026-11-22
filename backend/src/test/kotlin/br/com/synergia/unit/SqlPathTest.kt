@@ -13,34 +13,25 @@ import io.kotest.matchers.shouldBe
  * arquivo existe. Se alguém renomeia um `.sql` e esquece do enum, o erro só
  * aparece quando um usuário abre a tela correspondente, em produção. Este teste
  * carrega os arquivos de verdade do classpath e reprova antes disso.
- *
- * Dois arquivos estão vazios hoje e ficam listados à parte: as telas de permissão
- * ainda não foram implementadas. O teste registra isso explicitamente em vez de
- * fingir que passa.
  */
 class SqlPathTest : FunSpec({
 
     val todosOsCaminhos: List<ISqlFile> =
-        SqlPath.ActionAttributePermissions.entries +
+        SqlPath.EntityPermission.entries +
             SqlPath.PageUpsertAccount.entries +
             SqlPath.PageLogin.entries +
             SqlPath.PageListTags.entries +
             SqlPath.EntityEvent.entries +
             SqlPath.EntityProject.entries +
             SqlPath.EntityNote.entries +
+            SqlPath.EntityPost.entries +
+            SqlPath.EntityTenant.entries +
             SqlPath.PageListPermissions.entries +
             SqlPath.EntityAccount.entries +
             SqlPath.PageListAccounts.entries +
             SqlPath.PageExtendedEvent.entries +
             SqlPath.PageExtendedProject.entries +
             SqlPath.PageExtendedAccount.entries
-
-    // Arquivos que existem mas ainda não têm conteúdo, porque a funcionalidade
-    // não foi implementada. Ficam fora da asserção de "não vazio" de propósito.
-    val aindaSemImplementacao = setOf(
-        "/sql/action-attribute-permissions/attribute-permissions.sql",
-        "/sql/page-list-permissions/list-permissions.sql",
-    )
 
     test("todo caminho declarado aponta para um arquivo que existe no classpath") {
         todosOsCaminhos.forEach { sqlFile ->
@@ -51,13 +42,11 @@ class SqlPathTest : FunSpec({
     }
 
     test("todo SQL implementado tem conteúdo") {
-        todosOsCaminhos
-            .filterNot { it.path in aindaSemImplementacao }
-            .forEach { sqlFile ->
-                withClue("SQL vazio em ${sqlFile.path}") {
-                    sqlFile.load().isBlank() shouldBe false
-                }
+        todosOsCaminhos.forEach { sqlFile ->
+            withClue("SQL vazio em ${sqlFile.path}") {
+                sqlFile.load().isBlank() shouldBe false
             }
+        }
     }
 
     test("todo caminho declarado começa com /sql/ e termina em .sql") {

@@ -1,0 +1,22 @@
+@use '../tab-layout';
+
+.new { width: 100%; height: 40px; margin-bottom: 8px; }
+
+.badge {
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0; width: 34px; height: 34px;
+  border-radius: 10px; background: #eef1fc; color: #3B52CC;
+  mat-icon { font-size: 20px; width: 20px; height: 20px; }
+}
+
+.title-field {
+  flex: 1; min-width: 0;
+  input { width: 100%; padding: 6px 0; border: none; border-bottom: 2px solid transparent; outline: none; background: none; font: inherit; font-size: 20px; font-weight: 700; color: #121840; }
+  input:focus { border-bottom-color: #3B52CC; }
+  &.invalid input { border-bottom-color: #d32f2f; }
+}
+
+.error { margin: 6px 20px 0; color: #d32f2f; font-size: 12px; }
+
+.danger { color: #d32f2f; }
+
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }

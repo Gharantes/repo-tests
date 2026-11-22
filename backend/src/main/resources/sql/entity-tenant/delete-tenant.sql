@@ -19,6 +19,18 @@ DELETE FROM project_event_relationship
 WHERE id_project IN (SELECT id FROM project WHERE id_tenant = :id_tenant)
    OR id_event IN (SELECT id FROM event WHERE id_tenant = :id_tenant);
 
+DELETE FROM account_permission_relationship
+WHERE id_account IN (SELECT id FROM account WHERE id_tenant = :id_tenant);
+
+DELETE FROM account_permission_profile_relationship
+WHERE id_account IN (SELECT id FROM account WHERE id_tenant = :id_tenant)
+   OR id_profile IN (SELECT id FROM permission_profile WHERE id_tenant = :id_tenant);
+
+DELETE FROM permission_profile_permission_relationship
+WHERE id_profile IN (SELECT id FROM permission_profile WHERE id_tenant = :id_tenant);
+
+DELETE FROM permission_profile WHERE id_tenant = :id_tenant;
+
 DELETE FROM account_tag_relationship
 WHERE id_account IN (SELECT id FROM account WHERE id_tenant = :id_tenant)
    OR id_tag IN (SELECT id FROM tags WHERE id_tenant = :id_tenant);

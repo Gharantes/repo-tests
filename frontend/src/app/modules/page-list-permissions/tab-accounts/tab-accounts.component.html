@@ -1,0 +1,107 @@
+<div class="layout">
+  <aside class="panel side">
+    <label class="search">
+      <mat-icon>search</mat-icon>
+      <input type="text" placeholder="Buscar usuário..." [formControl]="connector.textFieldControl" />
+      @if (connector.textFieldControl.value) {
+        <button type="button" class="clear" (click)="connector.textFieldControl.setValue('')" aria-label="Limpar busca">
+          <mat-icon>close</mat-icon>
+        </button>
+      }
+    </label>
+
+    <ul class="side-list">
+      @for (account of accounts$(); track account.id) {
+        <li>
+          <button type="button" class="item" [class.active]="account.id === selected$()?.id" (click)="select(account)">
+            <span class="avatar" [style.background]="colorFor(account.id)">{{ initials(account) }}</span>
+            <span class="who">
+              <span class="name">
+                {{ fullName(account) }}
+                @if (account.id === store.myId) { <span class="you">você</span> }
+              </span>
+              <span class="sub">&#64;{{ account.login }}</span>
+            </span>
+          </button>
+        </li>
+      } @empty {
+        <li class="side-empty">Nenhum usuário encontrado.</li>
+      }
+    </ul>
+  </aside>
+
+  <section class="panel detail">
+    @if (selected$(); as account) {
+      <div class="detail-head">
+        <span class="avatar lg" [style.background]="colorFor(account.id)">{{ initials(account) }}</span>
+        <div class="who">
+          <h2>{{ fullName(account) }}</h2>
+          <span class="sub">&#64;{{ account.login }}</span>
+        </div>
+        <span class="summary">{{ effectiveCount$() }} de {{ store.catalog$().length }} permissões</span>
+      </div>
+
+      <div class="detail-body" [class.loading]="loading$()">
+        <h3 class="section-label">Perfis</h3>
+        <div class="profiles">
+          @for (profile of assignedProfiles$(); track profile.id) {
+            <span class="chip">
+              <mat-icon>badge</mat-icon>{{ profile.title }}
+              @if (store.canManage()) {
+                <button type="button" (click)="removeProfile(profile)" [attr.aria-label]="'Remover perfil ' + profile.title">
+                  <mat-icon>close</mat-icon>
+                </button>
+              }
+            </span>
+          } @empty {
+            <span class="muted">Nenhum perfil.</span>
+          }
+          @if (store.canManage()) {
+            <button mat-stroked-button class="add" [matMenuTriggerFor]="profileMenu" [disabled]="!availableProfiles$().length">
+              <mat-icon>add</mat-icon>Adicionar perfil
+            </button>
+            <mat-menu #profileMenu="matMenu">
+              @for (profile of availableProfiles$(); track profile.id) {
+                <button mat-menu-item (click)="addProfile(profile)">
+                  <mat-icon>badge</mat-icon><span>{{ profile.title }}</span>
+                </button>
+              }
+            </mat-menu>
+          }
+        </div>
+
+        <h3 class="section-label">Permissões <span class="hint">As que vêm de perfil ficam travadas; as outras são avulsas, só deste usuário.</span></h3>
+        <app-permission-groups
+          [catalog]="store.catalog$()"
+          [granted]="draftPermissions$()"
+          [inherited]="inherited$()"
+          [disabled]="!store.canManage() || loading$()"
+          (toggleEvent)="toggle($event)"
+          (toggleGroupEvent)="toggleGroup($event)"
+        ></app-permission-groups>
+      </div>
+    } @else {
+      <div class="placeholder">
+        <mat-icon>manage_accounts</mat-icon>
+        <p>Selecione um usuário na lista para ver os perfis e as permissões dele.</p>
+      </div>
+    }
+  </section>
+</div>
+
+@if (selected$() && store.canManage()) {
+  <footer class="bar">
+    <span class="status" [class.warn]="wouldLockMeOut$()">
+      <span class="pip" [class.dirty]="dirty$()"></span>
+      @if (wouldLockMeOut$()) {
+        Você ficaria sem a permissão de gerenciar permissões.
+      } @else {
+        {{ dirty$() ? 'Alterações não salvas' : 'Tudo salvo' }}
+      }
+    </span>
+    <button mat-button type="button" [disabled]="!dirty$() || saving$()" (click)="discard()">Descartar</button>
+    <button mat-flat-button class="save" type="button" [disabled]="!dirty$() || saving$() || wouldLockMeOut$()" (click)="save()">
+      {{ saving$() ? 'Salvando...' : 'Salvar' }}
+    </button>
+  </footer>
+}

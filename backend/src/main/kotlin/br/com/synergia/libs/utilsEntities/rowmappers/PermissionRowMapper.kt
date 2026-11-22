@@ -7,8 +7,10 @@ import java.sql.ResultSet
 class PermissionRowMapper : RowMapper<PermissionDto> {
     override fun mapRow(rs: ResultSet, rowNum: Int): PermissionDto {
         return PermissionDto(
-            id=rs.getLong("id"),
-            name=rs.getString("name")
+            id = rs.getLong("id"),
+            name = rs.getString("name"),
+            description = rs.getString("description"),
+            category = rs.getString("category"),
         )
     }
 }

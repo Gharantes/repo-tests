@@ -7,6 +7,7 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 import jakarta.persistence.Table
 
+/** As linhas são escritas pelo PermissionCatalogSeeder a partir do AuthPermissionsEnum. */
 @Entity
 @Table(name = "permission")
 class Permission(
@@ -17,5 +18,11 @@ class Permission(
     val id: Long? = null,
 
     @Column(name = "label", nullable = false, length = 255)
-    var label: String = ""
+    var label: String = "",
+
+    @Column(name = "description", length = 255)
+    var description: String? = null,
+
+    @Column(name = "category", length = 255)
+    var category: String? = null,
 )
