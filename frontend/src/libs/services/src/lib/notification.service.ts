@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { BASE_PATH } from '@synergia-frontend/api';
 import { INotificationModel } from '@synergia-frontend/interfaces';
+import { EntityChangesService } from './entity-changes.service';
 import { RoutingService } from './routing.service';
 import { SessionService } from './session.service';
 
@@ -19,12 +20,18 @@ export class NotificationService {
   private readonly http = inject(HttpClient);
   private readonly session = inject(SessionService);
   private readonly routing = inject(RoutingService);
+  private readonly entityChanges = inject(EntityChangesService);
   private readonly url = `${inject(BASE_PATH)}/api/entity-notification`;
 
   public readonly notifications = signal<INotificationModel[]>([]);
   public readonly unread = signal(0);
-  /** Os não lidos entre os carregados: é o que o dashboard mostra. */
-  public readonly unreadList = computed(() => this.notifications().filter((n) => n.readAt == null));
+  /**
+   * O que o dashboard mostra: os não lidos e os pedidos para participar ainda sem resposta
+   * (lido ou não, o pedido continua esperando alguém aceitar ou recusar).
+   */
+  public readonly unreadList = computed(() =>
+    this.notifications().filter((n) => n.readAt == null || n.type === 'REQUEST')
+  );
   public readonly loading = signal(false);
   public readonly loaded = signal(false);
 
@@ -79,12 +86,24 @@ export class NotificationService {
   /** Marca como lida e abre o evento/projeto na aba onde a novidade está. */
   public open(notification: INotificationModel) {
     this.markAsRead(notification);
+    if (notification.type === 'REQUEST' || notification.type === 'ACCEPTED') {
+      // Pedido aceito: o projeto passa a ser "seu" e a sidebar precisa reler a lista.
+      if (notification.type === 'ACCEPTED') this.entityChanges.notifyProjectsChanged();
+      this.routing.goToProjectDetails(notification.parentId);
+      return;
+    }
     const isDate = notification.type === 'DATE';
     if (notification.parentEntity === 'EVENT') {
       this.routing.goToEventDetails(notification.parentId, isDate ? 'calendario' : notification.type === 'POST' ? 'feed' : 'lousa');
     } else {
       this.routing.goToProjectDetails(notification.parentId, isDate ? 'calendario' : 'lousa');
     }
+  }
+
+  /** Tira o aviso da lista na hora (ex.: pedido respondido); o servidor já o apagou. */
+  public remove(notification: INotificationModel) {
+    this.notifications.update((list) => list.filter((n) => n.id !== notification.id));
+    if (notification.readAt == null) this.unread.update((n) => Math.max(0, n - 1));
   }
 
   public markAsRead(notification: INotificationModel) {

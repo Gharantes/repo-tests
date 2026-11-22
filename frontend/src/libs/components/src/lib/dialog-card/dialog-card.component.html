@@ -51,6 +51,22 @@
   </div>
 
   <div class="actions">
+    @if (canRequestJoin$()) {
+      @switch (joinState$()) {
+        @case ('pending') {
+          <div class="join-pending" role="status">
+            <mat-icon>schedule</mat-icon>
+            <span>Pedido enviado. Os membros vão responder.</span>
+            <button type="button" class="join-cancel" (click)="cancelJoin()">Cancelar pedido</button>
+          </div>
+        }
+        @default {
+          <button mat-stroked-button class="join" [disabled]="joinState$() !== 'idle'" (click)="requestJoin()">
+            <mat-icon>person_add</mat-icon>{{ joinState$() === 'sending' ? 'Enviando…' : 'Pedir para participar' }}
+          </button>
+        }
+      }
+    }
     <button mat-flat-button class="primary" (click)="onAction('open')">
       {{ view.openLabel }}<mat-icon iconPositionEnd>arrow_forward</mat-icon>
     </button>

@@ -112,6 +112,32 @@
     width: 100%;
   }
 }
+.notif.request {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 16px;
+  border-bottom: 1px solid #f2efe9;
+  cursor: default;
+  &.unread { background: #f3f5ff; }
+}
+.notif-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+  button {
+    height: 28px;
+    padding: 0 14px;
+    border-radius: 8px;
+    font: inherit;
+    font-size: 0.8rem;
+    font-weight: 600;
+    cursor: pointer;
+    &:focus-visible { outline: 2px solid #3B52CC; outline-offset: 2px; }
+  }
+}
+.notif-accept { border: 0; background: #3B52CC; color: #fff; &:hover { background: #2f44b3; } }
+.notif-decline { border: 1px solid #dcd9d1; background: #fff; color: #1b1f3a; &:hover { background: #f3f2ee; } }
 .notif-icon {
   flex: none;
   display: inline-flex;
@@ -125,6 +151,7 @@
   &[data-type='NOTE'] { background: #fff4c2; color: #8a6d00; }
   &[data-type='LIST'] { background: #d9f2dc; color: #2e7d32; }
   &[data-type='DATE'] { background: #fde4dc; color: #b3471d; }
+  &[data-type='REQUEST'], &[data-type='ACCEPTED'] { background: #ece3fb; color: #6b3fc4; }
   mat-icon { margin: 0; font-size: 18px; width: 18px; height: 18px; color: inherit; }
 }
 .notif-text {

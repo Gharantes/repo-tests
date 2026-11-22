@@ -5,6 +5,7 @@ export * from './lib/note.service';
 export * from './lib/post.service';
 export * from './lib/calendar.service';
 export * from './lib/notification.service';
+export * from './lib/join-request.service';
 export * from './lib/project-events.service';
 export * from './lib/permission.service';
 export * from './lib/entity-changes.service';

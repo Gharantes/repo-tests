@@ -3,6 +3,7 @@ package br.com.synergia.libs.entityNotification.services
 import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.MembershipLabels
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
+import br.com.synergia.libs.utilsEntities.jpa.notification.Notification
 import br.com.synergia.libs.utilsEntities.jpa.notification.NotificationRepository
 import br.com.synergia.libs.utilsEntities.models.NotificationDto
 import br.com.synergia.libs.utilsEntities.rowmappers.EntityRowMapper
@@ -60,6 +61,29 @@ class EntityNotificationSqlService (
         return template.update(sql, paramMap)
     }
 
+    /** Devolve quantas notificações foram gravadas (uma por membro do projeto). */
+    fun notifyJoinRequestAudience(idProject: Long, idRequester: Long, idRequest: Long): Int {
+        val sql = SqlPath.EntityNotification.NOTIFY_JOIN_REQUEST_AUDIENCE.load()
+        val paramMap = notifyParams(idRequester, ActivityTypeEnum.REQUEST, idRequest, leadLabel = "")
+            .addValue("id_project", idProject, Types.BIGINT)
+        return template.update(sql, paramMap)
+    }
+
+    /** reference_id é o próprio projeto: o pedido já foi apagado quando este aviso é lido. */
+    fun notifyJoinAccepted(idTenant: Long, idProject: Long, idActor: Long, idRequester: Long) {
+        notificationRepository.save(
+            Notification(
+                idTenant = idTenant,
+                idAccount = idRequester,
+                idActor = idActor,
+                type = ActivityTypeEnum.ACCEPTED,
+                parentEntity = NoteParentEnum.PROJECT,
+                parentId = idProject,
+                referenceId = idProject
+            )
+        )
+    }
+
     private fun notifyParams(idActor: Long, type: ActivityTypeEnum, referenceId: Long, leadLabel: String) =
         MapSqlParameterSource()
             .addValue("id_actor", idActor, Types.BIGINT)
@@ -92,5 +116,9 @@ class EntityNotificationSqlService (
 
     fun deleteOfCalendarEntry(idEntry: Long) {
         notificationRepository.deleteByReference(listOf(ActivityTypeEnum.DATE), idEntry)
+    }
+
+    fun deleteOfJoinRequest(idRequest: Long) {
+        notificationRepository.deleteByReference(listOf(ActivityTypeEnum.REQUEST), idRequest)
     }
 }
