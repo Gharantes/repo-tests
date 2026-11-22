@@ -27,6 +27,7 @@ import { DialogCalendarEntryComponent } from './dialog-calendar-entry.component'
       </div>
 
       <div class="agenda">
+        <ng-content></ng-content>
         @if (selectedDay(); as day) {
           <div class="filter">
             <span>{{ longDate(day) }}</span>
@@ -64,12 +65,7 @@ import { DialogCalendarEntryComponent } from './dialog-calendar-entry.component'
           </article>
         } @empty {
           @if (loaded()) {
-            <span class="empty">
-              {{ selectedDay() ? 'Nada marcado neste dia.' : 'Nenhuma data marcada ainda.' }}
-              @if (canEdit()) {
-                <button type="button" class="link" (click)="openNew()">Marcar uma data</button>
-              }
-            </span>
+            <span class="empty">{{ selectedDay() ? 'Nada marcado neste dia.' : 'Nenhuma data marcada ainda.' }}</span>
           }
         }
       </div>

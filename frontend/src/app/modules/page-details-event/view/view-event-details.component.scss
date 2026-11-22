@@ -98,10 +98,8 @@
 
 .muted { color: #b3b0a8; font-size: 14px; }
 
-// Lousa / Projetos / Eventos / Feed em abas. O "+" de cada aba fica no topo dela, à esquerda.
+// Lousa / Projetos / Eventos / Feed em abas. Cada aba começa com o bloco "+".
 .sections { margin-top: 18px; }
-
-.tab-actions { display: flex; margin: -4px 0 -4px -8px; }
 
 .tabs {
   --mat-tab-container-height: 48px;

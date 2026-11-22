@@ -85,6 +85,7 @@ interface INoteDraft {
       </article>
     </ng-template>
 
+    <ng-content></ng-content>
     @if (draft(); as d) {
       @if (d.id == null) {
         <ng-container *ngTemplateOutlet="editor; context: { $implicit: d }"></ng-container>
