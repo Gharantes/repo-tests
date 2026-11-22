@@ -1,9 +1,9 @@
-import { INoteItem, NoteParent } from './i-note.model';
+import { NoteParent } from './i-note.model';
 
 /** O que aconteceu num evento/projeto: postagem no feed, nota ou lista na lousa. */
 export type ActivityType = 'POST' | 'NOTE' | 'LIST';
 
-/** Aviso do sino do topo. */
+/** Aviso do sino do topo e da seção "Notificações" do dashboard. */
 export interface INotificationModel {
   id: number;
   type: ActivityType;
@@ -15,20 +15,4 @@ export interface INotificationModel {
   actorName: string;
   createdAt: string;
   readAt: string | null;
-}
-
-/** Item do feed "Novidades" do dashboard. `content` é Markdown nas postagens e texto puro nas notas. */
-export interface IFeedItemModel {
-  type: ActivityType;
-  referenceId: number;
-  parentEntity: NoteParent;
-  parentId: number;
-  parentTitle: string;
-  idAccount: number;
-  authorName: string;
-  authorIsLead: boolean;
-  title: string;
-  content: string;
-  items: INoteItem[];
-  createdAt: string;
 }

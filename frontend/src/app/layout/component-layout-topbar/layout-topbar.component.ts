@@ -1,6 +1,5 @@
 import { Component, ChangeDetectionStrategy, computed, inject } from '@angular/core';
 import { NotificationService, RoutingService, SessionService } from '@synergia-frontend/services';
-import { INotificationModel } from '@synergia-frontend/interfaces';
 import { activityIcon, activityVerb, formatRelativeTime } from '@synergia-frontend/utils';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
@@ -38,16 +37,6 @@ export class LayoutTopbarComponent {
     if (parts.length >= 2) return (parts[0][0] + parts[parts.length - 1][0]).toUpperCase();
     if (parts.length === 1) return parts[0].substring(0, 2).toUpperCase();
     return 'GA';
-  }
-
-  /** Marca como lida e abre o evento/projeto na aba onde a novidade está. */
-  public openNotification(n: INotificationModel) {
-    this.notifications.markAsRead(n);
-    if (n.parentEntity === 'EVENT') {
-      this.routingService.goToEventDetails(n.parentId, n.type === 'POST' ? 'feed' : 'lousa');
-    } else {
-      this.routingService.goToProjectDetails(n.parentId);
-    }
   }
 
   public logout() {

@@ -36,9 +36,6 @@ object SqlPath {
         NOTIFY_EVENT_AUDIENCE("/sql/entity-notification/notify-event-audience.sql"),
         NOTIFY_PROJECT_AUDIENCE("/sql/entity-notification/notify-project-audience.sql"),
     }
-    enum class PageDashboard (override val path: String) : ISqlFile {
-        LIST_FEED_OF_ACCOUNT("/sql/page-dashboard/list-feed-of-account.sql"),
-    }
     enum class PageListPermissions (override val path: String) : ISqlFile {
         LIST_PERMISSIONS("/sql/page-list-permissions/list-permissions.sql")
     }

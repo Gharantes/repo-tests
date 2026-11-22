@@ -38,18 +38,13 @@
       }
     </div>
     @for (n of notifications.notifications(); track n.id) {
-      <button mat-menu-item class="notif" [class.unread]="!n.readAt" (click)="openNotification(n)">
+      <button mat-menu-item class="notif" [class.unread]="!n.readAt" (click)="notifications.open(n)">
         <span class="notif-icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
         <span class="notif-text">
           <span class="notif-line">
             <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>
           </span>
-          <span class="notif-meta">
-            @if (n.referenceTitle) {
-              <span class="notif-ref">“{{ n.referenceTitle }}”</span> ·
-            }
-            {{ relative(n.createdAt) }}
-          </span>
+          <span class="notif-meta">{{ relative(n.createdAt) }}</span>
         </span>
         @if (!n.readAt) {
           <span class="notif-dot" aria-label="Não lida"></span>

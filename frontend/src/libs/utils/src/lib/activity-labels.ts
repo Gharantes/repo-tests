@@ -14,18 +14,9 @@ const VERBS: Record<Activity, string> = {
   LIST: 'criou uma lista em',
 };
 
-const NAMES: Record<Activity, string> = {
-  POST: 'Postagem',
-  NOTE: 'Nota',
-  LIST: 'Lista',
-};
-
 export function activityIcon(type: Activity) {
   return ICONS[type];
 }
 export function activityVerb(type: Activity) {
   return VERBS[type];
-}
-export function activityName(type: Activity) {
-  return NAMES[type];
 }

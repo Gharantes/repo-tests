@@ -1,15 +1,16 @@
 import { HttpClient } from '@angular/common/http';
-import { DestroyRef, inject, Injectable, signal } from '@angular/core';
+import { computed, DestroyRef, inject, Injectable, signal } from '@angular/core';
 import { BASE_PATH } from '@synergia-frontend/api';
-import { IFeedItemModel, INotificationModel } from '@synergia-frontend/interfaces';
+import { INotificationModel } from '@synergia-frontend/interfaces';
+import { RoutingService } from './routing.service';
 import { SessionService } from './session.service';
 
-/** De quanto em quanto tempo o sino confere se chegou aviso novo. */
+/** De quanto em quanto tempo os avisos são relidos do servidor. */
 const POLL_MS = 30_000;
 
 /**
- * Sino do topo (/api/entity-notification) e feed do dashboard (/api/page-dashboard).
- * Guarda os avisos e o número de não lidos em signals, para o topo e o dashboard lerem o mesmo estado.
+ * Avisos da conta (/api/entity-notification). O sino do topo e a seção "Notificações" do dashboard
+ * leem estes mesmos signals, então mostram sempre a mesma coisa.
  */
 @Injectable({
   providedIn: 'root',
@@ -17,12 +18,15 @@ const POLL_MS = 30_000;
 export class NotificationService {
   private readonly http = inject(HttpClient);
   private readonly session = inject(SessionService);
-  private readonly basePath = inject(BASE_PATH);
-  private readonly url = `${this.basePath}/api/entity-notification`;
+  private readonly routing = inject(RoutingService);
+  private readonly url = `${inject(BASE_PATH)}/api/entity-notification`;
 
   public readonly notifications = signal<INotificationModel[]>([]);
   public readonly unread = signal(0);
+  /** Os não lidos entre os carregados: é o que o dashboard mostra. */
+  public readonly unreadList = computed(() => this.notifications().filter((n) => n.readAt == null));
   public readonly loading = signal(false);
+  public readonly loaded = signal(false);
 
   private timer: ReturnType<typeof setInterval> | null = null;
 
@@ -30,11 +34,11 @@ export class NotificationService {
     inject(DestroyRef).onDestroy(() => this.stopPolling());
   }
 
-  /** Começa a conferir o contador periodicamente. Chamar de novo não cria um segundo timer. */
+  /** Carrega agora e relê periodicamente. Chamar de novo não cria um segundo timer. */
   public startPolling() {
-    this.refreshUnread();
+    this.load();
     if (this.timer != null) return;
-    this.timer = setInterval(() => this.refreshUnread(), POLL_MS);
+    this.timer = setInterval(() => this.load(), POLL_MS);
   }
 
   public stopPolling() {
@@ -47,33 +51,39 @@ export class NotificationService {
     this.stopPolling();
     this.notifications.set([]);
     this.unread.set(0);
+    this.loaded.set(false);
   }
 
-  public refreshUnread() {
-    const idAccount = this.session.getUserId();
-    if (idAccount == null) return;
-    this.http
-      .post<number>(`${this.url}/count-unread`, null, { params: { 'id-account': idAccount } })
-      .subscribe({ next: (n) => this.unread.set(n), error: () => undefined });
-  }
-
-  /** Recarrega a lista (ao abrir o sino). */
+  /** Relê a lista e o contador. */
   public load() {
     const idAccount = this.session.getUserId();
     if (idAccount == null) return;
+    const params = { 'id-account': idAccount };
     this.loading.set(true);
+    this.http.post<INotificationModel[]>(`${this.url}/list-notifications-of-account`, null, { params }).subscribe({
+      next: (list) => {
+        this.notifications.set(list);
+        this.loading.set(false);
+        this.loaded.set(true);
+      },
+      error: () => {
+        this.loading.set(false);
+        this.loaded.set(true);
+      },
+    });
     this.http
-      .post<INotificationModel[]>(`${this.url}/list-notifications-of-account`, null, {
-        params: { 'id-account': idAccount },
-      })
-      .subscribe({
-        next: (list) => {
-          this.notifications.set(list);
-          this.loading.set(false);
-        },
-        error: () => this.loading.set(false),
-      });
-    this.refreshUnread();
+      .post<number>(`${this.url}/count-unread`, null, { params })
+      .subscribe({ next: (n) => this.unread.set(n), error: () => undefined });
+  }
+
+  /** Marca como lida e abre o evento/projeto na aba onde a novidade está. */
+  public open(notification: INotificationModel) {
+    this.markAsRead(notification);
+    if (notification.parentEntity === 'EVENT') {
+      this.routing.goToEventDetails(notification.parentId, notification.type === 'POST' ? 'feed' : 'lousa');
+    } else {
+      this.routing.goToProjectDetails(notification.parentId);
+    }
   }
 
   public markAsRead(notification: INotificationModel) {
@@ -84,7 +94,7 @@ export class NotificationService {
     this.unread.update((n) => Math.max(0, n - 1));
     this.http
       .post<void>(`${this.url}/mark-as-read/${notification.id}`, null, { params: { 'id-account': idAccount } })
-      .subscribe({ error: () => this.refreshUnread() });
+      .subscribe({ error: () => this.load() });
   }
 
   public markAllAsRead() {
@@ -95,12 +105,6 @@ export class NotificationService {
     this.unread.set(0);
     this.http
       .post<void>(`${this.url}/mark-all-as-read`, null, { params: { 'id-account': idAccount } })
-      .subscribe({ error: () => this.refreshUnread() });
-  }
-
-  public listFeed(idAccount: number, limit = 20) {
-    return this.http.post<IFeedItemModel[]>(`${this.basePath}/api/page-dashboard/list-feed-of-account`, null, {
-      params: { 'id-account': idAccount, limit },
-    });
+      .subscribe({ error: () => this.load() });
   }
 }

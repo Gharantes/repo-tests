@@ -10,7 +10,6 @@ import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.PostEntitiesEnum
-import br.com.synergia.libs.utilsEntities.models.FeedItemDto
 import br.com.synergia.libs.utilsEntities.models.NoteItemDto
 import br.com.synergia.libs.utilsEntities.models.NotificationDto
 import io.kotest.matchers.collections.shouldBeEmpty
@@ -22,8 +21,8 @@ import org.junit.jupiter.api.Test
 import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 
-/** Integração do sino (notificações) e do feed "Novidades" do dashboard. */
-@DisplayName("Integração: notificações e feed do dashboard")
+/** Integração das notificações (sino do topo e seção do dashboard). */
+@DisplayName("Integração: notificações")
 class EntityNotificationIntegrationTest : IntegrationTestBase() {
 
     private val base = "/api/entity-notification"
@@ -66,9 +65,6 @@ class EntityNotificationIntegrationTest : IntegrationTestBase() {
 
     private fun naoLidas(idConta: Long) =
         rest.postSemCorpo<Long>("$base/count-unread?id-account=$idConta").body.shouldNotBeNull()
-
-    private fun feed(idConta: Long) =
-        rest.postForList<FeedItemDto>("/api/page-dashboard/list-feed-of-account?id-account=$idConta").body.shouldNotBeNull()
 
     @Test
     fun `postagem do Organizador avisa os membros do evento e não o próprio autor`() {
@@ -197,30 +193,5 @@ class EntityNotificationIntegrationTest : IntegrationTestBase() {
         ).statusCode shouldBe HttpStatus.OK
 
         contarLinhas("notification") shouldBe 0
-    }
-
-    @Test
-    fun `feed do dashboard junta postagens e blocos dos eventos e projetos da conta, do mais novo ao mais antigo`() {
-        val idTenant = criarTenant()
-        val idOrganizadora = criarConta(idTenant, login = "org")
-        val idAluno = criarConta(idTenant, login = "aluno")
-        val idEvento = criarEvento(idTenant, "Feira")
-        val idOutroEvento = criarEvento(idTenant, "Outro")
-        val idProjeto = criarProjeto(idTenant, "Robótica")
-        vincularContaAoEvento(idOrganizadora, idEvento, papel = "Organizador")
-        vincularContaAoEvento(idOrganizadora, idOutroEvento, papel = "Organizador")
-        vincularContaAoEvento(idAluno, idEvento, papel = "Participante")
-        vincularContaAoProjeto(idAluno, idProjeto, papel = "Líder")
-
-        postar(idOrganizadora, idEvento, titulo = "Na feira")
-        postar(idOrganizadora, idOutroEvento, titulo = "Em outro evento")
-        criarBlocoVinculado(idTenant, idAluno, NoteParentEnum.PROJECT, idProjeto)
-
-        val itens = feed(idAluno)
-        itens.map { it.type } shouldBe listOf(ActivityTypeEnum.LIST, ActivityTypeEnum.POST)
-        itens[0].parentTitle shouldBe "Robótica"
-        itens[0].items shouldBe listOf(NoteItemDto("Montar banca", false))
-        itens[1].title shouldBe "Na feira"
-        itens[1].authorIsLead shouldBe true
     }
 }

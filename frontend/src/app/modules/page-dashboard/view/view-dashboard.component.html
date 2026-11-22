@@ -1,11 +1,13 @@
 <div id="page">
   <div class="section">
-    <div class="section-title">Novidades</div>
-    <app-dashboard-feed
-      [items]="feed$"
-      [loaded]="feedLoaded"
-      (openEvent)="openFeedItemEvent.emit($event)"
-    ></app-dashboard-feed>
+    <div class="section-title">Notificações</div>
+    <app-dashboard-notifications
+      [items]="notifications$"
+      [loaded]="notificationsLoaded"
+      (openEvent)="openNotificationEvent.emit($event)"
+      (markReadEvent)="markReadEvent.emit($event)"
+      (markAllEvent)="markAllReadEvent.emit()"
+    ></app-dashboard-notifications>
   </div>
 
   <div class="section">
