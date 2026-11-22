@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
-import { AuthPermission, PermissionService, RoutingService, SessionService } from "@synergia-frontend/services";
+import { AuthPermission, EntityChangesService, PermissionService, RoutingService, SessionService } from "@synergia-frontend/services";
 import { EntityEventResourceService, EntityProjectResourceService } from "@synergia-frontend/api";
 import { IEventModel, IProjectModel } from "@synergia-frontend/interfaces";
 import { EventDtoToModel, ProjectDtoToModel } from "@synergia-frontend/mappers";
@@ -33,12 +33,14 @@ export class LayoutSidebarComponent {
     public readonly permissions: PermissionService,
     private readonly entityProjectService: EntityProjectResourceService,
     private readonly entityEventService: EntityEventResourceService,
+    private readonly entityChanges: EntityChangesService,
     private readonly router: Router,
     private readonly destroyRef: DestroyRef,
   ) {
     this.lookupProjects();
     this.lookupEvents();
     this.refreshOnNavigation();
+    this.refreshOnEntityChanges();
   }
 
   /**
@@ -57,6 +59,16 @@ export class LayoutSidebarComponent {
         this.lookupEvents();
         this.permissions.refresh().pipe(catchError(() => EMPTY)).subscribe();
       });
+  }
+
+  /** Salvar a edição na página de detalhes não troca de rota; sem isso, o nome novo só aparece após navegar. */
+  private refreshOnEntityChanges() {
+    this.entityChanges.projectsChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.lookupProjects());
+    this.entityChanges.eventsChanged$
+      .pipe(takeUntilDestroyed(this.destroyRef))
+      .subscribe(() => this.lookupEvents());
   }
 
   private lookupProjects() {

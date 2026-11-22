@@ -2,7 +2,7 @@ import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { EntityEventResourceService, EntityGetByIdResourceService } from '@synergia-frontend/api';
-import { PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
+import { EntityChangesService, PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 import { EventDtoToModel } from '@synergia-frontend/mappers';
 import { IEventModel } from '@synergia-frontend/interfaces';
@@ -27,6 +27,7 @@ export class RouteEventDetailsComponent {
   private readonly routingService = inject(RoutingService);
   public readonly permissions = inject(PermissionService);
   private readonly snackbarService = inject(SnackbarService);
+  private readonly entityChanges = inject(EntityChangesService);
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly entityEventService = inject(EntityEventResourceService);
   private readonly activatedRoute = inject(ActivatedRoute);
@@ -115,6 +116,7 @@ export class RouteEventDetailsComponent {
           this.snackbarService.showMessage('Evento atualizado.');
           this.editing.set(false);
           this.lookupEvent();
+          this.entityChanges.notifyEventsChanged();
         }),
         catchError((err) => {
           this.snackbarService.catchError(err);
