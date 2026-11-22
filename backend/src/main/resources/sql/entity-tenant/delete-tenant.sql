@@ -1,6 +1,7 @@
 -- O banco não tem foreign keys: cada tabela que pertence ao tenant é apagada aqui,
 -- relacionamentos antes das entidades. `permission` é global e fica.
 DELETE FROM notification WHERE id_tenant = :id_tenant;
+DELETE FROM project_join_request WHERE id_tenant = :id_tenant;
 DELETE FROM project_note_relationship
 WHERE id_note IN (SELECT id FROM note WHERE id_tenant = :id_tenant);
 

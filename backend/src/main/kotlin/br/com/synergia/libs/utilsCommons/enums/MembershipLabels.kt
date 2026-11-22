@@ -4,4 +4,6 @@ package br.com.synergia.libs.utilsCommons.enums
 object MembershipLabels {
     const val EVENT_LEAD = "Organizador"
     const val PROJECT_LEAD = "Líder"
+    /** Papel de quem entra no projeto por pedido aceito. */
+    const val PROJECT_MEMBER = "Integrante"
 }

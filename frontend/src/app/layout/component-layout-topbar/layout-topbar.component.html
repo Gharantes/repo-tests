@@ -38,6 +38,20 @@
       }
     </div>
     @for (n of notifications.notifications(); track n.id) {
+      @if (n.type === 'REQUEST') {
+        <!-- Pedido para participar: tem botões próprios, então não é um menu-item; o clique não fecha o menu. -->
+        <div class="notif request" [class.unread]="!n.readAt" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
+          <span class="notif-icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
+          <span class="notif-text">
+            <span class="notif-line"><b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b></span>
+            <span class="notif-meta">{{ relative(n.createdAt) }}</span>
+            <span class="notif-actions">
+              <button type="button" class="notif-accept" (click)="joinRequests.accept(n)">Aceitar</button>
+              <button type="button" class="notif-decline" (click)="joinRequests.decline(n)">Recusar</button>
+            </span>
+          </span>
+        </div>
+      } @else {
       <button mat-menu-item class="notif" [class.unread]="!n.readAt" (click)="notifications.open(n)">
         <span class="notif-icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
         <span class="notif-text">
@@ -50,6 +64,7 @@
           <span class="notif-dot" aria-label="Não lida"></span>
         }
       </button>
+      }
     } @empty {
       <div class="notif-empty" (click)="$event.stopPropagation()" (keydown)="$event.stopPropagation()">
         @if (notifications.loading()) {

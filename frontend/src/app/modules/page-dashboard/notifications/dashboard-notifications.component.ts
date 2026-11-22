@@ -6,7 +6,8 @@ import { activityIcon, activityVerb, formatDateTime, formatRelativeTime } from '
 
 /**
  * Seção "Notificações" do dashboard: os mesmos avisos do sino, só os não lidos.
- * Clicar abre o que foi criado; o check marca como lido e tira da lista.
+ * Clicar abre o que foi criado; o check marca como lido e tira da lista. Pedido para participar
+ * de projeto tem Aceitar/Recusar no lugar do check.
  */
 @Component({
   selector: 'app-dashboard-notifications',
@@ -27,15 +28,22 @@ import { activityIcon, activityVerb, formatDateTime, formatRelativeTime } from '
           </span>
           <small [matTooltip]="formatDateTime(n.createdAt)">{{ relative(n.createdAt) }}</small>
         </button>
-        <button
-          type="button"
-          class="read"
-          matTooltip="Marcar como lida"
-          aria-label="Marcar como lida"
-          (click)="markReadEvent.emit(n)"
-        >
-          <mat-icon>check</mat-icon>
-        </button>
+        @if (n.type === 'REQUEST') {
+          <span class="answer">
+            <button type="button" class="accept" (click)="acceptEvent.emit(n)">Aceitar</button>
+            <button type="button" class="decline" (click)="declineEvent.emit(n)">Recusar</button>
+          </span>
+        } @else {
+          <button
+            type="button"
+            class="read"
+            matTooltip="Marcar como lida"
+            aria-label="Marcar como lida"
+            (click)="markReadEvent.emit(n)"
+          >
+            <mat-icon>check</mat-icon>
+          </button>
+        }
       </div>
     } @empty {
       <div class="empty">
@@ -60,6 +68,16 @@ import { activityIcon, activityVerb, formatDateTime, formatRelativeTime } from '
     .icon[data-type='NOTE'] { background: #fff4c2; color: #8a6d00; }
     .icon[data-type='LIST'] { background: #d9f2dc; color: #2e7d32; }
     .icon[data-type='DATE'] { background: #fde4dc; color: #b3471d; }
+    .icon[data-type='REQUEST'], .icon[data-type='ACCEPTED'] { background: #ece3fb; color: #6b3fc4; }
+    .answer { flex: none; display: flex; gap: 6px; margin-right: 10px; }
+    .answer button { height: 30px; padding: 0 14px; border-radius: 8px; font: inherit; font-size: 0.8rem;
+      font-weight: 600; cursor: pointer; }
+    .answer button:focus-visible { outline: 2px solid #3B52CC; outline-offset: 2px; }
+    .accept { border: 0; background: #3B52CC; color: #fff; }
+    .accept:hover { background: #2f44b3; }
+    .decline { border: 1px solid #dcd9d1; background: #fff; color: #1b1f3a; }
+    .decline:hover { background: #f3f2ee; }
+    @media (max-width: 560px) { .row { flex-wrap: wrap; } .answer { margin: 0 14px 10px 58px; } }
     .icon mat-icon { font-size: 17px; width: 17px; height: 17px; }
     .text { flex: 1; min-width: 0; font-size: 0.88rem; color: #555; overflow-wrap: anywhere; }
     .text b { color: #121840; font-weight: 600; }
@@ -80,6 +98,8 @@ export class DashboardNotificationsComponent {
   public readonly openEvent = output<INotificationModel>();
   public readonly markReadEvent = output<INotificationModel>();
   public readonly markAllEvent = output<void>();
+  public readonly acceptEvent = output<INotificationModel>();
+  public readonly declineEvent = output<INotificationModel>();
 
   public readonly iconFor = activityIcon;
   public readonly verbFor = activityVerb;

@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable, map } from 'rxjs';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { EventDtoToModel, ProjectDtoToModel } from '@synergia-frontend/mappers';
-import { PermissionService, RoutingService } from '@synergia-frontend/services';
+import { JoinRequestService, PermissionService, RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { SafeImageComponent } from '../safe-image/safe-image.component';
 import {
   buildDialogCardView,
@@ -36,6 +36,9 @@ export class DialogCardComponent {
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly routingService = inject(RoutingService);
   private readonly permissions = inject(PermissionService);
+  private readonly session = inject(SessionService);
+  private readonly joinRequests = inject(JoinRequestService);
+  private readonly snackbar = inject(SnackbarService);
 
   /** Começa com o que veio da listagem e é substituído pela versão completa do backend. */
   private readonly entity$ = signal<DialogCardEntity>(this.data.entity);
@@ -46,6 +49,21 @@ export class DialogCardComponent {
       ? this.permissions.canEditProject(this.entity$())
       : this.permissions.canEditEvent(this.entity$())
   );
+
+  /** Só depois que os membros chegam dá para saber se quem vê já participa. */
+  private readonly detailsLoaded$ = signal(false);
+  /** Projeto de que a conta não participa: pode pedir para entrar. */
+  public readonly canRequestJoin$ = computed(() => {
+    const idAccount = this.session.getUserId();
+    return (
+      this.data.type === 'project' &&
+      this.detailsLoaded$() &&
+      idAccount != null &&
+      !this.entity$().members.some((m) => m.id === idAccount)
+    );
+  });
+  /** checking: ainda lendo se já existe pedido; sending: pedido indo para o servidor. */
+  public readonly joinState$ = signal<'checking' | 'idle' | 'sending' | 'pending'>('checking');
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;
@@ -64,7 +82,39 @@ export class DialogCardComponent {
   }
 
   constructor() {
-    this.fetchDetails().subscribe((entity) => this.entity$.set(entity));
+    this.fetchDetails().subscribe((entity) => {
+      this.entity$.set(entity);
+      this.detailsLoaded$.set(true);
+    });
+    if (this.data.type === 'project') {
+      this.joinRequests.hasPendingRequest(this.data.entity.id).subscribe({
+        next: (pending) => this.joinState$.set(pending ? 'pending' : 'idle'),
+        error: () => this.joinState$.set('idle'),
+      });
+    }
+  }
+
+  public requestJoin() {
+    if (this.joinState$() !== 'idle') return;
+    this.joinState$.set('sending');
+    this.joinRequests.request(this.data.entity.id).subscribe({
+      next: () => this.joinState$.set('pending'),
+      error: (err) => {
+        this.joinState$.set('idle');
+        this.snackbar.catchError(err, 'Não foi possível enviar o pedido.');
+      },
+    });
+  }
+
+  public cancelJoin() {
+    this.joinState$.set('sending');
+    this.joinRequests.cancel(this.data.entity.id).subscribe({
+      next: () => this.joinState$.set('idle'),
+      error: (err) => {
+        this.joinState$.set('pending');
+        this.snackbar.catchError(err, 'Não foi possível cancelar o pedido.');
+      },
+    });
   }
 
   private fetchDetails(): Observable<DialogCardEntity> {

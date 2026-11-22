@@ -10,4 +10,6 @@
   (openNotificationEvent)="notifications.open($event)"
   (markReadEvent)="notifications.markAsRead($event)"
   (markAllReadEvent)="notifications.markAllAsRead()"
+  (acceptRequestEvent)="joinRequests.accept($event)"
+  (declineRequestEvent)="joinRequests.decline($event)"
 ></app-view-dashboard>

@@ -1,5 +1,5 @@
 import { Component, signal, ChangeDetectionStrategy, inject } from '@angular/core';
-import { NotificationService, RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
+import { JoinRequestService, NotificationService, RoutingService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { EntityEventResourceService, EntityProjectResourceService } from '@synergia-frontend/api';
 import { IEventModel, IProjectModel } from '@synergia-frontend/interfaces';
 import { EventDtoToModel, ProjectDtoToModel } from '@synergia-frontend/mappers';
@@ -19,6 +19,7 @@ export class RouteDashboardComponent {
   public readonly events$ = signal<IEventModel[]>([]);
   /** Mesmo estado do sino do topo. */
   public readonly notifications = inject(NotificationService);
+  public readonly joinRequests = inject(JoinRequestService);
 
   constructor(
     private readonly routingService: RoutingService,

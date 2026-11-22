@@ -46,7 +46,18 @@ class EntityNotificationService (
         sqlService.notifyCalendarAudience(parentEntity, parentId, idActor, idEntry)
     }
 
+    /** Pedido para participar: avisa todos os membros do projeto, que podem aceitar ou recusar. */
+    fun notifyJoinRequest(idProject: Long, idRequester: Long, idRequest: Long) {
+        sqlService.notifyJoinRequestAudience(idProject, idRequester, idRequest)
+    }
+
+    /** Pedido aceito: avisa só quem pediu. */
+    fun notifyJoinAccepted(idTenant: Long, idProject: Long, idActor: Long, idRequester: Long) {
+        sqlService.notifyJoinAccepted(idTenant, idProject, idActor, idRequester)
+    }
+
     fun deleteOfPost(idPost: Long) = sqlService.deleteOfPost(idPost)
+    fun deleteOfJoinRequest(idRequest: Long) = sqlService.deleteOfJoinRequest(idRequest)
     fun deleteOfCalendarEntry(idEntry: Long) = sqlService.deleteOfCalendarEntry(idEntry)
     fun deleteOfNote(idNote: Long) = sqlService.deleteOfNote(idNote)
 

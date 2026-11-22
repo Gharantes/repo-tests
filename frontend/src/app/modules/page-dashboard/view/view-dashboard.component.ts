@@ -28,4 +28,6 @@ export class ViewDashboardComponent {
   @Output() openNotificationEvent = new EventEmitter<INotificationModel>();
   @Output() markReadEvent = new EventEmitter<INotificationModel>();
   @Output() markAllReadEvent = new EventEmitter<void>();
+  @Output() acceptRequestEvent = new EventEmitter<INotificationModel>();
+  @Output() declineRequestEvent = new EventEmitter<INotificationModel>();
 }
