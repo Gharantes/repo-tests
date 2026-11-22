@@ -4,10 +4,12 @@
       <h1>Tags</h1>
       <p>Organize projetos, eventos e usuários com etiquetas.</p>
     </div>
-    <button mat-flat-button class="create" (click)="createTagEvent.emit()">
-      <mat-icon>add</mat-icon>
-      Criar nova tag
-    </button>
+    @if (permissions.has(P.CREATE_TAG)) {
+      <button mat-flat-button class="create" (click)="createTagEvent.emit()">
+        <mat-icon>add</mat-icon>
+        Criar nova tag
+      </button>
+    }
   </header>
 
   <div class="toolbar">
@@ -53,23 +55,31 @@
           }
         </div>
 
+        @if (permissions.hasAny(P.EDIT_TAG, P.DELETE_TAG)) {
         <button mat-icon-button class="more row-menu-btn" [matMenuTriggerFor]="menu" aria-label="Ações">
           <mat-icon>more_horiz</mat-icon>
         </button>
+        }
         <mat-menu #menu="matMenu" xPosition="before">
-          <button mat-menu-item (click)="editTagEvent.emit(tag)">
-            <mat-icon>edit</mat-icon><span>Editar</span>
-          </button>
-          <button mat-menu-item class="danger" (click)="deleteTagEvent.emit(tag)">
-            <mat-icon>delete_outline</mat-icon><span>Deletar</span>
-          </button>
+          @if (permissions.has(P.EDIT_TAG)) {
+            <button mat-menu-item (click)="editTagEvent.emit(tag)">
+              <mat-icon>edit</mat-icon><span>Editar</span>
+            </button>
+          }
+          @if (permissions.has(P.DELETE_TAG)) {
+            <button mat-menu-item class="danger" (click)="deleteTagEvent.emit(tag)">
+              <mat-icon>delete_outline</mat-icon><span>Deletar</span>
+            </button>
+          }
         </mat-menu>
       </li>
     } @empty {
       <li class="empty">
         <mat-icon>label_off</mat-icon>
         <p>Nenhuma tag por aqui.</p>
-        <button mat-stroked-button (click)="createTagEvent.emit()">Criar a primeira</button>
+        @if (permissions.has(P.CREATE_TAG)) {
+          <button mat-stroked-button (click)="createTagEvent.emit()">Criar a primeira</button>
+        }
       </li>
     }
   </ul>

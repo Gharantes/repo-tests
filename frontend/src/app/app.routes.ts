@@ -8,10 +8,11 @@ import { RouteDashboardComponent } from './modules/page-dashboard/route-dashboar
 import { RouteUpsertEventComponent } from './modules/page-upsert-event/route-upsert-event.component';
 import { RouteUpsertProjectComponent } from './modules/page-upsert-project/route-upsert-project.component';
 import { HasActiveTenant } from './security/routing/has-active-tenant';
+import { canEditAccount, hasPermission } from './security/routing/has-permission';
+import { AuthPermission } from '@synergia-frontend/services';
 import { RouteEventDetailsComponent } from './modules/page-details-event/route-event-details.component';
 import { RouteListTagsComponent } from './modules/page-list-tags/route-list-tags.component';
 import { RouteUpsertAccountComponent } from './modules/page-upsert-account/route-upsert-account.component';
-import { RouteListPermissionsComponent } from './modules/page-list-permissions/route-list-permissions.component';
 import { LayoutBeforeLoginComponent } from './layout/component-layout-before-login/layout-before-login.component';
 import { RouteNotFoundComponent } from './modules/page-not-found/route-not-found.component';
 import { RouteProjectDetailsComponent } from './modules/page-details-project/route-project-details.component';
@@ -49,27 +50,27 @@ export const appRoutes: Route[] = [
           { path: 'dashboard', component: RouteDashboardComponent },
           { path: 'lousa', loadComponent: () => import('./modules/page-lousa/route-lousa.component').then((m) => m.RouteLousaComponent) },
           // Usuários
-          { path: 'accounts', component: RouteListAccountsComponent },
-          { path: 'create-account', component: RouteUpsertAccountComponent },
-          { path: 'edit-account/:id', component: RouteUpsertAccountComponent },
+          { path: 'accounts', component: RouteListAccountsComponent, canActivate: [hasPermission(AuthPermission.VIEW_ACCOUNTS_PAGE)] },
+          { path: 'create-account', component: RouteUpsertAccountComponent, canActivate: [hasPermission(AuthPermission.CREATE_USER)] },
+          { path: 'edit-account/:id', component: RouteUpsertAccountComponent, canActivate: [canEditAccount] },
           // Eventos
           { path: 'events', component: RouteListEventsComponent },
-          { path: 'create-event', component: RouteUpsertEventComponent },
+          { path: 'create-event', component: RouteUpsertEventComponent, canActivate: [hasPermission(AuthPermission.CREATE_EVENT)] },
           // Links antigos: a edição agora é feita na própria página do evento.
           { path: 'edit-event/:id', redirectTo: ({ params }) => `event/${params['id']}?edit=1` },
           { path: 'event/:id', component: RouteEventDetailsComponent },
           // Projetos
           { path: 'projects', component: RouteListProjectsComponent },
-          { path: 'create-project', component: RouteUpsertProjectComponent },
+          { path: 'create-project', component: RouteUpsertProjectComponent, canActivate: [hasPermission(AuthPermission.CREATE_PROJECT)] },
           // Links antigos: a edição agora é feita na própria página do projeto.
           { path: 'edit-project/:id', redirectTo: ({ params }) => `project/${params['id']}?edit=1` },
           { path: 'project/:id', component: RouteProjectDetailsComponent },
           // Tags
-          { path: 'tags', component: RouteListTagsComponent },
-          { path: 'create-tag', component: RouteUpsertTagComponent },
-          { path: 'edit-tag/:id', component: RouteUpsertTagComponent },
+          { path: 'tags', component: RouteListTagsComponent, canActivate: [hasPermission(AuthPermission.VIEW_TAGS_PAGE)] },
+          { path: 'create-tag', component: RouteUpsertTagComponent, canActivate: [hasPermission(AuthPermission.CREATE_TAG)] },
+          { path: 'edit-tag/:id', component: RouteUpsertTagComponent, canActivate: [hasPermission(AuthPermission.EDIT_TAG)] },
           // Permissões
-          { path: 'permissions', component: RouteListPermissionsComponent }
+          { path: 'permissions', loadComponent: () => import('./modules/page-list-permissions/route-list-permissions.component').then((m) => m.RouteListPermissionsComponent), canActivate: [hasPermission(AuthPermission.VIEW_PERMISSIONS_PAGE)] }
         ]
       },
     ]

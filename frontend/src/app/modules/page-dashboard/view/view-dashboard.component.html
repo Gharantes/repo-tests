@@ -5,10 +5,12 @@
       [data$]="projects$"
       (cardInteractionEvent)="openProjectEvent.emit($event)"
     >
-      <button class="create-widget" (click)="createProjectEvent.emit()">
-        <mat-icon>add</mat-icon>
-        <span>Criar Projeto</span>
-      </button>
+      @if (permissions.has(P.CREATE_PROJECT)) {
+        <button class="create-widget" (click)="createProjectEvent.emit()">
+          <mat-icon>add</mat-icon>
+          <span>Criar Projeto</span>
+        </button>
+      }
     </lib-project-card-grid>
   </div>
 
@@ -18,10 +20,12 @@
       [data$]="events$"
       (cardInteractionEvent)="openEventEvent.emit($event)"
     >
-      <button class="create-widget" (click)="createEventEvent.emit()">
-        <mat-icon>add</mat-icon>
-        <span>Criar Evento</span>
-      </button>
+      @if (permissions.has(P.CREATE_EVENT)) {
+        <button class="create-widget" (click)="createEventEvent.emit()">
+          <mat-icon>add</mat-icon>
+          <span>Criar Evento</span>
+        </button>
+      }
     </lib-event-card-grid>
   </div>
 </div>

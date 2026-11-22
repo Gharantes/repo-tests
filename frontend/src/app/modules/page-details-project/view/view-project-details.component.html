@@ -21,7 +21,7 @@
 
       <!-- Só o topo vira campos; as abas abaixo não são recriadas ao entrar/sair da edição. -->
       @if (editing) {
-        <app-entity-form-fields kind="project" [connector]="connector"></app-entity-form-fields>
+        <app-entity-form-fields kind="project" [connector]="connector" [tagsLocked]="!canEditTags"></app-entity-form-fields>
       } @else {
         <h1 class="title">{{ project$.title }}</h1>
 
@@ -112,9 +112,11 @@
     } @else {
       <span class="status"><mat-icon>visibility</mat-icon>Visualizando projeto</span>
       <button mat-button type="button" (click)="goToParentPageEvent.emit()">Voltar</button>
-      <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
-        <mat-icon>edit</mat-icon>Editar projeto
-      </button>
+      @if (canEdit) {
+        <button mat-flat-button class="edit" type="button" (click)="editEvent.emit()">
+          <mat-icon>edit</mat-icon>Editar projeto
+        </button>
+      }
     }
   </footer>
 </div>

@@ -2,7 +2,6 @@
 .openapi-generator-ignore
 README.md
 api.module.ts
-api/actionAttributePermissionsResource.service.ts
 api/actionManageRelationshipsResource.service.ts
 api/api.ts
 api/entityAccountResource.service.ts
@@ -19,13 +18,13 @@ encoder.ts
 git_push.sh
 index.ts
 model/accountDto.ts
-model/attributePermissionsDto.ts
 model/eventDto.ts
 model/loginInformationInputDto.ts
 model/loginInformationResponseDto.ts
 model/models.ts
 model/permissionDto.ts
 model/projectDto.ts
+model/setAccountPermissionsDto.ts
 model/tagDto.ts
 model/tenantDto.ts
 model/upsertAccountDto.ts

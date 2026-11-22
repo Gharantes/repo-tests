@@ -10,10 +10,16 @@
       @for (tag of c.tags.value; track tag.id) {
         <span class="tag">
           <span class="dot" [style.background]="tagColor(tag)"></span>{{ tag.title }}
-          <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
+          @if (!tagsLocked) {
+            <button type="button" (click)="removeTag(tag)" [attr.aria-label]="'Remover ' + tag.title"><mat-icon>close</mat-icon></button>
+          }
         </span>
       }
-      <lib-add-tag-btn class="add-tag" [forProjects]="kind === 'project'" [forEvents]="kind === 'event'" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
+      @if (!tagsLocked) {
+        <lib-add-tag-btn class="add-tag" [forProjects]="kind === 'project'" [forEvents]="kind === 'event'" (saveTagEvent)="addTag($event)"></lib-add-tag-btn>
+      } @else if (c.tags.value.length === 0) {
+        <span class="locked">Sem tags</span>
+      }
     </dd>
   </div>
   <div class="prop">

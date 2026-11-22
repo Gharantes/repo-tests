@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityAccount.services
 
 import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.entityTag.services.EntityTagService
 import br.com.synergia.libs.utilsEntities.models.AccountDto
 import org.springframework.stereotype.Service
@@ -8,7 +9,8 @@ import org.springframework.stereotype.Service
 @Service
 class EntityAccountService (
     private val sqlService: EntityAccountSqlService,
-    private val entityTagService: EntityTagService
+    private val entityTagService: EntityTagService,
+    private val entityPermissionService: EntityPermissionService,
 ) {
     fun listAccountsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null, lookupTags: Boolean? = null): List<AccountDto> {
         val accounts = sqlService.listAccountsByTenant(idTenant, text, tagIds)
@@ -34,6 +36,7 @@ class EntityAccountService (
         }
         val idAccount = sqlService.createAccount(params)
         sqlService.createAccountTagRelationship(idAccount, params.tags)
+        entityPermissionService.grantDefaultPermissions(idAccount)
     }
     fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
         sqlService.updateAccount(idAccount, params)

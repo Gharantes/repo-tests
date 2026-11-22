@@ -6,6 +6,8 @@ import { Injectable, signal } from "@angular/core";
 export class SessionService {
     private readonly tenant = signal<{ id: number, label: string, identifier: string } | null>(null);
     private readonly user = signal<{ id: number, label: string } | null>(null);
+    /** Códigos (AuthPermission) do usuário logado. Recarregados a cada login pelo PermissionService. */
+    private readonly permissions = signal<ReadonlySet<string>>(new Set());
 
     public setUser(res: { id: number, label: string }) {
         this.user.set(res);
@@ -13,9 +15,16 @@ export class SessionService {
     public setTenant(res: { id: number, label: string, identifier: string }) {
         this.tenant.set(res);
     }
+    public setPermissions(codes: string[]) {
+        this.permissions.set(new Set(codes));
+    }
+    public hasPermission(code: string): boolean {
+        return this.permissions().has(code);
+    }
     public logout() {
       this.tenant.set(null);
       this.user.set(null);
+      this.permissions.set(new Set());
       localStorage.removeItem('login-data');
     }
 

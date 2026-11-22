@@ -2,7 +2,7 @@ import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EntityGetByIdResourceService, EntityProjectResourceService } from '@synergia-frontend/api';
-import { RoutingService, SnackbarService } from '@synergia-frontend/services';
+import { PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { map, tap } from 'rxjs';
 import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { IProjectModel } from '@synergia-frontend/interfaces';
@@ -25,6 +25,7 @@ import { ConnectorUpsertProject } from '../page-upsert-project/connector/connect
 export class RouteProjectDetailsComponent {
   public readonly connector = inject(ConnectorUpsertProject);
   private readonly routingService = inject(RoutingService);
+  public readonly permissions = inject(PermissionService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly entityProjectService = inject(EntityProjectResourceService);
@@ -84,6 +85,10 @@ export class RouteProjectDetailsComponent {
   public startEditing() {
     const project = this.project$();
     if (project == null) return;
+    if (!this.permissions.canEditProject(project)) {
+      this.clearEditParam();
+      return;
+    }
     this.connector.populateForm(project);
     this.editing.set(true);
     this.clearEditParam();

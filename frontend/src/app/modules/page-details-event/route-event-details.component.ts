@@ -2,7 +2,7 @@ import { Component, signal, inject, ChangeDetectionStrategy } from '@angular/cor
 import { ActivatedRoute, Router } from '@angular/router';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { EntityEventResourceService, EntityGetByIdResourceService } from '@synergia-frontend/api';
-import { RoutingService, SnackbarService } from '@synergia-frontend/services';
+import { PermissionService, RoutingService, SnackbarService } from '@synergia-frontend/services';
 import { catchError, EMPTY, map, tap } from 'rxjs';
 import { EventDtoToModel } from '@synergia-frontend/mappers';
 import { IEventModel } from '@synergia-frontend/interfaces';
@@ -25,6 +25,7 @@ import { ConnectorUpsertEvent } from '../page-upsert-event/connector/connector-u
 export class RouteEventDetailsComponent {
   public readonly connector = inject(ConnectorUpsertEvent);
   private readonly routingService = inject(RoutingService);
+  public readonly permissions = inject(PermissionService);
   private readonly snackbarService = inject(SnackbarService);
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly entityEventService = inject(EntityEventResourceService);
@@ -85,6 +86,10 @@ export class RouteEventDetailsComponent {
   public startEditing() {
     const event = this.event$();
     if (event == null) return;
+    if (!this.permissions.canEditEvent(event)) {
+      this.clearEditParam();
+      return;
+    }
     this.connector.populateForm(event);
     this.editing.set(true);
     this.clearEditParam();

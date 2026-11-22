@@ -1,5 +1,6 @@
 package br.com.synergia.libs.entityTenant.services
 
+import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
 import org.springframework.beans.factory.annotation.Value
@@ -10,6 +11,7 @@ import org.springframework.transaction.annotation.Transactional
 @Service
 class EntityTenantService (
     private val sqlService: EntityTenantSqlService,
+    private val entityPermissionService: EntityPermissionService,
     @Value("\${LIST_TENANT_PAGE_PASSWORD:}") private val listTenantPagePassword: String,
 ) {
     fun listAllTenants(text: String?): List<TenantDto> {
@@ -47,7 +49,9 @@ class EntityTenantService (
         }
 
         val idTenant = getTenantByIdentifier(params.identifier)?.id ?: throw Exception("Erro ao criar Tenant.")
-        sqlService.createAdminAccountForTenant(idTenant, login, params.password)
+        val idAdmin = sqlService.createAdminAccountForTenant(idTenant, login, params.password)
+        // O admin é quem distribui as permissões para o resto do tenant.
+        entityPermissionService.grantAllPermissions(idAdmin)
     }
     fun updateTenant(idTenant: Long, params: UpsertTenantDto) {
         validateIdentifier(params.identifier)

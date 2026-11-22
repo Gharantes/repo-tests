@@ -1,10 +1,13 @@
 package br.com.synergia.rest
 
+import br.com.synergia.libs.entityPermission.models.SetAccountPermissionsDto
 import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.libs.utilsEntities.models.PermissionDto
 import org.springframework.http.ResponseEntity
+import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 import org.springframework.web.bind.annotation.RestController
@@ -21,6 +24,24 @@ class EntityPermissionResource (
     ): ResponseEntity<List<PermissionDto>> {
         return ResponseMessenger.buildResponse {
             service.listPermissions(text)
+        }
+    }
+
+    @GetMapping("/list-permissions-of-account")
+    fun listPermissionsOfAccount(
+        @RequestParam("id-account") idAccount: Long
+    ): ResponseEntity<List<PermissionDto>> {
+        return ResponseMessenger.buildResponse {
+            service.listPermissionsOfAccount(idAccount)
+        }
+    }
+
+    @PostMapping("/set-account-permissions")
+    fun setAccountPermissions(
+        @RequestBody params: SetAccountPermissionsDto
+    ): ResponseEntity<Void> {
+        return ResponseMessenger.responseWithoutReturn {
+            service.setAccountPermissions(params)
         }
     }
 }

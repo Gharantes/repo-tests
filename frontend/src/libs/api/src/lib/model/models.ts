@@ -1,5 +1,4 @@
 export * from './accountDto';
-export * from './attributePermissionsDto';
 export * from './checkListTenantsPasswordDto';
 export * from './deleteTenantDto';
 export * from './eventDto';
@@ -7,6 +6,7 @@ export * from './loginInformationInputDto';
 export * from './loginInformationResponseDto';
 export * from './permissionDto';
 export * from './projectDto';
+export * from './setAccountPermissionsDto';
 export * from './tagDto';
 export * from './tenantDto';
 export * from './upsertAccountDto';

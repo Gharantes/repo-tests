@@ -3,7 +3,7 @@ import { takeUntilDestroyed } from "@angular/core/rxjs-interop";
 import { NavigationEnd, Router } from "@angular/router";
 import { MatRippleModule } from "@angular/material/core";
 import { MatIconModule } from "@angular/material/icon";
-import { RoutingService, SessionService } from "@synergia-frontend/services";
+import { AuthPermission, PermissionService, RoutingService, SessionService } from "@synergia-frontend/services";
 import { EntityEventResourceService, EntityProjectResourceService } from "@synergia-frontend/api";
 import { IEventModel, IProjectModel } from "@synergia-frontend/interfaces";
 import { EventDtoToModel, ProjectDtoToModel } from "@synergia-frontend/mappers";
@@ -25,10 +25,12 @@ export class LayoutSidebarComponent {
 
   public readonly projects$ = signal<IProjectModel[]>([]);
   public readonly events$ = signal<IEventModel[]>([]);
+  public readonly P = AuthPermission;
 
   constructor(
     public readonly routingService: RoutingService,
     public readonly sessionService: SessionService,
+    public readonly permissions: PermissionService,
     private readonly entityProjectService: EntityProjectResourceService,
     private readonly entityEventService: EntityEventResourceService,
     private readonly router: Router,

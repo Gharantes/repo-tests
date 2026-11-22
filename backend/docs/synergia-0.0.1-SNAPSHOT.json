@@ -979,29 +979,6 @@
         }
       }
     },
-    "/api/action-attribute-permissions/attribute-permissions": {
-      "post": {
-        "tags": [
-          "action-attribute-permissions-resource"
-        ],
-        "operationId": "attributePermissions",
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/AttributePermissionsDto"
-              }
-            }
-          },
-          "required": true
-        },
-        "responses": {
-          "200": {
-            "description": "OK"
-          }
-        }
-      }
-    },
     "/api/entity-tag/list-tags-by-project": {
       "get": {
         "tags": [
@@ -1308,6 +1285,63 @@
         "responses": {
           "200": {
             "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-permission/set-account-permissions": {
+      "post": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "setAccountPermissions",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SetAccountPermissionsDto"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          }
+        }
+      }
+    },
+    "/api/entity-permission/list-permissions-of-account": {
+      "get": {
+        "tags": [
+          "entity-permission-resource"
+        ],
+        "operationId": "listPermissionsOfAccount",
+        "parameters": [
+          {
+            "name": "id-account",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/PermissionDto"
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -1672,6 +1706,12 @@
           },
           "name": {
             "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "category": {
+            "type": "string"
           }
         }
       },
@@ -1753,24 +1793,21 @@
           }
         }
       },
-      "AttributePermissionsDto": {
+      "SetAccountPermissionsDto": {
         "required": [
-          "idAccounts",
+          "idAccount",
           "idPermissions",
-          "idTenant"
+          "idRequester"
         ],
         "type": "object",
         "properties": {
-          "idTenant": {
+          "idRequester": {
             "type": "integer",
             "format": "int64"
           },
-          "idAccounts": {
-            "type": "array",
-            "items": {
-              "type": "integer",
-              "format": "int64"
-            }
+          "idAccount": {
+            "type": "integer",
+            "format": "int64"
           },
           "idPermissions": {
             "type": "array",

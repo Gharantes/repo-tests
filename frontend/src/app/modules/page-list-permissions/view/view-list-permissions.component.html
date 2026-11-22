@@ -1,5 +1,115 @@
-<lib-sig-extendable-table
-  [actions]="actions"
-  [columns]="columns"
-  [data$]="data$"
-></lib-sig-extendable-table>
+<div class="container">
+  <header class="page-head">
+    <div>
+      <h1>Permissões</h1>
+      <p>Escolha um usuário para ver e mudar o que ele pode fazer na instituição.</p>
+    </div>
+    @if (!canManage) {
+      <span class="readonly-badge"><mat-icon>visibility</mat-icon>Somente leitura</span>
+    }
+  </header>
+
+  <div class="layout">
+    <aside class="panel people">
+      <label class="search">
+        <mat-icon>search</mat-icon>
+        <input type="text" placeholder="Buscar usuário..." [formControl]="connector.textFieldControl" />
+        @if (connector.textFieldControl.value) {
+          <button type="button" class="clear" (click)="clearSearch()" aria-label="Limpar busca">
+            <mat-icon>close</mat-icon>
+          </button>
+        }
+      </label>
+
+      <ul class="people-list">
+        @for (account of accounts; track account.id) {
+          <li>
+            <button
+              type="button"
+              class="person"
+              [class.active]="account.id === selected?.id"
+              [attr.aria-pressed]="account.id === selected?.id"
+              (click)="selectEvent.emit(account)"
+            >
+              <span class="avatar" [style.background]="colorFor(account.id)">{{ initials(account) }}</span>
+              <span class="who">
+                <span class="name">
+                  {{ fullName(account) }}
+                  @if (account.id === myId) { <span class="you">você</span> }
+                </span>
+                <span class="login">&#64;{{ account.login }}</span>
+              </span>
+            </button>
+          </li>
+        } @empty {
+          <li class="people-empty">Nenhum usuário encontrado.</li>
+        }
+      </ul>
+    </aside>
+
+    <section class="panel detail">
+      @if (selected; as account) {
+        <div class="detail-head">
+          <span class="avatar lg" [style.background]="colorFor(account.id)">{{ initials(account) }}</span>
+          <div class="who">
+            <h2>{{ fullName(account) }}</h2>
+            <span class="login">&#64;{{ account.login }}</span>
+          </div>
+          <span class="summary">{{ grantedCount }} de {{ totalCount }} permissões</span>
+        </div>
+
+        <div class="groups" [class.loading]="loading">
+          @for (g of groups; track g.category) {
+            <section class="group">
+              <header class="group-head">
+                <mat-icon>{{ g.icon }}</mat-icon>
+                <h3>{{ g.category }}</h3>
+                <span class="n">{{ groupOnCount(g) }}/{{ g.permissions.length }}</span>
+                @if (canManage) {
+                  <button type="button" class="link" (click)="toggleGroupEvent.emit(groupIds(g))">
+                    {{ groupOnCount(g) === g.permissions.length ? 'Desmarcar todas' : 'Marcar todas' }}
+                  </button>
+                }
+              </header>
+              <ul class="perm-list">
+                @for (p of g.permissions; track p.id) {
+                  <li class="perm">
+                    <div class="perm-text">
+                      <span class="desc">{{ p.description }}</span>
+                      <code class="code">{{ p.name }}</code>
+                    </div>
+                    <mat-slide-toggle
+                      [checked]="granted.has(p.id)"
+                      [disabled]="!canManage || lockedIds.has(p.id) || loading"
+                      [matTooltip]="lockedIds.has(p.id) ? 'Você não pode tirar esta permissão de si mesmo.' : ''"
+                      [attr.aria-label]="p.description"
+                      (change)="toggleEvent.emit(p.id)"
+                    ></mat-slide-toggle>
+                  </li>
+                }
+              </ul>
+            </section>
+          }
+        </div>
+      } @else {
+        <div class="placeholder">
+          <mat-icon>manage_accounts</mat-icon>
+          <p>Selecione um usuário na lista para ver as permissões dele.</p>
+        </div>
+      }
+    </section>
+  </div>
+
+  @if (selected && canManage) {
+    <footer class="bar">
+      <span class="status">
+        <span class="pip" [class.dirty]="dirty"></span>
+        {{ dirty ? 'Alterações não salvas' : 'Tudo salvo' }}
+      </span>
+      <button mat-button type="button" [disabled]="!dirty || saving" (click)="discardEvent.emit()">Descartar</button>
+      <button mat-flat-button class="save" type="button" [disabled]="!dirty || saving" (click)="saveEvent.emit()">
+        {{ saving ? 'Salvando...' : 'Salvar' }}
+      </button>
+    </footer>
+  }
+</div>

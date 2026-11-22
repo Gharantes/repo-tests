@@ -1,5 +1,3 @@
-export * from './actionAttributePermissionsResource.service';
-import { ActionAttributePermissionsResourceService } from './actionAttributePermissionsResource.service';
 export * from './actionManageRelationshipsResource.service';
 import { ActionManageRelationshipsResourceService } from './actionManageRelationshipsResource.service';
 export * from './entityAccountResource.service';
@@ -20,4 +18,4 @@ export * from './entityTenantResource.service';
 import { EntityTenantResourceService } from './entityTenantResource.service';
 export * from './pageLoginResource.service';
 import { PageLoginResourceService } from './pageLoginResource.service';
-export const APIS = [ActionAttributePermissionsResourceService, ActionManageRelationshipsResourceService, EntityAccountResourceService, EntityDeleteByIdResourceService, EntityEventResourceService, EntityGetByIdResourceService, EntityPermissionResourceService, EntityProjectResourceService, EntityTagResourceService, EntityTenantResourceService, PageLoginResourceService];
+export const APIS = [ActionManageRelationshipsResourceService, EntityAccountResourceService, EntityDeleteByIdResourceService, EntityEventResourceService, EntityGetByIdResourceService, EntityPermissionResourceService, EntityProjectResourceService, EntityTagResourceService, EntityTenantResourceService, PageLoginResourceService];

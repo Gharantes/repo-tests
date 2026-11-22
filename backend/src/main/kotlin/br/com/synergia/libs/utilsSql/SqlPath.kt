@@ -1,8 +1,9 @@
 package br.com.synergia.libs.utilsSql
 
 object SqlPath {
-    enum class ActionAttributePermissions (override val path: String) : ISqlFile {
-        ATTRIBUTE_PERMISSIONS("/sql/action-attribute-permissions/attribute-permissions.sql")
+    enum class EntityPermission (override val path: String) : ISqlFile {
+        LIST_PERMISSIONS_OF_ACCOUNT("/sql/entity-permission/list-permissions-of-account.sql"),
+        UPSERT_PERMISSION("/sql/entity-permission/upsert-permission.sql"),
     }
     enum class PageUpsertAccount (override val path: String) : ISqlFile {
         GET_ACCOUNT_BY_LOGIN_OR_EMAIL("/sql/page-upsert-account/get-account-by-login-or-email.sql"),

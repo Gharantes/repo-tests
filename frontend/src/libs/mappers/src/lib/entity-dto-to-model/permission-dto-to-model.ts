@@ -4,6 +4,8 @@ import { IPermissionModel } from '@synergia-frontend/interfaces';
 export function PermissionDtoToModel(input: PermissionDto) : IPermissionModel {
   return {
     id: input.id,
-    name: input.name
+    name: input.name,
+    description: input.description ?? input.name,
+    category: input.category ?? 'Geral',
   }
 }

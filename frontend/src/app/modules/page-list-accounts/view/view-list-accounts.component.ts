@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
@@ -6,6 +6,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { IAccountModel, ITagModel } from '@synergia-frontend/interfaces';
 import { AddTagBtnComponent } from '@synergia-frontend/components';
 import { ConnectorListAccounts } from '../connector/connector-list-accounts';
+import { AuthPermission, PermissionService } from '@synergia-frontend/services';
 
 /** Cores derivadas do ID, para cada usuário/tag ter uma identidade visual estável. */
 const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777', '#CA8A04', '#4F46E5'];
@@ -20,6 +21,8 @@ const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777
 })
 export class ViewListAccountsComponent {
   @Input() data$!: IAccountModel[];
+  public readonly permissions = inject(PermissionService);
+  public readonly P = AuthPermission;
   @Input() connector!: ConnectorListAccounts;
 
   @Output() public readonly createAccountEvent = new EventEmitter<void>();

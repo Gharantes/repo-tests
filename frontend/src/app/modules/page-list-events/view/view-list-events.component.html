@@ -4,10 +4,12 @@
       <h1>Eventos <span class="count">{{ data$.length }}</span></h1>
       <p>Veja o que está acontecendo na instituição.</p>
     </div>
-    <button mat-flat-button class="create" (click)="insertEvent.emit()">
-      <mat-icon>add</mat-icon>
-      Criar novo evento
-    </button>
+    @if (permissions.has(P.CREATE_EVENT)) {
+      <button mat-flat-button class="create" (click)="insertEvent.emit()">
+        <mat-icon>add</mat-icon>
+        Criar novo evento
+      </button>
+    }
   </header>
 
   <div class="toolbar">
@@ -90,7 +92,9 @@
           <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
         } @else {
           <p>Ainda não há eventos.</p>
-          <button mat-stroked-button (click)="insertEvent.emit()">Criar o primeiro</button>
+          @if (permissions.has(P.CREATE_EVENT)) {
+            <button mat-stroked-button (click)="insertEvent.emit()">Criar o primeiro</button>
+          }
         }
       </div>
     }

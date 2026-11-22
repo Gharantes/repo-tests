@@ -4,10 +4,12 @@
       <h1>Projetos <span class="count">{{ data$.length }}</span></h1>
       <p>Explore o que a instituição está construindo.</p>
     </div>
-    <button mat-flat-button class="create" (click)="createProjectEvent.emit()">
-      <mat-icon>add</mat-icon>
-      Criar novo projeto
-    </button>
+    @if (permissions.has(P.CREATE_PROJECT)) {
+      <button mat-flat-button class="create" (click)="createProjectEvent.emit()">
+        <mat-icon>add</mat-icon>
+        Criar novo projeto
+      </button>
+    }
   </header>
 
   <div class="toolbar">
@@ -90,7 +92,9 @@
           <button mat-stroked-button (click)="clearFilters()">Limpar filtros</button>
         } @else {
           <p>Ainda não há projetos.</p>
-          <button mat-stroked-button (click)="createProjectEvent.emit()">Criar o primeiro</button>
+          @if (permissions.has(P.CREATE_PROJECT)) {
+            <button mat-stroked-button (click)="createProjectEvent.emit()">Criar o primeiro</button>
+          }
         }
       </div>
     }

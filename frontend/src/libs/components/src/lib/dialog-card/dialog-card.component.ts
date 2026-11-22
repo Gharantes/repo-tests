@@ -5,7 +5,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { Observable, map } from 'rxjs';
 import { EntityGetByIdResourceService } from '@synergia-frontend/api';
 import { EventDtoToModel, ProjectDtoToModel } from '@synergia-frontend/mappers';
-import { RoutingService } from '@synergia-frontend/services';
+import { PermissionService, RoutingService } from '@synergia-frontend/services';
 import { SafeImageComponent } from '../safe-image/safe-image.component';
 import {
   buildDialogCardView,
@@ -35,10 +35,17 @@ export class DialogCardComponent {
   private readonly dialogRef = inject(MatDialogRef<DialogCardComponent>);
   private readonly entityService = inject(EntityGetByIdResourceService);
   private readonly routingService = inject(RoutingService);
+  private readonly permissions = inject(PermissionService);
 
   /** Começa com o que veio da listagem e é substituído pela versão completa do backend. */
   private readonly entity$ = signal<DialogCardEntity>(this.data.entity);
   public readonly view$ = computed(() => buildDialogCardView(this.data.type, this.entity$()));
+  /** Os membros só chegam com a versão completa; até lá o botão fica escondido para quem não tem a permissão. */
+  public readonly canEdit$ = computed(() =>
+    this.data.type === 'project'
+      ? this.permissions.canEditProject(this.entity$())
+      : this.permissions.canEditEvent(this.entity$())
+  );
 
   public readonly colorFor = colorForId;
   public readonly initials = memberInitials;
@@ -78,6 +85,7 @@ export class DialogCardComponent {
         else this.routingService.goToEventDetails(id);
         break;
       case 'edit':
+        if (!this.canEdit$()) break;
         if (isProject) this.routingService.goToEditProject(id);
         else this.routingService.goToEditEvent(id);
         break;

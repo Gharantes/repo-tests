@@ -22,6 +22,8 @@ const PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB2777
 export class EntityFormFieldsComponent {
   @Input() public connector!: IEntityFormConnector;
   @Input() public kind: EntityFormKind = 'project';
+  /** Mostra as tags sem deixar mudar (quem edita sem ser membro e sem ASSIGN_TAGS_*). */
+  @Input() public tagsLocked = false;
 
   public get descriptionPlaceholder(): string {
     return this.kind === 'event'

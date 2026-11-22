@@ -1,10 +1,11 @@
-import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy } from '@angular/core';
+import { Component, EventEmitter, Input, Output, ChangeDetectionStrategy, inject } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { ITagModel } from '@synergia-frontend/interfaces';
 import { ConnectorListTags } from '../connector/connector-list-tags';
+import { AuthPermission, PermissionService } from '@synergia-frontend/services';
 
 type TagScopeKey = 'forProjects' | 'forEvents' | 'forAccounts';
 
@@ -27,6 +28,8 @@ const TAG_PALETTE = ['#3B52CC', '#FF7043', '#16A34A', '#9333EA', '#0891B2', '#DB
 })
 export class ViewListTagsComponent {
   @Input() public data$!: ITagModel[];
+  public readonly permissions = inject(PermissionService);
+  public readonly P = AuthPermission;
   @Input() public connector!: ConnectorListTags;
 
   @Output() public readonly createTagEvent = new EventEmitter<void>();

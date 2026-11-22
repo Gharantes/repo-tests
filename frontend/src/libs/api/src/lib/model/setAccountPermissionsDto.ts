@@ -9,9 +9,9 @@
  */
 
 
-export interface AttributePermissionsDto { 
-    idTenant: number;
-    idAccounts: Array<number>;
+export interface SetAccountPermissionsDto { 
+    idRequester: number;
+    idAccount: number;
     idPermissions: Array<number>;
 }
 

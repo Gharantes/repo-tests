@@ -37,7 +37,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             store,
-            UpsertEventDto(idTenant, idOrganizador, "Startup Garage", "Maratona de projetos.", null, listOf(idTag)),
+            UpsertEventDto(idTenant, idOrganizador, "Startup Garage", "Maratona de projetos.", null, tags = listOf(idTag)),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK
@@ -63,7 +63,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
 
         rest.postJson<Void>(
             store,
-            UpsertEventDto(idTenant, idConta, "Summit 2026", "Encontro anual.", null, emptyList()),
+            UpsertEventDto(idTenant, idConta, "Summit 2026", "Encontro anual.", null, tags = emptyList()),
         )
 
         val lista = rest.postForList<EventDto>("$porTenant?id-tenant=$idTenant")
@@ -145,7 +145,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
 
         val resposta = rest.postJson<Void>(
             "/api/entity-event/update/$idEvento",
-            UpsertEventDto(idTenant, idConta, "Título Novo", "Descrição nova.", null, listOf(idNova)),
+            UpsertEventDto(idTenant, idConta, "Título Novo", "Descrição nova.", null, tags = listOf(idNova)),
         )
 
         resposta.statusCode shouldBe HttpStatus.OK

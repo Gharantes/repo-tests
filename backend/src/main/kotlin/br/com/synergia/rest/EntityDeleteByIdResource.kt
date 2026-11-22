@@ -1,5 +1,6 @@
 package br.com.synergia.rest
 
+import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
 import br.com.synergia.libs.utilsEntities.jpa.tag.TagRepository
@@ -10,7 +11,8 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/api/entity-delete-by-id")
 class EntityDeleteByIdResource (
     private val tagRepository: TagRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val entityPermissionService: EntityPermissionService,
 ) {
     @GetMapping("delete-tag-by-id/{id-tag}")
     fun deleteTagById(
@@ -25,6 +27,7 @@ class EntityDeleteByIdResource (
         @PathVariable("id-account") idAccount: Long
     ): ResponseEntity<Void> {
         return ResponseMessenger.responseWithoutReturn {
+            entityPermissionService.revokeAllPermissions(idAccount)
             accountRepository.deleteById(idAccount)
         }
     }
