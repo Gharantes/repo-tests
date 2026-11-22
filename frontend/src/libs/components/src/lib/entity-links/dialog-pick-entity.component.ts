@@ -22,6 +22,8 @@ export interface PickEntityData {
   options: Observable<IPickEntity[]>;
   /** Já vinculados; ficam fora da lista. */
   excludeIds: number[];
+  /** Ícone à direita de cada opção. Padrão: "add". */
+  pickIcon?: string;
 }
 
 /** Escolhe um projeto ou evento de uma lista com busca. Devolve o escolhido. */
@@ -46,7 +48,7 @@ export interface PickEntityData {
                 <small>{{ item.description }}</small>
               }
             </span>
-            <mat-icon class="add">add</mat-icon>
+            <mat-icon class="add">{{ data.pickIcon ?? 'add' }}</mat-icon>
           </button>
         } @empty {
           @if (loaded()) {

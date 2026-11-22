@@ -1,12 +1,16 @@
-import { ChangeDetectionStrategy, Component, effect, ElementRef, input, signal, viewChild } from '@angular/core';
+import { ChangeDetectionStrategy, Component, effect, ElementRef, inject, input, signal, viewChild } from '@angular/core';
 import { NgTemplateOutlet } from '@angular/common';
+import { MatDialog } from '@angular/material/dialog';
 import { MatIconModule } from '@angular/material/icon';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { EntityProjectResourceService, ProjectDto } from '@synergia-frontend/api';
 import { INoteItem, INoteModel, IUpsertNote, NoteParent, NoteType } from '@synergia-frontend/interfaces';
+import { ProjectDtoToModel } from '@synergia-frontend/mappers';
 import { NoteService, SessionService, SnackbarService } from '@synergia-frontend/services';
 import { formatDateTime } from '@synergia-frontend/utils';
-import { firstValueFrom } from 'rxjs';
+import { combineLatest, firstValueFrom, map } from 'rxjs';
+import { DialogPickEntityComponent } from '../entity-links/dialog-pick-entity.component';
 
 const COLORS = ['padrao', 'amarelo', 'verde', 'azul', 'rosa'];
 
@@ -91,13 +95,18 @@ interface INoteDraft {
         <ng-container *ngTemplateOutlet="editor; context: { $implicit: draft() }"></ng-container>
       } @else {
         <article class="note" [class]="'note--' + note.color">
-          @if (note.title || isMine(note)) {
+          @if (note.title || isMine(note) || canCopy()) {
             <header class="top">
               @if (note.title) {
                 <strong class="title">{{ note.title }}</strong>
               }
-              @if (isMine(note)) {
-                <div class="tools">
+              <div class="tools">
+                @if (canCopy()) {
+                  <button type="button" class="action" matTooltip="Copiar para um projeto" (click)="copyToProject(note)">
+                    <mat-icon>content_copy</mat-icon>
+                  </button>
+                }
+                @if (isMine(note)) {
                   <button type="button" class="action" matTooltip="Editar" (click)="edit(note)">
                     <mat-icon>edit</mat-icon>
                   </button>
@@ -114,8 +123,8 @@ interface INoteDraft {
                   <button type="button" class="action" matTooltip="Apagar" (click)="remove(note)">
                     <mat-icon>delete</mat-icon>
                   </button>
-                </div>
-              }
+                }
+              </div>
             </header>
           }
           @if (note.type === 'LIST') {
@@ -181,6 +190,14 @@ export class ParentNotesComponent {
   public readonly saving = signal(false);
   public readonly colors = COLORS;
   public readonly formatDateTime = formatDateTime;
+
+  private readonly dialog = inject(MatDialog);
+  private readonly projectResource = inject(EntityProjectResourceService);
+
+  /** Só na lousa do evento: copia o bloco para um projeto registrado nele. O contrário não existe. */
+  public canCopy() {
+    return this.parentEntity() === 'EVENT';
+  }
 
   private readonly draftCard = viewChild<ElementRef<HTMLElement>>('draftCard');
   private readonly idAccount: number;
@@ -292,6 +309,43 @@ export class ParentNotesComponent {
     } finally {
       this.saving.set(false);
     }
+  }
+
+  /**
+   * Escolhe um projeto que está registrado neste evento e de que o usuário participa, e cria nele
+   * uma cópia do bloco na lousa do usuário. O original continua no evento.
+   */
+  public copyToProject(note: INoteModel) {
+    const idEvent = this.parentId();
+    const toModels = map((res: ProjectDto[]) => res.map((p) => ProjectDtoToModel(p)));
+    const options = combineLatest([
+      this.projectResource.listProjectsByEvent(idEvent).pipe(toModels),
+      this.projectResource.listProjectsByAccount(this.idAccount).pipe(toModels),
+    ]).pipe(
+      map(([ofEvent, mine]) => {
+        const myIds = new Set(mine.map((p) => p.id));
+        return ofEvent.filter((p) => myIds.has(p.id));
+      })
+    );
+    DialogPickEntityComponent.open(this.dialog, {
+      heading: 'Copiar para um projeto',
+      searchPlaceholder: 'Buscar seus projetos neste evento…',
+      emptyText: 'Nenhum projeto seu está registrado neste evento.',
+      options,
+      excludeIds: [],
+      pickIcon: 'content_copy',
+    }).subscribe(async (project) => {
+      if (project == null) return;
+      try {
+        const id = await firstValueFrom(this.noteService.store(this.toUpsert(note)));
+        await firstValueFrom(this.noteService.attach(id, this.idAccount, { entity: 'PROJECT', id: project.id }), {
+          defaultValue: undefined,
+        });
+        this.snackbar.showMessage(`Bloco copiado para "${project.title}".`, true);
+      } catch (err) {
+        this.snackbar.catchError(err, 'Erro ao copiar o bloco.');
+      }
+    });
   }
 
   public recolor(note: INoteModel, color: string) {
