@@ -2,6 +2,7 @@
   <app-view-project-details
     [project$]="project"
     [editing]="editing()"
+    [openTab]="openTab()"
     [canEdit]="permissions.canEditProject(project)"
     [canEditTags]="permissions.canChangeProjectTags(project)"
     [isMember]="permissions.isMemberOf(project)"

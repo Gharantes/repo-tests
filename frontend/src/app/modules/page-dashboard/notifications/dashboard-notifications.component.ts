@@ -23,7 +23,7 @@ import { activityIcon, activityVerb, formatDateTime, formatRelativeTime } from '
         <button type="button" class="open" (click)="openEvent.emit(n)">
           <span class="icon" [attr.data-type]="n.type"><mat-icon>{{ iconFor(n.type) }}</mat-icon></span>
           <span class="text">
-            <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>
+            <b>{{ n.actorName }}</b> {{ verbFor(n.type) }} <b>{{ n.parentTitle }}</b>@if (n.type === 'DATE' && n.referenceTitle) {: {{ n.referenceTitle }}}
           </span>
           <small [matTooltip]="formatDateTime(n.createdAt)">{{ relative(n.createdAt) }}</small>
         </button>
@@ -59,6 +59,7 @@ import { activityIcon, activityVerb, formatDateTime, formatRelativeTime } from '
       border-radius: 50%; background: #e8ebfb; color: #3B52CC; }
     .icon[data-type='NOTE'] { background: #fff4c2; color: #8a6d00; }
     .icon[data-type='LIST'] { background: #d9f2dc; color: #2e7d32; }
+    .icon[data-type='DATE'] { background: #fde4dc; color: #b3471d; }
     .icon mat-icon { font-size: 17px; width: 17px; height: 17px; }
     .text { flex: 1; min-width: 0; font-size: 0.88rem; color: #555; overflow-wrap: anywhere; }
     .text b { color: #121840; font-weight: 600; }

@@ -4,10 +4,12 @@ import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postForList
 import br.com.synergia.integration.support.postJson
 import br.com.synergia.libs.entityCalendar.models.UpsertCalendarEntryDto
+import br.com.synergia.libs.utilsCommons.enums.ActivityTypeEnum
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
 import br.com.synergia.libs.utilsEntities.jpa.projectEventRelationship.ProjectEventRelationship
 import br.com.synergia.libs.utilsEntities.jpa.projectEventRelationship.ProjectEventRelationshipRepository
 import br.com.synergia.libs.utilsEntities.models.CalendarEntryDto
+import br.com.synergia.libs.utilsEntities.models.NotificationDto
 import io.kotest.matchers.collections.shouldBeEmpty
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -121,6 +123,77 @@ class EntityCalendarIntegrationTest : IntegrationTestBase() {
         projectEventRelationshipRepository.deleteByIdProjectAndIdEvent(idProjeto, idEvento)
 
         doProjeto(idProjeto).shouldBeEmpty()
+    }
+
+    private fun avisos(idConta: Long) =
+        rest.postForList<NotificationDto>("/api/entity-notification/list-notifications-of-account?id-account=$idConta")
+            .body.shouldNotBeNull()
+
+    @Test
+    fun `data no projeto avisa os outros membros do projeto, mesmo quem marcou não sendo Líder`() {
+        val idTenant = criarTenant()
+        val integrante = criarConta(idTenant, login = "integrante")
+        val colega = criarConta(idTenant, login = "colega")
+        val deFora = criarConta(idTenant, login = "defora")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(integrante, idProjeto, papel = "Integrante")
+        vincularContaAoProjeto(colega, idProjeto, papel = "Líder")
+
+        val idData = marcar(NoteParentEnum.PROJECT, idProjeto, data(integrante, "Ensaio")).body.shouldNotBeNull()
+
+        val doColega = avisos(colega)
+        doColega shouldHaveSize 1
+        doColega[0].type shouldBe ActivityTypeEnum.DATE
+        doColega[0].parentEntity shouldBe NoteParentEnum.PROJECT
+        doColega[0].parentId shouldBe idProjeto
+        doColega[0].parentTitle shouldBe "Robótica"
+        doColega[0].referenceId shouldBe idData
+        doColega[0].referenceTitle shouldBe "Ensaio"
+        avisos(integrante).shouldBeEmpty()
+        avisos(deFora).shouldBeEmpty()
+    }
+
+    @Test
+    fun `data no evento avisa os membros dos projetos registrados nele, uma vez por pessoa`() {
+        val idTenant = criarTenant()
+        val organizadora = criarConta(idTenant, login = "organizadora")
+        val emDoisProjetos = criarConta(idTenant, login = "dupla")
+        val soNoOutro = criarConta(idTenant, login = "outro")
+        val idEvento = criarEvento(idTenant, "Feira")
+        val idRobotica = criarProjeto(idTenant, "Robótica")
+        val idHorta = criarProjeto(idTenant, "Horta")
+        val idForaDoEvento = criarProjeto(idTenant, "Xadrez")
+        vincularContaAoEvento(organizadora, idEvento)
+        vincularContaAoProjeto(emDoisProjetos, idRobotica)
+        vincularContaAoProjeto(emDoisProjetos, idHorta)
+        vincularContaAoProjeto(soNoOutro, idForaDoEvento)
+        projectEventRelationshipRepository.save(ProjectEventRelationship(idProject = idRobotica, idEvent = idEvento))
+        projectEventRelationshipRepository.save(ProjectEventRelationship(idProject = idHorta, idEvent = idEvento))
+
+        marcar(NoteParentEnum.EVENT, idEvento, data(organizadora, "Abertura"))
+
+        val avisosDupla = avisos(emDoisProjetos)
+        avisosDupla shouldHaveSize 1
+        avisosDupla[0].parentEntity shouldBe NoteParentEnum.EVENT
+        avisosDupla[0].parentTitle shouldBe "Feira"
+        avisos(soNoOutro).shouldBeEmpty()
+        avisos(organizadora).shouldBeEmpty()
+    }
+
+    @Test
+    fun `apagar a data apaga os avisos dela`() {
+        val idTenant = criarTenant()
+        val autora = criarConta(idTenant, login = "autora")
+        val colega = criarConta(idTenant, login = "colega")
+        val idProjeto = criarProjeto(idTenant, "Robótica")
+        vincularContaAoProjeto(autora, idProjeto)
+        vincularContaAoProjeto(colega, idProjeto)
+        val idData = marcar(NoteParentEnum.PROJECT, idProjeto, data(autora)).body.shouldNotBeNull()
+        contarLinhas("notification") shouldBe 1
+
+        rest.delete("$base/delete/$idData?id-account=$autora")
+
+        contarLinhas("notification") shouldBe 0
     }
 
     @Test

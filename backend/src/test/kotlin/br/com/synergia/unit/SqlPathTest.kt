@@ -26,6 +26,7 @@ class SqlPathTest : FunSpec({
             SqlPath.EntityNote.entries +
             SqlPath.EntityPost.entries +
             SqlPath.EntityNotification.entries +
+            SqlPath.EntityCalendar.entries +
             SqlPath.EntityTenant.entries +
             SqlPath.PageListPermissions.entries +
             SqlPath.EntityAccount.entries +

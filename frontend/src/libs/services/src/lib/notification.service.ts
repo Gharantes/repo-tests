@@ -79,10 +79,11 @@ export class NotificationService {
   /** Marca como lida e abre o evento/projeto na aba onde a novidade está. */
   public open(notification: INotificationModel) {
     this.markAsRead(notification);
+    const isDate = notification.type === 'DATE';
     if (notification.parentEntity === 'EVENT') {
-      this.routing.goToEventDetails(notification.parentId, notification.type === 'POST' ? 'feed' : 'lousa');
+      this.routing.goToEventDetails(notification.parentId, isDate ? 'calendario' : notification.type === 'POST' ? 'feed' : 'lousa');
     } else {
-      this.routing.goToProjectDetails(notification.parentId);
+      this.routing.goToProjectDetails(notification.parentId, isDate ? 'calendario' : 'lousa');
     }
   }
 
