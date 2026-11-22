@@ -9,7 +9,7 @@ import { DialogPickEntityComponent } from './dialog-pick-entity.component';
 import { EntityLinkListComponent, ILinkedEntity } from './entity-link-list.component';
 
 /**
- * Projetos registrados no evento. Clicar abre o projeto. O usuário registra (botão "+" no cabeçalho
+ * Projetos registrados no evento. Clicar abre o projeto. O usuário registra (bloco "+" projetado no começo da lista
  * da seção, que chama `openAdd()`) e tira só os projetos de que participa.
  */
 @Component({
@@ -25,7 +25,7 @@ import { EntityLinkListComponent, ILinkedEntity } from './entity-link-list.compo
       [canRemove]="isMine"
       (openItem)="open($event)"
       (removeItem)="remove($event)"
-    ></lib-entity-link-list>
+    ><ng-content></ng-content></lib-entity-link-list>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
 })

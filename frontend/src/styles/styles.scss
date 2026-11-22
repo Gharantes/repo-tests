@@ -73,3 +73,28 @@ body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
         border-radius: 6px;
     }
 }
+
+// Bloco tracejado "+" no começo de cada aba de projeto/evento (projetado dentro das listas).
+.create-tile {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  border: 2px dashed #c5bfb5;
+  border-radius: 10px;
+  background: #fff;
+  color: #666;
+  font: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: border-color 0.15s, background 0.15s, color 0.15s;
+  mat-icon { font-size: 24px; width: 24px; height: 24px; }
+  &:hover { border-color: #3B52CC; background: #f0f3ff; color: #3B52CC; }
+}
+// Lousa: do tamanho de um bloco, ícone em cima.
+.create-tile--note { width: 240px; min-height: 110px; flex-direction: column; mat-icon { font-size: 32px; width: 32px; height: 32px; } }
+// Projetos/Eventos vinculados: uma célula da grade.
+.create-tile--link { min-height: 54px; }
+// Feed e calendário: faixa na largura da coluna.
+.create-tile--row { width: 100%; min-height: 52px; }

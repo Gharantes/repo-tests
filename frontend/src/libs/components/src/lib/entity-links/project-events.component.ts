@@ -10,7 +10,7 @@ import { EntityLinkListComponent, ILinkedEntity } from './entity-link-list.compo
 
 /**
  * Eventos em que o projeto está registrado. Clicar abre o evento; dá para registrar em mais
- * (botão "+" no cabeçalho da seção, que chama `openAdd()`) e tirar de um evento.
+ * (bloco "+" projetado no começo da lista da seção, que chama `openAdd()`) e tirar de um evento.
  */
 @Component({
   selector: 'lib-project-events',
@@ -24,7 +24,7 @@ import { EntityLinkListComponent, ILinkedEntity } from './entity-link-list.compo
       removeLabel="Tirar do evento"
       (openItem)="open($event)"
       (removeItem)="remove($event)"
-    ></lib-entity-link-list>
+    ><ng-content></ng-content></lib-entity-link-list>
   `,
   changeDetection: ChangeDetectionStrategy.Eager,
 })

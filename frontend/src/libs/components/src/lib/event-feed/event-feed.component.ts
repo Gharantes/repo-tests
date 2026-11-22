@@ -19,6 +19,7 @@ import { MarkdownComponent } from '../markdown/markdown.component';
   standalone: true,
   imports: [MarkdownComponent, MatIconModule, MatMenuModule, MatTooltipModule],
   template: `
+    <ng-content></ng-content>
     @for (post of posts(); track post.id) {
       <article class="post">
         <header class="author">

@@ -15,6 +15,7 @@ export interface ILinkedEntity extends IPickEntity {
   standalone: true,
   imports: [MatIconModule, MatTooltipModule, SafeImageComponent],
   template: `
+    <ng-content></ng-content>
     @for (item of items(); track item.id) {
       <article class="item">
         <button type="button" class="open" [matTooltip]="'Abrir ' + item.title" (click)="openItem.emit(item)">
