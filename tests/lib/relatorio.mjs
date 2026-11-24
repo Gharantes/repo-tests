@@ -47,16 +47,60 @@ const ehAssercao = (erro) => (erro?.cause ?? erro)?.code === 'ERR_ASSERTION';
 const situacao = (t) =>
   t.ok ? 'protegido' : !ehAssercao(t.erro) ? 'incompleto' : ehControle(t) ? 'controle' : 'vulneravel';
 
-// A mensagem que explica a falha, sem stack trace.
+// A mensagem que explica a falha, sem stack trace: { texto, itens }.
+//
+// O Node anexa à mensagem da asserção um diff ("+ actual - expected" ...), que
+// fica ilegível numa linha só. Em vez dele:
+//   - mensagem própria do teste: só ela;
+//   - mensagem gerada pelo Node: "esperado X, recebido Y";
+//   - teste que espera uma lista vazia (achados de análise estática, arquivos
+//     versionados...): os itens encontrados viram uma lista à parte.
+const MAX_ITENS = 8;
+
+const compacto = (valor) => {
+  const s = typeof valor === 'string' ? `"${valor}"` : JSON.stringify(valor) ?? String(valor);
+  return s.length > 120 ? `${s.slice(0, 117)}...` : s;
+};
+
+const descreverItem = (item) => {
+  if (typeof item !== 'object' || item === null) return String(item);
+  const onde = item.onde ?? (item.arquivo ? `${item.arquivo}${item.n ? `:${item.n}` : ''}` : null);
+  const linha = item.linha ? String(item.linha).slice(0, 100) : null;
+  if (onde && linha) return `${onde}: ${linha}`;
+  return onde ?? linha ?? compacto(item);
+};
+
 function motivo(erro) {
-  if (!erro) return '';
+  if (!erro) return { texto: '', itens: [] };
   const causa = erro.cause ?? erro;
-  let texto = String(causa?.message ?? causa ?? '');
+  const mensagem = String(causa?.message ?? causa ?? '');
+
+  // Tudo antes do diff que o Node anexa. Numa mensagem própria do teste, o diff
+  // vem depois de uma linha em branco ("...\n\ntrue !== false"), então basta o
+  // primeiro parágrafo.
+  const corpo = causa?.generatedMessage === false ? mensagem.split(/\n\s*\n/)[0] : mensagem;
+  const linhas = [];
+  for (const l of corpo.split('\n').map((x) => x.trim())) {
+    if (l === '+ actual - expected') break;
+    if (l) linhas.push(l);
+  }
+  let texto = linhas.slice(0, 3).join(' ').slice(0, 300);
+
+  const listaEsperadaVazia = Array.isArray(causa?.actual) && Array.isArray(causa?.expected) && causa.expected.length === 0;
+  let itens = [];
+  if (listaEsperadaVazia) {
+    itens = causa.actual.slice(0, MAX_ITENS).map(descreverItem);
+    if (causa.actual.length > MAX_ITENS) itens.push(`... e mais ${causa.actual.length - MAX_ITENS}`);
+    if (causa.generatedMessage) texto = `${plural(causa.actual.length, 'ocorrência encontrada', 'ocorrências encontradas')}:`;
+  } else if (causa?.generatedMessage && 'actual' in causa && 'expected' in causa) {
+    texto = `esperado ${compacto(causa.expected)}, recebido ${compacto(causa.actual)}`;
+  }
+
   if (erro.failureType === 'hookFailed') texto = `a preparação dos testes falhou: ${texto}`;
-  const linhas = texto.split('\n').map((l) => l.trim()).filter(Boolean);
-  // assert.equal sem mensagem própria: "Expected values to be strictly equal:" + o diff.
-  return linhas.slice(0, 3).join(' ').slice(0, 300);
+  return { texto, itens };
 }
+
+const mesmoMotivo = (a, b) => a && b && a.texto === b.texto && a.itens.join('\n') === b.itens.join('\n');
 
 const plural = (n, um, varios) => `${n} ${n === 1 ? um : varios}`;
 const soma = (categorias, campo) => categorias.reduce((total, cat) => total + cat[campo], 0);
@@ -165,7 +209,10 @@ function texto(categorias) {
         linhas.push(`    ${marca[situacao(t)]} ${t.nome}`);
         if (t.ok) continue;
         const m = motivo(t.erro);
-        if (m !== ultimoMotivo) linhas.push(cinza(`        → ${m}`));
+        if (!mesmoMotivo(m, ultimoMotivo)) {
+          linhas.push(cinza(`        → ${m.texto}`));
+          for (const item of m.itens) linhas.push(cinza(`            · ${item}`));
+        }
         ultimoMotivo = m;
       }
     }
@@ -237,8 +284,9 @@ function markdown(categorias) {
         md.push(`**${escapar(semPrefixo(bloco))}**`, '');
         for (const t of ruins) {
           const m = motivo(t.erro);
-          const explicacao = m === ultimoMotivo ? '' : `<br>&nbsp;&nbsp;&nbsp;↳ _${escapar(m)}_`;
+          const explicacao = mesmoMotivo(m, ultimoMotivo) ? '' : `<br>&nbsp;&nbsp;&nbsp;↳ _${escapar(m.texto)}_`;
           md.push(`- ${EMOJI[situacao(t)]} ${escapar(t.nome)}${explicacao}`);
+          if (explicacao) for (const item of m.itens) md.push(`  - \`${item.replace(/`/g, "'")}\``);
           ultimoMotivo = m;
         }
         md.push('');
