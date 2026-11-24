@@ -6,7 +6,7 @@ Esta suíte verifica as quatro falhas trabalhadas na disciplina de ciberseguran�
 | --- | --- | --- |
 | `security/01-idor.test.mjs` | **IDOR** | A Eve faz login na instituição dela e tenta ler, editar e apagar objetos da instituição da Maria só trocando o ID. |
 | `security/02-criptografia-senhas.test.mjs` | **Criptografia/Senhas** | Olha no banco como a senha foi gravada. Também cobre o login sem senha, a política de senha fraca e os segredos versionados no git. |
-| `security/03-injecao.test.mjs` | **Injeção de código** | Manda payloads de SQL injection e XSS para a API e varre o código-fonte atrás de SQL montado com string e de `innerHTML`/`eval`. |
+| `security/03-injecao.test.mjs` | **Injeção de código** | Manda payloads de SQL injection e XSS para a API e varre o código-fonte atrás de SQL montado com string e de HTML cru (`.innerHTML =`, `bypassSecurityTrust`) e `eval`. O binding `[innerHTML]` do Angular é permitido, porque passa pelo sanitizador. |
 | `security/04-bots.test.mjs` | **Bots** | Força bruta no login, enumeração de usuários e cadastro em massa. Espera que a rajada seja barrada com 429, 423 ou 403. |
 
 Os testes são de caixa-preta. Eles sobem o backend de verdade, fazem requisições HTTP de verdade e conferem o resultado direto no PostgreSQL. Nada é simulado com mock.
@@ -31,7 +31,7 @@ As falhas batem com o relatório de auditoria em `docs/security-audit/`:
 | --- | --- | --- | --- |
 | IDOR | 3 | 10 | O backend não tem autenticação (C-01), e por isso qualquer pessoa lê, edita e apaga dados de qualquer instituição (C-03, A-05, A-06, A-07, M-02). A checagem de dono das notas existe, mas confia no `id-account` que o cliente manda. |
 | Criptografia/Senhas | 3 | 11 | Senha em texto puro e sem sal (A-X1), login sem senha via `checkLastSeen` (C-02), senha `123` aceita, `backend/.env` versionado e senha padrão no `application-e2e.yaml` (M-04). |
-| Injeção | 12 | 0 | Todo SQL usa parâmetros nomeados, e o frontend não usa `innerHTML` nem `eval`. |
+| Injeção | 12 | 0 | Todo SQL usa parâmetros nomeados, e o frontend não injeta HTML cru (`.innerHTML =`, `bypassSecurityTrust`) nem usa `eval`. |
 | Bots | 1 | 5 | Não há limite de tentativas, bloqueio de conta nem limite de cadastro, e a API anônima confirma se um login existe. |
 
 ## Pré-requisitos
