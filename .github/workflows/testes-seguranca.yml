@@ -1,9 +1,13 @@
-# Testes de segurança em todo Pull Request.
+# Testes de segurança em todo Pull Request e em todo push na main.
 #
-# Sobe um PostgreSQL efêmero, empacota e liga o backend do próprio PR, e roda a
+# Sobe um PostgreSQL efêmero, empacota e liga o backend do próprio commit, e roda a
 # suíte de tests/ (IDOR, criptografia/senhas, injeção, bots) contra ele. É o
 # mesmo script que roda na máquina de desenvolvimento (tests/rodar.sh), então o
 # que passa aqui passa lá e vice-versa.
+#
+# É um workflow separado do Deploy (deploy.yml) de propósito: no push na main os
+# dois rodam lado a lado, e uma falha aqui deixa este check vermelho sem impedir
+# nem interromper a publicação.
 #
 # Para o PR ficar bloqueado enquanto houver falha de segurança, marque o check
 # "Testes de segurança" como obrigatório na proteção da branch main.
@@ -11,6 +15,8 @@ name: Testes de segurança
 
 on:
   pull_request:
+    branches: [main]
+  push:
     branches: [main]
   workflow_dispatch:
 
