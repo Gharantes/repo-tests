@@ -34,6 +34,11 @@
       (click)="hidePassword.set(!hidePassword())">
       <mat-icon>{{ hidePassword() ? 'visibility' : 'visibility_off' }}</mat-icon>
     </button>
+    @if (connector.form.controls.password.hasError('senhaFraca')) {
+      <mat-error>{{ connector.form.controls.password.getError('senhaFraca') }}</mat-error>
+    } @else {
+      <mat-hint>Pelo menos 8 caracteres, com letras e números.</mat-hint>
+    }
   </mat-form-field>
 
   <button class="auth-primary-button" matRipple [disabled]="!isFormValid() || isSubmitting" (click)="registrarTenant()">Registrar</button>

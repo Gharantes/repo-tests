@@ -1,11 +1,19 @@
 import { Injectable, signal } from "@angular/core";
 
+interface DadosDeLogin {
+  tenant: { id: number, label: string, identifier?: string } | null,
+  user: { id: number, label: string } | null,
+  /** Token da sessão no backend. Vai em `Authorization: Bearer ...` (ver autenticacao.interceptor). */
+  token?: string | null,
+}
+
 @Injectable({
     providedIn: 'root',
 })
 export class SessionService {
     private readonly tenant = signal<{ id: number, label: string, identifier: string } | null>(null);
     private readonly user = signal<{ id: number, label: string } | null>(null);
+    private readonly token = signal<string | null>(null);
     /** Códigos (AuthPermission) do usuário logado. Recarregados a cada login pelo PermissionService. */
     private readonly permissions = signal<ReadonlySet<string>>(new Set());
 
@@ -14,6 +22,12 @@ export class SessionService {
     }
     public setTenant(res: { id: number, label: string, identifier: string }) {
         this.tenant.set(res);
+    }
+    public setToken(token: string | null | undefined) {
+        this.token.set(token ?? null);
+    }
+    public getToken(): string | null {
+        return this.token();
     }
     public setPermissions(codes: string[]) {
         this.permissions.set(new Set(codes));
@@ -24,6 +38,7 @@ export class SessionService {
     public logout() {
       this.tenant.set(null);
       this.user.set(null);
+      this.token.set(null);
       this.permissions.set(new Set());
       localStorage.removeItem('login-data');
     }
@@ -46,21 +61,18 @@ export class SessionService {
     }
 
     public saveSessionOnLocalStorage() {
-      const loginData = JSON.stringify({
+      const loginData: DadosDeLogin = {
         tenant: this.tenant(),
-        user: this.user()
-      })
-      localStorage.setItem('login-data', loginData);
+        user: this.user(),
+        token: this.token(),
+      };
+      localStorage.setItem('login-data', JSON.stringify(loginData));
     }
-    public retrieveSessionFromLocalStorage() {
+    public retrieveSessionFromLocalStorage(): DadosDeLogin | null {
       const storage = localStorage.getItem('login-data')
       if (storage === null) {
         return null
       }
-      const loginData: {
-        tenant: { id: number, label: string, identifier?: string } | null,
-        user: { id: number, label: string } | null
-      } = JSON.parse(storage)
-      return loginData
+      return JSON.parse(storage) as DadosDeLogin
     }
 }

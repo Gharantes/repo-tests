@@ -4,6 +4,7 @@ import br.com.synergia.config.senha.Senhas
 import br.com.synergia.libs.pageLogin.models.LoginInformationInputDto
 import br.com.synergia.libs.pageLogin.models.LoginInformationResponseDto
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
+import br.com.synergia.libs.utilsEntities.jpa.tenant.TenantRepository
 import br.com.synergia.libs.utilsSql.SqlPath
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate
@@ -15,12 +16,12 @@ import java.time.LocalDateTime
 class PageLoginSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val accountRepository: AccountRepository,
+    private val tenantRepository: TenantRepository,
     private val senhas: Senhas,
 ) {
     private class ContaEncontrada(
         val dto: LoginInformationResponseDto,
         val senhaGravada: String,
-        val vistoRecentemente: Boolean,
     )
 
     fun checkLoginInformation(
@@ -41,16 +42,14 @@ class PageLoginSqlService (
                     lastName = rs.getString("last_name"),
                 ),
                 senhaGravada = rs.getString("password"),
-                vistoRecentemente = rs.getBoolean("visto_recentemente"),
             )
         }.firstOrNull()
 
-        // Modo "continuar logado": não confere senha, só se a conta foi vista há
-        // pouco. Comportamento de antes, mantido como estava.
-        if (params.checkLastSeen) {
-            return conta?.takeIf { it.vistoRecentemente }?.dto
-        }
-
+        // O antigo modo "continuar logado" (checkLastSeen) entrava sem senha em
+        // qualquer conta vista nas últimas 12 horas. Agora a sessão é restaurada
+        // pelo token (POST /api/page-login/sessao-atual), e o login sempre exige a
+        // senha: o campo checkLastSeen é ignorado.
+        //
         // Confere mesmo quando a conta não existe, para o tempo de resposta não
         // entregar quais logins existem.
         if (!senhas.confere(params.password, conta?.senhaGravada)) return null
@@ -64,6 +63,19 @@ class PageLoginSqlService (
             }
         }
         return conta.dto
+    }
+    /** Os mesmos dados do login, para a conta de uma sessão já aberta. */
+    fun dadosDaConta(idAccount: Long): LoginInformationResponseDto? {
+        val account = accountRepository.findById(idAccount).orElse(null) ?: return null
+        val tenant = tenantRepository.findById(account.idTenant).orElse(null) ?: return null
+        return LoginInformationResponseDto(
+            idAccount = account.id!!,
+            idTenant = tenant.id!!,
+            login = account.login,
+            tenantTitle = tenant.title,
+            firstName = account.firstName,
+            lastName = account.lastName,
+        )
     }
     fun updateLastSeen(idAccount: Long) {
         accountRepository.findById(idAccount).ifPresent { account ->

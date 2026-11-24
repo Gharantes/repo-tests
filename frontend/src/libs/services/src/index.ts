@@ -10,3 +10,4 @@ export * from './lib/join-request.service';
 export * from './lib/project-events.service';
 export * from './lib/permission.service';
 export * from './lib/entity-changes.service';
+export * from './lib/autenticacao.interceptor';

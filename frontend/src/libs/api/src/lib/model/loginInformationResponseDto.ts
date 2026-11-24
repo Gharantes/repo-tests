@@ -16,5 +16,9 @@ export interface LoginInformationResponseDto {
     tenantTitle: string;
     firstName?: string;
     lastName?: string;
+    /**
+     * Token da sessão aberta pelo login. O frontend manda em `Authorization: Bearer ...`.
+     */
+    token?: string;
 }
 

@@ -22,6 +22,8 @@ import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.HttpMethod
 import org.springframework.jdbc.core.JdbcTemplate
 import org.springframework.http.client.ClientHttpResponse
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import br.com.synergia.config.autenticacao.SessaoService
 import org.springframework.web.client.ResponseErrorHandler
 import org.springframework.web.client.RestTemplate
 import org.springframework.web.util.DefaultUriBuilderFactory
@@ -68,11 +70,30 @@ abstract class IntegrationTestBase {
      * em 4xx/5xx - sem ele, todo teste que afirma sobre status de erro viraria
      * exceção no lugar de asserção.
      */
-    protected val rest: RestTemplate by lazy {
-        RestTemplate().apply {
-            uriTemplateHandler = DefaultUriBuilderFactory("http://localhost:$porta")
-            errorHandler = ResponseErrorHandler { _: ClientHttpResponse -> false }
+    protected val rest: RestTemplate by lazy { novoRestTemplate() }
+
+    @Autowired
+    protected lateinit var sessoes: SessaoService
+
+    /**
+     * Cliente HTTP logado como [idConta]: abre uma sessão de verdade e manda o
+     * token em `Authorization: Bearer ...`, como o frontend faz depois do login.
+     * Necessário nas rotas de AutenticacaoConfig.ROTAS_PROTEGIDAS.
+     */
+    protected fun restComo(idConta: Long): RestTemplate {
+        val idTenant = jdbc.queryForObject("SELECT id_tenant FROM account WHERE id = ?", Long::class.java, idConta)!!
+        val token = sessoes.abrir(idConta, idTenant)
+        return novoRestTemplate().apply {
+            interceptors.add(ClientHttpRequestInterceptor { requisicao, corpo, execucao ->
+                requisicao.headers.setBearerAuth(token)
+                execucao.execute(requisicao, corpo)
+            })
         }
+    }
+
+    private fun novoRestTemplate() = RestTemplate().apply {
+        uriTemplateHandler = DefaultUriBuilderFactory("http://localhost:$porta")
+        errorHandler = ResponseErrorHandler { _: ClientHttpResponse -> false }
     }
 
     @Autowired
@@ -238,6 +259,7 @@ abstract class IntegrationTestBase {
 
     companion object {
         val TABELAS_NA_ORDEM_DE_EXCLUSAO = listOf(
+            "sessao",
             "notification",
             "conversation_message",
             "conversation_read",

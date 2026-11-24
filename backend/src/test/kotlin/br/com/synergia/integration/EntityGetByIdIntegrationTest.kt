@@ -121,7 +121,7 @@ class EntityGetByIdIntegrationTest : IntegrationTestBase() {
             sobrenome = "Souza", email = "ana@fag.edu.br",
         )
 
-        val resposta = rest.getForEntity(
+        val resposta = restComo(idConta).getForEntity(
             "/api/entity-get-by-id/get-account-by-id/$idConta", String::class.java,
         )
 
@@ -139,11 +139,32 @@ class EntityGetByIdIntegrationTest : IntegrationTestBase() {
         val idConta = criarConta(idTenant, login = "ana")
         vincularTagAConta(criarTag(idTenant, "Design", paraContas = true), idConta)
 
-        val conta = rest.getForEntity(
+        val conta = restComo(idConta).getForEntity(
             "/api/entity-get-by-id/get-account-by-id/$idConta?lookup-tags=true", AccountDto::class.java,
         ).body.shouldNotBeNull()
 
         conta.tags.map { it.title } shouldContainExactlyInAnyOrder listOf("Design")
+    }
+
+    @Test
+    fun `detalhes da conta exigem login`() {
+        val idConta = criarConta(criarTenant(), login = "ana")
+
+        rest.getForEntity("/api/entity-get-by-id/get-account-by-id/$idConta", String::class.java)
+            .statusCode shouldBe HttpStatus.UNAUTHORIZED
+    }
+
+    @Test
+    fun `conta de outra instituição responde como se não existisse`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idAna = criarConta(idFag, login = "ana", email = "ana@fag.edu.br")
+        val idBruno = criarConta(idOutra, login = "bruno", email = "bruno@outra.edu.br")
+
+        val resposta = restComo(idAna).getForEntity("/api/entity-get-by-id/get-account-by-id/$idBruno", String::class.java)
+
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
+        (resposta.body ?: "").contains("bruno@outra.edu.br") shouldBe false
     }
 
     @Test

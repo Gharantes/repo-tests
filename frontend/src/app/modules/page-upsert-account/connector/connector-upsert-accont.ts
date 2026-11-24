@@ -2,6 +2,7 @@ import { IAccountModel, ITagModel, IUpsertAccountModel } from '@synergia-fronten
 import { NonNullableFormBuilder, Validators } from '@angular/forms';
 import { inject } from '@angular/core';
 import { SessionService } from '@synergia-frontend/services';
+import { senhaForteValidator } from '@synergia-frontend/utils';
 
 export class ConnectorUpsertAccont {
   private readonly fb = inject(NonNullableFormBuilder);
@@ -11,7 +12,7 @@ export class ConnectorUpsertAccont {
     idTenant: this.fb.control<number>(this.sessionService.getTenantId() as number, [Validators.required]),
     email: this.fb.control<string|undefined>('', [Validators.email]),
     login: this.fb.control<string>('', [Validators.required]),
-    password: this.fb.control<string>(''),
+    password: this.fb.control<string>('', [senhaForteValidator]),
     firstName: this.fb.control<string>('', [Validators.required]),
     lastName: this.fb.control<string>('', [Validators.required]),
     tags: this.fb.control<ITagModel[]>([]),

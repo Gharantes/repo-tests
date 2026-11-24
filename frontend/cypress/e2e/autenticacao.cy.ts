@@ -116,7 +116,7 @@ describe('Sistema: autenticação', () => {
 
       cy.reload();
 
-      // O login guardado no localStorage é revalidado contra a API (checkLastSeen).
+      // O token guardado no localStorage é revalidado contra a API (/api/page-login/sessao-atual).
       cy.location('pathname', { timeout: 20000 }).should('include', '/dashboard');
     });
   });

@@ -1,5 +1,6 @@
 package br.com.synergia.libs.entityAccount.services
 
+import br.com.synergia.config.senha.PoliticaDeSenha
 import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
 import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.entityTag.services.EntityTagService
@@ -23,11 +24,14 @@ class EntityAccountService (
         if (params.password.isNullOrBlank()) {
             throw Exception("Senha inválida.")
         }
+        PoliticaDeSenha.exigir(params.password)
         val idAccount = sqlService.createAccount(params)
         sqlService.createAccountTagRelationship(idAccount, params.tags)
         entityPermissionService.grantDefaultPermissions(idAccount)
     }
     fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
+        // Senha em branco na edição quer dizer "não mexer na senha"; senha nova passa pela política.
+        params.password?.takeIf { it.isNotBlank() }?.let(PoliticaDeSenha::exigir)
         sqlService.updateAccount(idAccount, params)
         sqlService.deleteAccountTagRelationships(idAccount)
         sqlService.createAccountTagRelationship(idAccount, params.tags)

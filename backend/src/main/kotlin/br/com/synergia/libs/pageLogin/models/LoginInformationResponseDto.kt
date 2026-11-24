@@ -6,5 +6,7 @@ data class LoginInformationResponseDto (
     val login: String,
     val tenantTitle: String,
     val firstName: String?,
-    val lastName: String?
+    val lastName: String?,
+    /** Token da sessão aberta pelo login. O frontend manda em `Authorization: Bearer ...`. */
+    val token: String? = null,
 )

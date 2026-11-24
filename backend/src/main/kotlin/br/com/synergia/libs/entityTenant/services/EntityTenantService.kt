@@ -1,5 +1,6 @@
 package br.com.synergia.libs.entityTenant.services
 
+import br.com.synergia.config.senha.PoliticaDeSenha
 import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
@@ -38,6 +39,7 @@ class EntityTenantService (
         if (login.isEmpty()) {
             throw Exception("Informe o login do administrador.")
         }
+        PoliticaDeSenha.exigir(params.password)
         if (getTenantByIdentifier(params.identifier) != null) {
             throw duplicateIdentifier(params.identifier)
         }

@@ -5,6 +5,7 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatIconModule } from '@angular/material/icon';
 import { MatButtonModule } from '@angular/material/button';
 import { MatBadgeModule } from '@angular/material/badge';
+import { PageLoginResourceService } from '@synergia-frontend/api';
 
 @Component({
   selector: 'app-layout-topbar',
@@ -18,6 +19,7 @@ export class LayoutTopbarComponent {
   public readonly notifications = inject(NotificationService);
   public readonly joinRequests = inject(JoinRequestService);
   private readonly messages = inject(MessageService);
+  private readonly pageLoginService = inject(PageLoginResourceService);
   public readonly iconFor = activityIcon;
   public readonly verbFor = activityVerb;
   public readonly relative = (value: string) => formatRelativeTime(value);
@@ -46,6 +48,9 @@ export class LayoutTopbarComponent {
     const identifier = this.sessionService.getTenantIdentifier();
     this.notifications.reset();
     this.messages.reset();
+    // Encerra a sessão no backend (o token deixa de valer) e depois limpa o navegador.
+    // Mesmo que a chamada falhe, o logout local acontece.
+    this.pageLoginService.logout().subscribe({ error: () => undefined });
     this.sessionService.logout();
     this.routingService.goToLogin(identifier);
   }
