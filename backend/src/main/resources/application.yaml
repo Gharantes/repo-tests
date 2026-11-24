@@ -1,5 +1,15 @@
 server:
   port: 8080
+  # Em produção o backend fica atrás do proxy do Render. Com isto, request.remoteAddr
+  # passa a ser o IP do cliente (lido do X-Forwarded-For que o proxy interno manda),
+  # e não o IP do proxy. O limite de cadastro de instituições depende disso.
+  forward-headers-strategy: native
+synergia:
+  # Anti-robô: cada IP cria no máximo `maximo` instituições a cada `janela-minutos`.
+  # 0 desliga (perfil e2e). Ver config/limite/LimiteCadastroInstituicaoConfig.kt.
+  limite-cadastro-instituicao:
+    maximo: ${LIMITE_CADASTRO_INSTITUICAO:10}
+    janela-minutos: 60
 spring:
   application:
     name: synergia

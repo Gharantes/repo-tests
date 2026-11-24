@@ -49,6 +49,8 @@ import org.springframework.web.util.DefaultUriBuilderFactory
         "spring.datasource.password=\${TEST_DB_PASSWORD:MaybeLater}",
         "spring.jpa.hibernate.ddl-auto=update",
         "LIST_TENANT_PAGE_PASSWORD=SenhaListagem",
+        // Os testes criam muitas instituições do mesmo IP; o limite tem teste de unidade próprio.
+        "synergia.limite-cadastro-instituicao.maximo=0",
     ]
 )
 abstract class IntegrationTestBase {

@@ -8,6 +8,10 @@
 # que TEST_DB_* faz nos testes de integração.
 #
 # Uso:  ./gradlew bootRun --args='--spring.profiles.active=e2e'
+synergia:
+  # A suíte do Cypress cria dezenas de instituições pela API, todas do mesmo IP.
+  limite-cadastro-instituicao:
+    maximo: 0
 spring:
   datasource:
     url: ${E2E_DB_URL:jdbc:postgresql://localhost:5432/synergia_e2e}
