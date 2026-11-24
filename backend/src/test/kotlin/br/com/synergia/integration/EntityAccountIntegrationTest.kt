@@ -10,6 +10,8 @@ import io.kotest.matchers.collections.shouldContainExactlyInAnyOrder
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -22,6 +24,8 @@ import org.springframework.http.HttpStatus
  */
 @DisplayName("Integração: contas")
 class EntityAccountIntegrationTest : IntegrationTestBase() {
+
+    private val bcrypt = BCryptPasswordEncoder()
 
     private val store = "/api/entity-account/store"
     private val porTenant = "/api/entity-account/list-accounts-by-tenant"
@@ -175,8 +179,8 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         linha["login"] shouldBe "ana2"
         linha["email"] shouldBe "ana.nova@fag.edu.br"
         linha["first_name"] shouldBe "Ana Maria"
-        // Senha em branco significa "não mexer na senha".
-        linha["password"] shouldBe "SenhaOriginal"
+        // Senha em branco significa "não mexer na senha": o hash continua sendo o da senha original.
+        bcrypt.matches("SenhaOriginal", linha["password"] as String) shouldBe true
     }
 
     @Test
@@ -189,9 +193,12 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
             UpsertAccountDto(idTenant, "ana@fag.edu.br", "ana", "SenhaNova456", "Ana", "Souza"),
         )
 
-        jdbc.queryForObject(
+        val gravada = jdbc.queryForObject(
             "SELECT password FROM account WHERE id = ?", String::class.java, idConta,
-        ) shouldBe "SenhaNova456"
+        )!!
+        // No banco fica o hash bcrypt da senha nova, nunca o texto digitado.
+        gravada shouldNotBe "SenhaNova456"
+        bcrypt.matches("SenhaNova456", gravada) shouldBe true
     }
 
     @Test

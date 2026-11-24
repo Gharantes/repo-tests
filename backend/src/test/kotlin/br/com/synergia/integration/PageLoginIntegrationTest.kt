@@ -7,6 +7,10 @@ import br.com.synergia.libs.pageLogin.models.LoginInformationResponseDto
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import io.kotest.matchers.shouldNotBe
+import br.com.synergia.config.senha.MigracaoSenhasTextoPuro
+import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.boot.DefaultApplicationArguments
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -18,12 +22,15 @@ import java.time.LocalDateTime
  * Cobre `POST /api/page-login/check-login-information` de ponta a ponta: HTTP
  * real -> controller real -> `check-login-information.sql` real -> PostgreSQL
  * real. É o tipo de coisa que teste de unidade não pega, porque o que decide o
- * resultado é o `CASE WHEN` dentro do SQL e o `INNER JOIN` com `tenant`.
+ * resultado é o `INNER JOIN` com `tenant` no SQL e a conferência do hash bcrypt.
  */
 @DisplayName("Integração: página de login")
 class PageLoginIntegrationTest : IntegrationTestBase() {
 
     private val url = "/api/page-login/check-login-information"
+
+    @Autowired
+    private lateinit var migracaoSenhas: MigracaoSenhasTextoPuro
 
     @Test
     fun `credenciais corretas devolvem os dados da conta e do tenant`() {
@@ -146,5 +153,40 @@ class PageLoginIntegrationTest : IntegrationTestBase() {
         )
 
         resposta.body shouldBe null
+    }
+
+    @Test
+    fun `conta antiga com senha em texto puro entra e a senha vira hash no login`() {
+        // Contas de antes do hash. A migração da subida converte todas; esta foi
+        // gravada direto no banco depois dela, como faria um script manual.
+        val idTenant = criarTenant(identifier = "fag", title = "FAG")
+        val idConta = criarConta(idTenant, login = "antiga", senha = "qualquer")
+        jdbc.update("UPDATE account SET password = 'SenhaAntiga123' WHERE id = ?", idConta)
+
+        val resposta = rest.postJson<LoginInformationResponseDto>(
+            url,
+            LoginInformationInputDto(idTenant, "antiga", "SenhaAntiga123", checkLastSeen = false),
+        )
+
+        resposta.body.shouldNotBeNull().idAccount shouldBe idConta
+        val gravada = jdbc.queryForObject("SELECT password FROM account WHERE id = ?", String::class.java, idConta)!!
+        gravada shouldNotBe "SenhaAntiga123"
+        BCryptPasswordEncoder().matches("SenhaAntiga123", gravada) shouldBe true
+    }
+
+    @Test
+    fun `a migração da subida converte as senhas em texto puro e o dono continua entrando`() {
+        val idTenant = criarTenant(identifier = "fag", title = "FAG")
+        val idConta = criarConta(idTenant, login = "antiga", senha = "qualquer")
+        jdbc.update("UPDATE account SET password = 'SenhaAntiga123' WHERE id = ?", idConta)
+
+        migracaoSenhas.run(DefaultApplicationArguments())
+
+        val gravada = jdbc.queryForObject("SELECT password FROM account WHERE id = ?", String::class.java, idConta)!!
+        BCryptPasswordEncoder().matches("SenhaAntiga123", gravada) shouldBe true
+        rest.postJson<LoginInformationResponseDto>(
+            url,
+            LoginInformationInputDto(idTenant, "antiga", "SenhaAntiga123", checkLastSeen = false),
+        ).body.shouldNotBeNull().idAccount shouldBe idConta
     }
 }

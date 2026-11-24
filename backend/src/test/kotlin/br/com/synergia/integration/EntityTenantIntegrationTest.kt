@@ -10,6 +10,8 @@ import br.com.synergia.libs.utilsEntities.models.TenantDto
 import io.kotest.matchers.collections.shouldHaveSize
 import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
+import io.kotest.matchers.shouldNotBe
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
 import org.springframework.http.HttpStatus
@@ -25,6 +27,8 @@ import org.springframework.http.HttpStatus
  */
 @DisplayName("Integração: tenants")
 class EntityTenantIntegrationTest : IntegrationTestBase() {
+
+    private val bcrypt = BCryptPasswordEncoder()
 
     private val store = "/api/entity-tenant/store"
     private val listar = "/api/entity-tenant/list-all-tenants"
@@ -103,7 +107,9 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
         )!!
 
         val admin = jdbc.queryForMap("SELECT * FROM account WHERE id_tenant = ? AND login = 'ADMIN'", idTenant)
-        admin["password"] shouldBe "AdminSenha123"
+        // A senha do ADMIN também vira hash bcrypt.
+        (admin["password"] as String) shouldNotBe "AdminSenha123"
+        bcrypt.matches("AdminSenha123", admin["password"] as String) shouldBe true
         admin["first_name"] shouldBe "System"
         admin["last_name"] shouldBe "Admin"
     }

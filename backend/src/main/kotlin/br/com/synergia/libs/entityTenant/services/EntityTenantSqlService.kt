@@ -1,5 +1,6 @@
 package br.com.synergia.libs.entityTenant.services
 
+import br.com.synergia.config.senha.Senhas
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.jpa.account.Account
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
@@ -17,7 +18,8 @@ import java.sql.Types
 class EntityTenantSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val tenantRepository: TenantRepository,
-    private val accountRepository: AccountRepository
+    private val accountRepository: AccountRepository,
+    private val senhas: Senhas,
 ) {
     fun listAllTenants(text: String?): List<TenantDto> {
         return tenantRepository.findAll().map { it.toDto() }
@@ -36,7 +38,7 @@ class EntityTenantSqlService (
         val account = Account(
             idTenant = idTenant,
             login = login,
-            password = password,
+            password = senhas.gerarHash(password),
             firstName = "System",
             lastName = "Admin",
         )
