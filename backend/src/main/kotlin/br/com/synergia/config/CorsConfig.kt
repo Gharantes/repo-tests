@@ -15,5 +15,8 @@ class CorsConfig : WebMvcConfigurer {
             .allowedOrigins(frontendUrl)
             .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
             .allowedHeaders("*")
+            // Sem isto o navegador esconde estes cabeçalhos do frontend em outra origem,
+            // e a mensagem de erro do x-error (ex.: limite de cadastro) não aparece.
+            .exposedHeaders("x-error", "Retry-After")
     }
 }
