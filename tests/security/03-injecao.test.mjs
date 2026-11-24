@@ -153,7 +153,10 @@ describe('Injeção - análise estática do código-fonte', () => {
   });
 
   it('o frontend não injeta HTML cru nem executa código dinâmico', () => {
-    const PERIGOSO = /\[innerHTML\]|\.innerHTML\s*=|outerHTML|insertAdjacentHTML|bypassSecurityTrust|\beval\(|new Function\(|document\.write/;
+    // O binding [innerHTML] do Angular não entra na lista: ele passa o HTML pelo
+    // sanitizador do Angular (tira scripts, handlers e URLs javascript:). O que
+    // desligaria essa proteção é o bypassSecurityTrust, que continua proibido.
+    const PERIGOSO = /\.innerHTML\s*=|outerHTML|insertAdjacentHTML|bypassSecurityTrust|\beval\(|new Function\(|document\.write/;
 
     const achados = procurar(
       versionados('frontend/src/**').filter((f) => /\.(ts|html)$/.test(f) && !f.endsWith('.spec.ts')),
