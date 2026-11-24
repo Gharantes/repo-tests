@@ -19,17 +19,6 @@ class EntityAccountService (
         }
         return accounts
     }
-    fun getAccountByLoginOrEmail(
-        idTenant: Long,
-        idAccount: Long?,
-        login: String?,
-        email: String?
-    ): Boolean {
-        val res = sqlService.getAccountByLoginOrEmail(idTenant, login, email)
-        if (res == null) return false
-        if (idAccount == null) return true
-        return res.id != idAccount
-    }
     fun createAccount(params: UpsertAccountDto) {
         if (params.password.isNullOrBlank()) {
             throw Exception("Senha inválida.")

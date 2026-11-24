@@ -56,14 +56,6 @@ class EntityAccountSqlService (
         return template.query(sql, paramMap, EntityRowMapper.accountRowMapper)
     }
 
-    fun getAccountByLoginOrEmail(idTenant: Long, login: String?, email: String?): AccountDto? {
-        val sql = SqlPath.PageUpsertAccount.GET_ACCOUNT_BY_LOGIN_OR_EMAIL.load()
-        val paramMap = MapSqlParameterSource()
-            .addValue("id_tenant", idTenant, Types.BIGINT)
-            .addValue("login", login, Types.VARCHAR)
-            .addValue("email", email, Types.VARCHAR)
-        return template.query(sql, paramMap, EntityRowMapper.accountRowMapper).firstOrNull()
-    }
     fun createAccount(params: UpsertAccountDto): Long {
         val account = Account(idTenant = params.idTenant)
         account.login = params.login

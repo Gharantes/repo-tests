@@ -18,7 +18,6 @@ class SqlPathTest : FunSpec({
 
     val todosOsCaminhos: List<ISqlFile> =
         SqlPath.EntityPermission.entries +
-            SqlPath.PageUpsertAccount.entries +
             SqlPath.PageLogin.entries +
             SqlPath.PageListTags.entries +
             SqlPath.EntityEvent.entries +

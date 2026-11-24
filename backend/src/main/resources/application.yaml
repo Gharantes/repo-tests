@@ -10,6 +10,17 @@ synergia:
   limite-cadastro-instituicao:
     maximo: ${LIMITE_CADASTRO_INSTITUICAO:10}
     janela-minutos: 60
+  # Anti-força bruta no login (ver config/limite/ProtecaoForcaBruta.kt). Só senhas
+  # erradas contam: depois de `falhas-por-conta` erros, aquele login trava até a
+  # janela passar; `falhas-por-ip` soma os erros de todos os logins de um IP.
+  limite-login:
+    falhas-por-conta: 5
+    falhas-por-ip: 30
+    janela-minutos: 15
+  # Senha da página de instituições (listar e excluir instituições).
+  limite-senha-instituicoes:
+    falhas-por-ip: 5
+    janela-minutos: 15
 spring:
   application:
     name: synergia
