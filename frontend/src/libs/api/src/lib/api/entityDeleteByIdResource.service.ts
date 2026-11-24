@@ -199,7 +199,7 @@ export class EntityDeleteByIdResourceService {
         }
 
         let localVarPath = `/api/entity-delete-by-id/delete-tag-by-id/${this.configuration.encodeParam({name: "idTag", value: idTag, in: "path", style: "simple", explode: false, dataType: "number", dataFormat: "int64"})}`;
-        return this.httpClient.request<any>('get', `${this.configuration.basePath}${localVarPath}`,
+        return this.httpClient.request<any>('delete', `${this.configuration.basePath}${localVarPath}`,
             {
                 context: localVarHttpContext,
                 responseType: <any>responseType_,

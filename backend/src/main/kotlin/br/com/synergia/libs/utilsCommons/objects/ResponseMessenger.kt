@@ -1,6 +1,7 @@
 package br.com.synergia.libs.utilsCommons.objects
 
 import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
 import java.nio.charset.StandardCharsets
 
@@ -9,6 +10,8 @@ object ResponseMessenger {
         return try {
             function()
             ResponseEntity.ok((null))
+        } catch (e: NaoEncontradoException) {
+            naoEncontrado()
         } catch (e: Exception) {
             e.printStackTrace()
             errorTemplate(truncateForHeader((e.message ?: "Erro desconhecido.")))
@@ -17,11 +20,20 @@ object ResponseMessenger {
     fun <T : Any> buildResponse(function: () -> T?): ResponseEntity<T> {
         return try {
             ResponseEntity.ok(function())
+        } catch (e: NaoEncontradoException) {
+            naoEncontrado()
         } catch (e: Exception) {
             e.printStackTrace()
             errorTemplate(truncateForHeader(e.message ?: "Erro desconhecido."))
         }
     }
+
+    /**
+     * 404 sem detalhes. Serve tanto para "não existe" quanto para "é de outra
+     * instituição": responder igual nos dois casos não confirma que o id existe.
+     */
+    private fun <T : Any> naoEncontrado(): ResponseEntity<T> =
+        ResponseEntity.status(HttpStatus.NOT_FOUND).header("x-error", "Registro não encontrado.").build()
 
     private fun <T : Any> errorTemplate(msg: String, body: T? = null): ResponseEntity<T> {
         val sanitizedMessage = msg.replace("\r", "").replace("\n", "")

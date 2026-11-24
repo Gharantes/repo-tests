@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.autenticacao.usuarioLogado
+import jakarta.servlet.http.HttpServletRequest
 import br.com.synergia.libs.entityEvent.models.UpsertEventDto
 import br.com.synergia.libs.entityEvent.services.EntityEventService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
@@ -51,10 +53,12 @@ class EntityEventResource (
     @PostMapping("update/{id-event}")
     fun updateEvent(
         @PathVariable("id-event") idEvent: Long,
-        @RequestBody params: UpsertEventDto
+        @RequestBody params: UpsertEventDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        val idTenant = usuarioLogado(request).idTenant
         return ResponseMessenger.responseWithoutReturn {
-            service.updateEvent(idEvent, params)
+            service.updateEvent(idEvent, params, idTenant)
         }
     }
 }

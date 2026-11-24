@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.autenticacao.SessaoService
+import br.com.synergia.config.autenticacao.usuarioLogado
 import br.com.synergia.config.limite.ProtecaoSenhaInstituicoes
 import jakarta.servlet.http.HttpServletRequest
 import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
@@ -16,6 +18,7 @@ import org.springframework.web.bind.annotation.*
 class EntityTenantResource (
     private val service: EntityTenantService,
     private val protecaoSenha: ProtecaoSenhaInstituicoes,
+    private val sessoes: SessaoService,
 ) {
     @PostMapping("/list-all-tenants")
     fun listAllTenants(
@@ -54,6 +57,8 @@ class EntityTenantResource (
         }
         return ResponseMessenger.responseWithoutReturn {
             service.deleteTenant(params.idTenant, params.password)
+            // O SQL de exclusão já apagou as sessões; isto tira do cache as que ainda estavam lá.
+            sessoes.esquecerDaInstituicao(params.idTenant)
         }
     }
     @PostMapping("store")
@@ -67,10 +72,12 @@ class EntityTenantResource (
     @PostMapping("update/{id-tenant}")
     fun updateTenant(
         @PathVariable("id-tenant") idTenant: Long,
-        @RequestBody params: UpsertTenantDto
+        @RequestBody params: UpsertTenantDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        val idTenantDaSessao = usuarioLogado(request).idTenant
         return ResponseMessenger.responseWithoutReturn {
-            service.updateTenant(idTenant, params)
+            service.updateTenant(idTenant, params, idTenantDaSessao)
         }
     }
 }

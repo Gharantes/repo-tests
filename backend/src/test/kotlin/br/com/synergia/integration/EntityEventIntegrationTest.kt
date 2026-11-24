@@ -143,7 +143,7 @@ class EntityEventIntegrationTest : IntegrationTestBase() {
         val idEvento = criarEvento(idTenant, "Título Antigo", "Descrição antiga.")
         vincularTagAoEvento(idAntiga, idEvento)
 
-        val resposta = rest.postJson<Void>(
+        val resposta = restComo(idConta).postJson<Void>(
             "/api/entity-event/update/$idEvento",
             UpsertEventDto(idTenant, idConta, "Título Novo", "Descrição nova.", null, tags = listOf(idNova)),
         )

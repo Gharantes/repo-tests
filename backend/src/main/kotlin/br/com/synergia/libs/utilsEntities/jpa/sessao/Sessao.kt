@@ -44,11 +44,22 @@ class Sessao(
 
 @Repository
 interface SessaoRepository : JpaRepository<Sessao, Long> {
-    fun findByTokenHash(tokenHash: String): Sessao?
+    /** A sessão do token, só se a conta dela ainda existir na mesma instituição. Uma consulta só. */
+    @Query(
+        "SELECT s FROM Sessao s WHERE s.tokenHash = :tokenHash AND EXISTS " +
+            "(SELECT 1 FROM Account a WHERE a.id = s.idAccount AND a.idTenant = s.idTenant)"
+    )
+    fun findValida(tokenHash: String): Sessao?
 
     @Modifying
     @Transactional
-    fun deleteByTokenHash(tokenHash: String)
+    @Query("DELETE FROM Sessao s WHERE s.tokenHash = :tokenHash")
+    fun deleteByTokenHash(tokenHash: String): Int
+
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Sessao s WHERE s.idAccount = :idAccount")
+    fun deleteByIdAccount(idAccount: Long): Int
 
     @Modifying
     @Transactional

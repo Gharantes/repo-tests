@@ -2,6 +2,8 @@ package br.com.synergia.libs.entityAccount.services
 
 import br.com.synergia.config.senha.Senhas
 import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
+import br.com.synergia.libs.utilsCommons.objects.NaoEncontradoException
+import br.com.synergia.libs.utilsCommons.objects.exigirMesmaInstituicao
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.account.Account
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
@@ -77,18 +79,19 @@ class EntityAccountSqlService (
     fun deleteAccountTagRelationships(idAccount: Long) {
         accountTagRelationshipRepository.deleteAllByIdAccount(idAccount)
     }
-    fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
-        accountRepository.findById(idAccount).ifPresent { account ->
-            account.email = params.email
-            account.firstName = params.firstName
-            account.lastName = params.lastName
-            account.login = params.login
-            account.updatedAt = LocalDateTime.now()
+    /** Edita a conta, só se ela for da instituição [idTenant] da sessão (a conta já é carregada: a checagem não custa consulta). */
+    fun updateAccount(idAccount: Long, params: UpsertAccountDto, idTenant: Long) {
+        val account = accountRepository.findById(idAccount).orElse(null) ?: throw NaoEncontradoException()
+        exigirMesmaInstituicao(account.idTenant, idTenant)
+        account.email = params.email
+        account.firstName = params.firstName
+        account.lastName = params.lastName
+        account.login = params.login
+        account.updatedAt = LocalDateTime.now()
 
-            if (!params.password.isNullOrBlank()) {
-                account.password = senhas.gerarHash(params.password)
-            }
-            accountRepository.save(account)
+        if (!params.password.isNullOrBlank()) {
+            account.password = senhas.gerarHash(params.password)
         }
+        accountRepository.save(account)
     }
 }

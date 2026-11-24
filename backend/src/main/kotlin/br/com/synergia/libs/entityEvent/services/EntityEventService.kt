@@ -33,8 +33,9 @@ class EntityEventService (
         sqlService.createEventAccountRelationship(idEvent, params.idAccount, membershipLabel = MembershipLabels.EVENT_LEAD)
         sqlService.createEventTagRelationship(idEvent, params.tags)
     }
-    fun updateEvent(idEvent: Long, params: UpsertEventDto) {
-        sqlService.updateEvent(idEvent, params)
+    fun updateEvent(idEvent: Long, params: UpsertEventDto, idTenant: Long) {
+        // Confere a instituição antes de mexer nos vínculos de tag.
+        sqlService.updateEvent(idEvent, params, idTenant)
         sqlService.deleteEventTagRelationshipByIdEvent(idEvent)
         sqlService.createEventTagRelationship(idEvent, params.tags)
     }

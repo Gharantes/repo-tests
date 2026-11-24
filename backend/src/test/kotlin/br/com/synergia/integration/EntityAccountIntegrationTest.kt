@@ -187,7 +187,7 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val idTenant = criarTenant()
         val idConta = criarConta(idTenant, login = "ana", senha = "SenhaOriginal")
 
-        val resposta = rest.postJson<Void>(
+        val resposta = restComo(idConta).postJson<Void>(
             "/api/entity-account/update/$idConta",
             UpsertAccountDto(idTenant, "ana.nova@fag.edu.br", "ana2", "", "Ana Maria", "Souza Lima"),
         )
@@ -207,7 +207,7 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val idTenant = criarTenant()
         val idConta = criarConta(idTenant, login = "ana", senha = "SenhaOriginal")
 
-        rest.postJson<Void>(
+        restComo(idConta).postJson<Void>(
             "/api/entity-account/update/$idConta",
             UpsertAccountDto(idTenant, "ana@fag.edu.br", "ana", "SenhaNova456", "Ana", "Souza"),
         )
@@ -241,9 +241,10 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
     @Test
     fun `excluir conta remove a linha do banco`() {
         val idTenant = criarTenant()
+        val idAdmin = criarConta(idTenant, login = "admin")
         val idConta = criarConta(idTenant, login = "ana")
 
-        val resposta = rest.exchange(
+        val resposta = restComo(idAdmin).exchange(
             "/api/entity-delete-by-id/delete-account/$idConta",
             org.springframework.http.HttpMethod.DELETE,
             null,
@@ -252,5 +253,41 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
 
         resposta.statusCode shouldBe HttpStatus.OK
         contarLinhas("account", "id = ?", idConta) shouldBe 0
+    }
+
+    @Test
+    fun `excluir conta de outra instituição responde 404 e não apaga nada`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idIntrusa = criarConta(idOutra, login = "eve")
+        val idConta = criarConta(idFag, login = "ana")
+
+        val resposta = restComo(idIntrusa).exchange(
+            "/api/entity-delete-by-id/delete-account/$idConta",
+            org.springframework.http.HttpMethod.DELETE,
+            null,
+            Void::class.java,
+        )
+
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
+        contarLinhas("account", "id = ?", idConta) shouldBe 1
+    }
+
+    @Test
+    fun `editar conta de outra instituição responde 404 e não muda nada`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idIntrusa = criarConta(idOutra, login = "eve")
+        val idConta = criarConta(idFag, login = "ana", senha = "SenhaOriginal1")
+
+        val resposta = restComo(idIntrusa).postJson<Void>(
+            "/api/entity-account/update/$idConta",
+            UpsertAccountDto(idFag, "eve@x.test", "ana", "SenhaDaEve123", "Eve", "Invasora"),
+        )
+
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
+        val linha = jdbc.queryForMap("SELECT first_name, password FROM account WHERE id = ?", idConta)
+        linha["first_name"] shouldNotBe "Eve"
+        bcrypt.matches("SenhaOriginal1", linha["password"] as String) shouldBe true
     }
 }
