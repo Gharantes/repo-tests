@@ -47,6 +47,8 @@ dependencies {
 	implementation("tools.jackson.module:jackson-module-kotlin")
 	/** Bancos de Dados **/
 	implementation("org.postgresql:postgresql")
+	/** Hash de senha (bcrypt). Só o módulo de criptografia: não liga os filtros do Spring Security. Versão vem do BOM do Spring Boot. **/
+	implementation("org.springframework.security:spring-security-crypto")
 	/** OPEN API **/
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:3.1.1")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-api:3.1.1")

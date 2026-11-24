@@ -1,5 +1,6 @@
 package br.com.synergia.libs.entityAccount.services
 
+import br.com.synergia.config.senha.Senhas
 import br.com.synergia.libs.entityAccount.models.UpsertAccountDto
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.account.Account
@@ -19,7 +20,8 @@ import java.time.LocalDateTime
 class EntityAccountSqlService (
     private val template: NamedParameterJdbcTemplate,
     private val accountRepository: AccountRepository,
-    private val accountTagRelationshipRepository: AccountTagRelationshipRepository
+    private val accountTagRelationshipRepository: AccountTagRelationshipRepository,
+    private val senhas: Senhas,
 ) {
     fun listAccountsByTenant(idTenant: Long, text: String?, tagIds: List<Long>? = null): List<AccountDto> {
         var sql = SqlPath.PageListAccounts.LIST_ACCOUNTS.load()
@@ -62,7 +64,7 @@ class EntityAccountSqlService (
         account.email = params.email
         account.firstName = params.firstName
         account.lastName = params.lastName
-        account.password = params.password!!
+        account.password = senhas.gerarHash(params.password!!)
         return accountRepository.save(account).id!!
     }
 
@@ -84,7 +86,7 @@ class EntityAccountSqlService (
             account.updatedAt = LocalDateTime.now()
 
             if (!params.password.isNullOrBlank()) {
-                account.password = params.password
+                account.password = senhas.gerarHash(params.password)
             }
             accountRepository.save(account)
         }
