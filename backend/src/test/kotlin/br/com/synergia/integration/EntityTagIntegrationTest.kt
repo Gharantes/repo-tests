@@ -13,6 +13,7 @@ import io.kotest.matchers.nulls.shouldNotBeNull
 import io.kotest.matchers.shouldBe
 import org.junit.jupiter.api.DisplayName
 import org.junit.jupiter.api.Test
+import org.springframework.http.HttpMethod
 import org.springframework.http.HttpStatus
 
 /**
@@ -157,11 +158,40 @@ class EntityTagIntegrationTest : IntegrationTestBase() {
     @Test
     fun `excluir tag remove a linha`() {
         val idTenant = criarTenant()
+        val idConta = criarConta(idTenant, login = "ana")
         val idTag = criarTag(idTenant, "Design")
 
-        val resposta = rest.getForEntity("/api/entity-delete-by-id/delete-tag-by-id/$idTag", Void::class.java)
+        val resposta = restComo(idConta).exchange(
+            "/api/entity-delete-by-id/delete-tag-by-id/$idTag", HttpMethod.DELETE, null, Void::class.java,
+        )
 
         resposta.statusCode shouldBe HttpStatus.OK
         contarLinhas("tags", "id = ?", idTag) shouldBe 0
+    }
+
+    @Test
+    fun `excluir tag de outra instituição responde 404 e não apaga`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idIntrusa = criarConta(idOutra, login = "eve")
+        val idTag = criarTag(idFag, "Design")
+
+        val resposta = restComo(idIntrusa).exchange(
+            "/api/entity-delete-by-id/delete-tag-by-id/$idTag", HttpMethod.DELETE, null, Void::class.java,
+        )
+
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
+        contarLinhas("tags", "id = ?", idTag) shouldBe 1
+    }
+
+    @Test
+    fun `excluir tag por GET não é mais aceito`() {
+        val idTenant = criarTenant()
+        val idConta = criarConta(idTenant, login = "ana")
+        val idTag = criarTag(idTenant, "Design")
+
+        restComo(idConta).getForEntity("/api/entity-delete-by-id/delete-tag-by-id/$idTag", Void::class.java)
+
+        contarLinhas("tags", "id = ?", idTag) shouldBe 1
     }
 }

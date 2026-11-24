@@ -1,6 +1,7 @@
 package br.com.synergia.libs.entityTenant.services
 
 import br.com.synergia.config.senha.PoliticaDeSenha
+import br.com.synergia.libs.utilsCommons.objects.exigirMesmaInstituicao
 import br.com.synergia.libs.entityPermission.services.EntityPermissionService
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
 import br.com.synergia.libs.utilsEntities.models.TenantDto
@@ -55,7 +56,9 @@ class EntityTenantService (
         // O admin é quem distribui as permissões para o resto do tenant.
         entityPermissionService.setUpTenantAdmin(idTenant, idAdmin)
     }
-    fun updateTenant(idTenant: Long, params: UpsertTenantDto) {
+    /** Só a própria instituição da sessão pode ser editada. Comparação de ids: nenhuma consulta. */
+    fun updateTenant(idTenant: Long, params: UpsertTenantDto, idTenantDaSessao: Long) {
+        exigirMesmaInstituicao(idTenant, idTenantDaSessao)
         validateIdentifier(params.identifier)
         sqlService.updateTenant(idTenant, params)
     }

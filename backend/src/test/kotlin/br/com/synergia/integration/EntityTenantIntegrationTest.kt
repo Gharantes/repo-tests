@@ -189,8 +189,9 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     @Test
     fun `atualizar tenant com identifier inválido não altera a linha`() {
         val idTenant = criarTenant(identifier = "fag", title = "FAG")
+        val idAdmin = criarConta(idTenant, login = "ADMIN")
 
-        val resposta = rest.postJson<String>(
+        val resposta = restComo(idAdmin).postJson<String>(
             "/api/entity-tenant/update/$idTenant",
             UpsertTenantDto("FAG", "FAG Cascavel", "ADMIN", "ignorada"),
         )
@@ -215,8 +216,9 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     @Test
     fun `atualizar tenant troca título e identifier`() {
         val idTenant = criarTenant(identifier = "fag", title = "FAG")
+        val idAdmin = criarConta(idTenant, login = "ADMIN")
 
-        val resposta = rest.postJson<Void>(
+        val resposta = restComo(idAdmin).postJson<Void>(
             "/api/entity-tenant/update/$idTenant",
             UpsertTenantDto("FAG Cascavel", "fag-cascavel", "ADMIN", "ignorada"),
         )
@@ -228,14 +230,22 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `atualizar tenant inexistente não cria linha nova`() {
-        val resposta = rest.postJson<Void>(
+    fun `atualizar outra instituição (ou uma inexistente) responde 404 e não muda nada`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idIntrusa = criarConta(idOutra, login = "eve")
+
+        restComo(idIntrusa).postJson<Void>(
             "/api/entity-tenant/update/999999",
             UpsertTenantDto("Fantasma", "fantasma", "ADMIN", "x"),
-        )
+        ).statusCode shouldBe HttpStatus.NOT_FOUND
 
-        // O serviço usa ifPresent: some silenciosamente, sem estourar.
-        resposta.statusCode shouldBe HttpStatus.OK
-        contarLinhas("tenant") shouldBe 0
+        restComo(idIntrusa).postJson<Void>(
+            "/api/entity-tenant/update/$idFag",
+            UpsertTenantDto("Invadida", "invadida", "ADMIN", "x"),
+        ).statusCode shouldBe HttpStatus.NOT_FOUND
+
+        contarLinhas("tenant") shouldBe 2
+        jdbc.queryForObject("SELECT title FROM tenant WHERE id = ?", String::class.java, idFag) shouldBe "FAG"
     }
 }

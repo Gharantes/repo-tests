@@ -2,6 +2,8 @@ package br.com.synergia.libs.entityEvent.services
 
 import br.com.synergia.libs.entityEvent.models.UpsertEventDto
 import br.com.synergia.libs.utilsCommons.enums.ColorsEnum
+import br.com.synergia.libs.utilsCommons.objects.NaoEncontradoException
+import br.com.synergia.libs.utilsCommons.objects.exigirMesmaInstituicao
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.event.Event
 import br.com.synergia.libs.utilsEntities.jpa.event.EventRepository
@@ -99,14 +101,15 @@ class EntityEventSqlService (
         )
     }
 
-    fun updateEvent(idEvent: Long, params: UpsertEventDto) {
-        eventRepository.findById(idEvent).ifPresent { event ->
-            event.title = params.title
-            event.description = params.description
-            event.bannerUrl = params.bannerUrl
-            ColorsEnum.fromHex(params.bannerColor)?.let { event.bannerColor = it.hex }
-            eventRepository.save(event)
-        }
+    /** Edita o evento, só se ele for da instituição [idTenant] da sessão (o evento já é carregado: a checagem não custa consulta). */
+    fun updateEvent(idEvent: Long, params: UpsertEventDto, idTenant: Long) {
+        val event = eventRepository.findById(idEvent).orElse(null) ?: throw NaoEncontradoException()
+        exigirMesmaInstituicao(event.idTenant, idTenant)
+        event.title = params.title
+        event.description = params.description
+        event.bannerUrl = params.bannerUrl
+        ColorsEnum.fromHex(params.bannerColor)?.let { event.bannerColor = it.hex }
+        eventRepository.save(event)
     }
 
     fun deleteEventTagRelationshipByIdEvent(idEvent: Long) {

@@ -14,8 +14,11 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer
  * recebe 401 antes de chegar no controller.
  *
  * Por enquanto a lista cobre as rotas que devolvem dados de contas (e-mail,
- * nome): elas eram as que vazavam para qualquer um. As outras rotas de dados
- * ainda estão abertas e entram aqui conforme forem corrigidas.
+ * nome) e as que editam ou apagam dados por id: eram as que vazavam ou deixavam
+ * mexer nos dados de outra instituição. As outras rotas de dados ainda estão
+ * abertas e entram aqui conforme forem corrigidas.
+ *
+ * Custo: validar a sessão quase nunca vai ao banco (ver o cache em [SessaoService]).
  *
  * Além do login, cada controller ainda confere se o dado pedido é da mesma
  * instituição da sessão (ver [usuarioLogado]): estar logado na instituição A não
@@ -30,8 +33,17 @@ class AutenticacaoConfig(private val sessoes: SessaoService) : WebMvcConfigurer 
 
     companion object {
         val ROTAS_PROTEGIDAS = listOf(
+            // Leitura de dados de contas
             "/api/entity-account/list-accounts-by-tenant",
             "/api/entity-get-by-id/get-account-by-id/**",
+            // Edição e exclusão por id: o controller confere a instituição da sessão
+            "/api/entity-account/update/**",
+            "/api/entity-project/update/**",
+            "/api/entity-event/update/**",
+            "/api/entity-tenant/update/**",
+            "/api/entity-note/delete/**",
+            "/api/entity-delete-by-id/**",
+            // Sessão
             "/api/page-login/sessao-atual",
             "/api/page-login/logout",
         )

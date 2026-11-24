@@ -54,10 +54,12 @@ class EntityAccountResource (
     @PostMapping("update/{id-account}")
     fun updateAccount(
         @PathVariable("id-account") idAccount: Long,
-        @RequestBody params: UpsertAccountDto
+        @RequestBody params: UpsertAccountDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        val idTenant = usuarioLogado(request).idTenant
         return ResponseMessenger.responseWithoutReturn {
-            entityAccountService.updateAccount(idAccount, params)
+            entityAccountService.updateAccount(idAccount, params, idTenant)
         }
     }
 }

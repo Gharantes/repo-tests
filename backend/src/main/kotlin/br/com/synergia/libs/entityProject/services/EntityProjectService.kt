@@ -23,8 +23,9 @@ class EntityProjectService (
         sqlService.createProjectAccountRelationship(params.idAccount, idProject, membershipLabel = MembershipLabels.PROJECT_LEAD)
         sqlService.createProjectTagRelationship(idProject, params.tags)
     }
-    fun updateProject(idProject: Long, params: UpsertProjectDto) {
-        sqlService.updateProject(idProject, params)
+    fun updateProject(idProject: Long, params: UpsertProjectDto, idTenant: Long) {
+        // Confere a instituição antes de mexer nos vínculos de tag.
+        sqlService.updateProject(idProject, params, idTenant)
         sqlService.deleteProjectTagRelationshipByIdProject(idProject)
         sqlService.createProjectTagRelationship(idProject, params.tags)
     }

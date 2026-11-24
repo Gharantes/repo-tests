@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.autenticacao.usuarioLogado
+import jakarta.servlet.http.HttpServletRequest
 import br.com.synergia.libs.entityProject.models.UpsertProjectDto
 import br.com.synergia.libs.entityProject.services.EntityProjectService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
@@ -51,10 +53,12 @@ class EntityProjectResource (
     @PostMapping("update/{id-project}")
     fun updateProject(
         @PathVariable("id-project") idProject: Long,
-        @RequestBody params: UpsertProjectDto
+        @RequestBody params: UpsertProjectDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        val idTenant = usuarioLogado(request).idTenant
         return ResponseMessenger.responseWithoutReturn {
-            service.updateProject(idProject, params)
+            service.updateProject(idProject, params, idTenant)
         }
     }
 }

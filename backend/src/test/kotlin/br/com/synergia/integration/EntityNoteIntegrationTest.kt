@@ -140,7 +140,7 @@ class EntityNoteIntegrationTest : IntegrationTestBase() {
         val idBloco = criarBloco(idTenant, idConta)
         rest.postSemCorpo<Void>("$base/attach/$idBloco?id-account=$idConta&parent-entity=EVENT&parent-id=$idEvento")
 
-        rest.delete("$base/delete/$idBloco?id-account=$idConta")
+        restComo(idConta).delete("$base/delete/$idBloco")
 
         contarLinhas("note") shouldBe 0
         contarLinhas("event_note_relationship") shouldBe 0

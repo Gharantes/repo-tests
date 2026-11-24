@@ -2,6 +2,8 @@ package br.com.synergia.libs.entityProject.services
 
 import br.com.synergia.libs.entityProject.models.UpsertProjectDto
 import br.com.synergia.libs.utilsCommons.enums.ColorsEnum
+import br.com.synergia.libs.utilsCommons.objects.NaoEncontradoException
+import br.com.synergia.libs.utilsCommons.objects.exigirMesmaInstituicao
 import br.com.synergia.libs.utilsCommons.extensions.parseStringToWildCard
 import br.com.synergia.libs.utilsEntities.jpa.project.Project
 import br.com.synergia.libs.utilsEntities.jpa.project.ProjectRepository
@@ -88,8 +90,10 @@ class EntityProjectSqlService (
         projectAccountRelationshipRepository.save(projectAccountRelationship)
     }
 
-    fun updateProject(idProject: Long, params: UpsertProjectDto) {
-        val project = projectRepository.findById(idProject).orElseThrow()
+    /** Edita o projeto, só se ele for da instituição [idTenant] da sessão (o projeto já é carregado: a checagem não custa consulta). */
+    fun updateProject(idProject: Long, params: UpsertProjectDto, idTenant: Long) {
+        val project = projectRepository.findById(idProject).orElse(null) ?: throw NaoEncontradoException()
+        exigirMesmaInstituicao(project.idTenant, idTenant)
         project.title = params.title
         project.description = params.description
         project.bannerUrl = params.bannerUrl

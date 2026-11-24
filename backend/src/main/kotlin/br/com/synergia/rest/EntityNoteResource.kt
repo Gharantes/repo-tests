@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.autenticacao.usuarioLogado
+import jakarta.servlet.http.HttpServletRequest
 import br.com.synergia.libs.entityNote.models.UpsertNoteDto
 import br.com.synergia.libs.entityNote.services.EntityNoteService
 import br.com.synergia.libs.utilsCommons.enums.NoteParentEnum
@@ -68,10 +70,14 @@ class EntityNoteResource (
     @DeleteMapping("delete/{id-note}")
     fun deleteNote(
         @PathVariable("id-note") idNote: Long,
-        @RequestParam("id-account") idAccount: Long
+        // Ignorado: quem apaga é a conta da sessão. Fica aceito só para não quebrar quem ainda manda.
+        @Suppress("UNUSED_PARAMETER") @RequestParam("id-account", required = false) idAccount: Long? = null,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        // O dono vem da sessão, não da URL: antes, mandar o id-account da Maria bastava.
+        val idDaSessao = usuarioLogado(request).idAccount
         return ResponseMessenger.responseWithoutReturn {
-            service.deleteNote(idNote, idAccount)
+            service.deleteNote(idNote, idDaSessao)
         }
     }
 }

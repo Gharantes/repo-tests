@@ -29,10 +29,11 @@ class EntityAccountService (
         sqlService.createAccountTagRelationship(idAccount, params.tags)
         entityPermissionService.grantDefaultPermissions(idAccount)
     }
-    fun updateAccount(idAccount: Long, params: UpsertAccountDto) {
+    fun updateAccount(idAccount: Long, params: UpsertAccountDto, idTenant: Long) {
         // Senha em branco na edição quer dizer "não mexer na senha"; senha nova passa pela política.
         params.password?.takeIf { it.isNotBlank() }?.let(PoliticaDeSenha::exigir)
-        sqlService.updateAccount(idAccount, params)
+        // Confere a instituição antes de mexer nos vínculos de tag.
+        sqlService.updateAccount(idAccount, params, idTenant)
         sqlService.deleteAccountTagRelationships(idAccount)
         sqlService.createAccountTagRelationship(idAccount, params.tags)
     }

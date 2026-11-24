@@ -249,7 +249,7 @@ class EntityProjectIntegrationTest : IntegrationTestBase() {
         vincularTagAoProjeto(idDesign, idProjeto)
         vincularTagAoProjeto(idTi, idProjeto)
 
-        val resposta = rest.postJson<Void>(
+        val resposta = restComo(idAutor).postJson<Void>(
             "/api/entity-project/update/$idProjeto",
             UpsertProjectDto(idTenant, idAutor, "Título Novo", "Descrição nova.", null, tags = listOf(idBio)),
         )
@@ -272,13 +272,41 @@ class EntityProjectIntegrationTest : IntegrationTestBase() {
         val idTenant = criarTenant()
         val idAutor = criarConta(idTenant, login = "autora")
 
-        val resposta = rest.postJson<String>(
+        val resposta = restComo(idAutor).postJson<String>(
             "/api/entity-project/update/999999",
             UpsertProjectDto(idTenant, idAutor, "Fantasma", "Não deveria existir.", null, tags = emptyList()),
         )
 
-        resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
         resposta.headers["x-error"].shouldNotBeNull()
         contarLinhas("project") shouldBe 0
+    }
+
+    @Test
+    fun `editar projeto de outra instituição responde 404 e não muda nada`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idIntrusa = criarConta(idOutra, login = "eve")
+        val idProjeto = criarProjeto(idFag, "Projeto da FAG", "Original.")
+
+        val resposta = restComo(idIntrusa).postJson<String>(
+            "/api/entity-project/update/$idProjeto",
+            UpsertProjectDto(idFag, idIntrusa, "Invadido", "x", null, tags = emptyList()),
+        )
+
+        resposta.statusCode shouldBe HttpStatus.NOT_FOUND
+        jdbc.queryForObject("SELECT title FROM project WHERE id = ?", String::class.java, idProjeto) shouldBe "Projeto da FAG"
+    }
+
+    @Test
+    fun `editar projeto exige login`() {
+        val idTenant = criarTenant()
+        val idAutor = criarConta(idTenant, login = "autora")
+        val idProjeto = criarProjeto(idTenant, "Projeto", "Original.")
+
+        rest.postJson<String>(
+            "/api/entity-project/update/$idProjeto",
+            UpsertProjectDto(idTenant, idAutor, "Invadido", "x", null, tags = emptyList()),
+        ).statusCode shouldBe HttpStatus.UNAUTHORIZED
     }
 }
