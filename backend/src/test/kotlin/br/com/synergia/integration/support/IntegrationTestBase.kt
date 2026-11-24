@@ -41,14 +41,15 @@ import org.springframework.web.util.DefaultUriBuilderFactory
  * O banco usado é o `synergia_test`, separado do `synergia_dev`, para que rodar a
  * suíte nunca apague dados de desenvolvimento. O endereço vem das variáveis
  * TEST_DB_URL / TEST_DB_USERNAME / TEST_DB_PASSWORD, que é como o pipeline de CI
- * aponta para o Postgres dele.
+ * aponta para o Postgres dele. Usuário e senha não têm valor padrão: na máquina de
+ * desenvolvimento, ficam no backend/.env (fora do git, ver .env.example).
  */
 @SpringBootTest(
     webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT,
     properties = [
         "spring.datasource.url=\${TEST_DB_URL:jdbc:postgresql://localhost:5432/synergia_test}",
-        "spring.datasource.username=\${TEST_DB_USERNAME:raindrop}",
-        "spring.datasource.password=\${TEST_DB_PASSWORD:MaybeLater}",
+        "spring.datasource.username=\${TEST_DB_USERNAME}",
+        "spring.datasource.password=\${TEST_DB_PASSWORD}",
         "spring.jpa.hibernate.ddl-auto=update",
         "LIST_TENANT_PAGE_PASSWORD=SenhaListagem",
         // Os testes criam muitas instituições do mesmo IP; o limite tem teste de unidade próprio.
