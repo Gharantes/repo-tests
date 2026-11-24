@@ -91,9 +91,11 @@ bash tests/rodar.sh test:bots
 
 O pipeline antigo da atividade de DevOps foi movido para `.github/workflows-backup-1/`. Fora de `.github/workflows/`, ele não roda mais. Os dois workflows novos são:
 
-### `testes-seguranca.yml`: testes no Pull Request
+### `testes-seguranca.yml`: testes no Pull Request e na `main`
 
-Roda em todo PR para a `main`, e também manualmente pela aba Actions. Ele sobe um PostgreSQL efêmero, empacota o backend do PR e executa `bash tests/rodar.sh test:ci`, o mesmo script da máquina local.
+Roda em todo PR para a `main`, em todo push na `main` e também manualmente pela aba Actions. Ele sobe um PostgreSQL efêmero, empacota o backend do commit e executa `bash tests/rodar.sh test:ci`, o mesmo script da máquina local.
+
+No push na `main`, ele roda ao lado do `deploy.yml`, como um workflow independente. Se algum teste de segurança falhar, o check fica vermelho, mas o deploy segue normalmente.
 
 O relatório JUnit e o log do backend ficam nos artefatos do job.
 
