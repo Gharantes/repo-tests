@@ -88,11 +88,10 @@ tasks.withType<Test> {
 		showStandardStreams = false
 	}
 
-	// Aponta o banco de testes. Os valores padrão servem para a máquina de
-	// desenvolvimento; no CI as mesmas variáveis vêm do serviço de Postgres.
+	// Aponta o banco de testes. Só o endereço tem padrão; usuário e senha
+	// (TEST_DB_USERNAME / TEST_DB_PASSWORD) vêm do ambiente ou do backend/.env,
+	// nunca de um valor escrito aqui. No CI eles vêm do serviço de Postgres.
 	environment("TEST_DB_URL", System.getenv("TEST_DB_URL") ?: "jdbc:postgresql://localhost:5432/synergia_test")
-	environment("TEST_DB_USERNAME", System.getenv("TEST_DB_USERNAME") ?: "raindrop")
-	environment("TEST_DB_PASSWORD", System.getenv("TEST_DB_PASSWORD") ?: "MaybeLater")
 
 	afterSuite(KotlinClosure2<TestDescriptor, TestResult, Unit>({ desc, result ->
 		if (desc.parent == null) {
