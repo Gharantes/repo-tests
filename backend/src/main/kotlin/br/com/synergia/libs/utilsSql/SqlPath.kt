@@ -5,9 +5,6 @@ object SqlPath {
         LIST_PERMISSIONS_OF_ACCOUNT("/sql/entity-permission/list-permissions-of-account.sql"),
         UPSERT_PERMISSION("/sql/entity-permission/upsert-permission.sql"),
     }
-    enum class PageUpsertAccount (override val path: String) : ISqlFile {
-        GET_ACCOUNT_BY_LOGIN_OR_EMAIL("/sql/page-upsert-account/get-account-by-login-or-email.sql"),
-    }
     enum class PageLogin (override val path: String) : ISqlFile {
         CHECK_LOGIN_INFORMATION("/sql/page-login/check-login-information.sql"),
     }

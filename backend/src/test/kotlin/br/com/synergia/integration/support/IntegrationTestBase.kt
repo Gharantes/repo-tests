@@ -51,6 +51,9 @@ import org.springframework.web.util.DefaultUriBuilderFactory
         "LIST_TENANT_PAGE_PASSWORD=SenhaListagem",
         // Os testes criam muitas instituições do mesmo IP; o limite tem teste de unidade próprio.
         "synergia.limite-cadastro-instituicao.maximo=0",
+        "synergia.limite-login.falhas-por-conta=0",
+        "synergia.limite-login.falhas-por-ip=0",
+        "synergia.limite-senha-instituicoes.falhas-por-ip=0",
     ]
 )
 abstract class IntegrationTestBase {

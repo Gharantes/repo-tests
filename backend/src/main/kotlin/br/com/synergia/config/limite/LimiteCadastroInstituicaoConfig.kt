@@ -53,7 +53,7 @@ class LimiteInterceptor(private val limitador: LimitadorDeTaxa) : HandlerInterce
             LimitadorDeTaxa.Resultado.Permitido -> true
             is LimitadorDeTaxa.Resultado.Barrado -> {
                 val segundos = resultado.tenteDeNovoEm.toSeconds()
-                val minutos = (segundos + 59) / 60
+                val minutos = minutosDeEspera(resultado.tenteDeNovoEm)
                 response.status = HttpStatus.TOO_MANY_REQUESTS.value()
                 response.setHeader(HttpHeaders.RETRY_AFTER, segundos.toString())
                 // Mesmo cabeçalho que o ResponseMessenger usa: o frontend mostra este texto.

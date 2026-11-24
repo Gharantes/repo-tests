@@ -25,7 +25,6 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
 
     private val store = "/api/entity-account/store"
     private val porTenant = "/api/entity-account/list-accounts-by-tenant"
-    private val loginOuEmail = "/api/entity-account/get-account-by-login-or-email"
 
     @Test
     fun `criar conta grava a linha com todos os campos`() {
@@ -158,71 +157,6 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val lista = rest.postForList<AccountDto>("$porTenant?id-tenant=$idTenant")
 
         lista.body.shouldNotBeNull()[0].tags.shouldBeEmpty()
-    }
-
-    @Test
-    fun `login já usado no tenant é reportado como indisponível`() {
-        val idTenant = criarTenant()
-        criarConta(idTenant, login = "ana", email = "ana@fag.edu.br")
-
-        val resposta = rest.getForEntity(
-            "$loginOuEmail?id-tenant=$idTenant&login=ana&email=naoexiste@fag.edu.br", Boolean::class.java,
-        )
-
-        resposta.statusCode shouldBe HttpStatus.OK
-        resposta.body shouldBe true
-    }
-
-    @Test
-    fun `email já usado no tenant é reportado como indisponível`() {
-        val idTenant = criarTenant()
-        criarConta(idTenant, login = "ana", email = "ana@fag.edu.br")
-
-        val resposta = rest.getForEntity(
-            "$loginOuEmail?id-tenant=$idTenant&login=outroLogin&email=ana@fag.edu.br", Boolean::class.java,
-        )
-
-        resposta.body shouldBe true
-    }
-
-    @Test
-    fun `login livre é reportado como disponível`() {
-        val idTenant = criarTenant()
-        criarConta(idTenant, login = "ana", email = "ana@fag.edu.br")
-
-        val resposta = rest.getForEntity(
-            "$loginOuEmail?id-tenant=$idTenant&login=novoLogin&email=novo@fag.edu.br", Boolean::class.java,
-        )
-
-        resposta.body shouldBe false
-    }
-
-    @Test
-    fun `a própria conta não conta como conflito ao editar`() {
-        // Ao salvar a edição do próprio perfil, o login continua o mesmo e isso
-        // não pode ser tratado como "já em uso".
-        val idTenant = criarTenant()
-        val idConta = criarConta(idTenant, login = "ana", email = "ana@fag.edu.br")
-
-        val resposta = rest.getForEntity(
-            "$loginOuEmail?id-tenant=$idTenant&id-account=$idConta&login=ana&email=ana@fag.edu.br",
-            Boolean::class.java,
-        )
-
-        resposta.body shouldBe false
-    }
-
-    @Test
-    fun `o mesmo login em outra instituição não é conflito`() {
-        val idFag = criarTenant(identifier = "fag", title = "FAG")
-        val idOutra = criarTenant(identifier = "outra", title = "Outra")
-        criarConta(idFag, login = "ana", email = "ana@fag.edu.br")
-
-        val resposta = rest.getForEntity(
-            "$loginOuEmail?id-tenant=$idOutra&login=ana&email=ana@outra.edu.br", Boolean::class.java,
-        )
-
-        resposta.body shouldBe false
     }
 
     @Test

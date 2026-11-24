@@ -29,7 +29,27 @@ class LimitadorDeTaxa(
     private val tentativas = ConcurrentHashMap<String, ArrayDeque<Long>>()
 
     /** Registra uma tentativa de [chave] e diz se ela pode seguir. Tentativa barrada não conta. */
-    fun tentar(chave: String): Resultado {
+    fun tentar(chave: String): Resultado = verificarERegistrar(chave, registrar = true)
+
+    /**
+     * Só consulta: [chave] já estourou o limite? Para quando só as tentativas que
+     * falham contam (login, senha), e o registro vem depois, com [registrar].
+     */
+    fun verificar(chave: String): Resultado = verificarERegistrar(chave, registrar = false)
+
+    /** Conta uma tentativa de [chave] sem perguntar nada (ex.: uma senha errada). */
+    fun registrar(chave: String) {
+        if (!ligado) return
+        val fila = tentativas.computeIfAbsent(chave) { ArrayDeque() }
+        synchronized(fila) { fila.addLast(agora()) }
+    }
+
+    /** Esquece as tentativas de [chave] (ex.: o dono acertou a senha). */
+    fun zerar(chave: String) {
+        tentativas.remove(chave)
+    }
+
+    private fun verificarERegistrar(chave: String, registrar: Boolean): Resultado {
         if (!ligado) return Resultado.Permitido
 
         val agora = agora()
@@ -44,7 +64,7 @@ class LimitadorDeTaxa(
                 val espera = fila.peekFirst() + janela.toMillis() - agora
                 return Resultado.Barrado(Duration.ofMillis(espera.coerceAtLeast(1_000)))
             }
-            fila.addLast(agora)
+            if (registrar) fila.addLast(agora)
             return Resultado.Permitido
         }
     }

@@ -33,17 +33,6 @@ class EntityAccountResource (
             entityAccountService.listAccountsByEvent(idEvent, text)
         }
     }
-    @GetMapping("get-account-by-login-or-email")
-    fun getAccountByLoginOrEmail(
-        @RequestParam("id-tenant") idTenant: Long,
-        @RequestParam("id-account", required = false) idAccount: Long?,
-        @RequestParam("login", required = false) login: String? = null,
-        @RequestParam("email", required = false) email: String? = null
-    ): ResponseEntity<Boolean> {
-        return ResponseMessenger.buildResponse {
-            entityAccountService.getAccountByLoginOrEmail(idTenant, idAccount, login, email)
-        }
-    }
     @PostMapping("store")
     fun createAccount(
         @RequestBody params: UpsertAccountDto

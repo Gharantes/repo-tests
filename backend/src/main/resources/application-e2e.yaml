@@ -12,6 +12,12 @@ synergia:
   # A suíte do Cypress cria dezenas de instituições pela API, todas do mesmo IP.
   limite-cadastro-instituicao:
     maximo: 0
+  # E também erra senha de propósito em vários testes, todos do mesmo IP.
+  limite-login:
+    falhas-por-conta: 0
+    falhas-por-ip: 0
+  limite-senha-instituicoes:
+    falhas-por-ip: 0
 spring:
   datasource:
     url: ${E2E_DB_URL:jdbc:postgresql://localhost:5432/synergia_e2e}

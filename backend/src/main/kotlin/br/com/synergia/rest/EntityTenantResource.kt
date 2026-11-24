@@ -1,5 +1,7 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.limite.ProtecaoSenhaInstituicoes
+import jakarta.servlet.http.HttpServletRequest
 import br.com.synergia.libs.entityTenant.models.CheckListTenantsPasswordDto
 import br.com.synergia.libs.entityTenant.models.DeleteTenantDto
 import br.com.synergia.libs.entityTenant.models.UpsertTenantDto
@@ -12,7 +14,8 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/api/entity-tenant")
 class EntityTenantResource (
-    private val service: EntityTenantService
+    private val service: EntityTenantService,
+    private val protecaoSenha: ProtecaoSenhaInstituicoes,
 ) {
     @PostMapping("/list-all-tenants")
     fun listAllTenants(
@@ -24,16 +27,31 @@ class EntityTenantResource (
     }
     @PostMapping("check-list-tenants-password")
     fun checkListTenantsPassword(
-        @RequestBody params: CheckListTenantsPasswordDto
+        @RequestBody params: CheckListTenantsPasswordDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Boolean> {
-        return ResponseMessenger.buildResponse {
+        val ip = request.remoteAddr ?: "desconhecido"
+        protecaoSenha.barrar<Boolean>(ip)?.let { return it }
+
+        val resposta = ResponseMessenger.buildResponse {
             service.checkListTenantsPassword(params.password)
         }
+        if (resposta.body == true) protecaoSenha.registrarSucesso(ip) else protecaoSenha.registrarFalha(ip)
+        return resposta
     }
     @PostMapping("delete")
     fun deleteTenant(
-        @RequestBody params: DeleteTenantDto
+        @RequestBody params: DeleteTenantDto,
+        request: HttpServletRequest,
     ): ResponseEntity<Void> {
+        // Usa a mesma senha da página de instituições: sem o limite aqui, o robô
+        // trocaria de rota para continuar chutando.
+        val ip = request.remoteAddr ?: "desconhecido"
+        protecaoSenha.barrar<Void>(ip)?.let { return it }
+
+        if (!service.checkListTenantsPassword(params.password)) {
+            protecaoSenha.registrarFalha(ip)
+        }
         return ResponseMessenger.responseWithoutReturn {
             service.deleteTenant(params.idTenant, params.password)
         }
