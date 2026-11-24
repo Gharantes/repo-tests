@@ -136,6 +136,17 @@ declare global {
 
 const api = () => Cypress.env('apiUrl') as string;
 
+/**
+ * Token da sessão do ADMIN de cada instituição criada pelo `criarInstituicao`.
+ * As rotas protegidas do backend (ex.: listar contas) exigem login; os atalhos de
+ * API abaixo usam este token, sem precisar mudar quem os chama.
+ */
+const tokenPorTenant = new Map<number, string>();
+const comToken = (idTenant: number) => {
+  const token = tokenPorTenant.get(idTenant);
+  return token ? { Authorization: `Bearer ${token}` } : {};
+};
+
 /** Sufixo único por execução, para que rodadas repetidas não colidam. */
 const sufixo = () => `${Date.now()}${Math.floor(Math.random() * 1000)}`;
 
@@ -160,15 +171,22 @@ Cypress.Commands.add('criarInstituicao', (senhaAdmin = 'AdminE2E123') => {
             (t) => t.identifier === identifier
           );
           expect(tenant, `tenant ${identifier} deve existir no banco`).to.not.be.undefined;
-          return cy.wrap<InstituicaoDeTeste>(
-            {
-              idTenant: (tenant as { id: number }).id,
-              identifier,
-              title,
-              senhaAdmin,
-            },
-            { log: false }
-          );
+          const idTenant = (tenant as { id: number }).id;
+          // Login do ADMIN pela API, para os atalhos que batem em rota protegida.
+          return cy
+            .request('POST', `${api()}/api/page-login/check-login-information`, {
+              idTenant,
+              login: 'ADMIN',
+              password: senhaAdmin,
+              checkLastSeen: false,
+            })
+            .then((login) => {
+              tokenPorTenant.set(idTenant, (login.body as { token: string }).token);
+              return cy.wrap<InstituicaoDeTeste>(
+                { idTenant, identifier, title, senhaAdmin },
+                { log: false }
+              );
+            });
         });
     });
 });
@@ -317,7 +335,7 @@ Cypress.Commands.add('listarContasPelaApi', (idTenant: number, texto?: string) =
     `${api()}/api/entity-account/list-accounts-by-tenant?id-tenant=${idTenant}&lookup-tags=true` +
     (texto ? `&text=${encodeURIComponent(texto)}` : '');
   return cy
-    .request('POST', url)
+    .request({ method: 'POST', url, headers: comToken(idTenant) })
     .then((r) =>
       cy.wrap(
         r.body as Array<{ id: number; login: string; firstName: string; lastName: string }>,

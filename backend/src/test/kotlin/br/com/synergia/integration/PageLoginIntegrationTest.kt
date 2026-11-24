@@ -2,6 +2,10 @@ package br.com.synergia.integration
 
 import br.com.synergia.integration.support.IntegrationTestBase
 import br.com.synergia.integration.support.postJson
+import br.com.synergia.integration.support.postSemCorpo
+import org.springframework.http.HttpEntity
+import org.springframework.http.HttpHeaders
+import org.springframework.http.HttpMethod
 import br.com.synergia.libs.pageLogin.models.LoginInformationInputDto
 import br.com.synergia.libs.pageLogin.models.LoginInformationResponseDto
 import io.kotest.matchers.nulls.shouldNotBeNull
@@ -125,34 +129,50 @@ class PageLoginIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
-    fun `sessao recente é aceita quando checkLastSeen está ligado, mesmo sem senha`() {
-        // Este é o modo "continuar logado": o SQL ignora a senha e olha se o
-        // last_seen tem menos de 12 horas.
+    fun `checkLastSeen não abre mais a conta sem a senha`() {
+        // Era o antigo "continuar logado": bastava a conta ter sido vista nas
+        // últimas 12 horas. Agora a sessão volta pelo token, e o login sempre
+        // exige a senha.
         val idTenant = criarTenant()
         val idConta = criarConta(idTenant, login = "gharantes", senha = "SenhaCorreta123")
         jdbc.update("UPDATE account SET last_seen = ? WHERE id = ?", LocalDateTime.now().minusHours(1), idConta)
 
         val resposta = rest.postJson<LoginInformationResponseDto>(
             url,
-            LoginInformationInputDto(idTenant, "gharantes", "senha-irrelevante", checkLastSeen = true),
-        )
-
-        resposta.body.shouldNotBeNull().idAccount shouldBe idConta
-    }
-
-    @Test
-    fun `sessao vencida é recusada quando checkLastSeen está ligado`() {
-        val idTenant = criarTenant()
-        val idConta = criarConta(idTenant, login = "gharantes", senha = "SenhaCorreta123")
-        // 13 horas: passou da janela de 12 horas escrita no SQL.
-        jdbc.update("UPDATE account SET last_seen = ? WHERE id = ?", LocalDateTime.now().minusHours(13), idConta)
-
-        val resposta = rest.postJson<LoginInformationResponseDto>(
-            url,
-            LoginInformationInputDto(idTenant, "gharantes", "SenhaCorreta123", checkLastSeen = true),
+            LoginInformationInputDto(idTenant, "gharantes", "", checkLastSeen = true),
         )
 
         resposta.body shouldBe null
+    }
+
+    @Test
+    fun `login certo devolve um token, e o token restaura a sessão até o logout`() {
+        val idTenant = criarTenant(identifier = "fag", title = "FAG")
+        val idConta = criarConta(idTenant, login = "gharantes", senha = "SenhaCorreta123")
+
+        val token = rest.postJson<LoginInformationResponseDto>(
+            url,
+            LoginInformationInputDto(idTenant, "gharantes", "SenhaCorreta123", checkLastSeen = false),
+        ).body.shouldNotBeNull().token.shouldNotBeNull()
+
+        val comToken = HttpHeaders().apply { setBearerAuth(token) }
+        val sessao = rest.exchange(
+            "/api/page-login/sessao-atual", HttpMethod.POST, HttpEntity<Void>(comToken), LoginInformationResponseDto::class.java,
+        )
+        sessao.statusCode shouldBe HttpStatus.OK
+        sessao.body.shouldNotBeNull().idAccount shouldBe idConta
+        sessao.body!!.tenantTitle shouldBe "FAG"
+
+        rest.exchange("/api/page-login/logout", HttpMethod.POST, HttpEntity<Void>(comToken), Void::class.java)
+
+        rest.exchange(
+            "/api/page-login/sessao-atual", HttpMethod.POST, HttpEntity<Void>(comToken), LoginInformationResponseDto::class.java,
+        ).statusCode shouldBe HttpStatus.UNAUTHORIZED
+    }
+
+    @Test
+    fun `sessão atual sem token é recusada`() {
+        rest.postSemCorpo<LoginInformationResponseDto>("/api/page-login/sessao-atual").statusCode shouldBe HttpStatus.UNAUTHORIZED
     }
 
     @Test

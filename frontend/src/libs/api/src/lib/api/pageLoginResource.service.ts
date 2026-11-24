@@ -165,4 +165,31 @@ export class PageLoginResourceService {
         );
     }
 
+    /**
+     * Encerra a sessão do token enviado no cabeçalho Authorization.
+     */
+    public logout(options?: {context?: HttpContext}): Observable<any> {
+        return this.httpClient.request('post', `${this.configuration.basePath}/api/page-login/logout`,
+            {
+                context: options?.context ?? new HttpContext(),
+                withCredentials: this.configuration.withCredentials,
+                headers: this.defaultHeaders,
+            }
+        );
+    }
+
+    /**
+     * A conta da sessão do token enviado no cabeçalho Authorization (restaura o login ao recarregar).
+     */
+    public sessaoAtual(options?: {context?: HttpContext}): Observable<LoginInformationResponseDto> {
+        return this.httpClient.request<LoginInformationResponseDto>('post', `${this.configuration.basePath}/api/page-login/sessao-atual`,
+            {
+                context: options?.context ?? new HttpContext(),
+                responseType: 'json',
+                withCredentials: this.configuration.withCredentials,
+                headers: this.defaultHeaders.set('Accept', 'application/json'),
+            }
+        );
+    }
+
 }

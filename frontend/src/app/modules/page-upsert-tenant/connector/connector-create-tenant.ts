@@ -1,5 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { AbstractControl, NonNullableFormBuilder, ValidationErrors, Validators } from '@angular/forms';
+import { senhaForteValidator } from '@synergia-frontend/utils';
 
 /** Mesmo formato validado no backend (EntityTenantService): vira o primeiro segmento da URL. */
 const IDENTIFIER_PATTERN = /^[a-z0-9]+(-[a-z0-9]+)*$/;
@@ -20,6 +21,6 @@ export class ConnectorCreateTenant {
     title: this.fb.control('', [Validators.required]),
     identifier: this.fb.control('', [Validators.required, identifierValidator]),
     login: this.fb.control('', [Validators.required, Validators.pattern(/\S/)]),
-    password: this.fb.control('', [Validators.required]),
+    password: this.fb.control('', [Validators.required, senhaForteValidator]),
   });
 }

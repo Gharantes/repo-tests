@@ -94,18 +94,23 @@ export class RouteLoginComponent {
     );
   }
 
-  /** Reaproveita a sessão guardada só se ela for do tenant da URL. */
+  /**
+   * Reaproveita a sessão guardada só se ela for do tenant da URL. Quem confirma
+   * que ela ainda vale é o backend, pelo token: sem token válido, volta ao login.
+   */
   private useStorage(tenant: ITenantModel): Observable<LoginInformationResponseDto | null> {
     const login = this.sessionService.retrieveSessionFromLocalStorage();
-    if (login == null || login.tenant?.identifier !== tenant.identifier) {
+    if (login == null || login.tenant?.identifier !== tenant.identifier || !login.token) {
       return of(null);
     }
-    return this.pageService.checkLoginInformation({
-      idTenant: tenant.id,
-      login: login.user?.label ?? '',
-      password: '',
-      checkLastSeen: true,
-    });
+    this.sessionService.setToken(login.token);
+    return this.pageService.sessaoAtual().pipe(
+      catchError(() => {
+        // Sessão vencida ou encerrada: limpa o que estava guardado e mostra o formulário.
+        this.sessionService.logout();
+        return of(null);
+      })
+    );
   }
   private useForm(): Observable<LoginInformationResponseDto | null> {
     const value = this.connector.getFormValue();
@@ -146,6 +151,7 @@ export class RouteLoginComponent {
             id: res.idAccount,
             label: res.login,
           });
+          this.sessionService.setToken(res.token);
           this.sessionService.saveSessionOnLocalStorage();
         }),
         // As telas e as rotas conferem as permissões; elas precisam estar carregadas antes de entrar.

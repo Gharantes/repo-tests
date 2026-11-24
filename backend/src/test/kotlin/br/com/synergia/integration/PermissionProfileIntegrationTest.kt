@@ -159,7 +159,7 @@ class PermissionProfileIntegrationTest : IntegrationTestBase() {
     fun `o admin de tenant novo fica com o perfil Administrador`() {
         rest.postJson<Void>(
             "/api/entity-tenant/store",
-            br.com.synergia.libs.entityTenant.models.UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "senha"),
+            br.com.synergia.libs.entityTenant.models.UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "SenhaForte1"),
         ).statusCode shouldBe HttpStatus.OK
         val idTenant = jdbc.queryForObject("SELECT id FROM tenant WHERE identifier = 'fag'", Long::class.java)!!
         val idAdmin = jdbc.queryForObject("SELECT id FROM account WHERE login = 'ADMIN'", Long::class.java)!!

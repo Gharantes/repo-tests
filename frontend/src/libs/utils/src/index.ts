@@ -12,3 +12,4 @@ export * from './lib/to-local-date';
 export * from './lib/display-type';
 export * from './lib/get-random-color';
 export * from './lib/banner-colors';
+export * from './lib/politica-de-senha';

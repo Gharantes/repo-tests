@@ -138,11 +138,11 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `identifier repetido é recusado e não cria tenant nem admin duplicado`() {
-        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "ADMIN", "Senha1"))
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "ADMIN", "SenhaForte1"))
 
         val segunda = rest.postJson<String>(
             store,
-            UpsertTenantDto("Outra Faculdade", "fag", "ADMIN", "Senha2"),
+            UpsertTenantDto("Outra Faculdade", "fag", "ADMIN", "SenhaForte2"),
         )
 
         segunda.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -158,7 +158,7 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
         listOf("FAG", "fag cascavel", "fág", "a/b", "-fag", "fag-").forEach { identifier ->
             val resposta = rest.postJson<String>(
                 store,
-                UpsertTenantDto("FAG", identifier, "ADMIN", "Senha1"),
+                UpsertTenantDto("FAG", identifier, "ADMIN", "SenhaForte1"),
             )
 
             resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
@@ -171,14 +171,14 @@ class EntityTenantIntegrationTest : IntegrationTestBase() {
 
     @Test
     fun `a primeira conta usa o login informado`() {
-        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "  coordenacao  ", "Senha1"))
+        rest.postJson<Void>(store, UpsertTenantDto("FAG", "fag", "  coordenacao  ", "SenhaForte1"))
 
         jdbc.queryForList("SELECT login FROM account", String::class.java) shouldBe listOf("coordenacao")
     }
 
     @Test
     fun `login do administrador em branco é recusado`() {
-        val resposta = rest.postJson<String>(store, UpsertTenantDto("FAG", "fag", "   ", "Senha1"))
+        val resposta = rest.postJson<String>(store, UpsertTenantDto("FAG", "fag", "   ", "SenhaForte1"))
 
         resposta.statusCode shouldBe HttpStatus.INTERNAL_SERVER_ERROR
         resposta.headers.getFirst("x-error") shouldBe "Informe o login do administrador."

@@ -45,7 +45,13 @@
         <button mat-icon-button matSuffix type="button" (click)="showPassword = !showPassword" [attr.aria-label]="showPassword ? 'Esconder senha' : 'Mostrar senha'">
           <mat-icon>{{ showPassword ? 'visibility_off' : 'visibility' }}</mat-icon>
         </button>
-        @if (editing) { <mat-hint>Deixe em branco para manter a senha atual.</mat-hint> }
+        @if (c.password.hasError('senhaFraca')) {
+          <mat-error>{{ c.password.getError('senhaFraca') }}</mat-error>
+        } @else if (editing) {
+          <mat-hint>Deixe em branco para manter a senha atual.</mat-hint>
+        } @else {
+          <mat-hint>Pelo menos 8 caracteres, com letras e números.</mat-hint>
+        }
       </mat-form-field>
       @if (c.password.value) {
         <div class="strength">

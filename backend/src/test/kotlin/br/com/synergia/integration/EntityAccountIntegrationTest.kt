@@ -107,10 +107,10 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
     fun `listar contas do tenant não vaza contas de outra instituição`() {
         val idFag = criarTenant(identifier = "fag", title = "FAG")
         val idOutra = criarTenant(identifier = "outra", title = "Outra")
-        criarConta(idFag, login = "ana", primeiroNome = "Ana")
+        val idAna = criarConta(idFag, login = "ana", primeiroNome = "Ana")
         criarConta(idOutra, login = "bruno", primeiroNome = "Bruno")
 
-        val lista = rest.postForList<AccountDto>("$porTenant?id-tenant=$idFag")
+        val lista = restComo(idAna).postForList<AccountDto>("$porTenant?id-tenant=$idFag")
 
         val contas = lista.body.shouldNotBeNull()
         contas shouldHaveSize 1
@@ -118,11 +118,30 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
     }
 
     @Test
+    fun `listar contas exige login`() {
+        val idTenant = criarTenant()
+        criarConta(idTenant, login = "ana")
+
+        rest.postForList<AccountDto>("$porTenant?id-tenant=$idTenant").statusCode shouldBe HttpStatus.UNAUTHORIZED
+    }
+
+    @Test
+    fun `logado numa instituição, trocar o id-tenant não lista as contas de outra`() {
+        val idFag = criarTenant(identifier = "fag", title = "FAG")
+        val idOutra = criarTenant(identifier = "outra", title = "Outra")
+        val idAna = criarConta(idFag, login = "ana")
+        criarConta(idOutra, login = "bruno")
+
+        restComo(idAna).postForList<AccountDto>("$porTenant?id-tenant=$idOutra").statusCode shouldBe HttpStatus.FORBIDDEN
+    }
+
+    @Test
     fun `a busca de contas olha login, primeiro nome e sobrenome`() {
         val idTenant = criarTenant()
-        criarConta(idTenant, login = "ana", primeiroNome = "Ana", sobrenome = "Souza")
+        val idAna = criarConta(idTenant, login = "ana", primeiroNome = "Ana", sobrenome = "Souza")
         criarConta(idTenant, login = "bruno", primeiroNome = "Bruno", sobrenome = "Lima")
         criarConta(idTenant, login = "carla", primeiroNome = "Carla", sobrenome = "Souza")
+        val rest = restComo(idAna)
 
         // Por login
         rest.postForList<AccountDto>("$porTenant?id-tenant=$idTenant&text=bruno")
@@ -144,7 +163,7 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val idDesign = criarTag(idTenant, "Design", paraProjetos = false, paraContas = true)
         vincularTagAConta(idDesign, idConta)
 
-        val lista = rest.postForList<AccountDto>("$porTenant?id-tenant=$idTenant&lookup-tags=true")
+        val lista = restComo(idConta).postForList<AccountDto>("$porTenant?id-tenant=$idTenant&lookup-tags=true")
 
         val contas = lista.body.shouldNotBeNull()
         contas shouldHaveSize 1
@@ -158,7 +177,7 @@ class EntityAccountIntegrationTest : IntegrationTestBase() {
         val idConta = criarConta(idTenant, login = "ana")
         vincularTagAConta(criarTag(idTenant, "Design", paraContas = true), idConta)
 
-        val lista = rest.postForList<AccountDto>("$porTenant?id-tenant=$idTenant")
+        val lista = restComo(idConta).postForList<AccountDto>("$porTenant?id-tenant=$idTenant")
 
         lista.body.shouldNotBeNull()[0].tags.shouldBeEmpty()
     }

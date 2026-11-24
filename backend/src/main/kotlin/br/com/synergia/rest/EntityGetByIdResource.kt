@@ -1,6 +1,9 @@
 package br.com.synergia.rest
 
+import br.com.synergia.config.autenticacao.usuarioLogado
 import br.com.synergia.libs.entityAccount.services.EntityAccountService
+import jakarta.servlet.http.HttpServletRequest
+import org.springframework.http.HttpStatus
 import br.com.synergia.libs.entityTag.services.EntityTagService
 import br.com.synergia.libs.utilsCommons.objects.ResponseMessenger
 import br.com.synergia.libs.utilsEntities.jpa.account.AccountRepository
@@ -31,10 +34,17 @@ class EntityGetByIdResource (
     @GetMapping("get-account-by-id/{id-account}")
     fun getAccountById(
         @PathVariable("id-account") idAccount: Long,
-        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false
+        @RequestParam("lookup-tags", required = false) lookupTags: Boolean? = false,
+        request: HttpServletRequest,
     ): ResponseEntity<AccountDto> {
+        val conta = accountRepository.findById(idAccount).orElse(null)
+        // Conta de outra instituição responde igual a conta inexistente: nem
+        // confirma que o id existe.
+        if (conta != null && conta.idTenant != usuarioLogado(request).idTenant) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build()
+        }
         return ResponseMessenger.buildResponse {
-            val el = accountRepository.findById(idAccount).orElse(null)?.toDto()
+            val el = conta?.toDto()
             if (lookupTags == true) {
                 el?.tags = entityTagService.listTagsByAccount(idAccount, null)
             }

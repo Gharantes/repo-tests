@@ -49,7 +49,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
     fun `o admin criado junto com o tenant recebe todas as permissões`() {
         rest.postJson<Void>(
             "/api/entity-tenant/store",
-            UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "senha"),
+            UpsertTenantDto(title = "FAG", identifier = "fag", login = "ADMIN", password = "SenhaForte1"),
         ).statusCode shouldBe HttpStatus.OK
         val idAdmin = jdbc.queryForObject("SELECT id FROM account WHERE login = 'ADMIN'", Long::class.java)!!
 
@@ -64,7 +64,7 @@ class EntityPermissionIntegrationTest : IntegrationTestBase() {
             "/api/entity-account/store",
             UpsertAccountDto(
                 idTenant = idTenant, email = "a@fag.edu.br", login = "aluno",
-                password = "senha", firstName = "A", lastName = "B",
+                password = "SenhaForte1", firstName = "A", lastName = "B",
             ),
         ).statusCode shouldBe HttpStatus.OK
         val idConta = jdbc.queryForObject("SELECT id FROM account WHERE login = 'aluno'", Long::class.java)!!
