@@ -13,12 +13,15 @@ Os testes são de caixa-preta. Eles sobem o backend de verdade, fazem requisiç�
 
 ## Como ler o resultado
 
-Cada teste afirma o comportamento **seguro**:
+Cada teste afirma o comportamento **seguro**. O resultado sai agrupado por categoria e por bloco:
 
 - ✔ significa que a proteção existe.
 - ✖ significa que a vulnerabilidade está presente, e a mensagem diz o que aconteceu, por exemplo `a Eve tomou a conta ADMIN da vítima com a senha que ela escolheu`.
+- ⚠ significa que a verificação **não chegou ao fim**, por exemplo porque o backend estava fora do ar. Isso não conta como vulnerabilidade, e a mensagem diz o que deu errado.
 
-Cada arquivo também tem testes de **controle**: o dono legítimo consegue usar a rota e a senha certa autentica. Eles garantem que um ✔ quer dizer "protegido", e não "a rota está quebrada para todo mundo".
+Cada arquivo também tem testes de **controle**: o dono legítimo consegue usar a rota e a senha certa autentica. Eles garantem que um ✔ quer dizer "protegido", e não "a rota está quebrada para todo mundo". Se um controle falha, ele aparece com ⚠ e a categoria ganha um aviso.
+
+Quem monta essa saída é o reporter `lib/relatorio.mjs`. Para ver a saída padrão do Node, com o stack trace de cada falha, use `npm run test:detalhado`.
 
 ### Resultado atual (26/10/2026): 19 ✔ e 26 ✖
 
@@ -96,6 +99,12 @@ O pipeline antigo da atividade de DevOps foi movido para `.github/workflows-back
 Roda em todo PR para a `main`, em todo push na `main` e também manualmente pela aba Actions. Ele sobe um PostgreSQL efêmero, empacota o backend do commit e executa `bash tests/rodar.sh test:ci`, o mesmo script da máquina local.
 
 No push na `main`, ele roda ao lado do `deploy.yml`, como um workflow independente. Se algum teste de segurança falhar, o check fica vermelho, mas o deploy segue normalmente.
+
+O resultado aparece em três lugares na página do run:
+
+- **Summary**: um relatório com uma tabela por categoria (protegido, vulnerável, não concluído) e, para cada vulnerabilidade, o teste e a mensagem que explica o que aconteceu. As verificações que passaram ficam recolhidas.
+- **Annotations**: uma linha por categoria com problema, por exemplo `Segurança - IDOR: 10 vulnerabilidades`.
+- **Log do passo "Rodar os testes de segurança"**: a mesma lista do terminal, agrupada e sem stack trace.
 
 O relatório JUnit e o log do backend ficam nos artefatos do job.
 
